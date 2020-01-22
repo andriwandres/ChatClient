@@ -12,9 +12,6 @@ namespace ChatClient.Core.Models.Validation
             RuleFor(group => group.Name)
                 .NotEmpty();
 
-            RuleFor(group => group.Description)
-                .NotEmpty();
-
             RuleFor(group => group.CreatedAt)
                 .NotEmpty();
         }
