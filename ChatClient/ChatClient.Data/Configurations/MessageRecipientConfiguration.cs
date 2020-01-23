@@ -20,8 +20,17 @@ namespace ChatClient.Data.Configurations
             builder.Property(recipient => recipient.MessageId)
                 .IsRequired();
 
+            builder.Property(recipient => recipient.RecipientUserId)
+                .IsRequired(false);
+
+            builder.Property(recipient => recipient.RecipientGroupId)
+                .IsRequired(false);
+
             builder.Property(recipient => recipient.IsRead)
                 .IsRequired();
+
+            builder.Property(recipient => recipient.ReadAt)
+                .IsRequired(false);
 
             builder.HasOne(recipient => recipient.Message)
                 .WithMany(message => message.Recipients)

@@ -13,6 +13,9 @@ namespace ChatClient.Data.Configurations
             builder.Property(message => message.AuthorId)
                 .IsRequired();
 
+            builder.Property(message => message.ParentId)
+                .IsRequired(false);
+
             builder.Property(message => message.TextContent)
                 .IsRequired();
 
@@ -30,7 +33,7 @@ namespace ChatClient.Data.Configurations
                 .HasForeignKey(message => message.AuthorId);
 
             builder.HasOne(message => message.Parent)
-                .WithOne(message => message)
+                .WithOne()
                 .HasForeignKey<Message>(message => message.ParentId);
 
             builder.HasMany(message => message.Recipients)

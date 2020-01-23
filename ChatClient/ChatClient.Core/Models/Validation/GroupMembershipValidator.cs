@@ -6,9 +6,6 @@ namespace ChatClient.Core.Models.Validation
     {
         public GroupMembershipValidator()
         {
-            RuleFor(membership => membership.GroupMembershipId)
-                .NotNull();
-
             RuleFor(membership => membership.UserId)
                 .NotNull();
 

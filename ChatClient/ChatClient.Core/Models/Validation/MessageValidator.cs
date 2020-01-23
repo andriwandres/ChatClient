@@ -6,9 +6,6 @@ namespace ChatClient.Core.Models.Validation
     {
         public MessageValidator()
         {
-            RuleFor(message => message.MessageId)
-                .NotNull();
-
             RuleFor(message => message.AuthorId)
                 .NotNull();
 

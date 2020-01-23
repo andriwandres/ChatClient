@@ -13,6 +13,9 @@ namespace ChatClient.Data.Configurations
             builder.Property(group => group.Name)
                 .IsRequired();
 
+            builder.Property(group => group.Description)
+                .IsRequired(false);
+
             builder.Property(group => group.CreatedAt)
                 .IsRequired();
 

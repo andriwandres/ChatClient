@@ -6,9 +6,6 @@ namespace ChatClient.Core.Models.Validation
     {
         public UserValidator()
         {
-            RuleFor(user => user.UserId)
-                .NotNull();
-
             RuleFor(user => user.UserTag)
                 .NotEmpty()
                 .Length(6);
