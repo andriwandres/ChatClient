@@ -57,5 +57,10 @@ namespace ChatClient.Data.Repositories
         {
             return await Context.Set<TEntity>().Where(predicate).ToListAsync();
         }
+
+        public async Task<bool> Any(Expression<Func<TEntity, bool>> predicate)
+        {
+            return await Context.Set<TEntity>().AnyAsync(predicate);
+        }
     }
 }

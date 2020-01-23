@@ -15,5 +15,6 @@ namespace ChatClient.Core.Repositories
         Task AddRange(IEnumerable<TEntity> entities);
         void Remove(TEntity entity);
         void RemoveRange(IEnumerable<TEntity> entities);
+        Task<bool> Any(Expression<Func<TEntity, bool>> predicate);
     }
 }

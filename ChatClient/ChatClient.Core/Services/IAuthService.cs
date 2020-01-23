@@ -4,11 +4,11 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ChatClient.Core.Repositories
+namespace ChatClient.Core.Services
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IAuthService
     {
+        Task<User> GetUser();
         Task<bool> IsEmailTaken(string email);
-        Task<User> GetUserByEmail(string email);
     }
 }
