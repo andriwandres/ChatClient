@@ -1,4 +1,4 @@
-﻿using ChatClient.Core.Models;
+﻿using ChatClient.Core.Models.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -10,5 +10,6 @@ namespace ChatClient.Core.Services
     {
         Task<User> GetUser();
         Task<bool> IsEmailTaken(string email);
+        Task<AuthenticatedUser>
     }
 }

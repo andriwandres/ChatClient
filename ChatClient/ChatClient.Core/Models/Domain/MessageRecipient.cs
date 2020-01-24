@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ChatClient.Core.Models
+namespace ChatClient.Core.Models.Domain
 {
     public class MessageRecipient
     {

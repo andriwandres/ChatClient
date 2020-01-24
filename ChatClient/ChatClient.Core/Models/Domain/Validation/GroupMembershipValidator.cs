@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace ChatClient.Core.Models.Validation
+namespace ChatClient.Core.Models.Domain.Validation
 {
     public class GroupMembershipValidator : AbstractValidator<GroupMembership>
     {

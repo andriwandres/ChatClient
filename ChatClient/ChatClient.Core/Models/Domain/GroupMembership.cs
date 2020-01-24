@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace ChatClient.Core.Models
+namespace ChatClient.Core.Models.Domain
 {
     public class GroupMembership
     {

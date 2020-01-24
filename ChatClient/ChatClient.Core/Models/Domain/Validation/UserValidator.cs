@@ -1,12 +1,12 @@
 ﻿using FluentValidation;
 
-namespace ChatClient.Core.Models.Validation
+namespace ChatClient.Core.Models.Domain.Validation
 {
     public class UserValidator : AbstractValidator<User>
     {
         public UserValidator()
         {
-            RuleFor(user => user.UserTag)
+            RuleFor(user => user.UserCode)
                 .NotEmpty()
                 .Length(6);
 

@@ -1,4 +1,4 @@
-﻿using ChatClient.Core.Models;
+﻿using ChatClient.Core.Models.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -12,11 +12,11 @@ namespace ChatClient.Data.Configurations
 
             builder.HasAlternateKey(user => new
             {
-                user.UserTag,
-                user.Email
+                user.Email,
+                user.UserCode,
             });
 
-            builder.Property(user => user.UserTag)
+            builder.Property(user => user.UserCode)
                 .IsRequired()
                 .HasMaxLength(6);
 

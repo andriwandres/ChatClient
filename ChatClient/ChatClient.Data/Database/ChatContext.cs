@@ -1,4 +1,4 @@
-﻿using ChatClient.Core.Models;
+﻿using ChatClient.Core.Models.Domain;
 using ChatClient.Data.Configurations;
 using Microsoft.EntityFrameworkCore;
 

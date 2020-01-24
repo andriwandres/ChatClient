@@ -1,5 +1,5 @@
 ﻿using ChatClient.Core;
-using ChatClient.Core.Models;
+using ChatClient.Core.Models.Domain;
 using ChatClient.Core.Services;
 using Microsoft.AspNetCore.Http;
 using System;

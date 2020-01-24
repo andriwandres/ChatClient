@@ -1,4 +1,4 @@
-﻿using ChatClient.Core.Models;
+﻿using ChatClient.Core.Models.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;

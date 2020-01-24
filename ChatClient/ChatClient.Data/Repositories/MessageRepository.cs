@@ -1,4 +1,4 @@
-﻿using ChatClient.Core.Models;
+﻿using ChatClient.Core.Models.Domain;
 using ChatClient.Core.Repositories;
 using ChatClient.Data.Database;
 using System;
