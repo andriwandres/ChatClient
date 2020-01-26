@@ -4,10 +4,7 @@ using ChatClient.Core.Models.ViewModels.Message;
 using ChatClient.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace ChatClient.Api.Controllers
@@ -30,13 +27,8 @@ namespace ChatClient.Api.Controllers
         [HttpGet("GetLatestMessages")]
         public async Task<ActionResult> GetLatestMessages()
         {
-            int userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
             IEnumerable<MessageRecipient> latestMessages = await _messageService.GetLatestMessages();
-            IEnumerable<LatestMessage> viewModels = _mapper.Map<IEnumerable<LatestMessage>>(latestMessages, options =>
-            {
-                options.Items["UserId"] = userId;
-            });
+            IEnumerable<LatestMessage> viewModels = _mapper.Map<IEnumerable<LatestMessage>>(latestMessages);
 
             return Ok(viewModels);
         }
