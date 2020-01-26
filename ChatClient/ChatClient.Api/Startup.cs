@@ -6,8 +6,10 @@ using System.Text;
 using System.Threading.Tasks;
 using ChatClient.Core;
 using ChatClient.Core.Options;
+using ChatClient.Core.Services;
 using ChatClient.Data;
 using ChatClient.Data.Database;
+using ChatClient.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -62,6 +64,10 @@ namespace ChatClient.Api
 
             // Add Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            // Add services
+            services.AddTransient<ICryptoService, CryptoService>();
+            services.AddTransient<IAuthService, AuthService>();
 
             // Add Cross-Origin-Resource-Sharing
             services.AddCors();

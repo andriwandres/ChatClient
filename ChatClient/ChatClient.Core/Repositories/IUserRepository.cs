@@ -8,6 +8,7 @@ namespace ChatClient.Core.Repositories
 {
     public interface IUserRepository : IRepository<User>
     {
+        Task<bool> UserCodeExists(string code);
         Task<bool> IsEmailTaken(string email);
         Task<User> GetUserByEmail(string email);
     }

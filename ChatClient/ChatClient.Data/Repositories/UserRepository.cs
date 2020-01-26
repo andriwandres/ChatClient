@@ -24,5 +24,11 @@ namespace ChatClient.Data.Repositories
             email = email.ToLower();
             return await Any(user => user.Email.ToLower() == email);
         }
+
+        public async Task<bool> UserCodeExists(string code)
+        {
+            code = code.ToLower();
+            return await Any(user => user.UserCode.ToLower() == code);
+        }
     }
 }
