@@ -1,7 +1,7 @@
-﻿using ChatClient.Core.Models.ViewModels;
+﻿using ChatClient.Core.Models.ViewModels.Auth;
 using FluentValidation;
 
-namespace ChatClient.Api.ViewModels.Validation
+namespace ChatClient.Core.Models.ViewModels.Auth.Validation
 {
     public class AuthenticatedUserValidator : AbstractValidator<AuthenticatedUser>
     {

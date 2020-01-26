@@ -21,9 +21,5 @@
     <ProjectReference Include="..\ChatClient.Services\ChatClient.Services.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Mapping\" />
-  </ItemGroup>
-
 
 </Project>

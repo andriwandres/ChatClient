@@ -1,4 +1,4 @@
-﻿namespace ChatClient.Core.Models.Dtos
+﻿namespace ChatClient.Core.Models.Dtos.Auth
 {
     public class LoginDto
     {

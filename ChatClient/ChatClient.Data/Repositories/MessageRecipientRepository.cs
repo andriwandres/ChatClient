@@ -17,15 +17,16 @@ namespace ChatClient.Data.Repositories
             User user = await Context.Users
                 .Include(u => u.ReceivedPrivateMessages)
                     .ThenInclude(mr => mr.Message)
-
+                        .ThenInclude(m => m.Author)
                 .Include(u => u.GroupMemberships)
                     .ThenInclude(gm => gm.ReceivedGroupMessages)
                         .ThenInclude(gm => gm.Message)
-
+                            .ThenInclude(m => m.Author)
                 .SingleOrDefaultAsync(u => u.UserId == userId);
-
+            
             IEnumerable<MessageRecipient> latestAuthoredMessages = Context.MessageRecipients
                 .Include(mr => mr.Message)
+                .ThenInclude(m => m.Author)
                 .Where(mr => mr.Message.AuthorId == user.UserId)
                 .GroupBy(mr => new { mr.RecipientUserId, mr.RecipientGroupId })
                 .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First());

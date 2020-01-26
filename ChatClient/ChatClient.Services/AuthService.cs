@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using ChatClient.Core;
 using ChatClient.Core.Models.Domain;
-using ChatClient.Core.Models.Dtos;
 using ChatClient.Core.Models.Dtos.Auth;
-using ChatClient.Core.Models.ViewModels;
+using ChatClient.Core.Models.ViewModels.Auth;
 using ChatClient.Core.Options;
 using ChatClient.Core.Services;
 using Microsoft.AspNetCore.Http;

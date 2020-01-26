@@ -1,4 +1,4 @@
-﻿namespace ChatClient.Core.Models.ViewModels
+﻿namespace ChatClient.Core.Models.ViewModels.Auth
 {
     public class AuthenticatedUser
     {

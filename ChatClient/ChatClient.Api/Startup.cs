@@ -1,9 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
+using AutoMapper;
 using ChatClient.Core;
 using ChatClient.Core.Options;
 using ChatClient.Core.Services;
@@ -11,23 +6,24 @@ using ChatClient.Data;
 using ChatClient.Data.Database;
 using ChatClient.Services;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using AutoMapper;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.IO;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System;
+using System.IO;
+using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace ChatClient.Api
 {

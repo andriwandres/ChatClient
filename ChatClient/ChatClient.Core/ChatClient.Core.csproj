@@ -8,4 +8,8 @@
     <PackageReference Include="FluentValidation" Version="8.6.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Models\ViewModels\Message\Validation\" />
+  </ItemGroup>
+
 </Project>
