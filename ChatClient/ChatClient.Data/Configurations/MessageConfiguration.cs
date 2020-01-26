@@ -29,7 +29,7 @@ namespace ChatClient.Data.Configurations
                 .IsRequired();
 
             builder.HasOne(message => message.Author)
-                .WithMany(user => user.PostedMessages)
+                .WithMany(user => user.AuthoredMessages)
                 .HasForeignKey(message => message.AuthorId);
 
             builder.HasOne(message => message.Parent)

@@ -35,13 +35,13 @@ namespace ChatClient.Data.Configurations
             builder.Property(user => user.CreatedAt)
                 .IsRequired();
 
-            builder.HasMany(user => user.PostedMessages)
+            builder.HasMany(user => user.AuthoredMessages)
                 .WithOne(message => message.Author);
 
             builder.HasMany(user => user.GroupMemberships)
                 .WithOne(membership => membership.User);
 
-            builder.HasMany(user => user.ReceivedMessages)
+            builder.HasMany(user => user.ReceivedPrivateMessages)
                 .WithOne(recipient => recipient.RecipientUser);
         }
     }

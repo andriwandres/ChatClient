@@ -13,8 +13,8 @@ namespace ChatClient.Core.Models.Domain
         public byte[] PasswordSalt { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public ICollection<Message> PostedMessages { get; set; }
+        public ICollection<Message> AuthoredMessages { get; set; }
         public ICollection<GroupMembership> GroupMemberships { get; set; }
-        public ICollection<MessageRecipient> ReceivedMessages { get; set; }
+        public ICollection<MessageRecipient> ReceivedPrivateMessages { get; set; }
     }
 }

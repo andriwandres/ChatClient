@@ -37,11 +37,11 @@ namespace ChatClient.Data.Configurations
                 .HasForeignKey(recipient => recipient.MessageId);
 
             builder.HasOne(recipient => recipient.RecipientUser)
-                .WithMany(user => user.ReceivedMessages)
+                .WithMany(user => user.ReceivedPrivateMessages)
                 .HasForeignKey(recipient => recipient.RecipientUserId);
 
             builder.HasOne(recipient => recipient.RecipientGroup)
-                .WithMany(membership => membership.ReceivedMessages)
+                .WithMany(membership => membership.ReceivedGroupMessages)
                 .HasForeignKey(recipient => recipient.RecipientGroupId);
         }
     }

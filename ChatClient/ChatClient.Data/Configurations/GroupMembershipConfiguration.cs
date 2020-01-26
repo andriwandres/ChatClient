@@ -36,7 +36,7 @@ namespace ChatClient.Data.Configurations
                 .WithMany(group => group.GroupMemberships)
                 .HasForeignKey(membership => membership.GroupId);
 
-            builder.HasMany(membership => membership.ReceivedMessages)
+            builder.HasMany(membership => membership.ReceivedGroupMessages)
                 .WithOne(recipient => recipient.RecipientGroup);
         }
     }

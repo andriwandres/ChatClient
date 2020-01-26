@@ -13,6 +13,6 @@ namespace ChatClient.Core.Models.Domain
 
         public User User { get; set; }
         public Group Group { get; set; }
-        public ICollection<MessageRecipient> ReceivedMessages { get; set; }
+        public ICollection<MessageRecipient> ReceivedGroupMessages { get; set; }
     }
 }
