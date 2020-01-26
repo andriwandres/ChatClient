@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace ChatClient.Core.Models.Dtos.Validation
+namespace ChatClient.Core.Models.Dtos.Auth.Validation
 {
     public class LoginDtoValidator : AbstractValidator<LoginDto>
     {

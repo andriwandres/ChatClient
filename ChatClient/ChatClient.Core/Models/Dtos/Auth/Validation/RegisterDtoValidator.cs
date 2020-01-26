@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using ChatClient.Core.Models.Dtos.Auth;
+using FluentValidation;
 
 namespace ChatClient.Core.Models.Dtos.Validation
 {

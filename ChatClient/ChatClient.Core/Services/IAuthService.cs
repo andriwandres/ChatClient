@@ -1,5 +1,6 @@
 ﻿using ChatClient.Core.Models.Domain;
 using ChatClient.Core.Models.Dtos;
+using ChatClient.Core.Models.Dtos.Auth;
 using ChatClient.Core.Models.ViewModels;
 using System;
 using System.Collections.Generic;
