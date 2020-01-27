@@ -36,7 +36,8 @@ namespace ChatClient.Api.Mapping
                         : recipient.RecipientUser.ReceivedPrivateMessages.Count(mr =>
                             mr.IsRead == false &&
                             mr.Message.AuthorId == recipient.Message.AuthorId
-                    ));
+                          )
+                    );
                 })
                 .ForMember(vm => vm.TextContent, config =>
                 {

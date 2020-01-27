@@ -32,12 +32,13 @@ namespace ChatClient.Data.Repositories
                 .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First());
 
             IEnumerable<MessageRecipient> latestReceivedPrivateMessages = user.ReceivedPrivateMessages
-                .GroupBy(mr => mr.RecipientUserId)
+                .GroupBy(mr => mr.Message.AuthorId)
                 .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First());
 
             IEnumerable<MessageRecipient> latestReceivedGroupMessages = user.GroupMemberships
                 .Select(gm => gm.ReceivedGroupMessages.OrderByDescending(mr => mr.Message.CreatedAt).First());
 
+            // TODO private messages should group to authors id
             IEnumerable<MessageRecipient> latestMessages = latestAuthoredMessages
                 .Concat(latestReceivedPrivateMessages)
                 .Concat(latestReceivedGroupMessages)
@@ -45,7 +46,7 @@ namespace ChatClient.Data.Repositories
                 .GroupBy(mr => new { mr.RecipientUserId, mr.RecipientGroupId })
                 .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First());
 
-            // TODO try GroupJoin() instead of Concat() + GroupBy()
+            // CONSIDER try GroupJoin() instead of Concat() + GroupBy()
 
             return latestMessages;
         }
