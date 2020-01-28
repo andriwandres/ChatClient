@@ -9,7 +9,7 @@ namespace ChatClient.Api.Mapping
     {
         public UserProfile()
         {
-            CreateMap<User, RegisterDto>();
+            CreateMap<RegisterDto, User>();
 
             CreateMap<User, AuthenticatedUser>()
                 .ForMember(vm => vm.Token, config =>

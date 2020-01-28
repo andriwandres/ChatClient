@@ -1,5 +1,6 @@
 ﻿using ChatClient.Core.Models.Domain;
 using ChatClient.Data.Configurations;
+using ChatClient.Data.Seeds;
 using Microsoft.EntityFrameworkCore;
 
 namespace ChatClient.Data.Database
@@ -16,11 +17,15 @@ namespace ChatClient.Data.Database
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            // Entity Type Configurations
             builder.ApplyConfiguration(new UserConfiguration());
             builder.ApplyConfiguration(new GroupConfiguration());
             builder.ApplyConfiguration(new GroupMembershipConfiguration());
             builder.ApplyConfiguration(new MessageConfiguration());
             builder.ApplyConfiguration(new MessageRecipientConfiguration());
+
+            // Data Seeds
+            builder.ApplyConfiguration(new UserSeed());
         }
     }
 }

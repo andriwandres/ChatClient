@@ -9,6 +9,7 @@ namespace ChatClient.Data
     public class UnitOfWork : IUnitOfWork
     {
         private readonly ChatContext _context;
+
         private UserRepository _userRepository;
         private GroupRepository _groupRepository;
         private MessageRepository _messageRepository;
