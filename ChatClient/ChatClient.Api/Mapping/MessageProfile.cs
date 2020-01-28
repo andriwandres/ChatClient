@@ -10,22 +10,6 @@ namespace ChatClient.Api.Mapping
 {
     public class MessageProfile : Profile
     {
-        public int GetUnreadMessagesCount(MessageRecipient recipient)
-        {
-            int userId = 0;
-
-            if (recipient.RecipientUser != null)
-            {
-                return recipient.RecipientUser.ReceivedPrivateMessages.Count(mr => 
-                    mr.Message.AuthorId == recipient.Message.AuthorId &&
-                    mr.RecipientUserId == userId &&
-                    mr.IsRead == false
-                );
-            }
-            
-            return recipient.RecipientGroup.ReceivedGroupMessages.Count(mr =>mr.IsRead == false);
-        }
-
         public MessageProfile()
         {
             CreateMap<MessageRecipient, LatestMessage>()

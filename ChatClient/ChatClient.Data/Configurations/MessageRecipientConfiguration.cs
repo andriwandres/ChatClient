@@ -10,13 +10,6 @@ namespace ChatClient.Data.Configurations
         {
             builder.HasKey(recipient => recipient.MessageRecipientId);
 
-            builder.HasAlternateKey(recipient => new
-            {
-                recipient.MessageId,
-                recipient.RecipientUserId,
-                recipient.RecipientGroupId,
-            });
-
             builder.Property(recipient => recipient.MessageId)
                 .IsRequired();
 
