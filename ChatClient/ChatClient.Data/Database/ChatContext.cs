@@ -26,6 +26,10 @@ namespace ChatClient.Data.Database
 
             // Data Seeds
             builder.ApplyConfiguration(new UserSeed());
+            builder.ApplyConfiguration(new GroupSeed());
+            builder.ApplyConfiguration(new GroupMembershipSeed());
+            builder.ApplyConfiguration(new MessageSeed());
+
         }
     }
 }

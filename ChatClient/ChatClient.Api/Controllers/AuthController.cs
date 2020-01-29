@@ -89,10 +89,9 @@ namespace ChatClient.Api.Controllers
         {
             User user = await _authService.GetUser();
 
-            string pw = Encoding.UTF8.GetString(user.PasswordHash);
+            string pw = Convert.ToBase64String(user.PasswordSalt);
 
-
-            return Ok();
+            return Ok(pw);
         }
     }
 }
