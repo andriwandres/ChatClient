@@ -29,11 +29,13 @@ namespace ChatClient.Api
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IWebHostEnvironment environment)
         {
+            Environment = environment;
             Configuration = configuration;
         }
 
+        public IWebHostEnvironment Environment { get; set; }
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -98,7 +100,11 @@ namespace ChatClient.Api
                 };
             });
 
-            services.AddSignalR();
+            // Add SignalR Websocket
+            services.AddSignalR(options =>
+            {
+                options.EnableDetailedErrors = Environment.IsDevelopment();
+            });
 
             // Add Swagger
             services.AddSwaggerGen(options =>
@@ -147,6 +153,7 @@ namespace ChatClient.Api
             // Add services
             services.AddTransient<ICryptoService, CryptoService>();
             services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IMessageService, MessageService>();
 
             // Add Cross-Origin-Resource-Sharing
             services.AddCors();

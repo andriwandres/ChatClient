@@ -10,11 +10,21 @@ namespace ChatClient.Data.Repositories
     {
         public UserRepository(ChatContext context) : base(context) { }
 
+        public async Task AddUser(User user)
+        {
+            await Context.Users.AddAsync(user);
+        }
+
         public async Task<User> GetUserByEmail(string email)
         {
             email = email.ToLower();
 
             return await Context.Users.SingleOrDefaultAsync(user => user.Email.ToLower() == email);
+        }
+
+        public async Task<User> GetUserById(int userId)
+        {
+            return await Context.Users.FindAsync(userId);
         }
 
         public async Task<bool> IsEmailTaken(string email)

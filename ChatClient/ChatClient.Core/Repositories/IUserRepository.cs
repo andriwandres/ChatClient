@@ -11,5 +11,7 @@ namespace ChatClient.Core.Repositories
         Task<bool> UserCodeExists(string code);
         Task<bool> IsEmailTaken(string email);
         Task<User> GetUserByEmail(string email);
+        Task<User> GetUserById(int userId);
+        Task AddUser(User user);
     }
 }

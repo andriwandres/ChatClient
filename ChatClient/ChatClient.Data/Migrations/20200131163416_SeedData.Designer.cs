@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatClient.Data.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    [Migration("20200129171022_SeedData")]
+    [Migration("20200131163416_SeedData")]
     partial class SeedData
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -46,14 +46,14 @@ namespace ChatClient.Data.Migrations
                         new
                         {
                             GroupId = 1,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 511, DateTimeKind.Utc).AddTicks(4982),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 326, DateTimeKind.Utc).AddTicks(849),
                             Description = "Description for Group 1",
                             Name = "Group 1"
                         },
                         new
                         {
                             GroupId = 2,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 511, DateTimeKind.Utc).AddTicks(5799),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 326, DateTimeKind.Utc).AddTicks(1844),
                             Description = "Description for Group 2",
                             Name = "Group 2"
                         });
@@ -90,7 +90,7 @@ namespace ChatClient.Data.Migrations
                         new
                         {
                             GroupMembershipId = 1,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 512, DateTimeKind.Utc).AddTicks(1661),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 328, DateTimeKind.Utc).AddTicks(2239),
                             GroupId = 1,
                             IsAdmin = true,
                             UserId = 1
@@ -98,7 +98,7 @@ namespace ChatClient.Data.Migrations
                         new
                         {
                             GroupMembershipId = 2,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 512, DateTimeKind.Utc).AddTicks(2344),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 328, DateTimeKind.Utc).AddTicks(3176),
                             GroupId = 1,
                             IsAdmin = false,
                             UserId = 2
@@ -106,7 +106,7 @@ namespace ChatClient.Data.Migrations
                         new
                         {
                             GroupMembershipId = 3,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 512, DateTimeKind.Utc).AddTicks(2357),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 328, DateTimeKind.Utc).AddTicks(3193),
                             GroupId = 1,
                             IsAdmin = false,
                             UserId = 3
@@ -114,7 +114,7 @@ namespace ChatClient.Data.Migrations
                         new
                         {
                             GroupMembershipId = 4,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 512, DateTimeKind.Utc).AddTicks(2359),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 328, DateTimeKind.Utc).AddTicks(3196),
                             GroupId = 2,
                             IsAdmin = false,
                             UserId = 1
@@ -122,7 +122,7 @@ namespace ChatClient.Data.Migrations
                         new
                         {
                             GroupMembershipId = 5,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 512, DateTimeKind.Utc).AddTicks(2367),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 328, DateTimeKind.Utc).AddTicks(3206),
                             GroupId = 2,
                             IsAdmin = true,
                             UserId = 3
@@ -130,7 +130,7 @@ namespace ChatClient.Data.Migrations
                         new
                         {
                             GroupMembershipId = 6,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 512, DateTimeKind.Utc).AddTicks(2369),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 328, DateTimeKind.Utc).AddTicks(3208),
                             GroupId = 2,
                             IsAdmin = false,
                             UserId = 4
@@ -178,7 +178,7 @@ namespace ChatClient.Data.Migrations
                         {
                             MessageId = 1,
                             AuthorId = 1,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 513, DateTimeKind.Utc).AddTicks(91),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 327, DateTimeKind.Utc).AddTicks(1842),
                             IsEdited = false,
                             IsForwarded = false,
                             TextContent = "Hello User 1"
@@ -187,7 +187,7 @@ namespace ChatClient.Data.Migrations
                         {
                             MessageId = 2,
                             AuthorId = 2,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 513, DateTimeKind.Utc).AddTicks(1619),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 327, DateTimeKind.Utc).AddTicks(3955),
                             IsEdited = false,
                             IsForwarded = false,
                             TextContent = "Hello AndriWandres"
@@ -196,7 +196,7 @@ namespace ChatClient.Data.Migrations
                         {
                             MessageId = 3,
                             AuthorId = 1,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 513, DateTimeKind.Utc).AddTicks(1645),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 327, DateTimeKind.Utc).AddTicks(4010),
                             IsEdited = false,
                             IsForwarded = false,
                             TextContent = "Hello Group 1"
@@ -205,7 +205,7 @@ namespace ChatClient.Data.Migrations
                         {
                             MessageId = 4,
                             AuthorId = 2,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 513, DateTimeKind.Utc).AddTicks(1647),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 327, DateTimeKind.Utc).AddTicks(4014),
                             IsEdited = false,
                             IsForwarded = false,
                             TextContent = "Hello together!"
@@ -214,7 +214,7 @@ namespace ChatClient.Data.Migrations
                         {
                             MessageId = 5,
                             AuthorId = 3,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 513, DateTimeKind.Utc).AddTicks(1654),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 327, DateTimeKind.Utc).AddTicks(4024),
                             IsEdited = false,
                             IsForwarded = false,
                             TextContent = "Greetings everyone!"
@@ -223,7 +223,7 @@ namespace ChatClient.Data.Migrations
                         {
                             MessageId = 6,
                             AuthorId = 2,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 513, DateTimeKind.Utc).AddTicks(1656),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 327, DateTimeKind.Utc).AddTicks(4027),
                             IsEdited = false,
                             IsForwarded = false,
                             TextContent = "Hello together!"
@@ -232,7 +232,7 @@ namespace ChatClient.Data.Migrations
                         {
                             MessageId = 7,
                             AuthorId = 1,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 513, DateTimeKind.Utc).AddTicks(1658),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 327, DateTimeKind.Utc).AddTicks(4029),
                             IsEdited = false,
                             IsForwarded = false,
                             TextContent = "Hi!"
@@ -270,6 +270,104 @@ namespace ChatClient.Data.Migrations
                     b.HasIndex("RecipientUserId");
 
                     b.ToTable("MessageRecipients");
+
+                    b.HasData(
+                        new
+                        {
+                            MessageRecipientId = 1,
+                            IsRead = true,
+                            MessageId = 1,
+                            ReadAt = new DateTime(2020, 1, 31, 16, 34, 15, 329, DateTimeKind.Utc).AddTicks(7397),
+                            RecipientUserId = 2
+                        },
+                        new
+                        {
+                            MessageRecipientId = 2,
+                            IsRead = false,
+                            MessageId = 2,
+                            ReadAt = new DateTime(2020, 1, 31, 16, 34, 15, 329, DateTimeKind.Utc).AddTicks(8637),
+                            RecipientUserId = 1
+                        },
+                        new
+                        {
+                            MessageRecipientId = 3,
+                            IsRead = true,
+                            MessageId = 3,
+                            ReadAt = new DateTime(2020, 1, 31, 16, 34, 15, 329, DateTimeKind.Utc).AddTicks(8673),
+                            RecipientGroupId = 2
+                        },
+                        new
+                        {
+                            MessageRecipientId = 4,
+                            IsRead = true,
+                            MessageId = 3,
+                            ReadAt = new DateTime(2020, 1, 31, 16, 34, 15, 329, DateTimeKind.Utc).AddTicks(8677),
+                            RecipientGroupId = 3
+                        },
+                        new
+                        {
+                            MessageRecipientId = 5,
+                            IsRead = true,
+                            MessageId = 4,
+                            ReadAt = new DateTime(2020, 1, 31, 16, 34, 15, 329, DateTimeKind.Utc).AddTicks(8687),
+                            RecipientGroupId = 1
+                        },
+                        new
+                        {
+                            MessageRecipientId = 6,
+                            IsRead = true,
+                            MessageId = 4,
+                            ReadAt = new DateTime(2020, 1, 31, 16, 34, 15, 329, DateTimeKind.Utc).AddTicks(8690),
+                            RecipientGroupId = 3
+                        },
+                        new
+                        {
+                            MessageRecipientId = 7,
+                            IsRead = true,
+                            MessageId = 5,
+                            ReadAt = new DateTime(2020, 1, 31, 16, 34, 15, 329, DateTimeKind.Utc).AddTicks(8692),
+                            RecipientGroupId = 1
+                        },
+                        new
+                        {
+                            MessageRecipientId = 8,
+                            IsRead = true,
+                            MessageId = 5,
+                            ReadAt = new DateTime(2020, 1, 31, 16, 34, 15, 329, DateTimeKind.Utc).AddTicks(8694),
+                            RecipientGroupId = 2
+                        },
+                        new
+                        {
+                            MessageRecipientId = 9,
+                            IsRead = true,
+                            MessageId = 6,
+                            ReadAt = new DateTime(2020, 1, 31, 16, 34, 15, 329, DateTimeKind.Utc).AddTicks(8700),
+                            RecipientGroupId = 4
+                        },
+                        new
+                        {
+                            MessageRecipientId = 10,
+                            IsRead = true,
+                            MessageId = 6,
+                            ReadAt = new DateTime(2020, 1, 31, 16, 34, 15, 329, DateTimeKind.Utc).AddTicks(8702),
+                            RecipientGroupId = 6
+                        },
+                        new
+                        {
+                            MessageRecipientId = 11,
+                            IsRead = true,
+                            MessageId = 7,
+                            ReadAt = new DateTime(2020, 1, 31, 16, 34, 15, 329, DateTimeKind.Utc).AddTicks(8704),
+                            RecipientGroupId = 5
+                        },
+                        new
+                        {
+                            MessageRecipientId = 12,
+                            IsRead = true,
+                            MessageId = 7,
+                            ReadAt = new DateTime(2020, 1, 31, 16, 34, 15, 329, DateTimeKind.Utc).AddTicks(8706),
+                            RecipientGroupId = 6
+                        });
                 });
 
             modelBuilder.Entity("ChatClient.Core.Models.Domain.User", b =>
@@ -313,7 +411,7 @@ namespace ChatClient.Data.Migrations
                         new
                         {
                             UserId = 1,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 509, DateTimeKind.Utc).AddTicks(8798),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 323, DateTimeKind.Utc).AddTicks(9125),
                             DisplayName = "AndriWandres",
                             Email = "andri.wandres@swisslife.ch",
                             PasswordHash = new byte[] { 194, 80, 251, 139, 60, 78, 94, 71, 158, 250, 144, 223, 172, 162, 67, 211, 126, 195, 180, 52, 243, 217, 140, 162, 208, 78, 100, 45, 28, 2, 245, 111 },
@@ -323,7 +421,7 @@ namespace ChatClient.Data.Migrations
                         new
                         {
                             UserId = 2,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 509, DateTimeKind.Utc).AddTicks(9570),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 324, DateTimeKind.Utc).AddTicks(178),
                             DisplayName = "User 1",
                             Email = "user1@test.ch",
                             PasswordHash = new byte[] { 194, 80, 251, 139, 60, 78, 94, 71, 158, 250, 144, 223, 172, 162, 67, 211, 126, 195, 180, 52, 243, 217, 140, 162, 208, 78, 100, 45, 28, 2, 245, 111 },
@@ -333,7 +431,7 @@ namespace ChatClient.Data.Migrations
                         new
                         {
                             UserId = 3,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 509, DateTimeKind.Utc).AddTicks(9587),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 324, DateTimeKind.Utc).AddTicks(200),
                             DisplayName = "User 2",
                             Email = "user2@test.ch",
                             PasswordHash = new byte[] { 194, 80, 251, 139, 60, 78, 94, 71, 158, 250, 144, 223, 172, 162, 67, 211, 126, 195, 180, 52, 243, 217, 140, 162, 208, 78, 100, 45, 28, 2, 245, 111 },
@@ -343,7 +441,7 @@ namespace ChatClient.Data.Migrations
                         new
                         {
                             UserId = 4,
-                            CreatedAt = new DateTime(2020, 1, 29, 17, 10, 22, 509, DateTimeKind.Utc).AddTicks(9592),
+                            CreatedAt = new DateTime(2020, 1, 31, 16, 34, 15, 324, DateTimeKind.Utc).AddTicks(207),
                             DisplayName = "User 3",
                             Email = "user3@test.ch",
                             PasswordHash = new byte[] { 194, 80, 251, 139, 60, 78, 94, 71, 158, 250, 144, 223, 172, 162, 67, 211, 126, 195, 180, 52, 243, 217, 140, 162, 208, 78, 100, 45, 28, 2, 245, 111 },

@@ -51,7 +51,7 @@ namespace ChatClient.Services
         {
             string id = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            return await _unitOfWork.UserRepository.GetById(int.Parse(id));
+            return await _unitOfWork.UserRepository.GetUserById(int.Parse(id));
         }
 
         public async Task<bool> IsEmailTaken(string email)
@@ -105,7 +105,7 @@ namespace ChatClient.Services
             while (await _unitOfWork.UserRepository.UserCodeExists(user.UserCode));
 
             // Save user to database
-            await _unitOfWork.UserRepository.Add(user);
+            await _unitOfWork.UserRepository.AddUser(user);
             await _unitOfWork.Commit(); 
         }
     }

@@ -22,28 +22,39 @@ namespace ChatClient.Data.Repositories
                     .ThenInclude(gm => gm.ReceivedGroupMessages)
                         .ThenInclude(gm => gm.Message)
                             .ThenInclude(m => m.Author)
+                .Include(u => u.GroupMemberships)
+                    .ThenInclude(gm => gm.ReceivedGroupMessages)
+                        .ThenInclude(mr => mr.RecipientGroup)
                 .SingleOrDefaultAsync(u => u.UserId == userId);
-            
+
             IEnumerable<MessageRecipient> latestAuthoredMessages = Context.MessageRecipients
                 .Include(mr => mr.Message)
                 .ThenInclude(m => m.Author)
                 .Where(mr => mr.Message.AuthorId == user.UserId)
+                .AsEnumerable()
                 .GroupBy(mr => new { mr.RecipientUserId, mr.RecipientGroupId })
                 .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First());
 
             IEnumerable<MessageRecipient> latestReceivedPrivateMessages = user.ReceivedPrivateMessages
                 .GroupBy(mr => mr.Message.AuthorId)
-                .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First());
+                .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First())
+                .AsEnumerable();
 
             IEnumerable<MessageRecipient> latestReceivedGroupMessages = user.GroupMemberships
-                .Select(gm => gm.ReceivedGroupMessages.OrderByDescending(mr => mr.Message.CreatedAt).First());
+                .Select(gm => gm.ReceivedGroupMessages.OrderByDescending(mr => mr.Message.CreatedAt).First())
+                .AsEnumerable();
 
             // TODO private messages should group to authors id
             IEnumerable<MessageRecipient> latestMessages = latestAuthoredMessages
                 .Concat(latestReceivedPrivateMessages)
                 .Concat(latestReceivedGroupMessages)
                 .OrderByDescending(mr => mr.Message.CreatedAt)
-                .GroupBy(mr => new { mr.RecipientUserId, mr.RecipientGroupId })
+                .GroupBy(mr => new { 
+                    GroupMembershipId = mr.RecipientGroupId,
+                    UserId = mr.RecipientUserId == user.UserId 
+                        ? mr.Message.AuthorId 
+                        : mr.RecipientUserId, 
+                })
                 .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First());
 
             // CONSIDER try GroupJoin() instead of Concat() + GroupBy()
