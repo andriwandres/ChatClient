@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ChatClient.Core.Repositories
 {
-    public interface IMessageRepository : IRepository<Message>
+    public interface IMessageRepository
     {
 
     }

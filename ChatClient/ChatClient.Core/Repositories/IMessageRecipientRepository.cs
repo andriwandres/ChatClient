@@ -1,12 +1,10 @@
 ﻿using ChatClient.Core.Models.Domain;
-using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ChatClient.Core.Repositories
 {
-    public interface IMessageRecipientRepository : IRepository<MessageRecipient>
+    public interface IMessageRecipientRepository
     {
         Task<IEnumerable<MessageRecipient>> GetLatestMessages(int userId);
     }

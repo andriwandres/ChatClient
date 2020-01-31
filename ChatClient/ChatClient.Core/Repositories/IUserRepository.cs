@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ChatClient.Core.Repositories
 {
-    public interface IUserRepository : IRepository<User>
+    public interface IUserRepository
     {
         Task<bool> UserCodeExists(string code);
         Task<bool> IsEmailTaken(string email);

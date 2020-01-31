@@ -7,7 +7,7 @@ using System.Text;
 
 namespace ChatClient.Data.Repositories
 {
-    public class GroupRepository : Repository<Group>, IGroupRepository
+    public class GroupRepository : Repository<ChatContext>, IGroupRepository
     {
         public GroupRepository(ChatContext context) : base(context) { }
     }

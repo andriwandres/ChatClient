@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace ChatClient.Data.Repositories
 {
-    public class MessageRecipientRepository : Repository<MessageRecipient>, IMessageRecipientRepository
+    public class MessageRecipientRepository : Repository<ChatContext>, IMessageRecipientRepository
     {
         public MessageRecipientRepository(ChatContext context) : base(context) { }
 

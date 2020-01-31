@@ -5,7 +5,7 @@ using System.Text;
 
 namespace ChatClient.Core.Repositories
 {
-    public interface IGroupMembershipRepository : IRepository<GroupMembership>
+    public interface IGroupMembershipRepository
     {
     }
 }
