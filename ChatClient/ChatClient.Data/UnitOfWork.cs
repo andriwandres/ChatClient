@@ -15,6 +15,7 @@ namespace ChatClient.Data
         private MessageRepository _messageRepository;
         private GroupMembershipRepository _groupMembershipRepository;
         private MessageRecipientRepository _messageRecipientRepository;
+        private UserRelationshipRepository _userRelationshipRepository;
 
         public UnitOfWork(ChatContext context)
         {
@@ -35,6 +36,9 @@ namespace ChatClient.Data
 
         public IMessageRecipientRepository MessageRecipientRepository =>
             _messageRecipientRepository = _messageRecipientRepository ?? new MessageRecipientRepository(_context);
+        
+        public IUserRelationshipRepository UserRelationshipRepository =>
+            _userRelationshipRepository = _userRelationshipRepository ?? new UserRelationshipRepository(_context);
 
         public async Task<int> Commit()
         {

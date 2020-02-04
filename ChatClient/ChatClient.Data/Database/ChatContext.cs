@@ -32,6 +32,7 @@ namespace ChatClient.Data.Database
             builder.ApplyConfiguration(new MessageSeed());
             builder.ApplyConfiguration(new GroupMembershipSeed());
             builder.ApplyConfiguration(new MessageRecipientSeed());
+            builder.ApplyConfiguration(new UserRelationshipSeed());
         }
     }
 }

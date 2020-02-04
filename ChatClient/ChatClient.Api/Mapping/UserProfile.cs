@@ -2,6 +2,7 @@
 using ChatClient.Core.Models.Domain;
 using ChatClient.Core.Models.Dtos.Auth;
 using ChatClient.Core.Models.ViewModels.Auth;
+using ChatClient.Core.Models.ViewModels.Contact;
 
 namespace ChatClient.Api.Mapping
 {
@@ -16,6 +17,8 @@ namespace ChatClient.Api.Mapping
                 {
                     config.MapFrom((src, dest, member, context) => context.Items["Token"]);
                 });
+
+            CreateMap<User, ContactSearchViewModel>();
         }
     }
 }

@@ -150,10 +150,11 @@ namespace ChatClient.Api
             // Add Unit of Work
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
-            // Add services
+            // Add Service Layer Dependencies
             services.AddTransient<ICryptoService, CryptoService>();
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IMessageService, MessageService>();
+            services.AddTransient<IContactService, ContactService>();
 
             // Add Cross-Origin-Resource-Sharing
             services.AddCors();

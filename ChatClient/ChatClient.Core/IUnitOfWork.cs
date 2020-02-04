@@ -1,7 +1,5 @@
 ﻿using ChatClient.Core.Repositories;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ChatClient.Core
@@ -13,6 +11,7 @@ namespace ChatClient.Core
         IMessageRepository MessageRepository { get; }
         IGroupMembershipRepository GroupMembershipRepository { get; }
         IMessageRecipientRepository MessageRecipientRepository { get; }
+        IUserRelationshipRepository UserRelationshipRepository { get; }
         Task<int> Commit();
     }
 }

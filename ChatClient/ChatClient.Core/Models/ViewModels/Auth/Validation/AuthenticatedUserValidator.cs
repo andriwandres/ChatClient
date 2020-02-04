@@ -1,5 +1,4 @@
-﻿using ChatClient.Core.Models.ViewModels.Auth;
-using FluentValidation;
+﻿using FluentValidation;
 
 namespace ChatClient.Core.Models.ViewModels.Auth.Validation
 {

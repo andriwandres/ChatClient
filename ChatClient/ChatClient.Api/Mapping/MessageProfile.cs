@@ -1,10 +1,7 @@
 ﻿using AutoMapper;
 using ChatClient.Core.Models.Domain;
 using ChatClient.Core.Models.ViewModels.Message;
-using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ChatClient.Api.Mapping
 {
@@ -42,7 +39,6 @@ namespace ChatClient.Api.Mapping
                     {
                         UserId = mr.RecipientUser.UserId,
                         DisplayName = mr.RecipientUser.DisplayName,
-                        IsOnline = true, // TODO refactor
                     });
                 })
                 .ForMember(vm => vm.GroupRecipient, config =>

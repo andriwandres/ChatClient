@@ -27,12 +27,13 @@ namespace ChatClient.Data.Configurations
 
             builder.HasOne(ur => ur.Initiator)
                 .WithMany(u => u.InitiatedUserRelationships)
-                .HasForeignKey(ur => ur.InitiatorId);
+                .HasForeignKey(ur => ur.InitiatorId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(ur => ur.Target)
                 .WithMany(u => u.TargetedUserRelationships)
-                .HasForeignKey(ur => ur.TargetId);
-            
+                .HasForeignKey(ur => ur.TargetId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
