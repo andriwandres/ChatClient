@@ -1,0 +1,48 @@
+@import '~@angular/material/theming';
+
+$primary-color: (
+  50: #4B71BB,
+  100: #4B71BB,
+  200: #4B71BB,
+  300: #4B71BB,
+  400: #4B71BB,
+  500: #4B71BB,
+  600: #4B71BB,
+  700: #4B71BB,
+  800: #4B71BB,
+  900: #4B71BB,
+  A100: #4B71BB,
+  A200: #4B71BB,
+  A400: #4B71BB,
+  A700: #4B71BB,
+  contrast: (
+    50: white,
+    100: white,
+    200: white,
+    300: white,
+    400: white,
+    500: white,
+    600: white,
+    700: white,
+    800: white,
+    900: white,
+    A100: white,
+    A200: white,
+    A400: white,
+    A700: white,
+  )
+);
+
+@include mat-core();
+
+$chat-client-primary: mat-palette($primary-color);
+$chat-client-accent: mat-palette($mat-blue-gray, 500);
+$chat-client-warn: mat-palette($mat-red);
+
+$chat-client-theme: mat-light-theme(
+  $chat-client-primary,
+  $chat-client-accent,
+  $chat-client-warn
+);
+
+@include angular-material-theme($chat-client-theme);
