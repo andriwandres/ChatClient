@@ -14,51 +14,69 @@ namespace ChatClient.Data.Repositories
 
         public async Task<IEnumerable<MessageRecipient>> GetLatestMessages(int userId)
         {
+            // Get the user with his related messages/groups
             User user = await Context.Users
                 .Include(u => u.ReceivedPrivateMessages)
                     .ThenInclude(mr => mr.Message)
                         .ThenInclude(m => m.Author)
+
+                .Include(u => u.GroupMemberships)
+                    .ThenInclude(gm => gm.Group)
+
+                .Include(u => u.GroupMemberships)
+                    .ThenInclude(gm => gm.ReceivedGroupMessages)
+
                 .Include(u => u.GroupMemberships)
                     .ThenInclude(gm => gm.ReceivedGroupMessages)
                         .ThenInclude(gm => gm.Message)
                             .ThenInclude(m => m.Author)
-                .Include(u => u.GroupMemberships)
-                    .ThenInclude(gm => gm.ReceivedGroupMessages)
-                        .ThenInclude(mr => mr.RecipientGroup)
+
                 .SingleOrDefaultAsync(u => u.UserId == userId);
 
+            // Get latest messages from the user itself
             IEnumerable<MessageRecipient> latestAuthoredMessages = Context.MessageRecipients
+                .Include(mr => mr.RecipientGroup)
                 .Include(mr => mr.Message)
                 .ThenInclude(m => m.Author)
                 .Where(mr => mr.Message.AuthorId == user.UserId)
-                .AsEnumerable()
-                .GroupBy(mr => new { mr.RecipientUserId, mr.RecipientGroupId })
+                .ToList()
+                .GroupBy(mr => new {
+                    UserId = mr.RecipientUserId == user.UserId
+                        ? mr.Message.AuthorId
+                        : mr.RecipientUserId,
+                    GroupId = mr.RecipientGroup == null
+                        ? null
+                        : (int?) mr.RecipientGroup.GroupId
+                })
                 .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First());
 
+            // Get latest messages that the user received through private chats
             IEnumerable<MessageRecipient> latestReceivedPrivateMessages = user.ReceivedPrivateMessages
                 .GroupBy(mr => mr.Message.AuthorId)
                 .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First())
                 .AsEnumerable();
 
+            // Get latest messages that the user received through group chats
             IEnumerable<MessageRecipient> latestReceivedGroupMessages = user.GroupMemberships
                 .Select(gm => gm.ReceivedGroupMessages.OrderByDescending(mr => mr.Message.CreatedAt).First())
                 .AsEnumerable();
 
-            // TODO private messages should group to authors id
+            // Union messages together and group them
             IEnumerable<MessageRecipient> latestMessages = latestAuthoredMessages
                 .Concat(latestReceivedPrivateMessages)
                 .Concat(latestReceivedGroupMessages)
                 .OrderByDescending(mr => mr.Message.CreatedAt)
-                .GroupBy(mr => new { 
-                    GroupMembershipId = mr.RecipientGroupId,
-                    UserId = mr.RecipientUserId == user.UserId 
-                        ? mr.Message.AuthorId 
-                        : mr.RecipientUserId, 
+                .GroupBy(mr => new
+                {
+                    UserId = mr.RecipientUserId == user.UserId
+                        ? mr.Message.AuthorId
+                        : mr.RecipientUserId,
+                    GroupId = mr.RecipientGroup == null
+                        ? null
+                        : (int?)mr.RecipientGroup.GroupId
                 })
                 .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First());
-
-            // CONSIDER try GroupJoin() instead of Concat() + GroupBy()
-
+            
             return latestMessages;
         }
     }
