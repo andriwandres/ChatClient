@@ -43,6 +43,12 @@ namespace ChatClient.Data.Configurations
 
             builder.HasMany(user => user.ReceivedPrivateMessages)
                 .WithOne(recipient => recipient.RecipientUser);
+
+            builder.HasMany(user => user.TargetedUserRelationships)
+                .WithOne(relationship => relationship.Target);
+
+            builder.HasMany(user => user.InitiatedUserRelationships)
+                .WithOne(relationship => relationship.Initiator);
         }
     }
 }

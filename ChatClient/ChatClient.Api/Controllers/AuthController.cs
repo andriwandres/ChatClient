@@ -1,14 +1,9 @@
-﻿using ChatClient.Core.Models.Domain;
-using ChatClient.Core.Models.Dtos.Auth;
+﻿using ChatClient.Core.Models.Dtos.Auth;
 using ChatClient.Core.Models.ViewModels.Auth;
 using ChatClient.Core.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace ChatClient.Api.Controllers
@@ -81,17 +76,6 @@ namespace ChatClient.Api.Controllers
             AuthenticatedUser user = await _authService.Login(credentials);
 
             return Ok(user);
-        }
-
-        [HttpGet("Test")]
-        [Authorize]
-        public async Task<ActionResult> Test()
-        {
-            User user = await _authService.GetUser();
-
-            string pw = Convert.ToBase64String(user.PasswordSalt);
-
-            return Ok(pw);
         }
     }
 }

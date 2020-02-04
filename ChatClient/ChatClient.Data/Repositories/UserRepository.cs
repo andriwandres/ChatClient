@@ -15,6 +15,13 @@ namespace ChatClient.Data.Repositories
             await Context.Users.AddAsync(user);
         }
 
+        public async Task<User> GetUserByCode(string code)
+        {
+            code = code.ToUpper();
+
+            return await Context.Users.SingleOrDefaultAsync(user => user.UserCode == code);
+        }
+
         public async Task<User> GetUserByEmail(string email)
         {
             email = email.ToLower();

@@ -76,7 +76,7 @@ namespace ChatClient.Data.Repositories
                         : (int?)mr.RecipientGroup.GroupId
                 })
                 .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First());
-            
+
             return latestMessages;
         }
     }

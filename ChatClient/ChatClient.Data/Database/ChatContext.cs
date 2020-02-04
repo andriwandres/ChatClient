@@ -9,8 +9,9 @@ namespace ChatClient.Data.Database
     {
         public DbSet<User> Users { get; set; }
         public DbSet<Group> Groups { get; set; }
-        public DbSet<GroupMembership> GroupMemberships { get; set; }
         public DbSet<Message> Messages { get; set; }
+        public DbSet<UserRelationship> UserRelationships { get; set; }
+        public DbSet<GroupMembership> GroupMemberships { get; set; }
         public DbSet<MessageRecipient> MessageRecipients { get; set; }
 
         public ChatContext(DbContextOptions<ChatContext> options) : base(options) { }
@@ -23,6 +24,7 @@ namespace ChatClient.Data.Database
             builder.ApplyConfiguration(new GroupMembershipConfiguration());
             builder.ApplyConfiguration(new MessageConfiguration());
             builder.ApplyConfiguration(new MessageRecipientConfiguration());
+            builder.ApplyConfiguration(new UserRelationshipConfiguration());
 
             // Data Seeds
             builder.ApplyConfiguration(new UserSeed());

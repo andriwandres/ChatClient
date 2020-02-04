@@ -16,5 +16,7 @@ namespace ChatClient.Core.Models.Domain
         public ICollection<Message> AuthoredMessages { get; set; }
         public ICollection<GroupMembership> GroupMemberships { get; set; }
         public ICollection<MessageRecipient> ReceivedPrivateMessages { get; set; }
+        public ICollection<UserRelationship> TargetedUserRelationships { get; set; }
+        public ICollection<UserRelationship> InitiatedUserRelationships { get; set; }
     }
 }
