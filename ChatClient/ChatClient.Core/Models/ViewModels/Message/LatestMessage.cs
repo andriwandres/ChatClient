@@ -8,6 +8,7 @@ namespace ChatClient.Core.Models.ViewModels.Message
         public bool IsRead { get; set; }
         public int UnreadMessagesCount { get; set; }
         public string TextContent { get; set; }
+        public int AuthorId { get; set; }
         public string AuthorName { get; set; }
         public DateTime CreatedAt { get; set; } 
 

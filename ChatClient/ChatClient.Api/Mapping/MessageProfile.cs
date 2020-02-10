@@ -24,6 +24,10 @@ namespace ChatClient.Api.Mapping
                 {
                     config.MapFrom(mr => mr.Message.TextContent);
                 })
+                .ForMember(vm => vm.AuthorId, config =>
+                {
+                    config.MapFrom(mr => mr.Message.AuthorId);
+                })
                 .ForMember(vm => vm.AuthorName, config =>
                 {
                     config.MapFrom(mr => mr.Message.Author.DisplayName);
