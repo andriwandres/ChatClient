@@ -1,13 +1,13 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SidenavComponent } from './sidenav.component';
+import { ContactsComponent } from './contacts.component';
 
 
 
 @NgModule({
-  declarations: [SidenavComponent],
+  declarations: [ContactsComponent],
   imports: [
     CommonModule
   ]
 })
-export class SidenavModule { }
+export class ContactsModule { }
