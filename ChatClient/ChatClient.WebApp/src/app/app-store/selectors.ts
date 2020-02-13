@@ -5,7 +5,7 @@ import { LatestMessagesStoreSelectors } from './latest-messages-store';
 export const selectLoading = createSelector(
   AuthStoreSelectors.selectLoading,
   LatestMessagesStoreSelectors.selectLoading,
-  (...errors) => errors.some(Boolean),
+  (...indicators) => indicators.some(Boolean),
 );
 
 export const selectError = createSelector(
