@@ -14,9 +14,7 @@ export class AuthService {
   authenticate(): Observable<AuthenticatedUser> {
     const url = `${environment.api.auth}/Authenticate`;
 
-    return this.http.get<AuthenticatedUser>(url).pipe(
-      retry(2)
-    );
+    return this.http.get<AuthenticatedUser>(url);
   }
 
   login(credentials: LoginDto): Observable<AuthenticatedUser> {
@@ -32,7 +30,7 @@ export class AuthService {
   }
 
   checkEmailTaken(email: string): Observable<boolean> {
-    const url = `${environment.api.auth}/CheckEmailTaken`;
+    const url = `${environment.api.auth}/IsEmailTaken`;
     const options = { params: new HttpParams().set('email', email) };
 
     return this.http.get<boolean>(url, options).pipe(

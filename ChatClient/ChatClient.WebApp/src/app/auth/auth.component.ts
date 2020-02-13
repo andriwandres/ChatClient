@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppStoreState } from '../app-store';
+import { AuthStoreActions } from '../app-store/auth-store';
 
 @Component({
   selector: 'app-auth',
@@ -6,10 +9,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
+  constructor(private readonly store$: Store<AppStoreState.State>) { }
 
-  constructor() { }
-
-  ngOnInit() {
+  ngOnInit(): void {
+    this.store$.dispatch(AuthStoreActions.authenticate());
   }
-
 }

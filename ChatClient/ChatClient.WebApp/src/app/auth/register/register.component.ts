@@ -3,9 +3,9 @@ import { ChangeDetectionStrategy, Component, OnInit, HostBinding, OnDestroy } fr
 import { Subject } from 'rxjs';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { takeUntil, distinctUntilChanged, debounceTime, skipWhile } from 'rxjs/operators';
-import { Store } from '@ngrx/store';
+import { Store, select } from '@ngrx/store';
 import { AppStoreState } from 'src/app/app-store';
-import { AuthStoreActions } from 'src/app/app-store/auth-store';
+import { AuthStoreActions, AuthStoreSelectors } from 'src/app/app-store/auth-store';
 import { MustMatch } from './password-match.validator';
 import { RegisterDto } from 'src/models/auth/register';
 
@@ -28,6 +28,16 @@ export class RegisterComponent implements OnInit, OnDestroy {
   @HostBinding('@fadeIn') readonly animationBinding: string;
 
   private readonly destroy$ = new Subject<void>();
+
+  readonly emailTaken$ = this.store$.pipe(
+    select(AuthStoreSelectors.selectEmailTaken),
+    takeUntil(this.destroy$),
+  );
+
+  readonly isLoading$ = this.store$.pipe(
+    select(AuthStoreSelectors.selectLoading),
+    takeUntil(this.destroy$),
+  );
 
   readonly form = new FormGroup({
     displayName: new FormControl('', [

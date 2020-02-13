@@ -13,7 +13,10 @@ export class AuthEffects {
     ofType(authActions.authenticate),
     exhaustMap(() => this.authService.authenticate().pipe(
       map(user => authActions.authenticateSuccess({ user })),
-      catchError(error => of(authActions.authenticateFailure({ error }))),
+      tap(() => this.router.navigate([''])),
+      catchError(error => of(authActions.authenticateFailure({ error })).pipe(
+        tap(() => this.router.navigate['/auth/login'])
+      )),
     )),
   ));
 
