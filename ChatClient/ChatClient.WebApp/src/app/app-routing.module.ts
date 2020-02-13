@@ -7,9 +7,9 @@ const routes: Routes = [
     loadChildren: () => import('./auth/auth.module').then(m => m.AuthModule)
   },
   {
-    path: '',
+    path: 'chats',
     pathMatch: 'full',
-    redirectTo: 'auth'
+    loadChildren: () => import('./chats/chats.module').then(m => m.ChatsModule),
   }
 ];
 
