@@ -5,6 +5,7 @@ import { catchError, exhaustMap, map, switchMap, tap } from 'rxjs/operators';
 import { AuthService } from 'src/app/core/auth.service';
 import * as authActions from './actions';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Injectable()
 export class AuthEffects {
@@ -29,6 +30,15 @@ export class AuthEffects {
     ofType(authActions.register),
     switchMap(action => this.authService.register(action.credentials).pipe(
       map(() => authActions.registerSuccess()),
+      tap(() => {
+        this.snackbar.open('Your account has been created', 'Dismiss', {
+          duration: 3000,
+          verticalPosition: 'bottom',
+          horizontalPosition: 'right',
+        });
+
+        this.router.navigate(['/auth/login']);
+      }),
       catchError(error => of(authActions.registerFailure({ error }))),
     )),
   ));
@@ -43,6 +53,7 @@ export class AuthEffects {
 
   constructor(
     private readonly router: Router,
+    private readonly snackbar: MatSnackBar,
     private readonly authService: AuthService,
     private readonly actions$: Actions<authActions.AuthActionUnion>,
   ) {}

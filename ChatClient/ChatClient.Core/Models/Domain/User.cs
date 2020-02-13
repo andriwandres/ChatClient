@@ -6,6 +6,7 @@ namespace ChatClient.Core.Models.Domain
     public class User
     {
         public int UserId { get; set; }
+        public int? ProfileImageId { get; set; }
         public string UserCode { get; set; }
         public string DisplayName { get; set; }
         public string Email { get; set; }
@@ -13,6 +14,7 @@ namespace ChatClient.Core.Models.Domain
         public byte[] PasswordSalt { get; set; }
         public DateTime CreatedAt { get; set; }
 
+        public DisplayImage ProfileImage { get; set; }
         public ICollection<Message> AuthoredMessages { get; set; }
         public ICollection<GroupMembership> GroupMemberships { get; set; }
         public ICollection<MessageRecipient> ReceivedPrivateMessages { get; set; }

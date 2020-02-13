@@ -19,6 +19,9 @@ namespace ChatClient.Data.Configurations
             builder.Property(group => group.CreatedAt)
                 .IsRequired();
 
+            builder.HasOne(group => group.GroupImage)
+                .WithOne(di => di.Group);
+
             builder.HasMany(group => group.GroupMemberships)
                 .WithOne(membership => membership.Group);
         }

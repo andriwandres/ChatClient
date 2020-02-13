@@ -35,6 +35,9 @@ namespace ChatClient.Data.Configurations
             builder.Property(user => user.CreatedAt)
                 .IsRequired();
 
+            builder.HasOne(user => user.ProfileImage)
+                .WithOne(di => di.User);
+
             builder.HasMany(user => user.AuthoredMessages)
                 .WithOne(message => message.Author);
 

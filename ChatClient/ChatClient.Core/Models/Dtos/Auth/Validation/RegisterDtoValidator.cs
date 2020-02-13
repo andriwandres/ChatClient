@@ -16,6 +16,7 @@ namespace ChatClient.Core.Models.Dtos.Validation
 
             RuleFor(register => register.Password)
                 .NotEmpty()
+                .MinimumLength(8)
                 .Matches(@"^\S+$");
         }
     }
