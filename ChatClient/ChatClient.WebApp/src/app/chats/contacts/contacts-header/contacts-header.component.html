@@ -1,1 +1,16 @@
-<p>contacts-header works!</p>
+<!-- Menu Button -->
+<button mat-icon-button id="menu-button" (click)="menuClick.emit()" matTooltip="Collapse" matTooltipShowDelay="300" matTooltipPosition="below">
+  <mat-icon>menu</mat-icon>
+</button>
+
+<span id="heading">Chats</span>
+
+<!-- Input to filter Contacts -->
+<input id="search-bar" placeholder="Search..." autocomplete="off" [formControl]="searchControl">
+
+<span id="spacer"></span>
+
+<!-- Add Chat Button -->
+<button mat-icon-button id="add-button" (click)="addClick.emit()" matTooltip="New Chat" matTooltipShowDelay="300" matTooltipPosition="before">
+  <mat-icon>add</mat-icon>
+</button>
