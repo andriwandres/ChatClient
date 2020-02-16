@@ -5,18 +5,17 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ContactsHeaderComponent } from './contacts-header.component';
+import { SidenavHeaderComponent } from './sidenav-header.component';
 
 @NgModule({
-  declarations: [ContactsHeaderComponent],
+  declarations: [SidenavHeaderComponent],
   imports: [
     CommonModule,
     MatToolbarModule,
-    MatButtonModule,
-    MatIconModule,
     MatTooltipModule,
-    ReactiveFormsModule,
-  ],
-  exports: [ContactsHeaderComponent]
+    MatIconModule,
+    MatButtonModule,
+    ReactiveFormsModule
+  ]
 })
-export class ContactsHeaderModule { }
+export class SidenavHeaderModule { }

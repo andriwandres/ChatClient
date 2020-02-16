@@ -1,0 +1,57 @@
+
+:host {
+  display: flex;
+  flex-direction: row;
+  background-color: white;
+  padding: 10px;
+  position: relative;
+  outline: none;
+  border-bottom: 1px solid #ddd;
+  cursor: pointer;
+
+  &:hover, &:focus {
+    background-color: darken(white, 10%);
+  }
+}
+
+#row-content {
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.text-row {
+  padding: 0 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+#unread-messages-badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #F44336;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  color: white;
+  font-size: 15px;
+  user-select: none;
+}
+
+#last-message, #last-message-timestamp {
+  color: #878787;
+  font-size: 15px;
+}
+
+#active-strip {
+  background-color: #4B71BB;
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 7px;
+}

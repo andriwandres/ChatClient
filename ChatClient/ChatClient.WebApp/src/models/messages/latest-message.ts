@@ -7,6 +7,7 @@ export interface LatestMessage {
   authorId: number;
   authorName: string;
   createdAt: Date;
+  image: Blob;
 
   userRecipient: RecipientUser;
   groupRecipient: RecipientGroup;

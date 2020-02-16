@@ -2,11 +2,11 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
 
 @Component({
-  selector: 'app-contacts-header',
-  templateUrl: './contacts-header.component.html',
-  styleUrls: ['./contacts-header.component.scss']
+  selector: 'app-sidenav-header',
+  templateUrl: './sidenav-header.component.html',
+  styleUrls: ['./sidenav-header.component.scss']
 })
-export class ContactsHeaderComponent {
+export class SidenavHeaderComponent {
   @Output() readonly addClick = new EventEmitter<void>(true);
   @Output() readonly menuClick = new EventEmitter<void>(true);
 
