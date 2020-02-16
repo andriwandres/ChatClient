@@ -15,6 +15,11 @@ export const selectError = createSelector(
   (state) => state.error,
 );
 
+export const selectActiveMessage  = createSelector(
+  selectLatestMessagesState,
+  (state) => state.activeMessage
+);
+
 export const {
   selectAll,
   selectEntities,

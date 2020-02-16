@@ -1,5 +1,6 @@
 
 export interface LatestMessage {
+  messageRecipientId: number;
   messageId: number;
   isRead: boolean;
   unreadMessagesCount: number;

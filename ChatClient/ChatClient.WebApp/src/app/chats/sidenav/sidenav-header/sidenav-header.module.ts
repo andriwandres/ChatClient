@@ -11,7 +11,6 @@ import { SidenavHeaderComponent } from './sidenav-header.component';
   declarations: [SidenavHeaderComponent],
   imports: [
     CommonModule,
-    MatToolbarModule,
     MatTooltipModule,
     MatIconModule,
     MatButtonModule,

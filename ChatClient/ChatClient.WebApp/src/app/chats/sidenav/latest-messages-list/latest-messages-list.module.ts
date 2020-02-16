@@ -8,7 +8,6 @@ import { LatestMessagesListComponent } from './latest-messages-list.component';
   declarations: [LatestMessagesListComponent],
   imports: [
     CommonModule,
-    MatDividerModule,
     LatestMessageModule
   ],
   exports: [LatestMessagesListComponent]

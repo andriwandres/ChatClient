@@ -4,13 +4,15 @@ namespace ChatClient.Core.Models.ViewModels.Message
 {
     public class LatestMessage
     {
+        public int MessageRecipientId { get; set; }
         public int MessageId { get; set; }
         public bool IsRead { get; set; }
         public int UnreadMessagesCount { get; set; }
         public string TextContent { get; set; }
         public int AuthorId { get; set; }
         public string AuthorName { get; set; }
-        public DateTime CreatedAt { get; set; } 
+        public byte[] Image { get; set; }
+        public DateTime CreatedAt { get; set; }
 
         public RecipientUser UserRecipient { get; set; }
         public RecipientGroup GroupRecipient { get; set; }

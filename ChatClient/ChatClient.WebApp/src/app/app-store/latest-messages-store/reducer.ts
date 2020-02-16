@@ -4,6 +4,8 @@ import { initialState, latestMessagesAdapter, State } from './state';
 
 const reducer = createReducer(
   initialState,
+
+  // Load Latest Messages
   on(latestMessagesActions.loadLatestMessages, (state) => {
     return {
       ...state,
@@ -23,6 +25,14 @@ const reducer = createReducer(
       ...state,
       isLoading: false,
       error,
+    };
+  }),
+
+  // Select Active Message
+  on(latestMessagesActions.selectActiveMessage, (state, { message }) => {
+    return {
+      ...state,
+      activeMessage: message,
     };
   })
 );
