@@ -1,0 +1,10 @@
+<!-- User Avatar -->
+<div id="avatar">
+  <ng-container [ngSwitch]="showOnlineIndicator">
+    <div *ngSwitchCase="true" id="image" [style.borderColor]="user.online ? '#8AB979' : '#932B2B'">
+      <div id="online-indicator" [style.backgroundColor]="user.online ? '#8AB979' : '#932B2B'"></div>
+    </div>
+
+    <div *ngSwitchCase="false" id="image"></div>
+  </ng-container>
+</div>
