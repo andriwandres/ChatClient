@@ -12,14 +12,14 @@ namespace ChatClient.Data.Repositories
     {
         public MessageRecipientRepository(ChatContext context) : base(context) { }
 
-        public async Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int recipientUserId)
+        public async Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int recipientId)
         {
             IEnumerable<MessageRecipient> messages = await Context.MessageRecipients
                 .Include(mr => mr.Message)
                 .ThenInclude(m => m.Author)
                 .Where(mr =>
-                    (mr.Message.AuthorId == userId && mr.RecipientUserId == recipientUserId) ||
-                    (mr.Message.AuthorId == recipientUserId && mr.RecipientUserId == userId)
+                    (mr.Message.AuthorId == userId && mr.RecipientUserId == recipientId) ||
+                    (mr.Message.AuthorId == recipientId && mr.RecipientUserId == userId)
                 )
                 .ToListAsync();
 

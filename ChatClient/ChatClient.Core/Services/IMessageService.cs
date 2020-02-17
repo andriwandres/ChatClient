@@ -7,5 +7,7 @@ namespace ChatClient.Core.Services
     public interface IMessageService
     {
         Task<IEnumerable<MessageRecipient>> GetLatestMessages();
+        Task<IEnumerable<MessageRecipient>> GetGroupMessages(int userId, int groupId);
+        Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int recipientId);
     }
 }

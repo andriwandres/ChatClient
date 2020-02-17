@@ -54,6 +54,25 @@ namespace ChatClient.Api.Mapping
                         Name = mr.RecipientGroup.Group.Name,
                     });
                 });
+
+            CreateMap<MessageRecipient, ChatMessage>()
+                .ForMember(vm => vm.AuthorName, config =>
+                {
+                    config.MapFrom(mr => mr.Message.Author.DisplayName);
+                })
+                .ForMember(vm => vm.TextContent, config =>
+                {
+                    config.MapFrom(mr => mr.Message.TextContent);
+                })
+                .ForMember(vm => vm.CreatedAt, config =>
+                {
+                    config.MapFrom(mr => mr.Message.CreatedAt);
+                })
+                .ForMember(vm => vm.IsOwnMessage, config =>
+                {
+                    config.MapFrom((source, destination, member, context) => 
+                        source.Message.AuthorId == (int)context.Items["UserId"]);
+                });
         }
     }
 }

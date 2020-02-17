@@ -8,6 +8,6 @@ namespace ChatClient.Core.Repositories
     {
         Task<IEnumerable<MessageRecipient>> GetLatestMessages(int userId);
         Task<IEnumerable<MessageRecipient>> GetGroupMessages(int userId, int groupId);
-        Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int recipientUserId);
+        Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int recipientId);
     }
 }

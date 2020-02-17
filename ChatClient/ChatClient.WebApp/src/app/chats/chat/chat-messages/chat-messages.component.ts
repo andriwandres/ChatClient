@@ -1,15 +1,21 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { AppStoreState } from 'src/app/app-store';
 
 @Component({
   selector: 'app-chat-messages',
   templateUrl: './chat-messages.component.html',
   styleUrls: ['./chat-messages.component.scss']
 })
-export class ChatMessagesComponent implements OnInit {
+export class ChatMessagesComponent implements OnInit, OnDestroy {
 
-  constructor() { }
+  constructor(private readonly store$: Store<AppStoreState.State>) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
+
   }
 
+  ngOnDestroy(): void {
+
+  }
 }

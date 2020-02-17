@@ -17,11 +17,21 @@ namespace ChatClient.Services
             _authService = authService;
         }
 
+        public async Task<IEnumerable<MessageRecipient>> GetGroupMessages(int userId, int groupId)
+        {
+            return await _unitOfWork.MessageRecipientRepository.GetGroupMessages(userId, groupId);
+        }
+
         public async Task<IEnumerable<MessageRecipient>> GetLatestMessages()
         {
             User user = await _authService.GetUser();
 
             return await _unitOfWork.MessageRecipientRepository.GetLatestMessages(user.UserId);
+        }
+
+        public async Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int recipientId)
+        {
+            return await _unitOfWork.MessageRecipientRepository.GetPrivateMessages(userId, recipientId);
         }
     }
 }
