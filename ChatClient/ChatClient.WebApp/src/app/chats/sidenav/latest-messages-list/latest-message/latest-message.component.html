@@ -1,8 +1,8 @@
 <!-- Strip when Chat is active -->
 <div id="active-strip" *ngIf="isActive"></div>
 
-<!-- User Avatar -->
-<app-user-avatar [image]="latestMessage.image"></app-user-avatar>
+<!-- User Profile Image or Group image -->
+<app-display-image [image]="latestMessage.image"></app-display-image>
 
 <div id="row-content">
   <!-- Contact Name + Timestamp -->

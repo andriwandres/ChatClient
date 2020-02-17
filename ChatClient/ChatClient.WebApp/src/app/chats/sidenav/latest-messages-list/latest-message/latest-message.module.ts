@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { ChatTimestampModule } from 'src/app/shared/chat-timestamp/chat-timestamp.module';
-import { UserAvatarModule } from 'src/app/shared/user-avatar/user-avatar.module';
+import { DisplayImageModule } from 'src/app/shared/display-image/display-image.module';
 import { LatestMessageComponent } from './latest-message.component';
 
 @NgModule({
@@ -9,7 +9,7 @@ import { LatestMessageComponent } from './latest-message.component';
   imports: [
     CommonModule,
     ChatTimestampModule,
-    UserAvatarModule
+    DisplayImageModule
   ],
   exports: [LatestMessageComponent]
 })
