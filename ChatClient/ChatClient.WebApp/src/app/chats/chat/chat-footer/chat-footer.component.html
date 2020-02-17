@@ -1,0 +1,12 @@
+<!-- Attach File Button -->
+<button mat-icon-button id="attach-button" matTooltip="Attach file" matTooltipShowDelay="300" (click)="attachFile.emit($event)">
+  <mat-icon>attach_file</mat-icon>
+</button>
+
+<!-- Message Input -->
+<input type="text" id="message-input" placeholder="Write a Message..." [formControl]="messageControl">
+
+<!-- Send Button -->
+<button mat-icon-button id="send-button" matTooltip="Send" matTooltipShowDelay="300" [disabled]="messageControl.invalid" (click)="sendMessage.emit($event)">
+  <mat-icon [class.disabled]="messageControl.invalid">send</mat-icon>
+</button>

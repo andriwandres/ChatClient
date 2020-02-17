@@ -3,19 +3,18 @@ import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { SidenavHeaderComponent } from './sidenav-header.component';
+import { ChatFooterComponent } from './chat-footer.component';
 
 @NgModule({
-  declarations: [SidenavHeaderComponent],
+  declarations: [ChatFooterComponent],
   imports: [
     CommonModule,
-    MatTooltipModule,
-    MatIconModule,
     MatButtonModule,
-    ReactiveFormsModule
+    MatIconModule,
+    MatTooltipModule,
+    ReactiveFormsModule,
   ],
-  exports: [SidenavHeaderComponent]
+  exports: [ChatFooterComponent]
 })
-export class SidenavHeaderModule { }
+export class ChatFooterModule { }

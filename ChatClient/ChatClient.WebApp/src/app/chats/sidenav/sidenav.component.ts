@@ -9,7 +9,15 @@ export class SidenavComponent implements OnInit {
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit(): void {
+
   }
 
+  onAddClick(): void {
+
+  }
+
+  onMenuClick(): void {
+
+  }
 }

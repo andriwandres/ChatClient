@@ -1,14 +1,14 @@
 <ng-container *ngIf="messages$ | async as messages">
 
-  <!-- List of Contacts -->
-  <app-contacts-row
+  <!-- List of Latest Messages -->
+  <app-latest-message
     *ngFor="let message of messages; trackBy: trackByFn"
     [message]="message"
     [isActive]="(activeMessage$ | async) === message"
     (click)="setActiveMessage(message)"
     (keydown.enter)="setActiveMessage(message)"
     (keydown.space)="setActiveMessage(message)">
-  </app-contacts-row>
+  </app-latest-message>
 
   <!-- No Message -->
   <p id="no-messages" *ngIf="messages.length === 0">
