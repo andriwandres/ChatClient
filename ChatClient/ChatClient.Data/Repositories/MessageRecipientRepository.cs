@@ -12,6 +12,34 @@ namespace ChatClient.Data.Repositories
     {
         public MessageRecipientRepository(ChatContext context) : base(context) { }
 
+        public async Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int recipientUserId)
+        {
+            IEnumerable<MessageRecipient> messages = await Context.MessageRecipients
+                .Include(mr => mr.Message)
+                .ThenInclude(m => m.Author)
+                .Where(mr =>
+                    (mr.Message.AuthorId == userId && mr.RecipientUserId == recipientUserId) ||
+                    (mr.Message.AuthorId == recipientUserId && mr.RecipientUserId == userId)
+                )
+                .ToListAsync();
+
+            return messages;
+        }
+
+        public async Task<IEnumerable<MessageRecipient>> GetGroupMessages(int userId, int groupId)
+        {
+            IEnumerable<MessageRecipient> messages = await Context.MessageRecipients
+                .Include(mr => mr.RecipientGroup)
+                .Where(mr => 
+                    mr.RecipientGroup != null && 
+                    mr.RecipientGroup.GroupId == groupId && 
+                    mr.RecipientGroup.UserId == userId
+                )
+                .ToListAsync();
+
+            return messages;
+        }
+
         public async Task<IEnumerable<MessageRecipient>> GetLatestMessages(int userId)
         {
             // Get the user with his related messages/groups
@@ -60,7 +88,7 @@ namespace ChatClient.Data.Repositories
             IEnumerable<MessageRecipient> latestReceivedGroupMessages = user.GroupMemberships
                 .Select(gm => gm.ReceivedGroupMessages.OrderByDescending(mr => mr.Message.CreatedAt).First())
                 .AsEnumerable();
-
+            
             // Union messages together and group them
             IEnumerable<MessageRecipient> latestMessages = latestAuthoredMessages
                 .Concat(latestReceivedPrivateMessages)

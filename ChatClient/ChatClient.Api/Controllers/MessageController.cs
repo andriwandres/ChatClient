@@ -25,12 +25,19 @@ namespace ChatClient.Api.Controllers
 
         [Authorize]
         [HttpGet("GetLatestMessages")]
-        public async Task<ActionResult> GetLatestMessages()
+        public async Task<ActionResult<IEnumerable<LatestMessage>>> GetLatestMessages()
         {
             IEnumerable<MessageRecipient> latestMessages = await _messageService.GetLatestMessages();
             IEnumerable<LatestMessage> viewModels = _mapper.Map<IEnumerable<LatestMessage>>(latestMessages);
 
             return Ok(viewModels);
+        }
+
+        public async Task<ActionResult> GetMessages()
+        {
+
+
+            return NoContent();
         }
     }
 }

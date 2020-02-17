@@ -1,15 +1,11 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-chat-header',
   templateUrl: './chat-header.component.html',
   styleUrls: ['./chat-header.component.scss']
 })
-export class ChatHeaderComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit() {
-
-  }
+export class ChatHeaderComponent {
+  @Input() isOnline: boolean;
+  @Input() contactName: string;
 }

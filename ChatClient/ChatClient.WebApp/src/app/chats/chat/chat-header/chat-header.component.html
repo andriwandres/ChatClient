@@ -1,10 +1,10 @@
-<!-- User Avatar -->
+<!-- User Profile Image or Group Image -->
 <app-display-image [image]="contact"></app-display-image>
 
 <!-- Contact Information -->
 <div id="text-row">
-  <span id="contact-name">Rocco Shaffer</span>
-  <span id="online-indicator-text">Online</span>
+  <span id="contact-name"> {{ contactName }} </span>
+  <span id="online-indicator-text"> {{ isOnline ? 'Online' : 'Offline' }} </span>
 </div>
 
 <!-- More Button -->
