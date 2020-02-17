@@ -25,6 +25,12 @@ namespace ChatClient.Api.Controllers
             _messageService = messageService;
         }
 
+        /// <summary>
+        ///     Gets the latest messages for a user grouped by private chats and group chats
+        /// </summary>
+        /// <returns>
+        ///     Latest messages of a user
+        /// </returns>
         [Authorize]
         [HttpGet("GetLatestMessages")]
         public async Task<ActionResult<IEnumerable<LatestMessage>>> GetLatestMessages()
@@ -35,6 +41,15 @@ namespace ChatClient.Api.Controllers
             return Ok(viewModels);
         }
 
+        /// <summary>
+        ///     Gets all messages of a specific group chat
+        /// </summary>
+        /// <param name="groupId">
+        ///     Group ID of group chat to load messages from
+        /// </param>
+        /// <returns>
+        ///     Messages of specific group chat
+        /// </returns>
         [Authorize]
         [HttpGet("GetGroupMessages/{groupId:int}")]
         public async Task<ActionResult<IEnumerable<ChatMessage>>> GetGroupMessages([FromRoute] int groupId)
@@ -56,6 +71,15 @@ namespace ChatClient.Api.Controllers
             return Ok(messages);
         }
 
+        /// <summary>
+        ///     Gets all messages of a specific private chat with a user
+        /// </summary>
+        /// <param name="recipientId">
+        ///     User ID of private chat to load messages from
+        /// </param>
+        /// <returns>
+        ///     Messages of specific private chat
+        /// </returns>
         [Authorize]
         [HttpGet("GetPrivateMessages/{recipientId:int}")]
         public async Task<ActionResult<IEnumerable<ChatMessage>>> GetPrivateMessages([FromRoute] int recipientId)
