@@ -5,8 +5,6 @@ import { LatestMessageEffects } from './effects';
 import { latestMessagesReducer } from './reducer';
 import { latestMessagesFeatureKey } from './selectors';
 
-
-
 @NgModule({
   imports: [
     StoreModule.forFeature(latestMessagesFeatureKey, latestMessagesReducer),
