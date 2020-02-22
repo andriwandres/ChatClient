@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -6,10 +6,6 @@
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="8.6.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Models\ViewModels\Message\Validation\" />
   </ItemGroup>
 
 </Project>
