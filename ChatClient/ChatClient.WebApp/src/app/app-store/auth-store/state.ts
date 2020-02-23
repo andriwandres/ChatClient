@@ -8,6 +8,7 @@ export interface State {
   error: any;
 }
 
+// Initial State upon Startup
 export const initialState: State = {
   token: localStorage.getItem('token'),
   user: null,

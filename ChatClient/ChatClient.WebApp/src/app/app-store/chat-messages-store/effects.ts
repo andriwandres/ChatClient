@@ -7,6 +7,7 @@ import { of } from 'rxjs';
 
 @Injectable()
 export class ChatMessagesEffects {
+  // Effect for Action 'LoadPrivateMessages'
   readonly loadPrivateMessagesEffect$ = this.actions$.pipe(
     ofType(chatMessagesActions.loadPrivateMessages),
     switchMap(action => this.chatMessageService.getPrivateMessages(action.recipientId).pipe(
@@ -15,6 +16,7 @@ export class ChatMessagesEffects {
     )),
   );
 
+  // Effect for Action 'LoadGroupMessages'
   readonly loadGroupMessagesEffect$ = this.actions$.pipe(
     ofType(chatMessagesActions.loadGroupMessages),
     switchMap(action => this.chatMessageService.getGroupMessages(action.groupId).pipe(

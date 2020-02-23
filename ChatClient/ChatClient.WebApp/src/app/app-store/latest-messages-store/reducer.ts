@@ -2,6 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 import * as latestMessagesActions from './actions';
 import { initialState, latestMessagesAdapter, State } from './state';
 
+// Action Reducer for Latest-Message-Related Actions
 const reducer = createReducer(
   initialState,
 
@@ -37,6 +38,7 @@ const reducer = createReducer(
   })
 );
 
+// Exported Reducer Function
 export function latestMessagesReducer(state: State | undefined, action: latestMessagesActions.LatestMessagesUnion): State {
   return reducer(state, action);
 }

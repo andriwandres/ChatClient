@@ -1,9 +1,9 @@
-import { Component, OnDestroy, OnInit, Input } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { select, Store } from '@ngrx/store';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { AppStoreState } from 'src/app/app-store';
-import { ChatMessagesStoreSelectors, ChatMessagesStoreActions } from 'src/app/app-store/chat-messages-store';
+import { ChatMessagesStoreActions, ChatMessagesStoreSelectors } from 'src/app/app-store/chat-messages-store';
 
 @Component({
   selector: 'app-chat-messages',

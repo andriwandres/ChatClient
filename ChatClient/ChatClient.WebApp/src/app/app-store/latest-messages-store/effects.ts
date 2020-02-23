@@ -7,6 +7,7 @@ import * as latestMessageActions from './actions';
 
 @Injectable()
 export class LatestMessageEffects {
+  // Effect for Action 'LoadLatestMessages'
   readonly loadLatestMessagesEffect$ = this.actions$.pipe(
     ofType(latestMessageActions.loadLatestMessages),
     switchMap(() => this.latestMessageService.getLatestMessages().pipe(

@@ -6,11 +6,13 @@ export interface State extends EntityState<ChatMessage> {
   isLoading: boolean;
 }
 
+// Adapter for accessing Entity-Related information
 export const chatMessagesAdapter = createEntityAdapter<ChatMessage>({
   selectId: message => message.messageId,
   sortComparer: (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
 });
 
+// Initial State upon Startup
 export const initialState: State = chatMessagesAdapter.getInitialState({
   error: null,
   isLoading: false,
