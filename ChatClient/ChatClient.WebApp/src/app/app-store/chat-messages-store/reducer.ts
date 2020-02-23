@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { createReducer, on, Action } from '@ngrx/store';
 import * as chatMessagesActions from './actions';
 import { chatMessagesAdapter, initialState, State } from './state';
 
@@ -54,6 +54,6 @@ const reducer = createReducer(
 );
 
 // Exported Reducer Function
-export function chatMessageReducer(state: State | undefined, action: chatMessagesActions.ChatMessagesActionUnion): State {
+export function chatMessageReducer(state: State | undefined, action: Action): State {
   return reducer(state, action);
 }

@@ -3,7 +3,7 @@ import { NgModule } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { DisplayImageComponent } from 'src/app/shared/display-image/display-image.component';
+import { DisplayImageModule } from 'src/app/shared/display-image/display-image.module';
 import { ChatHeaderComponent } from './chat-header.component';
 
 @NgModule({
@@ -13,7 +13,7 @@ import { ChatHeaderComponent } from './chat-header.component';
     MatButtonModule,
     MatTooltipModule,
     MatIconModule,
-    DisplayImageComponent
+    DisplayImageModule
   ],
   exports: [ChatHeaderComponent]
 })

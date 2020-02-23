@@ -1,4 +1,4 @@
-import { createReducer, on } from '@ngrx/store';
+import { createReducer, on, Action } from '@ngrx/store';
 import * as latestMessagesActions from './actions';
 import { initialState, latestMessagesAdapter, State } from './state';
 
@@ -39,6 +39,6 @@ const reducer = createReducer(
 );
 
 // Exported Reducer Function
-export function latestMessagesReducer(state: State | undefined, action: latestMessagesActions.LatestMessagesUnion): State {
+export function latestMessagesReducer(state: State | undefined, action: Action): State {
   return reducer(state, action);
 }

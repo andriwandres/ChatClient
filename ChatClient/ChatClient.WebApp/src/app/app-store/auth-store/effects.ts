@@ -14,7 +14,7 @@ export class AuthEffects {
     ofType(authActions.authenticate),
     exhaustMap(() => this.authService.authenticate().pipe(
       map(user => authActions.authenticateSuccess({ user })),
-      tap(() => this.router.navigate([''])),
+      tap(() => this.router.navigate(['/chats'])),
       catchError(error => of(authActions.authenticateFailure({ error })).pipe(
 
         // Navigate to Login Page
@@ -28,7 +28,7 @@ export class AuthEffects {
     ofType(authActions.login),
     exhaustMap(action => this.authService.login(action.credentials).pipe(
       map(user => authActions.loginSuccess({ user })),
-      tap(() => this.router.navigate([''])),
+      tap(() => this.router.navigate(['/chats'])),
       catchError(error => of(authActions.loginFailure({ error })))
     ))
   ));

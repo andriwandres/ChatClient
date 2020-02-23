@@ -3,7 +3,7 @@
   <!-- List of Latest Messages -->
   <app-latest-message
     *ngFor="let message of messages; trackBy: trackByFn"
-    [message]="message"
+    [latestMessage]="message"
     [isActive]="(activeMessage$ | async) === message"
     (click)="setActiveMessage(message)"
     (keydown.enter)="setActiveMessage(message)"

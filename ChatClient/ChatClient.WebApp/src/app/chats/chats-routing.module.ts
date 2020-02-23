@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { ChatsComponent } from './chats.component';
-
 
 const routes: Routes = [
   {
@@ -9,7 +8,13 @@ const routes: Routes = [
     component: ChatsComponent,
     children: [
       {
-        path: ':id',
+        path: 'user/:id',
+        data: { isGroupChat: false },
+        loadChildren: () => import('./chat/chat.module').then(m => m.ChatModule),
+      },
+      {
+        path: 'group/:id',
+        data: { isGroupChat: true },
         loadChildren: () => import('./chat/chat.module').then(m => m.ChatModule)
       }
     ]
