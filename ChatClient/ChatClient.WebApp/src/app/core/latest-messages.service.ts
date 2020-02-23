@@ -10,7 +10,7 @@ export class LatestMessagesService {
   constructor(private readonly http: HttpClient) { }
 
   getLatestMessages(): Observable<LatestMessage[]> {
-    const url = `${environment.api.message}`;
+    const url = `${environment.api.message}/GetLatestMessages`;
 
     return this.http.get<LatestMessage[]>(url).pipe(
       retry(2)

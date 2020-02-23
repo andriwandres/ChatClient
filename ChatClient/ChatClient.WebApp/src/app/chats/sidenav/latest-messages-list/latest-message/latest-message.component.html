@@ -8,7 +8,7 @@
   <!-- Contact Name + Timestamp -->
   <div class="text-row">
     <span id="contact-name">{{ latestMessage.userRecipient ? latestMessage.userRecipient.displayName : latestMessage.groupRecipient.name }}</span>
-    <span id="last-message-timestamp">{{ contact.message.createdAt | chatTimestamp }}</span>
+    <span id="last-message-timestamp">{{ latestMessage.createdAt | chatTimestamp }}</span>
   </div>
 
   <!-- Latest Message + Number of unread Messages -->

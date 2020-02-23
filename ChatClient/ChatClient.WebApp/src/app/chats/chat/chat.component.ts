@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-chat',
@@ -6,10 +7,13 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./chat.component.scss']
 })
 export class ChatComponent implements OnInit {
+  targetId: number;
+  isGroupChat: boolean;
 
-  constructor() { }
+  constructor(private readonly activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
-
+    this.targetId = +this.activatedRoute.snapshot.params['id'];
+    this.isGroupChat = this.activatedRoute.snapshot.data['isGroupChat'];
   }
 }
