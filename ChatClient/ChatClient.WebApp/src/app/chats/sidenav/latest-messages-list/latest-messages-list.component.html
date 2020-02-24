@@ -11,7 +11,12 @@
   </app-latest-message>
 
   <!-- No Message -->
-  <p id="no-messages" *ngIf="messages.length === 0">
+  <p id="no-messages" *ngIf="!(loading$ | async) && messages.length === 0">
     You don't have any messages yet.
   </p>
 </ng-container>
+
+<!-- Loading Spinner -->
+<div id="loader-container" *ngIf="loading$ | async">
+  <mat-spinner color="warn"></mat-spinner>
+</div>

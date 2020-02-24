@@ -20,6 +20,12 @@ namespace ChatClient.Api.Controllers
             _authService = authService;
         }
 
+        /// <summary>
+        ///     Authenticates the User with a valid Access Token in the Authorization Header
+        /// </summary>
+        /// <returns>
+        ///     User Information of the User with the valid Token
+        /// </returns>
         [Authorize]
         [HttpGet("Authenticate")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -30,6 +36,16 @@ namespace ChatClient.Api.Controllers
             return Ok(user);
         }
 
+        /// <summary>
+        ///     Checks the Email Availiability of a given Email Address in the Database.
+        /// </summary>
+        /// <param name="query">
+        ///     Query Parameter including the Email Address to query by
+        /// </param>
+        /// <returns>
+        ///     True, if Email Address is already taken
+        ///     False, if Email is free to use
+        /// </returns>
         [AllowAnonymous]
         [HttpGet("IsEmailTaken")]
         [ProducesResponseType(StatusCodes.Status200OK)]
@@ -46,6 +62,15 @@ namespace ChatClient.Api.Controllers
             return Ok(isTaken);
         }
 
+        /// <summary>
+        ///     Creates a new User Account in the Database
+        /// </summary>
+        /// <param name="credentials">
+        ///     User Credentials that are required for the User to be registered
+        /// </param>
+        /// <returns>
+        ///     No Content
+        /// </returns>
         [AllowAnonymous]
         [HttpPost("Register")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -62,6 +87,15 @@ namespace ChatClient.Api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        ///     Validates User Credentials and returns the Users Information alongside a valid Access Token
+        /// </summary>
+        /// <param name="credentials">
+        ///     User Credentials that are required for logging in
+        /// </param>
+        /// <returns>
+        ///     User Information + Access Token
+        /// </returns>
         [AllowAnonymous]
         [HttpPost("Login")]
         [ProducesResponseType(StatusCodes.Status200OK)]

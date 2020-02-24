@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Subject } from 'rxjs';
+import { Subject, of } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { AppStoreState } from 'src/app/app-store';
 import { LatestMessagesStoreSelectors, LatestMessagesStoreActions } from 'src/app/app-store/latest-messages-store';
@@ -13,6 +13,12 @@ import { LatestMessage } from 'src/models/messages/latest-message';
 })
 export class LatestMessagesListComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
+
+  // readonly loading$ = this.store$.pipe(
+  //   select(LatestMessagesStoreSelectors.selectLoading),
+  //   takeUntil(this.destroy$),
+  // );
+readonly loading$ = of(true);
 
   readonly messages$ = this.store$.pipe(
     select(LatestMessagesStoreSelectors.selectAll),
@@ -39,7 +45,7 @@ export class LatestMessagesListComponent implements OnInit, OnDestroy {
     this.store$.dispatch(LatestMessagesStoreActions.selectActiveMessage({ message }));
   }
 
-  trackByFn(message: LatestMessage, index: number): number {
+  trackByFn(message: LatestMessage): number {
     return message.messageRecipientId;
   }
 }
