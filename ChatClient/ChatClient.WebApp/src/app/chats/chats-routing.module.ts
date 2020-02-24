@@ -9,11 +9,14 @@ const routes: Routes = [
     children: [
       {
         path: 'user/:id',
+        // outlet: 'chat',
+
         data: { isGroupChat: false },
         loadChildren: () => import('./chat/chat.module').then(m => m.ChatModule),
       },
       {
         path: 'group/:id',
+        // outlet: 'chat',
         data: { isGroupChat: true },
         loadChildren: () => import('./chat/chat.module').then(m => m.ChatModule)
       }
