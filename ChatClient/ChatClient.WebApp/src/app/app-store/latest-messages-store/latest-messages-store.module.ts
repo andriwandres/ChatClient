@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
   imports: [
     StoreModule.forFeature(latestMessagesFeatureKey, latestMessagesReducer),
     EffectsModule.forFeature([LatestMessageEffects]),
+    RouterModule,
   ],
   providers: [LatestMessageEffects],
 })

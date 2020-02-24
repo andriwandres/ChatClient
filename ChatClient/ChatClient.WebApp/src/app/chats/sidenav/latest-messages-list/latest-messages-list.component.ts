@@ -14,11 +14,10 @@ import { LatestMessage } from 'src/models/messages/latest-message';
 export class LatestMessagesListComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject<void>();
 
-  // readonly loading$ = this.store$.pipe(
-  //   select(LatestMessagesStoreSelectors.selectLoading),
-  //   takeUntil(this.destroy$),
-  // );
-readonly loading$ = of(true);
+  readonly loading$ = this.store$.pipe(
+    select(LatestMessagesStoreSelectors.selectLoading),
+    takeUntil(this.destroy$),
+  );
 
   readonly messages$ = this.store$.pipe(
     select(LatestMessagesStoreSelectors.selectAll),
