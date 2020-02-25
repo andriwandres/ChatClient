@@ -9,7 +9,7 @@ namespace ChatClient.Api.Mapping
     {
         public MessageProfile()
         {
-            CreateMap<MessageRecipient, LatestMessage>()
+            CreateMap<MessageRecipient, LatestMessageViewModel>()
                 .ForMember(vm => vm.UnreadMessagesCount, config =>
                 {
                     config.MapFrom(recipient => recipient.RecipientUser == null
@@ -39,7 +39,7 @@ namespace ChatClient.Api.Mapping
                 .ForMember(vm => vm.UserRecipient, config =>
                 {
                     config.Condition(mr => mr.RecipientUser != null);
-                    config.MapFrom(mr => new LatestMessage.RecipientUser
+                    config.MapFrom(mr => new LatestMessageViewModel.RecipientUser
                     {
                         UserId = mr.RecipientUser.UserId,
                         DisplayName = mr.RecipientUser.DisplayName,
@@ -48,14 +48,14 @@ namespace ChatClient.Api.Mapping
                 .ForMember(vm => vm.GroupRecipient, config =>
                 {
                     config.Condition(mr => mr.RecipientGroup != null);
-                    config.MapFrom(mr => new LatestMessage.RecipientGroup
+                    config.MapFrom(mr => new LatestMessageViewModel.RecipientGroup
                     {
                         GroupId = mr.RecipientGroup.GroupId,
                         Name = mr.RecipientGroup.Group.Name,
                     });
                 });
 
-            CreateMap<MessageRecipient, ChatMessage>()
+            CreateMap<MessageRecipient, ChatMessageViewModel>()
                 .ForMember(vm => vm.AuthorName, config =>
                 {
                     config.MapFrom(mr => mr.Message.Author.DisplayName);

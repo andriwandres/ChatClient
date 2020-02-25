@@ -2,7 +2,7 @@
 
 namespace ChatClient.Core.Models.ViewModels.Message
 {
-    public class ChatMessage
+    public class ChatMessageViewModel
     {
         public int MessageRecipientId { get; set; }
         public int MessageId { get; set; }

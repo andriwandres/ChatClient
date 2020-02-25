@@ -24,6 +24,7 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   constructor(private readonly store$: Store<AppStoreState.State>) { }
 
   ngOnInit(): void {
+    console.log(this.targetId);
     // const action = this.isGroupChat
     //   ? ChatMessagesStoreActions.loadGroupMessages({ groupId: this.targetId })
     //   : ChatMessagesStoreActions.loadPrivateMessages({ recipientId: this.targetId });

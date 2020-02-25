@@ -13,7 +13,7 @@ import { ChatComponent } from './chat.component';
     ChatRoutingModule,
     ChatHeaderModule,
     ChatMessagesModule,
-    ChatFooterModule
-  ]
+    ChatFooterModule,
+  ],
 })
 export class ChatModule { }

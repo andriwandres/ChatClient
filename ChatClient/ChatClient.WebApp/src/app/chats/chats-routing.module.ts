@@ -9,15 +9,12 @@ const routes: Routes = [
     children: [
       {
         path: 'user/:id',
-        // outlet: 'chat',
-
-        data: { isGroupChat: false },
+        data: { isGroupChat: false, reuseRoute: true },
         loadChildren: () => import('./chat/chat.module').then(m => m.ChatModule),
       },
       {
         path: 'group/:id',
-        // outlet: 'chat',
-        data: { isGroupChat: true },
+        data: { isGroupChat: true, reuseRoute: true },
         loadChildren: () => import('./chat/chat.module').then(m => m.ChatModule)
       }
     ]

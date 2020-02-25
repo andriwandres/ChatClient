@@ -33,12 +33,13 @@ namespace ChatClient.Api.Controllers
         /// </returns>
         [Authorize]
         [HttpGet("GetLatestMessages")]
-        public async Task<ActionResult<IEnumerable<LatestMessage>>> GetLatestMessages()
+        public async Task<ActionResult<IEnumerable<LatestMessageViewModel>>> GetLatestMessages()
         {
-            IEnumerable<MessageRecipient> latestMessages = await _messageService.GetLatestMessages();
-            IEnumerable<LatestMessage> viewModels = _mapper.Map<IEnumerable<LatestMessage>>(latestMessages);
+            IEnumerable<MessageRecipient> recipients = await _messageService.GetLatestMessages();
 
-            return Ok(viewModels);
+            IEnumerable<LatestMessageViewModel> latestMessages = _mapper.Map<IEnumerable<LatestMessageViewModel>>(recipients);
+
+            return Ok(latestMessages);
         }
 
         /// <summary>
@@ -52,7 +53,7 @@ namespace ChatClient.Api.Controllers
         /// </returns>
         [Authorize]
         [HttpGet("GetGroupMessages/{groupId:int}")]
-        public async Task<ActionResult<IEnumerable<ChatMessage>>> GetGroupMessages([FromRoute] int groupId)
+        public async Task<ActionResult<IEnumerable<ChatMessageViewModel>>> GetGroupMessages([FromRoute] int groupId)
         {
             if (!ModelState.IsValid)
             {
@@ -63,7 +64,7 @@ namespace ChatClient.Api.Controllers
 
             IEnumerable<MessageRecipient> recipients = await _messageService.GetGroupMessages(user.UserId, groupId);
 
-            IEnumerable<ChatMessage> messages = _mapper.Map<IEnumerable<ChatMessage>>(recipients, options =>
+            IEnumerable<ChatMessageViewModel> messages = _mapper.Map<IEnumerable<ChatMessageViewModel>>(recipients, options =>
             {
                 options.Items["UserId"] = user.UserId;
             });
@@ -82,7 +83,7 @@ namespace ChatClient.Api.Controllers
         /// </returns>
         [Authorize]
         [HttpGet("GetPrivateMessages/{recipientId:int}")]
-        public async Task<ActionResult<IEnumerable<ChatMessage>>> GetPrivateMessages([FromRoute] int recipientId)
+        public async Task<ActionResult<IEnumerable<ChatMessageViewModel>>> GetPrivateMessages([FromRoute] int recipientId)
         {
             if (!ModelState.IsValid)
             {
@@ -93,7 +94,7 @@ namespace ChatClient.Api.Controllers
 
             IEnumerable<MessageRecipient> recipients = await _messageService.GetPrivateMessages(user.UserId, recipientId);
 
-            IEnumerable<ChatMessage> messages = _mapper.Map<IEnumerable<ChatMessage>>(recipients, options =>
+            IEnumerable<ChatMessageViewModel> messages = _mapper.Map<IEnumerable<ChatMessageViewModel>>(recipients, options =>
             {
                 options.Items["UserId"] = user.UserId;
             });
