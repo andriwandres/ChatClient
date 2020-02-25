@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { Actions, ofType } from '@ngrx/effects';
+import { Actions, ofType, createEffect } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { ChatMessagesService } from 'src/app/core/chat-messages.service';
@@ -9,24 +9,24 @@ import * as chatMessagesActions from './actions';
 @Injectable()
 export class ChatMessagesEffects {
   // Effect for Action 'LoadPrivateMessages'
-  readonly loadPrivateMessagesEffect$ = this.actions$.pipe(
+  readonly loadPrivateMessagesEffect$ = createEffect(() => this.actions$.pipe(
     ofType(chatMessagesActions.loadPrivateMessages),
     switchMap(action => this.chatMessageService.getPrivateMessages(action.recipientId).pipe(
       map(messages => chatMessagesActions.loadPrivateMessagesSuccess({ messages })),
-      tap(() => this.router.navigate([`./user/${action.recipientId}`])),
+      // tap(() => this.router.navigate([`chats/user/${action.recipientId}`])),
       catchError(error => of(chatMessagesActions.loadPrivateMessagesFailure({ error }))),
     )),
-  );
+  ));
 
   // Effect for Action 'LoadGroupMessages'
-  readonly loadGroupMessagesEffect$ = this.actions$.pipe(
+  readonly loadGroupMessagesEffect$ = createEffect(() => this.actions$.pipe(
     ofType(chatMessagesActions.loadGroupMessages),
     switchMap(action => this.chatMessageService.getGroupMessages(action.groupId).pipe(
       map(messages => chatMessagesActions.loadGroupMessagesSuccess({ messages })),
-      tap(() => this.router.navigate([`./group/${action.groupId}`])),
+      // tap(() => this.router.navigate([`chats/group/${action.groupId}`])),
       catchError(error => of(chatMessagesActions.loadGroupMessagesFailure({ error }))),
     )),
-  );
+  ));
 
   constructor(
     private readonly router: Router,

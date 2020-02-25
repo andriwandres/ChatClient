@@ -24,6 +24,6 @@ export class CustomRouteReuseStrategy extends RouteReuseStrategy {
   }
 
   shouldReuseRoute(future: ActivatedRouteSnapshot, curr: ActivatedRouteSnapshot): boolean {
-    return future.url === curr.url && !!future.data['reuseRoute'];
+    return !!future.data['reuseRoute'];
   }
 }

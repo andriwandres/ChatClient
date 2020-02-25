@@ -30,7 +30,10 @@ namespace ChatClient.Api.Mapping
                 })
                 .ForMember(vm => vm.AuthorName, config =>
                 {
-                    config.MapFrom(mr => mr.Message.Author.DisplayName);
+                    config.MapFrom((source, destination, member, context) => source.Message.AuthorId == (int) context.Items["UserId"]
+                        ? "You"
+                        : source.Message.Author.DisplayName
+                    );
                 })
                 .ForMember(vm => vm.CreatedAt, config =>
                 {
@@ -38,16 +41,21 @@ namespace ChatClient.Api.Mapping
                 })
                 .ForMember(vm => vm.UserRecipient, config =>
                 {
-                    config.Condition(mr => mr.RecipientUser != null);
-                    config.MapFrom(mr => new LatestMessageViewModel.RecipientUser
+                    config.PreCondition(mr => mr.RecipientUser != null);
+                    config.MapFrom((source, destination, member, context) => new LatestMessageViewModel.RecipientUser
                     {
-                        UserId = mr.RecipientUser.UserId,
-                        DisplayName = mr.RecipientUser.DisplayName,
+                        UserId = source.RecipientUser.UserId == (int) context.Items["UserId"]
+                            ? source.Message.AuthorId
+                            : source.RecipientUser.UserId,
+
+                        DisplayName = source.RecipientUser.UserId == (int) context.Items["UserId"]
+                            ? source.Message.Author.DisplayName
+                            : source.RecipientUser.DisplayName,
                     });
                 })
                 .ForMember(vm => vm.GroupRecipient, config =>
                 {
-                    config.Condition(mr => mr.RecipientGroup != null);
+                    config.PreCondition(mr => mr.RecipientGroup != null);
                     config.MapFrom(mr => new LatestMessageViewModel.RecipientGroup
                     {
                         GroupId = mr.RecipientGroup.GroupId,

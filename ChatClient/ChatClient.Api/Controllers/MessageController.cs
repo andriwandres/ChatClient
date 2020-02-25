@@ -35,9 +35,14 @@ namespace ChatClient.Api.Controllers
         [HttpGet("GetLatestMessages")]
         public async Task<ActionResult<IEnumerable<LatestMessageViewModel>>> GetLatestMessages()
         {
+            User user = await _authService.GetUser();
+
             IEnumerable<MessageRecipient> recipients = await _messageService.GetLatestMessages();
 
-            IEnumerable<LatestMessageViewModel> latestMessages = _mapper.Map<IEnumerable<LatestMessageViewModel>>(recipients);
+            IEnumerable<LatestMessageViewModel> latestMessages = _mapper.Map<IEnumerable<LatestMessageViewModel>>(recipients, options =>
+            {
+                options.Items["UserId"] = user.UserId;
+            });
 
             return Ok(latestMessages);
         }

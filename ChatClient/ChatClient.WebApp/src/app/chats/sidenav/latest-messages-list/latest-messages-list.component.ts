@@ -3,7 +3,7 @@ import { Subject, of } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { AppStoreState } from 'src/app/app-store';
 import { LatestMessagesStoreSelectors, LatestMessagesStoreActions } from 'src/app/app-store/latest-messages-store';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, take } from 'rxjs/operators';
 import { LatestMessage } from 'src/models/messages/latest-message';
 
 @Component({
@@ -32,7 +32,13 @@ export class LatestMessagesListComponent implements OnInit, OnDestroy {
   constructor(private readonly store$: Store<AppStoreState.State>) { }
 
   ngOnInit(): void {
-    this.store$.dispatch(LatestMessagesStoreActions.loadLatestMessages());
+    this.messages$.pipe(
+      take(1)
+    ).subscribe((messages) => {
+      if (!messages || !messages.length) {
+        this.store$.dispatch(LatestMessagesStoreActions.loadLatestMessages());
+      }
+    });
   }
 
   ngOnDestroy(): void {
