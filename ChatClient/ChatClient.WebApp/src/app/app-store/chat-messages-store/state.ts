@@ -9,7 +9,7 @@ export interface State extends EntityState<ChatMessage> {
 // Adapter for accessing Entity-Related information
 export const chatMessagesAdapter = createEntityAdapter<ChatMessage>({
   selectId: message => message.messageId,
-  sortComparer: (a, b) => a.createdAt.getTime() - b.createdAt.getTime()
+  sortComparer: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
 });
 
 // Initial State upon Startup

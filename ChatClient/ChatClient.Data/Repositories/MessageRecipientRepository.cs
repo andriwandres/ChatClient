@@ -29,6 +29,7 @@ namespace ChatClient.Data.Repositories
         public async Task<IEnumerable<MessageRecipient>> GetGroupMessages(int userId, int groupId)
         {
             IEnumerable<MessageRecipient> messages = await Context.MessageRecipients
+                .Include(mr => mr.Message)
                 .Include(mr => mr.RecipientGroup)
                 .Where(mr => 
                     mr.RecipientGroup != null && 
