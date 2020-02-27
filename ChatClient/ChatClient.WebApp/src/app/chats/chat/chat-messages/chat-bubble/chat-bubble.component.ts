@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, HostBinding } from '@angular/core';
+import { ChatMessage } from 'src/models/messages/chat-message';
 
 @Component({
   selector: 'app-chat-bubble',
@@ -6,10 +7,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./chat-bubble.component.scss']
 })
 export class ChatBubbleComponent implements OnInit {
+  @Input() message: ChatMessage;
+  @Input() isAnchor = false;
+
+  @HostBinding('style.flex-direction') flexDirection: string;
 
   constructor() { }
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.flexDirection = this.message.isOwnMessage ? 'row' : 'row-reverse';
   }
-
 }

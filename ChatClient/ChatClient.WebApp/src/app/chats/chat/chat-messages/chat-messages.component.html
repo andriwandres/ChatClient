@@ -1,3 +1,4 @@
-<p *ngFor="let message of messages$ | async">
-  {{ message.textContent }}
-</p>
+<app-chat-bubble
+  [message]="message"
+  *ngFor="let message of messages$ | async" >
+</app-chat-bubble>
