@@ -1,1 +1,3 @@
-<p>chat-messages works!</p>
+<p *ngFor="let message of messages$ | async">
+  {{ message.textContent }}
+</p>

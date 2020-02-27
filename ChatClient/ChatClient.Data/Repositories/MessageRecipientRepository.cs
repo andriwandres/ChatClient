@@ -28,15 +28,35 @@ namespace ChatClient.Data.Repositories
 
         public async Task<IEnumerable<MessageRecipient>> GetGroupMessages(int userId, int groupId)
         {
-            IEnumerable<MessageRecipient> messages = await Context.MessageRecipients
-                .Include(mr => mr.Message)
+            // Get Group Messages that the user has received
+            IEnumerable<MessageRecipient> receivedMessages = await Context.MessageRecipients
                 .Include(mr => mr.RecipientGroup)
-                .Where(mr => 
-                    mr.RecipientGroup != null && 
-                    mr.RecipientGroup.GroupId == groupId && 
-                    mr.RecipientGroup.UserId == userId
+                .Include(mr => mr.Message)
+                .ThenInclude(m => m.Author)
+                .Where(mr =>
+                    mr.RecipientGroup != null &&
+                    mr.RecipientGroup.GroupId == groupId &&
+                    (mr.RecipientGroup.UserId == userId)
                 )
                 .ToListAsync();
+
+            // Get Group Messages Written by the User himself
+            IEnumerable<MessageRecipient> authoredMessages = await Context.Messages
+                .Include(m => m.Recipients)
+                .ThenInclude(mr => mr.RecipientGroup)
+                .Include(m => m.Recipients)
+                .ThenInclude(mr => mr.Message)
+                .ThenInclude(mr => mr.Author)
+                .Where(m =>
+                    m.AuthorId == userId &&
+                    m.Recipients.First().RecipientGroup != null &&
+                    m.Recipients.First().RecipientGroup.GroupId == groupId
+                )
+                .Select(m => m.Recipients.First())
+                .ToListAsync();
+
+            // Union the groups together
+            IEnumerable<MessageRecipient> messages = receivedMessages.Concat(authoredMessages);
 
             return messages;
         }

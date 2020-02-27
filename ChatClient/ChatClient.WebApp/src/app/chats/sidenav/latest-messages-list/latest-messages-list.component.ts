@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostBinding } from '@angular/core';
 import { Subject, of } from 'rxjs';
 import { Store, select } from '@ngrx/store';
 import { AppStoreState } from 'src/app/app-store';

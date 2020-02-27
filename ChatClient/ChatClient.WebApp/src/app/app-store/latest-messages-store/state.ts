@@ -9,7 +9,7 @@ export interface State extends EntityState<LatestMessage> {
 
 export const latestMessagesAdapter = createEntityAdapter<LatestMessage>({
   selectId: message => message.messageRecipientId,
-  sortComparer: (a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime(),
+  sortComparer: (a, b) => a.messageRecipientId - b.messageRecipientId
 });
 
 export const initialState: State = latestMessagesAdapter.getInitialState({

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
+import { trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-sidenav',
   templateUrl: './sidenav.component.html',
-  styleUrls: ['./sidenav.component.scss']
+  styleUrls: ['./sidenav.component.scss'],
 })
 export class SidenavComponent implements OnInit {
 
