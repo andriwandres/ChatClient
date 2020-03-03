@@ -15,6 +15,6 @@ export class ChatBubbleComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    this.flexDirection = this.message.isOwnMessage ? 'row' : 'row-reverse';
+    this.flexDirection = this.message.isOwnMessage ? 'row-reverse' : 'row';
   }
 }

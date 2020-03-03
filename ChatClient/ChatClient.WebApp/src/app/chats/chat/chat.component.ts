@@ -10,6 +10,8 @@ export class ChatComponent implements OnInit {
   targetId: number;
   isGroupChat: boolean;
 
+  contactName: string;
+
   constructor(private readonly activatedRoute: ActivatedRoute) { }
 
   ngOnInit(): void {
