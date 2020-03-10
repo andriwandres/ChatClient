@@ -104,7 +104,7 @@ namespace ChatClient.Data.Repositories
                 .GroupBy(mr => mr.Message.AuthorId)
                 .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First())
                 .AsEnumerable();
-
+            
             // Get latest messages that the user received through group chats
             IEnumerable<MessageRecipient> latestReceivedGroupMessages = user.GroupMemberships
                 .Select(gm => gm.ReceivedGroupMessages.OrderByDescending(mr => mr.Message.CreatedAt).First())
@@ -129,34 +129,13 @@ namespace ChatClient.Data.Repositories
             return latestMessages;
         }
 
-        public async Task AddGroupMessage(int groupId, Message message)
+        public async Task AddGroupMessage(IEnumerable<MessageRecipient> recipients)
         {
-            IEnumerable<GroupMembership> memberships = Context.GroupMemberships
-                .AsNoTracking()
-                .Where(membership => 
-                    membership.GroupId == groupId && 
-                    membership.UserId != message.AuthorId
-                );
-
-            IEnumerable<MessageRecipient> recipients = memberships.Select(membership => new MessageRecipient
-            {
-                RecipientGroupId = membership.GroupMembershipId,
-                MessageId = message.MessageId,
-                IsRead = false
-            });
-
             await Context.MessageRecipients.AddRangeAsync(recipients);
         }
 
-        public async Task AddPrivateMessage(int recipientId, Message message)
+        public async Task AddPrivateMessage(MessageRecipient recipient)
         {
-            MessageRecipient recipient = new MessageRecipient
-            {
-                RecipientUserId = recipientId,
-                MessageId = message.MessageId,
-                IsRead = false
-            };
-
             await Context.MessageRecipients.AddAsync(recipient);
         }
     }

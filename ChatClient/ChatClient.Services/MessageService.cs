@@ -17,6 +17,16 @@ namespace ChatClient.Services
             _authService = authService;
         }
 
+        public Task AddGroupMessage(int groupId, string message)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task AddPrivateMessage(int recipientId, string message)
+        {
+            throw new System.NotImplementedException();
+        }
+
         public async Task<IEnumerable<MessageRecipient>> GetGroupMessages(int userId, int groupId)
         {
             return await _unitOfWork.MessageRecipientRepository.GetGroupMessages(userId, groupId);

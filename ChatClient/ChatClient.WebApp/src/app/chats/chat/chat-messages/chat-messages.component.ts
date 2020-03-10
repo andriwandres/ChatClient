@@ -14,7 +14,7 @@ export class ChatMessagesComponent implements OnInit, OnDestroy {
   @Input() targetId: number;
   @Input() isGroupChat: boolean;
 
-  readonly destroy$ = new Subject<void>();
+  private readonly destroy$ = new Subject<void>();
 
   readonly messages$ = this.store$.pipe(
     select(ChatMessagesStoreSelectors.selectAll),
