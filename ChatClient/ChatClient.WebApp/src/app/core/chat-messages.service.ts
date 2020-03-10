@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { retry } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { ChatMessage } from 'src/models/messages/chat-message';
+import { ChatMessage, ChatMessageDto } from 'src/models/messages/chat-message';
 
 @Injectable({ providedIn: 'root' })
 export class ChatMessagesService {
@@ -23,5 +23,17 @@ export class ChatMessagesService {
     return this.http.get<ChatMessage[]>(url).pipe(
       retry(1)
     );
+  }
+
+  addPrivateMessage(message: ChatMessageDto): Observable<ChatMessage> {
+    const url = `${environment.api.message}/AddPrivateMessage`;
+
+    return this.http.post<ChatMessage>(url, message);
+  }
+
+  addGroupMessage(message: ChatMessageDto): Observable<ChatMessage> {
+    const url = `${environment.api.message}/AddGroupMessage`;
+
+    return this.http.post<ChatMessage>(url, message);
   }
 }

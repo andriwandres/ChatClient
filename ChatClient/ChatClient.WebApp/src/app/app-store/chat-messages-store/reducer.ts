@@ -6,7 +6,7 @@ import { chatMessagesAdapter, initialState, State } from './state';
 const reducer = createReducer(
   initialState,
 
-  // Private Messages
+  // Load Private Messages
   on(chatMessagesActions.loadPrivateMessages, (state, { recipientId }) => {
     return chatMessagesAdapter.removeAll({
       ...state,
@@ -29,7 +29,7 @@ const reducer = createReducer(
     };
   }),
 
-  // Group Messages
+  // Load Group Messages
   on(chatMessagesActions.loadGroupMessages, (state, { groupId }) => {
     return chatMessagesAdapter.removeAll({
       ...state,
@@ -45,6 +45,29 @@ const reducer = createReducer(
     });
   }),
   on(chatMessagesActions.loadGroupMessagesFailure, (state, { error }) => {
+    return {
+      ...state,
+      isLoading: false,
+      error,
+    };
+  }),
+
+  // Add Private Message
+  on(chatMessagesActions.addPrivateMessage, (state) => {
+    return {
+      ...state,
+      isLoading: true,
+      error: null
+    };
+  }),
+  on(chatMessagesActions.addPrivateMessageSuccess, (state, { message }) => {
+    return chatMessagesAdapter.addOne(message, {
+      ...state,
+      isLoading: false,
+      error: null,
+    });
+  }),
+  on(chatMessagesActions.addPrivateMessageFailure, (state, { error }) => {
     return {
       ...state,
       isLoading: false,

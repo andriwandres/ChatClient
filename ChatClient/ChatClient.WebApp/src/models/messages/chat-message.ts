@@ -8,3 +8,8 @@ export interface ChatMessage {
   isOwnMessage: boolean;
   createdAt: Date;
 }
+
+export interface ChatMessageDto {
+  targetId: number;
+  message: string;
+}

@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
-import { Actions, ofType, createEffect } from '@ngrx/effects';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, exhaustMap, map, switchMap } from 'rxjs/operators';
 import { ChatMessagesService } from 'src/app/core/chat-messages.service';
 import * as chatMessagesActions from './actions';
 
@@ -13,7 +12,6 @@ export class ChatMessagesEffects {
     ofType(chatMessagesActions.loadPrivateMessages),
     switchMap(action => this.chatMessageService.getPrivateMessages(action.recipientId).pipe(
       map(messages => chatMessagesActions.loadPrivateMessagesSuccess({ messages })),
-      // tap(() => this.router.navigate([`chats/user/${action.recipientId}`])),
       catchError(error => of(chatMessagesActions.loadPrivateMessagesFailure({ error }))),
     )),
   ));
@@ -23,13 +21,29 @@ export class ChatMessagesEffects {
     ofType(chatMessagesActions.loadGroupMessages),
     switchMap(action => this.chatMessageService.getGroupMessages(action.groupId).pipe(
       map(messages => chatMessagesActions.loadGroupMessagesSuccess({ messages })),
-      // tap(() => this.router.navigate([`chats/group/${action.groupId}`])),
       catchError(error => of(chatMessagesActions.loadGroupMessagesFailure({ error }))),
     )),
   ));
 
+  // Effect for Action 'AddPrivateMessage'
+  readonly addPrivateMessage$ = createEffect(() => this.actions$.pipe(
+    ofType(chatMessagesActions.addPrivateMessage),
+    exhaustMap(action => this.chatMessageService.addPrivateMessage(action.message).pipe(
+      map(message => chatMessagesActions.addPrivateMessageSuccess({ message })),
+      catchError(error => of(chatMessagesActions.addPrivateMessageFailure({ error })))
+    ))
+  ));
+
+  // Effect for Action 'AddPrivateMessage'
+  readonly addGroupMessage$ = createEffect(() => this.actions$.pipe(
+    ofType(chatMessagesActions.addGroupMessage),
+    exhaustMap(action => this.chatMessageService.addGroupMessage(action.message).pipe(
+      map(message => chatMessagesActions.addGroupMessageSuccess({ message })),
+      catchError(error => of(chatMessagesActions.addGroupMessageFailure({ error })))
+    ))
+  ));
+
   constructor(
-    private readonly router: Router,
     private readonly chatMessageService: ChatMessagesService,
     private readonly actions$: Actions<chatMessagesActions.ChatMessagesActionUnion>
   ) {}

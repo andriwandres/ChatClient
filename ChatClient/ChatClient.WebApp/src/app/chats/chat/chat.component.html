@@ -1,8 +1,13 @@
+<!-- Chat Header -->
 <app-chat-header></app-chat-header>
 
+<!-- List of chat messages -->
 <app-chat-messages
   [targetId]="targetId"
-  [isGroupChat]="isGroupChat"
-></app-chat-messages>
+  [isGroupChat]="isGroupChat">
+</app-chat-messages>
 
-<app-chat-footer></app-chat-footer>
+<!-- Chat Footer -->
+<app-chat-footer
+  (sendMessage)="onSendMessage($event)">
+</app-chat-footer>
