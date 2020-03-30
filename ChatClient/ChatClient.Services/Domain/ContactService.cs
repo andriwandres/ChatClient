@@ -4,7 +4,7 @@ using ChatClient.Core.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ChatClient.Services
+namespace ChatClient.Services.Domain
 {
     public class ContactService : IContactService
     {

@@ -1,10 +1,11 @@
-import { Component, OnInit, Input, HostBinding } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostBinding, Input, OnInit } from '@angular/core';
 import { ChatMessage } from 'src/models/messages/chat-message';
 
 @Component({
   selector: 'app-chat-bubble',
   templateUrl: './chat-bubble.component.html',
-  styleUrls: ['./chat-bubble.component.scss']
+  styleUrls: ['./chat-bubble.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ChatBubbleComponent implements OnInit {
   @Input() message: ChatMessage;

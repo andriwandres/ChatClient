@@ -1,4 +1,4 @@
-<div id="bubble" [ngClass]="{ 'anchor-left': isAnchor && message.isOwnMessage, 'anchor-right': isAnchor && !message.isOwnMessage }">
+<div id="bubble" [ngClass]="{ 'anchor-right': isAnchor && message.isOwnMessage, 'anchor-left': isAnchor && !message.isOwnMessage }">
   <div id="header">{{ message.authorName }}</div>
   <div id="content">
     <span id="message">{{ message.textContent }}</span>

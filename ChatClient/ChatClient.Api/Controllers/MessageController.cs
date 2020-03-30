@@ -35,7 +35,7 @@ namespace ChatClient.Api.Controllers
         [HttpGet("GetLatestMessages")]
         public async Task<ActionResult<IEnumerable<LatestMessageViewModel>>> GetLatestMessages()
         {
-            User user = await _authService.GetUser();
+            User user = await _authService.GetCurrentUser();
 
             IEnumerable<MessageRecipient> recipients = await _messageService.GetLatestMessages();
 
@@ -65,7 +65,7 @@ namespace ChatClient.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            User user = await _authService.GetUser();
+            User user = await _authService.GetCurrentUser();
 
             IEnumerable<MessageRecipient> recipients = await _messageService.GetGroupMessages(user.UserId, groupId);
 
@@ -95,7 +95,7 @@ namespace ChatClient.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            User user = await _authService.GetUser();
+            User user = await _authService.GetCurrentUser();
 
             IEnumerable<MessageRecipient> recipients = await _messageService.GetPrivateMessages(user.UserId, recipientId);
 

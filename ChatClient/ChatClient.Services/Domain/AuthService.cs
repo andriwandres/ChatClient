@@ -1,8 +1,8 @@
 ﻿using AutoMapper;
 using ChatClient.Core;
+using ChatClient.Core.Exceptions.Auth;
 using ChatClient.Core.Models.Domain;
 using ChatClient.Core.Models.Dtos.Auth;
-using ChatClient.Core.Models.ViewModels.Auth;
 using ChatClient.Core.Options;
 using ChatClient.Core.Services;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +12,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
-namespace ChatClient.Services
+namespace ChatClient.Services.Domain
 {
     public class AuthService : IAuthService
     {
@@ -31,39 +31,39 @@ namespace ChatClient.Services
             _httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<AuthenticatedUser> Authenticate()
+        public async Task<(User user, string token)> Authenticate()
         {
-            User user = await GetUser();
+            User user = await GetCurrentUser();
 
-            string authHeader = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
-            string token = authHeader.Split(' ').Last();
+            // Extract the access token from the authorization header
+            string authorizationToken = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
+            string token = authorizationToken.Split(' ').Last();
 
-            return _mapper.Map<User, AuthenticatedUser>(user, options =>
-            {
-                options.Items["Token"] = token;
-            });
+            return (user, token);
         }
 
-        public async Task<User> GetUser()
+        public async Task<User> GetCurrentUser()
         {
             string id = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
-            return await _unitOfWork.UserRepository.GetUserById(int.Parse(id));
+            User user = await _unitOfWork.UserRepository.GetUserById(int.Parse(id));
+
+            return user;
         }
 
-        public async Task<bool> IsEmailTaken(string email)
+        public async Task<bool> EmailExists(string email)
         {
             return await _unitOfWork.UserRepository.IsEmailTaken(email);
         }
 
-        public async Task<AuthenticatedUser> Login(LoginDto credentials)
+        public async Task<(User user, string token)> Login(LoginDto credentials)
         {
             // Look for user with given email address
             User user = await _unitOfWork.UserRepository.GetUserByEmail(credentials.Email);
 
             if (user == null)
             {
-                return null;
+                throw new InvalidEmailException();
             }
 
             // Verify that the password is correct
@@ -71,18 +71,13 @@ namespace ChatClient.Services
 
             if (!passwordCorrect)
             {
-                return null;
+                throw new InvalidPasswordException();
             }
 
             // Generate jwt access token
             string token = _cryptoService.GenerateToken(user, _jwtOptions.Secret);
 
-            AuthenticatedUser result = _mapper.Map<User, AuthenticatedUser>(user, options =>
-            {
-                options.Items["Token"] = token;
-            });
-
-            return result;
+            return (user, token);
         }
 
         public async Task Register(RegisterDto credentials)
@@ -103,7 +98,7 @@ namespace ChatClient.Services
 
             // Save user to database
             await _unitOfWork.UserRepository.AddUser(user);
-            await _unitOfWork.Commit(); 
+            await _unitOfWork.Commit();
         }
     }
 }

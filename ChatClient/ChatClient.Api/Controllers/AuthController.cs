@@ -1,4 +1,6 @@
-﻿using ChatClient.Core.Models.Dtos.Auth;
+﻿using AutoMapper;
+using ChatClient.Core.Models.Domain;
+using ChatClient.Core.Models.Dtos.Auth;
 using ChatClient.Core.Models.ViewModels.Auth;
 using ChatClient.Core.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -13,10 +15,12 @@ namespace ChatClient.Api.Controllers
     [Produces("application/json")]
     public class AuthController : ControllerBase
     {
+        private readonly IMapper _mapper;
         private readonly IAuthService _authService;
         
-        public AuthController(IAuthService authService)
+        public AuthController(IAuthService authService, IMapper mapper)
         {
+            _mapper = mapper;
             _authService = authService;
         }
 
@@ -31,9 +35,14 @@ namespace ChatClient.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<AuthenticatedUser>> Authenticate()
         {
-            AuthenticatedUser user = await _authService.Authenticate();
+            (User user, string token) = await _authService.Authenticate();
 
-            return Ok(user);
+            AuthenticatedUser authenticatedUser = _mapper.Map<User, AuthenticatedUser>(user, options =>
+            {
+                options.Items.Add("Token", token);
+            });
+
+            return Ok(authenticatedUser);
         }
 
         /// <summary>
@@ -57,7 +66,7 @@ namespace ChatClient.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            bool isTaken = await _authService.IsEmailTaken(query.Email);
+            bool isTaken = await _authService.EmailExists(query.Email);
 
             return Ok(isTaken);
         }
@@ -107,9 +116,14 @@ namespace ChatClient.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            AuthenticatedUser user = await _authService.Login(credentials);
+            (User user, string token) = await _authService.Login(credentials);
 
-            return Ok(user);
+            AuthenticatedUser authenticatedUser = _mapper.Map<User, AuthenticatedUser>(user, options =>
+            {
+                options.Items.Add("Token", token);
+            });
+
+            return Ok(authenticatedUser);
         }
     }
 }

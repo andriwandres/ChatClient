@@ -61,6 +61,49 @@ namespace ChatClient.Data.Repositories
             return messages;
         }
 
+        public async Task<IEnumerable<MessageRecipient>> GetLatestAuthoredMessages(int userId)
+        {
+            IEnumerable<MessageRecipient> allAuthoredMessages = await Context.MessageRecipients
+                .Include(mr => mr.RecipientGroup)
+                .Include(mr => mr.Message)
+                    .ThenInclude(m => m.Author)
+                .Where(mr => mr.Message.AuthorId == userId)
+                .ToListAsync();
+
+            IEnumerable<MessageRecipient> latestAuthoredMessages = allAuthoredMessages
+                .GroupBy(mr => new
+                {
+                    UserId = mr.RecipientUserId == userId
+                        ? mr.Message.AuthorId
+                        : mr.RecipientUserId,
+
+                    GroupId = mr.RecipientGroup == null
+                        ? null
+                        : (int?) mr.RecipientGroup.GroupId
+                })
+                .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First());
+
+            return latestAuthoredMessages;
+        }
+
+        public async Task<IEnumerable<MessageRecipient>> GetLatestReceivedGroupMessages(int userId)
+        {
+            IEnumerable<GroupMembership> memberships = await Context.GroupMemberships
+                .Include(gm => gm.ReceivedGroupMessages)
+                .Where(gm => gm.UserId == userId)
+                .ToListAsync();
+
+            IEnumerable<MessageRecipient> latestReceivedGroupMessages = memberships
+                .Select(gm => gm.ReceivedGroupMessages.OrderByDescending(mr => mr.Message.CreatedAt).First());
+
+            return latestReceivedGroupMessages;
+        }
+
+        public async Task<IEnumerable<MessageRecipient>> GetLatestReceivedPrivateMessages(int userId)
+        {
+            return null;
+        }
+
         public async Task<IEnumerable<MessageRecipient>> GetLatestMessages(int userId)
         {
             // Get the user with his related messages/groups
@@ -83,21 +126,7 @@ namespace ChatClient.Data.Repositories
                 .SingleOrDefaultAsync(u => u.UserId == userId);
 
             // Get latest messages from the user itself
-            IEnumerable<MessageRecipient> latestAuthoredMessages = Context.MessageRecipients
-                .Include(mr => mr.RecipientGroup)
-                .Include(mr => mr.Message)
-                .ThenInclude(m => m.Author)
-                .Where(mr => mr.Message.AuthorId == user.UserId)
-                .ToList()
-                .GroupBy(mr => new {
-                    UserId = mr.RecipientUserId == user.UserId
-                        ? mr.Message.AuthorId
-                        : mr.RecipientUserId,
-                    GroupId = mr.RecipientGroup == null
-                        ? null
-                        : (int?) mr.RecipientGroup.GroupId
-                })
-                .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First());
+            IEnumerable<MessageRecipient> latestAuthoredMessages = await GetLatestAuthoredMessages(userId);
 
             // Get latest messages that the user received through private chats
             IEnumerable<MessageRecipient> latestReceivedPrivateMessages = user.ReceivedPrivateMessages

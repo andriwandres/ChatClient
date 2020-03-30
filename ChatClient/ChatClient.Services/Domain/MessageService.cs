@@ -4,7 +4,7 @@ using ChatClient.Core.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace ChatClient.Services
+namespace ChatClient.Services.Domain
 {
     public class MessageService : IMessageService
     {
@@ -34,7 +34,7 @@ namespace ChatClient.Services
 
         public async Task<IEnumerable<MessageRecipient>> GetLatestMessages()
         {
-            User user = await _authService.GetUser();
+            User user = await _authService.GetCurrentUser();
 
             return await _unitOfWork.MessageRecipientRepository.GetLatestMessages(user.UserId);
         }

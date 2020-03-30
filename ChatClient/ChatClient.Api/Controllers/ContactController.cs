@@ -30,7 +30,7 @@ namespace ChatClient.Api.Controllers
         [HttpGet("GetContacts")]
         public async Task<ActionResult<IEnumerable<ContactViewModel>>> GetContacts()
         {
-            User user = await _authService.GetUser();
+            User user = await _authService.GetCurrentUser();
 
             IEnumerable<UserRelationship> relationships = await _contactService.GetContacts(user.UserId);
 

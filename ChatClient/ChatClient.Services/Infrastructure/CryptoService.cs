@@ -9,7 +9,7 @@ using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace ChatClient.Services
+namespace ChatClient.Services.Infrastructure
 {
     public class CryptoService : ICryptoService
     {
@@ -54,6 +54,7 @@ namespace ChatClient.Services
         public string GenerateUserCode()
         {
             string code = string.Empty;
+
             const string alphabetic = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
             const string numeric = "0123456789";
 
