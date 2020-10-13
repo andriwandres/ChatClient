@@ -61,9 +61,18 @@ namespace ChatClient.Data.Repositories
             throw new System.NotImplementedException();
         }
 
-        public Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int recipientId)
+        public async Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int targetUserId)
         {
-            throw new System.NotImplementedException();
+            IQueryable<MessageRecipient> privateMessages = Context.MessageRecipients
+                .AsNoTracking()
+                .Include(mr => mr.Message)
+                .ThenInclude(m => m.Author)
+                .Where(mr =>
+                    (mr.Message.AuthorId == userId && mr.RecipientUserId == targetUserId) ||
+                    (mr.Message.AuthorId == targetUserId && mr.RecipientUserId == userId)
+                );
+
+            return await privateMessages.ToListAsync();
         }
 
         public async Task AddGroupMessage(IEnumerable<MessageRecipient> recipients)

@@ -40,9 +40,9 @@ namespace ChatClient.Services.Domain
             return await _unitOfWork.MessageRecipientRepository.GetLatestMessages(user.UserId);
         }
 
-        public async Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int recipientId)
+        public async Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int targetUserId)
         {
-            return await _unitOfWork.MessageRecipientRepository.GetPrivateMessages(userId, recipientId);
+            return await _unitOfWork.MessageRecipientRepository.GetPrivateMessages(userId, targetUserId);
         }
     }
 }

@@ -9,8 +9,8 @@ namespace ChatClient.Core.Services
     {
         Task<IEnumerable<LatestMessageViewModel>> GetLatestMessages();
         Task<IEnumerable<MessageRecipient>> GetGroupMessages(int userId, int groupId);
-        Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int recipientId);
+        Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int targetUserId);
         Task AddGroupMessage(int groupId, string message);
-        Task AddPrivateMessage(int recipientId, string message);
+        Task AddPrivateMessage(int targetUserId, string message);
     }
 }

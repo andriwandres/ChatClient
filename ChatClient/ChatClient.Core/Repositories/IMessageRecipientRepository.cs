@@ -9,7 +9,7 @@ namespace ChatClient.Core.Repositories
     {
         Task<IEnumerable<LatestMessageViewModel>> GetLatestMessages(int userId);
         Task<IEnumerable<MessageRecipient>> GetGroupMessages(int userId, int groupId);
-        Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int recipientId);
+        Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int targetUserId);
         Task AddGroupMessage(IEnumerable<MessageRecipient> recipients);
         Task AddPrivateMessage(MessageRecipient recipient);
     }
