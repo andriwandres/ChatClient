@@ -8,11 +8,25 @@ namespace ChatClient.Data.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
+                name: "DisplayImage",
+                columns: table => new
+                {
+                    DisplayImageId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Image = table.Column<byte[]>(nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_DisplayImage", x => x.DisplayImageId);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Groups",
                 columns: table => new
                 {
                     GroupId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    GroupImageId = table.Column<int>(nullable: true),
                     Name = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: true),
                     CreatedAt = table.Column<DateTime>(nullable: false)
@@ -20,6 +34,12 @@ namespace ChatClient.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Groups", x => x.GroupId);
+                    table.ForeignKey(
+                        name: "FK_Groups_DisplayImage_GroupImageId",
+                        column: x => x.GroupImageId,
+                        principalTable: "DisplayImage",
+                        principalColumn: "DisplayImageId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -28,6 +48,7 @@ namespace ChatClient.Data.Migrations
                 {
                     UserId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    ProfileImageId = table.Column<int>(nullable: true),
                     UserCode = table.Column<string>(maxLength: 6, nullable: false),
                     DisplayName = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: false),
@@ -39,6 +60,12 @@ namespace ChatClient.Data.Migrations
                 {
                     table.PrimaryKey("PK_Users", x => x.UserId);
                     table.UniqueConstraint("AK_Users_Email_UserCode", x => new { x.Email, x.UserCode });
+                    table.ForeignKey(
+                        name: "FK_Users_DisplayImage_ProfileImageId",
+                        column: x => x.ProfileImageId,
+                        principalTable: "DisplayImage",
+                        principalColumn: "DisplayImageId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -101,6 +128,33 @@ namespace ChatClient.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "UserRelationships",
+                columns: table => new
+                {
+                    UserRelationshipId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    InitiatorId = table.Column<int>(nullable: false),
+                    TargetId = table.Column<int>(nullable: false),
+                    Message = table.Column<string>(nullable: true),
+                    Status = table.Column<int>(nullable: false),
+                    CreatedAt = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_UserRelationships", x => x.UserRelationshipId);
+                    table.ForeignKey(
+                        name: "FK_UserRelationships_Users_InitiatorId",
+                        column: x => x.InitiatorId,
+                        principalTable: "Users",
+                        principalColumn: "UserId");
+                    table.ForeignKey(
+                        name: "FK_UserRelationships_Users_TargetId",
+                        column: x => x.TargetId,
+                        principalTable: "Users",
+                        principalColumn: "UserId");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "MessageRecipients",
                 columns: table => new
                 {
@@ -141,6 +195,13 @@ namespace ChatClient.Data.Migrations
                 column: "GroupId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Groups_GroupImageId",
+                table: "Groups",
+                column: "GroupImageId",
+                unique: true,
+                filter: "[GroupImageId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MessageRecipients_MessageId",
                 table: "MessageRecipients",
                 column: "MessageId");
@@ -166,12 +227,32 @@ namespace ChatClient.Data.Migrations
                 column: "ParentId",
                 unique: true,
                 filter: "[ParentId] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRelationships_InitiatorId",
+                table: "UserRelationships",
+                column: "InitiatorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserRelationships_TargetId",
+                table: "UserRelationships",
+                column: "TargetId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Users_ProfileImageId",
+                table: "Users",
+                column: "ProfileImageId",
+                unique: true,
+                filter: "[ProfileImageId] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
                 name: "MessageRecipients");
+
+            migrationBuilder.DropTable(
+                name: "UserRelationships");
 
             migrationBuilder.DropTable(
                 name: "Messages");
@@ -184,6 +265,9 @@ namespace ChatClient.Data.Migrations
 
             migrationBuilder.DropTable(
                 name: "Users");
+
+            migrationBuilder.DropTable(
+                name: "DisplayImage");
         }
     }
 }

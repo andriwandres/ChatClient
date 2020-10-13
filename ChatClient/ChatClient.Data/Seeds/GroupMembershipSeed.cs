@@ -10,7 +10,7 @@ namespace ChatClient.Data.Seeds
     {
         public void Configure(EntityTypeBuilder<GroupMembership> builder)
         {
-            builder.HasData(Memberships);  
+            //builder.HasData(Memberships);  
         }
 
         private readonly IEnumerable<GroupMembership> Memberships = new HashSet<GroupMembership>()

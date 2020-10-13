@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ChatClient.Data.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    [Migration("20200128072042_Initial")]
+    [Migration("20201013170556_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -20,6 +20,21 @@ namespace ChatClient.Data.Migrations
                 .HasAnnotation("ProductVersion", "3.1.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("ChatClient.Core.Models.Domain.DisplayImage", b =>
+                {
+                    b.Property<int>("DisplayImageId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<byte[]>("Image")
+                        .HasColumnType("varbinary(max)");
+
+                    b.HasKey("DisplayImageId");
+
+                    b.ToTable("DisplayImage");
+                });
 
             modelBuilder.Entity("ChatClient.Core.Models.Domain.Group", b =>
                 {
@@ -34,11 +49,18 @@ namespace ChatClient.Data.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("GroupImageId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("GroupId");
+
+                    b.HasIndex("GroupImageId")
+                        .IsUnique()
+                        .HasFilter("[GroupImageId] IS NOT NULL");
 
                     b.ToTable("Groups");
                 });
@@ -167,6 +189,9 @@ namespace ChatClient.Data.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
+                    b.Property<int?>("ProfileImageId")
+                        .HasColumnType("int");
+
                     b.Property<string>("UserCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(6)")
@@ -176,7 +201,49 @@ namespace ChatClient.Data.Migrations
 
                     b.HasAlternateKey("Email", "UserCode");
 
+                    b.HasIndex("ProfileImageId")
+                        .IsUnique()
+                        .HasFilter("[ProfileImageId] IS NOT NULL");
+
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("ChatClient.Core.Models.Domain.UserRelationship", b =>
+                {
+                    b.Property<int>("UserRelationshipId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("InitiatorId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Message")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TargetId")
+                        .HasColumnType("int");
+
+                    b.HasKey("UserRelationshipId");
+
+                    b.HasIndex("InitiatorId");
+
+                    b.HasIndex("TargetId");
+
+                    b.ToTable("UserRelationships");
+                });
+
+            modelBuilder.Entity("ChatClient.Core.Models.Domain.Group", b =>
+                {
+                    b.HasOne("ChatClient.Core.Models.Domain.DisplayImage", "GroupImage")
+                        .WithOne("Group")
+                        .HasForeignKey("ChatClient.Core.Models.Domain.Group", "GroupImageId");
                 });
 
             modelBuilder.Entity("ChatClient.Core.Models.Domain.GroupMembership", b =>
@@ -222,6 +289,28 @@ namespace ChatClient.Data.Migrations
                     b.HasOne("ChatClient.Core.Models.Domain.User", "RecipientUser")
                         .WithMany("ReceivedPrivateMessages")
                         .HasForeignKey("RecipientUserId");
+                });
+
+            modelBuilder.Entity("ChatClient.Core.Models.Domain.User", b =>
+                {
+                    b.HasOne("ChatClient.Core.Models.Domain.DisplayImage", "ProfileImage")
+                        .WithOne("User")
+                        .HasForeignKey("ChatClient.Core.Models.Domain.User", "ProfileImageId");
+                });
+
+            modelBuilder.Entity("ChatClient.Core.Models.Domain.UserRelationship", b =>
+                {
+                    b.HasOne("ChatClient.Core.Models.Domain.User", "Initiator")
+                        .WithMany("InitiatedUserRelationships")
+                        .HasForeignKey("InitiatorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("ChatClient.Core.Models.Domain.User", "Target")
+                        .WithMany("TargetedUserRelationships")
+                        .HasForeignKey("TargetId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

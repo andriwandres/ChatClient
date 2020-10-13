@@ -10,7 +10,7 @@ namespace ChatClient.Data.Seeds
     {
         public void Configure(EntityTypeBuilder<UserRelationship> builder)
         {
-            builder.HasData(Relationships);
+            //builder.HasData(Relationships);
         }
 
         private readonly IEnumerable<UserRelationship> Relationships = new HashSet<UserRelationship>

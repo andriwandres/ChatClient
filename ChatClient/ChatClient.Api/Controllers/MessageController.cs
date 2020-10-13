@@ -3,6 +3,7 @@ using ChatClient.Core.Models.Domain;
 using ChatClient.Core.Models.ViewModels.Message;
 using ChatClient.Core.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -33,16 +34,10 @@ namespace ChatClient.Api.Controllers
         /// </returns>
         [Authorize]
         [HttpGet("GetLatestMessages")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<LatestMessageViewModel>>> GetLatestMessages()
         {
-            User user = await _authService.GetCurrentUser();
-
-            IEnumerable<MessageRecipient> recipients = await _messageService.GetLatestMessages();
-
-            IEnumerable<LatestMessageViewModel> latestMessages = _mapper.Map<IEnumerable<LatestMessageViewModel>>(recipients, options =>
-            {
-                options.Items["UserId"] = user.UserId;
-            });
+            IEnumerable<LatestMessageViewModel> latestMessages = await _messageService.GetLatestMessages();
 
             return Ok(latestMessages);
         }

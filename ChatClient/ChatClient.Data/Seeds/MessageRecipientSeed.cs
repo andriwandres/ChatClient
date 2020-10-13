@@ -10,7 +10,7 @@ namespace ChatClient.Data.Seeds
     {
         public void Configure(EntityTypeBuilder<MessageRecipient> builder)
         {
-            builder.HasData(Recipients);  
+            //builder.HasData(Recipients);  
         }
 
         private readonly IEnumerable<MessageRecipient> Recipients = new HashSet<MessageRecipient>

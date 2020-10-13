@@ -14,24 +14,20 @@ namespace ChatClient.Core.Models.ViewModels.Message
         public byte[] Image { get; set; }
         public DateTime CreatedAt { get; set; }
 
-        public RecipientUser UserRecipient { get; set; }
-        public RecipientGroup GroupRecipient { get; set; }
-        
-        #region Nested Classes
+        public RecipientUserViewModel RecipientUser { get; set; }
+        public RecipientGroupViewModel RecipientGroup { get; set; }
+    }
 
-        public class RecipientUser
-        {
-            public int UserId { get; set; }
-            public string DisplayName { get; set; }
-            public bool IsOnline { get; set; }
-        }
+    public class RecipientUserViewModel
+    {
+        public int UserId { get; set; }
+        public string DisplayName { get; set; }
+        public bool IsOnline { get; set; }
+    }
 
-        public class RecipientGroup
-        {
-            public int GroupId { get; set; }
-            public string Name { get; set; }
-        }
-
-        #endregion
+    public class RecipientGroupViewModel
+    {
+        public int GroupId { get; set; }
+        public string Name { get; set; }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using ChatClient.Core.Models.Domain;
+using ChatClient.Core.Models.ViewModels.Message;
 using ChatClient.Core.Repositories;
 using ChatClient.Data.Database;
+using ChatClient.Data.Extensions;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,150 +14,56 @@ namespace ChatClient.Data.Repositories
     {
         public MessageRecipientRepository(ChatContext context) : base(context) { }
 
-        public async Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int recipientId)
+        public async Task<IEnumerable<LatestMessageViewModel>> GetLatestMessages(int userId)
         {
-            IEnumerable<MessageRecipient> messages = await Context.MessageRecipients
-                .Include(mr => mr.Message)
-                .ThenInclude(m => m.Author)
+            IQueryable<LatestMessageViewModel> latestMessages = Context.MessageRecipients
+                .AsNoTracking()
                 .Where(mr =>
-                    (mr.Message.AuthorId == userId && mr.RecipientUserId == recipientId) ||
-                    (mr.Message.AuthorId == recipientId && mr.RecipientUserId == userId)
+                    (mr.RecipientGroupId != null && mr.RecipientGroup.UserId == userId) ||
+                    (mr.RecipientUserId != null && (mr.RecipientUserId == userId || mr.Message.AuthorId == userId))
                 )
-                .ToListAsync();
-
-            return messages;
-        }
-
-        public async Task<IEnumerable<MessageRecipient>> GetGroupMessages(int userId, int groupId)
-        {
-            // Get Group Messages that the user has received
-            IEnumerable<MessageRecipient> receivedMessages = await Context.MessageRecipients
-                .Include(mr => mr.RecipientGroup)
-                .Include(mr => mr.Message)
-                .ThenInclude(m => m.Author)
-                .Where(mr =>
-                    mr.RecipientGroup != null &&
-                    mr.RecipientGroup.GroupId == groupId &&
-                    (mr.RecipientGroup.UserId == userId)
-                )
-                .ToListAsync();
-
-            // Get Group Messages Written by the User himself
-            IEnumerable<MessageRecipient> authoredMessages = await Context.Messages
-                .Include(m => m.Recipients)
-                .ThenInclude(mr => mr.RecipientGroup)
-                .Include(m => m.Recipients)
-                .ThenInclude(mr => mr.Message)
-                .ThenInclude(mr => mr.Author)
-                .Where(m =>
-                    m.AuthorId == userId &&
-                    m.Recipients.First().RecipientGroup != null &&
-                    m.Recipients.First().RecipientGroup.GroupId == groupId
-                )
-                .Select(m => m.Recipients.First())
-                .ToListAsync();
-
-            // Union the groups together
-            IEnumerable<MessageRecipient> messages = receivedMessages.Concat(authoredMessages);
-
-            return messages;
-        }
-
-        public async Task<IEnumerable<MessageRecipient>> GetLatestAuthoredMessages(int userId)
-        {
-            IEnumerable<MessageRecipient> allAuthoredMessages = await Context.MessageRecipients
-                .Include(mr => mr.RecipientGroup)
-                .Include(mr => mr.Message)
-                    .ThenInclude(m => m.Author)
-                .Where(mr => mr.Message.AuthorId == userId)
-                .ToListAsync();
-
-            IEnumerable<MessageRecipient> latestAuthoredMessages = allAuthoredMessages
-                .GroupBy(mr => new
-                {
-                    UserId = mr.RecipientUserId == userId
-                        ? mr.Message.AuthorId
-                        : mr.RecipientUserId,
-
-                    GroupId = mr.RecipientGroup == null
-                        ? null
-                        : (int?) mr.RecipientGroup.GroupId
-                })
-                .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First());
-
-            return latestAuthoredMessages;
-        }
-
-        public async Task<IEnumerable<MessageRecipient>> GetLatestReceivedGroupMessages(int userId)
-        {
-            IEnumerable<GroupMembership> memberships = await Context.GroupMemberships
-                .Include(gm => gm.ReceivedGroupMessages)
-                .Where(gm => gm.UserId == userId)
-                .ToListAsync();
-
-            IEnumerable<MessageRecipient> latestReceivedGroupMessages = memberships
-                .Select(gm => gm.ReceivedGroupMessages.OrderByDescending(mr => mr.Message.CreatedAt).First());
-
-            return latestReceivedGroupMessages;
-        }
-
-        public async Task<IEnumerable<MessageRecipient>> GetLatestReceivedPrivateMessages(int userId)
-        {
-            return null;
-        }
-
-        public async Task<IEnumerable<MessageRecipient>> GetLatestMessages(int userId)
-        {
-            // Get the user with his related messages/groups
-            User user = await Context.Users
-                .Include(u => u.ReceivedPrivateMessages)
-                    .ThenInclude(mr => mr.Message)
-                        .ThenInclude(m => m.Author)
-
-                .Include(u => u.GroupMemberships)
-                    .ThenInclude(gm => gm.Group)
-
-                .Include(u => u.GroupMemberships)
-                    .ThenInclude(gm => gm.ReceivedGroupMessages)
-
-                .Include(u => u.GroupMemberships)
-                    .ThenInclude(gm => gm.ReceivedGroupMessages)
-                        .ThenInclude(gm => gm.Message)
-                            .ThenInclude(m => m.Author)
-
-                .SingleOrDefaultAsync(u => u.UserId == userId);
-
-            // Get latest messages from the user itself
-            IEnumerable<MessageRecipient> latestAuthoredMessages = await GetLatestAuthoredMessages(userId);
-
-            // Get latest messages that the user received through private chats
-            IEnumerable<MessageRecipient> latestReceivedPrivateMessages = user.ReceivedPrivateMessages
-                .GroupBy(mr => mr.Message.AuthorId)
-                .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First())
-                .AsEnumerable();
-            
-            // Get latest messages that the user received through group chats
-            IEnumerable<MessageRecipient> latestReceivedGroupMessages = user.GroupMemberships
-                .Select(gm => gm.ReceivedGroupMessages.OrderByDescending(mr => mr.Message.CreatedAt).First())
-                .AsEnumerable();
-            
-            // Union messages together and group them
-            IEnumerable<MessageRecipient> latestMessages = latestAuthoredMessages
-                .Concat(latestReceivedPrivateMessages)
-                .Concat(latestReceivedGroupMessages)
+                .GroupByTargetAndGetLatestMessages(userId)
                 .OrderByDescending(mr => mr.Message.CreatedAt)
-                .GroupBy(mr => new
+                .Select(mr => new LatestMessageViewModel
                 {
-                    UserId = mr.RecipientUserId == user.UserId
-                        ? mr.Message.AuthorId
-                        : mr.RecipientUserId,
-                    GroupId = mr.RecipientGroup == null
-                        ? null
-                        : (int?)mr.RecipientGroup.GroupId
-                })
-                .Select(grouping => grouping.OrderByDescending(mr => mr.Message.CreatedAt).First());
+                    AuthorId = mr.Message.AuthorId,
+                    AuthorName = mr.Message.Author.DisplayName,
+                    CreatedAt = mr.Message.CreatedAt,
+                    IsRead = mr.IsRead,
+                    MessageId = mr.MessageId,
+                    MessageRecipientId = mr.MessageRecipientId,
+                    TextContent = mr.Message.TextContent,
+                    UnreadMessagesCount = mr.RecipientGroupId == null
+                        ? mr.RecipientUser.ReceivedPrivateMessages.Count(m => m.IsRead == false)
+                        : mr.RecipientGroup.ReceivedGroupMessages.Count(m => m.IsRead == false && mr.RecipientGroup.UserId != userId),
+                    RecipientGroup = mr.RecipientGroupId == null ? null : new RecipientGroupViewModel
+                    {
+                        GroupId = mr.RecipientGroup.GroupId,
+                        Name = mr.RecipientGroup.Group.Name,
+                    },
+                    RecipientUser = mr.RecipientUserId == null ? null : new RecipientUserViewModel
+                    {
+                        UserId = mr.RecipientUserId == userId
+                            ? mr.Message.Author.UserId
+                            : mr.RecipientUser.UserId,
 
-            return latestMessages;
+                        DisplayName = mr.RecipientUserId == userId
+                            ? mr.Message.Author.DisplayName
+                            : mr.RecipientUser.DisplayName,
+                    }
+                });
+
+            return await latestMessages.ToListAsync();
+        }
+
+        public Task<IEnumerable<MessageRecipient>> GetGroupMessages(int userId, int groupId)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int recipientId)
+        {
+            throw new System.NotImplementedException();
         }
 
         public async Task AddGroupMessage(IEnumerable<MessageRecipient> recipients)

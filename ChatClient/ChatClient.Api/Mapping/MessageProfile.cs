@@ -39,10 +39,10 @@ namespace ChatClient.Api.Mapping
                 {
                     config.MapFrom(mr => mr.Message.CreatedAt);
                 })
-                .ForMember(vm => vm.UserRecipient, config =>
+                .ForMember(vm => vm.RecipientUser, config =>
                 {
                     config.PreCondition(mr => mr.RecipientUser != null);
-                    config.MapFrom((source, destination, member, context) => new LatestMessageViewModel.RecipientUser
+                    config.MapFrom((source, destination, member, context) => new RecipientUserViewModel
                     {
                         UserId = source.RecipientUser.UserId == (int) context.Items["UserId"]
                             ? source.Message.AuthorId
@@ -53,10 +53,10 @@ namespace ChatClient.Api.Mapping
                             : source.RecipientUser.DisplayName,
                     });
                 })
-                .ForMember(vm => vm.GroupRecipient, config =>
+                .ForMember(vm => vm.RecipientGroup, config =>
                 {
                     config.PreCondition(mr => mr.RecipientGroup != null);
-                    config.MapFrom(mr => new LatestMessageViewModel.RecipientGroup
+                    config.MapFrom(mr => new RecipientGroupViewModel
                     {
                         GroupId = mr.RecipientGroup.GroupId,
                         Name = mr.RecipientGroup.Group.Name,

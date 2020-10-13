@@ -1,5 +1,6 @@
 ﻿using ChatClient.Core;
 using ChatClient.Core.Models.Domain;
+using ChatClient.Core.Models.ViewModels.Message;
 using ChatClient.Core.Services;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -32,7 +33,7 @@ namespace ChatClient.Services.Domain
             return await _unitOfWork.MessageRecipientRepository.GetGroupMessages(userId, groupId);
         }
 
-        public async Task<IEnumerable<MessageRecipient>> GetLatestMessages()
+        public async Task<IEnumerable<LatestMessageViewModel>> GetLatestMessages()
         {
             User user = await _authService.GetCurrentUser();
 
