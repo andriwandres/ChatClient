@@ -56,9 +56,20 @@ namespace ChatClient.Data.Repositories
             return await latestMessages.ToListAsync();
         }
 
-        public Task<IEnumerable<MessageRecipient>> GetGroupMessages(int userId, int groupId)
+        public async Task<IEnumerable<MessageRecipient>> GetGroupMessages(int userId, int groupId)
         {
-            throw new System.NotImplementedException();
+            IQueryable<MessageRecipient> groupMessages = Context.MessageRecipients
+                .AsNoTracking()
+                .Include(mr => mr.RecipientGroup)
+                .Include(mr => mr.Message)
+                .ThenInclude(m => m.Author)
+                .Where(mr =>
+                    mr.RecipientGroupId != null &&
+                    mr.RecipientGroup.GroupId == groupId &&
+                    mr.RecipientGroup.UserId == userId
+                );
+
+            return await groupMessages.ToListAsync();
         }
 
         public async Task<IEnumerable<MessageRecipient>> GetPrivateMessages(int userId, int targetUserId)
