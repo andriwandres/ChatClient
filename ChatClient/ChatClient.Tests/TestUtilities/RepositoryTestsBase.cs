@@ -10,18 +10,20 @@ namespace ChatClient.Tests.TestUtilities
     {
         protected ChatContext Context { get; private set; }
 
-        protected void SeedTestDatabase(DataContainer dataContainer)
+        public RepositoryTestsBase()
         {
+            // Create in-memory database for testing
             DbContextOptions<ChatContext> options = new DbContextOptionsBuilder<ChatContext>()
                 .UseInMemoryDatabase(Guid.NewGuid().ToString())
                 .Options;
 
             Context = new ChatContext(options);
 
-            // Clean and re-create database
-            Context.Database.EnsureDeleted();
             Context.Database.EnsureCreated();
+        }
 
+        protected void SeedDatabase(DataContainer dataContainer)
+        {
             // Add entities from mapping container
             Context.Users.AddRange(dataContainer.Users);
             Context.Groups.AddRange(dataContainer.Groups);

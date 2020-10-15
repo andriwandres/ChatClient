@@ -30,7 +30,7 @@ namespace ChatClient.Tests.RepositoryTests
                 }
             };
 
-            SeedTestDatabase(data);
+            SeedDatabase(data);
 
             // Initialize system under test
             _systemUnderTest = new UserRepository(Context);
