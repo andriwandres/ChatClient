@@ -78,7 +78,7 @@ namespace ChatClient.Tests.RepositoryTests
             // Arrange
             Message message = await Context.Messages.FirstOrDefaultAsync(m => m.MessageId == 1);
 
-            message.TextContent = "Update Test";
+            message.TextContent = "Updated Test";
 
             // Act
             _systemUnderTest.EditMessage(message);
