@@ -19,7 +19,7 @@ namespace Infrastructure.Persistence.Configurations
                 .HasMaxLength(8)
                 .IsRequired()
                 .ValueGeneratedOnAdd()
-                .HasValueGenerator((property, type) => new DisplayIdGenerator());
+                .HasValueGenerator((property, type) => new DisplayIdGenerator(8));
 
             builder.Property(user => user.UserName)
                 .IsRequired();
@@ -41,6 +41,9 @@ namespace Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             // Relationships
+            builder.HasOne(user => user.Country)
+                .WithMany(country => country.Users)
+                .HasForeignKey(user => user.CountryCode);
         }
     }
 }

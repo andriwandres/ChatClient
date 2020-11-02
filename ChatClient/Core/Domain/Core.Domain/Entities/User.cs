@@ -8,11 +8,16 @@ namespace Core.Domain.Entities
     {
         public int UserId { get; set; }
         public string DisplayId { get; set; }
+
+        public string CountryCode { get; set; }
+
         public string UserName { get; set; }
         public string Email { get; set; }
         public byte[] PasswordHash { get; set; }
         public byte[] PasswordSalt { get; set; }
         public DateTime Created { get; set; }
         public bool IsEmailConfirmed { get; set; }
+
+        public Country Country { get; set; }
     }
 }
