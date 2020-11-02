@@ -43,7 +43,7 @@ namespace Infrastructure.Persistence.Configurations
             // Relationships
             builder.HasOne(user => user.Country)
                 .WithMany(country => country.Users)
-                .HasForeignKey(user => user.CountryCode);
+                .HasForeignKey(user => user.CountryId);
         }
     }
 }

@@ -9,10 +9,13 @@ namespace Infrastructure.Persistence.Configurations
         public void Configure(EntityTypeBuilder<Country> builder)
         {
             // Keys
-            builder.HasKey(country => country.Code);
+            builder.HasKey(country => country.CountryId);
+
+            builder.HasAlternateKey(country => country.Code);
 
             // Properties
-            builder.Property(country => country.Name);
+            builder.Property(country => country.Name)
+                .IsRequired();
 
             // Relationships
             builder.HasMany(country => country.Users)

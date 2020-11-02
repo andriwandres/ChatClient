@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Core.Domain.Entities
 {
@@ -9,7 +7,7 @@ namespace Core.Domain.Entities
         public int UserId { get; set; }
         public string DisplayId { get; set; }
 
-        public string CountryCode { get; set; }
+        public int? CountryId { get; set; }
 
         public string UserName { get; set; }
         public string Email { get; set; }
