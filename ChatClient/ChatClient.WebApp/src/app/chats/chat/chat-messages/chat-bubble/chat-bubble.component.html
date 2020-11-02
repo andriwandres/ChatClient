@@ -1,7 +1,0 @@
-<div id="bubble" [ngClass]="{ 'anchor-right': isAnchor && message.isOwnMessage, 'anchor-left': isAnchor && !message.isOwnMessage }">
-  <div id="header">{{ message.authorName }}</div>
-  <div id="content">
-    <span id="message">{{ message.textContent }}</span>
-    <span id="timestamp">{{ message.createdAt | date: 'HH:mm' }}</span>
-  </div>
-</div>
