@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Presentation.Api.Extensions;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Presentation.Api
 {
@@ -21,7 +22,7 @@ namespace Presentation.Api
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -36,6 +37,14 @@ namespace Presentation.Api
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            // Use swagger UI
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
+            {
+                options.SwaggerEndpoint("/swagger/master/swagger.json", "Chat Client Web API");
+                options.DocExpansion(DocExpansion.List);
+            });
 
             app.UseHttpsRedirection();
 
