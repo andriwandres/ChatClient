@@ -21,23 +21,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Api", "Api", "{61F34F63-54A
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Client", "Client", "{325061FA-9731-4A26-8C61-2161C4BCA88F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Domain", "Core\Domain\Core.Domain\Core.Domain.csproj", "{04C5048A-70BD-4906-88EB-867A571544D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Domain", "Core\Domain\Core.Domain\Core.Domain.csproj", "{04C5048A-70BD-4906-88EB-867A571544D8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Domain.Test", "Core\Domain\Core.Domain.Test\Core.Domain.Test.csproj", "{595DAE4E-F5CF-4418-8ED2-CBBE56F6ADC3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Domain.Test", "Core\Domain\Core.Domain.Test\Core.Domain.Test.csproj", "{595DAE4E-F5CF-4418-8ED2-CBBE56F6ADC3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Application.Test", "Core\Application\Core.Application.Test\Core.Application.Test.csproj", "{D2339CDB-3024-4E4F-B7D3-AE10DF4019A6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Application.Test", "Core\Application\Core.Application.Test\Core.Application.Test.csproj", "{D2339CDB-3024-4E4F-B7D3-AE10DF4019A6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core.Application", "Core\Application\Core.Application\Core.Application.csproj", "{F25004B1-18AB-449B-BFED-CC0226E27B15}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Application", "Core\Application\Core.Application\Core.Application.csproj", "{F25004B1-18AB-449B-BFED-CC0226E27B15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Persistence", "Infrastructure\Persistence\Infrastructure.Persistence\Infrastructure.Persistence.csproj", "{2D3EF9E3-F32C-4636-BCBB-EB9356F6BF54}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Persistence", "Infrastructure\Persistence\Infrastructure.Persistence\Infrastructure.Persistence.csproj", "{2D3EF9E3-F32C-4636-BCBB-EB9356F6BF54}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Persistence.Test", "Infrastructure\Persistence\Infrastructure.Persistence.Test\Infrastructure.Persistence.Test.csproj", "{F188F760-B045-4576-BCCF-8D0BB2213840}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Persistence.Test", "Infrastructure\Persistence\Infrastructure.Persistence.Test\Infrastructure.Persistence.Test.csproj", "{F188F760-B045-4576-BCCF-8D0BB2213840}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Shared", "Infrastructure\Shared\Infrastructure.Shared\Infrastructure.Shared.csproj", "{93F7E186-AB51-46E6-B9FF-33104D7145FD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Shared", "Infrastructure\Shared\Infrastructure.Shared\Infrastructure.Shared.csproj", "{93F7E186-AB51-46E6-B9FF-33104D7145FD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Shared.Test", "Infrastructure\Shared\Infrastructure.Shared.Test\Infrastructure.Shared.Test.csproj", "{DC167D08-AF59-453B-BD90-DDFE509CBE58}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Shared.Test", "Infrastructure\Shared\Infrastructure.Shared.Test\Infrastructure.Shared.Test.csproj", "{DC167D08-AF59-453B-BD90-DDFE509CBE58}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation.Api", "Presentation\Api\Presentation.Api\Presentation.Api.csproj", "{3759A717-BF46-44A4-B3DA-9BB4D8868DAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation.Api", "Presentation\Api\Presentation.Api\Presentation.Api.csproj", "{3759A717-BF46-44A4-B3DA-9BB4D8868DAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

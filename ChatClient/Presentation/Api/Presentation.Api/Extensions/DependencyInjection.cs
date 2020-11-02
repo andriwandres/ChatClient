@@ -2,8 +2,11 @@
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using AutoMapper;
+using Core.Domain.Options;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
@@ -11,10 +14,16 @@ using Swashbuckle.AspNetCore.Swagger;
 
 namespace Presentation.Api.Extensions
 {
-    public static class ServiceCollectionExtensions
+    public static class DependencyInjection
     {
-        public static void AddPresentationServices(this IServiceCollection services)
+        public static void AddPresentationServices(this IServiceCollection services, IConfiguration configuration)
         {
+            // Add AutoMapper
+            services.AddAutoMapper(typeof(Startup));
+
+            // Configure options
+            services.Configure<CorsOptions>(configuration.GetSection("CrossOriginResourceSharing"));
+
             // Add swagger
             services.AddSwaggerGen(options =>
             {
@@ -71,6 +80,9 @@ namespace Presentation.Api.Extensions
 
             // Add swagger example providers from assemblies
             services.AddSwaggerExamplesFromAssemblyOf<Startup>();
+
+            // Add cross-origin-resource-sharing
+            services.AddCors();
 
             // Add support for controllers
             services.AddControllers()
