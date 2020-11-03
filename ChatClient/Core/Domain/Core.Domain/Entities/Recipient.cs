@@ -13,5 +13,6 @@ namespace Core.Domain.Entities
         public GroupMembership GroupMembership { get; set; }
         public ICollection<PinnedRecipient> Pins { get; set; }
         public ICollection<ArchivedRecipient> Archives { get; set; }
+        public ICollection<MessageRecipient> ReceivedMessages { get; set; }
     }
 }

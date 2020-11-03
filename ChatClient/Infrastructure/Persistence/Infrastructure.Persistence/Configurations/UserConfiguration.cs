@@ -74,6 +74,12 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasMany(user => user.PinnedRecipients)
                 .WithOne(pin => pin.User);
+
+            builder.HasMany(user => user.AuthoredMessages)
+                .WithOne(message => message.Author);
+
+            builder.HasMany(user => user.MessageReactions)
+                .WithOne(reaction => reaction.User);
         }
     }
 }

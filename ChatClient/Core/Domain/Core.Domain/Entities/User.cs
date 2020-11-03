@@ -28,5 +28,7 @@ namespace Core.Domain.Entities
         public ICollection<Friendship> AddressedFriendships{ get; set; }
         public ICollection<Friendship> RequestedFriendships { get; set; }
         public ICollection<GroupMembership> GroupMemberships { get; set; }
+        public ICollection<Message> AuthoredMessages { get; set; }
+        public ICollection<MessageReaction> MessageReactions { get; set; }
     }
 }

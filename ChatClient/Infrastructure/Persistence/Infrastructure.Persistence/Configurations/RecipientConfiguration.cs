@@ -40,6 +40,9 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasMany(recipient => recipient.Pins)
                 .WithOne(pin => pin.Recipient);
+
+            builder.HasMany(recipient => recipient.ReceivedMessages)
+                .WithOne(messageRecipient => messageRecipient.Recipient);
         }
     }
 }

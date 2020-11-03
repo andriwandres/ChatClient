@@ -13,13 +13,18 @@ namespace Core.Domain.Database
         DbSet<AvailabilityStatus> AvailabilityStatuses { get; set; }
         DbSet<Country> Countries { get; set; }
         DbSet<DisplayImage> DisplayImages { get; set; }
+        DbSet<Emoji> Emojis { get; set; }
         DbSet<Friendship> Friendships { get; set; }
         DbSet<FriendshipChange> FriendshipChanges { get; set; }
         DbSet<FriendshipStatus> FriendshipStatuses { get; set; }
         DbSet<Group> Groups { get; set; }
         DbSet<GroupMembership> GroupMemberships { get; set; }
         DbSet<Language> Languages { get; set; }
+        DbSet<Message> Messages { get;set; }
+        DbSet<MessageReaction> MessageReactions { get;set; }
+        DbSet<MessageRecipient> MessageRecipients { get;set; }
         DbSet<PinnedRecipient> PinnedRecipients { get; set; }
+        DbSet<Recipient> Recipients { get; set; }
         DbSet<Translation> Translations { get; set; }
         DbSet<User> Users { get; set; }
 
