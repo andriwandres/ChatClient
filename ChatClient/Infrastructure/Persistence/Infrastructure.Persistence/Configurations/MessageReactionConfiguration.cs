@@ -23,6 +23,11 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(reaction => reaction.MessageId);
 
             // Relationships
+            builder.HasOne(reaction => reaction.User)
+                .WithMany(user => user.MessageReactions)
+                .HasForeignKey(reaction => reaction.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
+
             builder.HasOne(reaction => reaction.Message)
                 .WithMany(message => message.Reactions)
                 .HasForeignKey(reaction => reaction.MessageId);

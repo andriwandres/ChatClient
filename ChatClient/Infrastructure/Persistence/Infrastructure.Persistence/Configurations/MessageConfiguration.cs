@@ -33,7 +33,8 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasOne(message => message.Parent)
                 .WithOne()
-                .HasForeignKey<Message>(message => message.ParentId);
+                .HasForeignKey<Message>(message => message.ParentId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(message => message.Reactions)
                 .WithOne(reaction => reaction.Message);

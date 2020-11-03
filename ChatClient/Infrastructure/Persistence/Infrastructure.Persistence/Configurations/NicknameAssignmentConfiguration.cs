@@ -26,7 +26,8 @@ namespace Infrastructure.Persistence.Configurations
             // Relationship
             builder.HasOne(nicknameAssignment => nicknameAssignment.Requester)
                 .WithMany(user => user.RequestedNicknames)
-                .HasForeignKey(nicknameAssignment => nicknameAssignment.RequesterId);
+                .HasForeignKey(nicknameAssignment => nicknameAssignment.RequesterId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(nicknameAssignment => nicknameAssignment.Addressee)
                 .WithMany(user => user.AddressedNicknames)

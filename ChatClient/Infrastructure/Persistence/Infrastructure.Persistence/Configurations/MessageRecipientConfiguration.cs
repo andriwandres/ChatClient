@@ -37,7 +37,8 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasOne(messageRecipient => messageRecipient.Recipient)
                 .WithMany(recipient => recipient.ReceivedMessages)
-                .HasForeignKey(messageRecipient => messageRecipient.RecipientId);
+                .HasForeignKey(messageRecipient => messageRecipient.RecipientId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

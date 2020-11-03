@@ -27,7 +27,8 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasOne(archive => archive.User)
                 .WithMany(user => user.ArchivedRecipients)
-                .HasForeignKey(archive => archive.UserId);
+                .HasForeignKey(archive => archive.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }

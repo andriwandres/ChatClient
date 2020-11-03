@@ -23,7 +23,8 @@ namespace Infrastructure.Persistence.Configurations
             // Relationships
             builder.HasOne(friendship => friendship.Requester)
                 .WithMany(user => user.RequestedFriendships)
-                .HasForeignKey(friendship => friendship.RequesterId);
+                .HasForeignKey(friendship => friendship.RequesterId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasOne(friendship => friendship.Addressee)
                 .WithMany(user => user.AddressedFriendships)

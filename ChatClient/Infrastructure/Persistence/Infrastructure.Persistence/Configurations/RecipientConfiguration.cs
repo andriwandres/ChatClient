@@ -40,7 +40,8 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasOne(recipient => recipient.User)
                 .WithOne(user => user.Recipient)
-                .HasForeignKey<Recipient>(recipient => recipient.UserId);
+                .HasForeignKey<Recipient>(recipient => recipient.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
 
             builder.HasMany(recipient => recipient.Pins)
                 .WithOne(pin => pin.Recipient);
