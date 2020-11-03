@@ -9,31 +9,25 @@ namespace Infrastructure.Persistence.Generators
 {
     public class DisplayIdGenerator : ValueGenerator<string>
     {
-        private readonly int _length;
-
-        public DisplayIdGenerator(int length)
-        {
-            _length = length;
-        }
+        private const int Length = 8;
+        private const string Characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
         public override string Next(EntityEntry entry)
         {
-            const string alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
-            byte[] data = new byte[4 * _length];
+            byte[] data = new byte[4 * Length];
             
             using RNGCryptoServiceProvider cryptoProvider = new RNGCryptoServiceProvider();
 
             cryptoProvider.GetBytes(data);
 
-            StringBuilder stringBuilder = new StringBuilder(_length);
+            StringBuilder stringBuilder = new StringBuilder(Length);
 
-            for (int index = 0; index < _length; index++)
+            for (int index = 0; index < Length; index++)
             {
                 int random = BitConverter.ToInt32(data, index * 4);
-                int characterIndex = random % alphabet.Length;
+                int characterIndex = random % Characters.Length;
 
-                stringBuilder.Append(alphabet.ElementAt(characterIndex));
+                stringBuilder.Append(Characters.ElementAt(characterIndex));
             }
 
             return stringBuilder.ToString();

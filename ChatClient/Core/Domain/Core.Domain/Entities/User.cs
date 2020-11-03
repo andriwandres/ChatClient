@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Core.Domain.Entities
 {
@@ -17,5 +18,7 @@ namespace Core.Domain.Entities
         public bool IsEmailConfirmed { get; set; }
 
         public Country Country { get; set; }
+        public ICollection<Friendship> AddressedFriendships{ get; set; }
+        public ICollection<Friendship> RequestedFriendships { get; set; }
     }
 }
