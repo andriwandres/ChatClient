@@ -9,6 +9,7 @@ namespace Core.Domain.Entities
         public string DisplayId { get; set; }
 
         public int? CountryId { get; set; }
+        public int? ProfileImageId { get; set; }
 
         public string UserName { get; set; }
         public string Email { get; set; }
@@ -18,6 +19,8 @@ namespace Core.Domain.Entities
         public bool IsEmailConfirmed { get; set; }
 
         public Country Country { get; set; }
+        public Availability Availability { get; set; }
+        public DisplayImage ProfileImage { get; set; }
         public ICollection<Friendship> AddressedFriendships{ get; set; }
         public ICollection<Friendship> RequestedFriendships { get; set; }
     }

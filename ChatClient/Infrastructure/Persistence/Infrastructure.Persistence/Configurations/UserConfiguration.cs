@@ -41,13 +41,20 @@ namespace Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             // Relationships
+            builder.HasOne(user => user.ProfileImage)
+                .WithOne()
+                .HasForeignKey<User>(user => user.ProfileImageId);
+
+            builder.HasOne(user => user.Availability)
+                .WithOne(availability => availability.User);
+
             builder.HasOne(user => user.Country)
                 .WithMany(country => country.Users)
                 .HasForeignKey(user => user.CountryId);
 
             builder.HasMany(user => user.AddressedFriendships)
                 .WithOne(friendship => friendship.Addressee);
-            
+
             builder.HasMany(user => user.RequestedFriendships)
                 .WithOne(friendship => friendship.Requester);
         }
