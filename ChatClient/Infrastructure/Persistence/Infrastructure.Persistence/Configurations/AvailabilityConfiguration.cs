@@ -16,12 +16,16 @@ namespace Infrastructure.Persistence.Configurations
                 .IsUnique();
 
             // Properties
-            builder.Property(availability => availability.ModifiedManually)
-                .IsRequired()
-                .HasDefaultValue(false);
+            builder.Property(availability => availability.UserId);
+
+            builder.Property(availability => availability.StatusId);
 
             builder.Property(availability => availability.Modified)
                 .IsRequired();
+
+            builder.Property(availability => availability.ModifiedManually)
+                .IsRequired()
+                .HasDefaultValue(false);
 
             // Relationships
             builder.HasOne(availability => availability.Status)

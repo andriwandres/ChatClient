@@ -15,6 +15,11 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasIndex(archive => new { archive.UserId, archive.RecipientId })
                 .IsUnique();
 
+            // Properties
+            builder.Property(archive => archive.UserId);
+
+            builder.Property(archive => archive.RecipientId);
+
             // Relationships
             builder.HasOne(archive => archive.Recipient)
                 .WithMany(recipient => recipient.Archives)

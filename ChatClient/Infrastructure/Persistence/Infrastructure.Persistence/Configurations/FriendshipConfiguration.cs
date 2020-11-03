@@ -15,6 +15,11 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasIndex(friendship => new {friendship.RequesterId, friendship.AddresseeId})
                 .IsUnique();
 
+            // Properties
+            builder.Property(friendship => friendship.RequesterId);
+
+            builder.Property(friendship => friendship.AddresseeId);
+
             // Relationships
             builder.HasOne(friendship => friendship.Requester)
                 .WithMany(user => user.RequestedFriendships)

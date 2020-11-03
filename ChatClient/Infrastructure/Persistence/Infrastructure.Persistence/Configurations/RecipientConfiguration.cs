@@ -20,6 +20,10 @@ namespace Infrastructure.Persistence.Configurations
                 .IsUnique();
 
             // Properties
+            builder.Property(recipient => recipient.UserId);
+
+            builder.Property(recipient => recipient.GroupMembershipId);
+
             builder.Property(recipient => recipient.DisplayId)
                 .IsRequired()
                 .HasMaxLength(8)

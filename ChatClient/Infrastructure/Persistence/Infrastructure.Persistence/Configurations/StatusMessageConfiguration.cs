@@ -16,6 +16,8 @@ namespace Infrastructure.Persistence.Configurations
                 .IsUnique();
 
             // Properties
+            builder.Property(message => message.UserId);
+
             builder.Property(message => message.Message);
 
             // Relationships

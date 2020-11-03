@@ -10,7 +10,7 @@ namespace Infrastructure.Persistence.Configurations
         {
             // Keys
             builder.HasKey(status => status.FriendshipStatusId);
-
+            
             // Properties
             builder.Property(status => status.Name)
                 .IsRequired();

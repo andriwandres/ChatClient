@@ -23,6 +23,10 @@ namespace Infrastructure.Persistence.Configurations
                 .IsUnique();
 
             // Properties
+            builder.Property(user => user.CountryId);
+
+            builder.Property(user => user.ProfileImageId);
+
             builder.Property(user => user.DisplayId)
                 .HasMaxLength(8)
                 .IsRequired()
@@ -51,9 +55,6 @@ namespace Infrastructure.Persistence.Configurations
             // Relationships
             builder.HasOne(user => user.StatusMessage)
                 .WithOne(statusMessage => statusMessage.User);
-
-            builder.HasMany(user => user.RedeemTokens)
-                .WithOne(token => token.User);
 
             builder.HasOne(user => user.Recipient)
                 .WithOne(recipient => recipient.User);
@@ -86,6 +87,15 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasMany(user => user.MessageReactions)
                 .WithOne(reaction => reaction.User);
+
+            builder.HasMany(user => user.AddressedNicknames)
+                .WithOne(nicknameAssignment => nicknameAssignment.Addressee);
+
+            builder.HasMany(user => user.RequestedNicknames)
+                .WithOne(nicknameAssignment => nicknameAssignment.Requester);
+
+            builder.HasMany(user => user.RedeemTokens)
+                .WithOne(token => token.User);
         }
     }
 }

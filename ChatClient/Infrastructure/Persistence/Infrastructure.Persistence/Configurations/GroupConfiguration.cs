@@ -12,6 +12,8 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasKey(group => group.GroupId);
 
             // Properties
+            builder.Property(group => group.GroupImageId);
+
             builder.Property(group => group.Name)
                 .IsRequired();
 

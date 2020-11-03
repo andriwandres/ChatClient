@@ -15,6 +15,8 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasIndex(translation => new { translation.LanguageId, translation.Key });
 
             // Properties
+            builder.Property(translation => translation.LanguageId);
+
             builder.Property(translation => translation.Key)
                 .IsRequired();
 

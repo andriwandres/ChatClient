@@ -16,6 +16,10 @@ namespace Infrastructure.Persistence.Configurations
                 .IsUnique();
 
             // Properties
+            builder.Property(messageRecipient => messageRecipient.MessageId);
+
+            builder.Property(messageRecipient => messageRecipient.RecipientId);
+
             builder.Property(messageRecipient => messageRecipient.IsForwarded)
                 .IsRequired()
                 .HasDefaultValue(false);

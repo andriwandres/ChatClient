@@ -15,6 +15,13 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasIndex(reaction => new { reaction.UserId, reaction.MessageId, reaction.EmojiId })
                 .IsUnique();
 
+            // Properties
+            builder.Property(reaction => reaction.UserId);
+
+            builder.Property(reaction => reaction.EmojiId);
+
+            builder.Property(reaction => reaction.MessageId);
+
             // Relationships
             builder.HasOne(reaction => reaction.Message)
                 .WithMany(message => message.Reactions)

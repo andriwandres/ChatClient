@@ -16,9 +16,13 @@ namespace Infrastructure.Persistence.Configurations
                 .IsUnique();
 
             // Properties
+            builder.Property(pin => pin.UserId);
+
+            builder.Property(pin => pin.RecipientId);
+
             builder.Property(pin => pin.OrderIndex);
 
-            builder.Property(pin => pin.Created)
+            builder.Property(pin => pin.Modified)
                 .IsRequired();
 
             // Relationships

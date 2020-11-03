@@ -12,6 +12,10 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasKey(token => token.RedeemTokenId);
 
             // Properties
+            builder.Property(token => token.UserId);
+
+            builder.Property(token => token.TypeId);
+
             builder.Property(token => token.Token)
                 .IsRequired()
                 .ValueGeneratedOnAdd();

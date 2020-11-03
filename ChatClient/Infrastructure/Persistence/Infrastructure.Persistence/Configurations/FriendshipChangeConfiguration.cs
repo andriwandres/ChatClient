@@ -12,6 +12,10 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasKey(change => change.FriendshipChangeId);
 
             // Properties
+            builder.Property(change => change.FriendshipId);
+
+            builder.Property(change => change.StatusId);
+
             builder.Property(change => change.Created)
                 .IsRequired();
 

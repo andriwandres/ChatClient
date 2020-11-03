@@ -16,6 +16,10 @@ namespace Infrastructure.Persistence.Configurations
                 .IsUnique();
 
             // Properties
+            builder.Property(nicknameAssignment => nicknameAssignment.RequesterId);
+
+            builder.Property(nicknameAssignment => nicknameAssignment.AddresseeId);
+
             builder.Property(nicknameAssignment => nicknameAssignment.NicknameValue)
                 .IsRequired();
 

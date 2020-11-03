@@ -12,6 +12,10 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasKey(message => message.MessageId);
 
             // Properties
+            builder.Property(message => message.AuthorId);
+
+            builder.Property(message => message.ParentId);
+
             builder.Property(message => message.HtmlContent)
                 .IsRequired();
 

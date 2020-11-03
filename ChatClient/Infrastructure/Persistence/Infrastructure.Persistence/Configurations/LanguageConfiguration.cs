@@ -16,6 +16,10 @@ namespace Infrastructure.Persistence.Configurations
                 .IsUnique();
 
             // Properties
+            builder.Property(language => language.Code)
+                .IsRequired()
+                .HasMaxLength(2);
+
             builder.Property(language => language.Name)
                 .IsRequired();
 

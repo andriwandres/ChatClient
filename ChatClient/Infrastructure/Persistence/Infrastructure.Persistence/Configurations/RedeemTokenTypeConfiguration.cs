@@ -11,6 +11,10 @@ namespace Infrastructure.Persistence.Configurations
             // Keys
             builder.HasKey(type => type.RedeemTokenTypeId);
 
+            // Indexes
+            builder.HasIndex(type => type.Name)
+                .IsUnique();
+
             // Properties
             builder.Property(type => type.Name)
                 .IsRequired();

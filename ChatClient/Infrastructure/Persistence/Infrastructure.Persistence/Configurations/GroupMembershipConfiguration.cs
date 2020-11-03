@@ -16,8 +16,13 @@ namespace Infrastructure.Persistence.Configurations
                 .IsUnique();
 
             // Properties
+            builder.Property(membership => membership.UserId);
+
+            builder.Property(membership => membership.GroupId);
+
             builder.Property(membership => membership.IsAdmin)
-                .IsRequired();
+                .IsRequired()
+                .HasDefaultValue(false);
 
             // Relationships
             builder.HasOne(membership => membership.Recipient)
