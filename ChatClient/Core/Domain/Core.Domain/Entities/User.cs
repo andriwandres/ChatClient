@@ -23,5 +23,6 @@ namespace Core.Domain.Entities
         public DisplayImage ProfileImage { get; set; }
         public ICollection<Friendship> AddressedFriendships{ get; set; }
         public ICollection<Friendship> RequestedFriendships { get; set; }
+        public ICollection<GroupMembership> GroupMemberships { get; set; }
     }
 }

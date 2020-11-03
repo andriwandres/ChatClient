@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Core.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Core.Domain.Database
 {
@@ -15,6 +15,8 @@ namespace Core.Domain.Database
         DbSet<Friendship> Friendships { get; set; }
         DbSet<FriendshipChange> FriendshipChanges { get; set; }
         DbSet<FriendshipStatus> FriendshipStatuses { get; set; }
+        DbSet<Group> Groups { get; set; }
+        DbSet<GroupMembership> GroupMemberships { get; set; }
         DbSet<Language> Languages { get; set; }
         DbSet<Translation> Translations { get; set; }
         DbSet<User> Users { get; set; }

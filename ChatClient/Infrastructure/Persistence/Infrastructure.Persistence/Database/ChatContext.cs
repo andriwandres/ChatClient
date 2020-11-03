@@ -1,7 +1,7 @@
-﻿using System.Reflection;
-using Core.Domain.Database;
+﻿using Core.Domain.Database;
 using Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 namespace Infrastructure.Persistence.Database
 {
@@ -14,6 +14,8 @@ namespace Infrastructure.Persistence.Database
         public DbSet<Friendship> Friendships { get; set; }
         public DbSet<FriendshipChange> FriendshipChanges { get; set; }
         public DbSet<FriendshipStatus> FriendshipStatuses { get; set; }
+        public DbSet<Group> Groups { get; set; }
+        public DbSet<GroupMembership> GroupMemberships { get; set; }
         public DbSet<Language> Languages { get; set; }
         public DbSet<Translation> Translations { get; set; }
         public DbSet<User> Users { get; set; }
