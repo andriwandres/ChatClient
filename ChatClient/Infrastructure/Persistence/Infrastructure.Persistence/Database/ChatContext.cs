@@ -22,10 +22,12 @@ namespace Infrastructure.Persistence.Database
         public DbSet<Message> Messages { get; set; }
         public DbSet<MessageReaction> MessageReactions { get; set; }
         public DbSet<MessageRecipient> MessageRecipients { get; set; }
+        public DbSet<NicknameAssignment> NicknameAssignments { get; set; }
         public DbSet<PinnedRecipient> PinnedRecipients { get; set; }
         public DbSet<Recipient> Recipients { get; set; }
         public DbSet<RedeemToken> RedeemTokens { get; set; }
         public DbSet<RedeemTokenType> RedeemTokenTypes { get; set; }
+        public DbSet<StatusMessage> StatusMessages { get; set; }
         public DbSet<Translation> Translations { get; set; }
         public DbSet<User> Users { get; set; }
 

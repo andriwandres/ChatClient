@@ -23,6 +23,7 @@ namespace Core.Domain.Entities
         public Recipient Recipient { get; set; }
         public Availability Availability { get; set; }
         public DisplayImage ProfileImage { get; set; }
+        public StatusMessage StatusMessage { get; set; }
 
         public ICollection<RedeemToken> RedeemTokens { get; set; }
         public ICollection<ArchivedRecipient> ArchivedRecipients { get; set; }
@@ -32,5 +33,7 @@ namespace Core.Domain.Entities
         public ICollection<GroupMembership> GroupMemberships { get; set; }
         public ICollection<Message> AuthoredMessages { get; set; }
         public ICollection<MessageReaction> MessageReactions { get; set; }
+        public ICollection<NicknameAssignment> AddressedNicknames { get; set; }
+        public ICollection<NicknameAssignment> RequestedNicknames { get; set; }
     }
 }
