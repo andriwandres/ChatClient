@@ -19,8 +19,12 @@ namespace Core.Domain.Entities
         public bool IsEmailConfirmed { get; set; }
 
         public Country Country { get; set; }
+        public Recipient Recipient { get; set; }
         public Availability Availability { get; set; }
         public DisplayImage ProfileImage { get; set; }
+
+        public ICollection<ArchivedRecipient> ArchivedRecipients { get; set; }
+        public ICollection<PinnedRecipient> PinnedRecipients { get; set; }
         public ICollection<Friendship> AddressedFriendships{ get; set; }
         public ICollection<Friendship> RequestedFriendships { get; set; }
         public ICollection<GroupMembership> GroupMemberships { get; set; }

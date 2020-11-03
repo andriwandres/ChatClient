@@ -11,7 +11,9 @@ namespace Infrastructure.Persistence.Configurations
             // Keys
             builder.HasKey(friendship => friendship.FriendshipId);
 
-            builder.HasAlternateKey(friendship => new { friendship.RequesterId, friendship.AddresseeId });
+            // Indexes
+            builder.HasIndex(friendship => new {friendship.RequesterId, friendship.AddresseeId})
+                .IsUnique();
 
             // Relationships
             builder.HasOne(friendship => friendship.Requester)

@@ -11,7 +11,8 @@ namespace Infrastructure.Persistence.Configurations
             // Keys
             builder.HasKey(translation => translation.TranslationId);
 
-            builder.HasAlternateKey(translation => new { translation.LanguageId, translation.Key });
+            // Indexes
+            builder.HasIndex(translation => new { translation.LanguageId, translation.Key });
 
             // Properties
             builder.Property(translation => translation.Key)

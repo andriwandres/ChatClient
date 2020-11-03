@@ -9,5 +9,6 @@
 
         public User User { get; set; }
         public Group Group { get; set; }
+        public Recipient Recipient { get; set; }
     }
 }

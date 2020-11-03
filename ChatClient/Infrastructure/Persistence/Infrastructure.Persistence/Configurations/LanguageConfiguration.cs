@@ -11,7 +11,9 @@ namespace Infrastructure.Persistence.Configurations
             // Keys
             builder.HasKey(language => language.LanguageId);
 
-            builder.HasAlternateKey(language => language.Code);
+            // Indexes
+            builder.HasIndex(language => language.Code)
+                .IsUnique();
 
             // Properties
             builder.Property(language => language.Name)

@@ -11,13 +11,18 @@ namespace Infrastructure.Persistence.Configurations
             // Keys
             builder.HasKey(membership => membership.GroupMembershipId);
 
-            builder.HasAlternateKey(membership => new { membership.UserId, membership.GroupId });
+            // Indexes
+            builder.HasIndex(membership => new {membership.UserId, membership.GroupId})
+                .IsUnique();
 
             // Properties
             builder.Property(membership => membership.IsAdmin)
                 .IsRequired();
 
             // Relationships
+            builder.HasOne(membership => membership.Recipient)
+                .WithOne(recipient => recipient.GroupMembership);
+
             builder.HasOne(membership => membership.Group)
                 .WithMany(group => group.Memberships)
                 .HasForeignKey(membership => membership.GroupId);

@@ -7,6 +7,7 @@ namespace Infrastructure.Persistence.Database
 {
     public class ChatContext : DbContext, IChatContext
     {
+        public DbSet<ArchivedRecipient> ArchivedRecipients { get; set; }
         public DbSet<Availability> Availabilities { get; set; }
         public DbSet<AvailabilityStatus> AvailabilityStatuses { get; set; }
         public DbSet<Country> Countries { get; set; }
@@ -17,6 +18,7 @@ namespace Infrastructure.Persistence.Database
         public DbSet<Group> Groups { get; set; }
         public DbSet<GroupMembership> GroupMemberships { get; set; }
         public DbSet<Language> Languages { get; set; }
+        public DbSet<PinnedRecipient> PinnedRecipients { get; set; }
         public DbSet<Translation> Translations { get; set; }
         public DbSet<User> Users { get; set; }
 

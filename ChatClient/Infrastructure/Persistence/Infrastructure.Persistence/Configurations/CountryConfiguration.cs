@@ -11,9 +11,15 @@ namespace Infrastructure.Persistence.Configurations
             // Keys
             builder.HasKey(country => country.CountryId);
 
-            builder.HasAlternateKey(country => country.Code);
+            // Indexes
+            builder.HasIndex(country => country.Code)
+                .IsUnique();
 
             // Properties
+            builder.Property(country => country.Code)
+                .IsRequired()
+                .HasMaxLength(2);
+
             builder.Property(country => country.Name)
                 .IsRequired();
 

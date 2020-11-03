@@ -8,6 +8,7 @@ namespace Core.Domain.Database
 {
     public interface IChatContext : IDisposable
     {
+        DbSet<ArchivedRecipient> ArchivedRecipients { get; set; }
         DbSet<Availability> Availabilities { get; set; }
         DbSet<AvailabilityStatus> AvailabilityStatuses { get; set; }
         DbSet<Country> Countries { get; set; }
@@ -18,6 +19,7 @@ namespace Core.Domain.Database
         DbSet<Group> Groups { get; set; }
         DbSet<GroupMembership> GroupMemberships { get; set; }
         DbSet<Language> Languages { get; set; }
+        DbSet<PinnedRecipient> PinnedRecipients { get; set; }
         DbSet<Translation> Translations { get; set; }
         DbSet<User> Users { get; set; }
 

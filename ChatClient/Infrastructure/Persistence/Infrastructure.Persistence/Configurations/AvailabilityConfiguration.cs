@@ -11,7 +11,9 @@ namespace Infrastructure.Persistence.Configurations
             // Keys
             builder.HasKey(availability => availability.AvailabilityId);
 
-            builder.HasAlternateKey(availability => availability.UserId);
+            // Indexes
+            builder.HasIndex(availability => availability.UserId)
+                .IsUnique();
 
             // Properties
             builder.Property(availability => availability.ModifiedManually)

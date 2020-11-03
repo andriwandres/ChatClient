@@ -12,7 +12,15 @@ namespace Infrastructure.Persistence.Configurations
             // Keys
             builder.HasKey(user => user.UserId);
 
-            builder.HasAlternateKey(user => user.DisplayId);
+            // Indexes
+            builder.HasIndex(user => user.DisplayId)
+                .IsUnique();
+
+            builder.HasIndex(user => user.UserName)
+                .IsUnique();
+
+            builder.HasIndex(user => user.Email)
+                .IsUnique();
 
             // Properties
             builder.Property(user => user.DisplayId)
@@ -41,6 +49,9 @@ namespace Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             // Relationships
+            builder.HasOne(user => user.Recipient)
+                .WithOne(recipient => recipient.User);
+
             builder.HasOne(user => user.ProfileImage)
                 .WithOne()
                 .HasForeignKey<User>(user => user.ProfileImageId);
@@ -57,6 +68,12 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasMany(user => user.RequestedFriendships)
                 .WithOne(friendship => friendship.Requester);
+
+            builder.HasMany(user => user.ArchivedRecipients)
+                .WithOne(archive => archive.User);
+
+            builder.HasMany(user => user.PinnedRecipients)
+                .WithOne(pin => pin.User);
         }
     }
 }
