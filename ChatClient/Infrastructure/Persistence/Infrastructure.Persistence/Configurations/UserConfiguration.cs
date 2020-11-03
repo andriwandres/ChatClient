@@ -49,6 +49,9 @@ namespace Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             // Relationships
+            builder.HasMany(user => user.RedeemTokens)
+                .WithOne(token => token.User);
+
             builder.HasOne(user => user.Recipient)
                 .WithOne(recipient => recipient.User);
 

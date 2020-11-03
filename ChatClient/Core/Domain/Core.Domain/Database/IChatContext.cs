@@ -25,6 +25,8 @@ namespace Core.Domain.Database
         DbSet<MessageRecipient> MessageRecipients { get;set; }
         DbSet<PinnedRecipient> PinnedRecipients { get; set; }
         DbSet<Recipient> Recipients { get; set; }
+        DbSet<RedeemToken> RedeemTokens { get; set; }
+        DbSet<RedeemTokenType> RedeemTokenTypes { get; set; }
         DbSet<Translation> Translations { get; set; }
         DbSet<User> Users { get; set; }
 

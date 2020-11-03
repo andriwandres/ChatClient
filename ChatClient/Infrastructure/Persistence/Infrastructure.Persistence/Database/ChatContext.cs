@@ -24,6 +24,8 @@ namespace Infrastructure.Persistence.Database
         public DbSet<MessageRecipient> MessageRecipients { get; set; }
         public DbSet<PinnedRecipient> PinnedRecipients { get; set; }
         public DbSet<Recipient> Recipients { get; set; }
+        public DbSet<RedeemToken> RedeemTokens { get; set; }
+        public DbSet<RedeemTokenType> RedeemTokenTypes { get; set; }
         public DbSet<Translation> Translations { get; set; }
         public DbSet<User> Users { get; set; }
 

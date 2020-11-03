@@ -11,6 +11,7 @@ namespace Core.Domain.Entities
         public int? CountryId { get; set; }
         public int? ProfileImageId { get; set; }
 
+
         public string UserName { get; set; }
         public string Email { get; set; }
         public byte[] PasswordHash { get; set; }
@@ -23,6 +24,7 @@ namespace Core.Domain.Entities
         public Availability Availability { get; set; }
         public DisplayImage ProfileImage { get; set; }
 
+        public ICollection<RedeemToken> RedeemTokens { get; set; }
         public ICollection<ArchivedRecipient> ArchivedRecipients { get; set; }
         public ICollection<PinnedRecipient> PinnedRecipients { get; set; }
         public ICollection<Friendship> AddressedFriendships{ get; set; }
