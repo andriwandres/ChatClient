@@ -1,4 +1,6 @@
 ﻿using AutoMapper;
+using Core.Application.Requests.Users.Queries;
+using Core.Domain.Dtos.Users;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Users;
 
@@ -9,6 +11,8 @@ namespace Presentation.Api.Mapping
         public UserMappingProfile()
         {
             CreateMap<User, AuthenticatedUser>();
+
+            CreateMap<LoginCredentialsDto, LoginQuery>();
         }
     }
 }

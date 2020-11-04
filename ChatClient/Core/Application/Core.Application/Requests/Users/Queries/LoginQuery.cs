@@ -28,7 +28,7 @@ namespace Core.Application.Requests.Users.Queries
                 _cryptoService = cryptoService;
             }
 
-            public async Task<AuthenticatedUser> Handle(LoginQuery request, CancellationToken cancellationToken)
+            public async Task<AuthenticatedUser> Handle(LoginQuery request, CancellationToken cancellationToken = default)
             {
                 User user = await _unitOfWork.Users
                     .GetUserByUserNameOrEmail(request.UserNameOrEmail)
@@ -50,7 +50,7 @@ namespace Core.Application.Requests.Users.Queries
 
                 mapped.Token = _cryptoService.GenerateToken(user);
 
-                return null;
+                return mapped;
             }
         }
     }
