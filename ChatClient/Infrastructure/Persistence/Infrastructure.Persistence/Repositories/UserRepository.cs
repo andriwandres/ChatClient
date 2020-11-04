@@ -13,14 +13,14 @@ namespace Infrastructure.Persistence.Repositories
         {
         }
 
-        public IQueryable<User> GetUserById(int userId)
+        public IQueryable<User> GetById(int userId)
         {
             return Context.Users
                 .AsNoTracking()
                 .Where(user => user.UserId == userId);
         }
 
-        public IQueryable<User> GetUserByUserNameOrEmail(string userNameOrEmail)
+        public IQueryable<User> GetByUserNameOrEmail(string userNameOrEmail)
         {
             userNameOrEmail = userNameOrEmail.ToLower();
 

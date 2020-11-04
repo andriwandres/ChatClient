@@ -1,14 +1,13 @@
-﻿using System.Threading;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Users;
 using Core.Domain.Resources.Users;
-using Infrastructure.Persistence.Repositories;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Presentation.Api.Controllers
 {

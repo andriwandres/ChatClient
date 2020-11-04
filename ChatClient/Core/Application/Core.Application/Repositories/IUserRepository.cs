@@ -5,7 +5,7 @@ namespace Core.Application.Repositories
 {
     public interface IUserRepository
     {
-        IQueryable<User> GetUserById(int userId);
-        IQueryable<User> GetUserByUserNameOrEmail(string userNameOrEmail);
+        IQueryable<User> GetById(int userId);
+        IQueryable<User> GetByUserNameOrEmail(string userNameOrEmail);
     }
 }

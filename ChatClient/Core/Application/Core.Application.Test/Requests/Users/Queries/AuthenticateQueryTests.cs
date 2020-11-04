@@ -47,7 +47,7 @@ namespace Core.Application.Test.Requests.Users.Queries
 
             Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
             unitOfWorkMock
-                .Setup(m => m.Users.GetUserById(It.IsAny<int>()))
+                .Setup(m => m.Users.GetById(It.IsAny<int>()))
                 .Returns(userQueryableMock.Object);
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
@@ -97,7 +97,7 @@ namespace Core.Application.Test.Requests.Users.Queries
 
             Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
             unitOfWorkMock
-                .Setup(m => m.Users.GetUserById(It.IsAny<int>()))
+                .Setup(m => m.Users.GetById(It.IsAny<int>()))
                 .Returns(userQueryableMock.Object);
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>

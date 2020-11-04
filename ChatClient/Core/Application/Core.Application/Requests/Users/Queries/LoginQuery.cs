@@ -31,7 +31,7 @@ namespace Core.Application.Requests.Users.Queries
             public async Task<AuthenticatedUser> Handle(LoginQuery request, CancellationToken cancellationToken = default)
             {
                 User user = await _unitOfWork.Users
-                    .GetUserByUserNameOrEmail(request.UserNameOrEmail)
+                    .GetByUserNameOrEmail(request.UserNameOrEmail)
                     .SingleOrDefaultAsync(cancellationToken);
 
                 if (user == null)

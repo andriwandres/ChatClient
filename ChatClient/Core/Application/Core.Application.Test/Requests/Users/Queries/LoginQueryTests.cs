@@ -32,7 +32,7 @@ namespace Core.Application.Test.Requests.Users.Queries
 
             Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
             unitOfWorkMock
-                .Setup(m => m.Users.GetUserByUserNameOrEmail(It.IsAny<string>()))
+                .Setup(m => m.Users.GetByUserNameOrEmail(It.IsAny<string>()))
                 .Returns(userQueryableMock.Object);
 
             LoginQuery.LoginQueryHandler handler = new LoginQuery.LoginQueryHandler(unitOfWorkMock.Object, null, null);
@@ -62,7 +62,7 @@ namespace Core.Application.Test.Requests.Users.Queries
 
             Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
             unitOfWorkMock
-                .Setup(m => m.Users.GetUserByUserNameOrEmail(It.IsAny<string>()))
+                .Setup(m => m.Users.GetByUserNameOrEmail(It.IsAny<string>()))
                 .Returns(userQueryableMock.Object);
 
             Mock<ICryptoService> cryptoServiceMock = new Mock<ICryptoService>();
@@ -102,7 +102,7 @@ namespace Core.Application.Test.Requests.Users.Queries
 
             Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
             unitOfWorkMock
-                .Setup(m => m.Users.GetUserByUserNameOrEmail(It.IsAny<string>()))
+                .Setup(m => m.Users.GetByUserNameOrEmail(It.IsAny<string>()))
                 .Returns(userQueryableMock.Object);
 
             Mock<ICryptoService> cryptoServiceMock = new Mock<ICryptoService>();

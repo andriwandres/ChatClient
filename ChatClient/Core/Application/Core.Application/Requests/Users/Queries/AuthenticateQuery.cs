@@ -35,7 +35,7 @@ namespace Core.Application.Requests.Users.Queries
                 string token = authorizationHeader.Split(' ').Last();
 
                 AuthenticatedUser user = await _unitOfWork.Users
-                    .GetUserById(int.Parse(id))
+                    .GetById(int.Parse(id))
                     .ProjectTo<AuthenticatedUser>(_mapper.ConfigurationProvider)
                     .SingleOrDefaultAsync(cancellationToken);
 
