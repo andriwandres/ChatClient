@@ -1,7 +1,7 @@
-﻿using Core.Domain.Database;
-using Core.Domain.Entities;
+﻿using Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Reflection;
+using Core.Application.Database;
 
 namespace Infrastructure.Persistence.Database
 {

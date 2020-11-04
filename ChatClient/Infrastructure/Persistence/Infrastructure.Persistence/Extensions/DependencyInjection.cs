@@ -1,4 +1,4 @@
-﻿using Core.Domain.Database;
+﻿using Core.Application.Database;
 using Infrastructure.Persistence.Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -24,6 +24,7 @@ namespace Infrastructure.Persistence.Extensions
 
             // Use abstraction of db context in service collection
             services.AddTransient<IChatContext, ChatContext>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
         }
     }
 }

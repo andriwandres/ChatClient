@@ -8,21 +8,25 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Core.Domain.Options;
+using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Shared.Services
 {
     public class CryptoService : ICryptoService
     {
         private readonly IDateProvider _dateProvider;
+        private readonly JwtOptions _jwtOptions;
 
-        public CryptoService(IDateProvider dateProvider)
+        public CryptoService(IDateProvider dateProvider, IOptions<JwtOptions> jwtOptions)
         {
             _dateProvider = dateProvider;
+            _jwtOptions = jwtOptions.Value;
         }
 
-        public string GenerateToken(User user, string secret)
+        public string GenerateToken(User user)
         {
-            byte[] key = Encoding.ASCII.GetBytes(secret);
+            byte[] key = Encoding.ASCII.GetBytes(_jwtOptions.Secret);
 
             JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
 

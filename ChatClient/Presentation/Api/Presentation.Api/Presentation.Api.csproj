@@ -4,9 +4,11 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>C:\Users\andri\source\repos\ChatClient\ChatClient\Presentation\Api\Presentation.Api\Swagger\Presentation.Api.xml</DocumentationFile>
+  </PropertyGroup>
+
   <ItemGroup>
-    <Folder Include="Controllers\" />
-    <Folder Include="Mapping\" />
     <Folder Include="Examples\" />
     <Folder Include="Swagger\" />
     <Folder Include="Validation\" />

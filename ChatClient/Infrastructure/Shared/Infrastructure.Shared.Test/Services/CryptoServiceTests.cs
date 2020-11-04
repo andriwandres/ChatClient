@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using Core.Domain.Options;
+using Microsoft.Extensions.Options;
 using Xunit;
 
 namespace Infrastructure.Shared.Test.Services
@@ -16,7 +18,6 @@ namespace Infrastructure.Shared.Test.Services
         public void GenerateToken_ShouldGenerateSameToken_GivenTheSamePayload()
         {
             // Arrange
-            const string secret = "0000_1111_2222_3333_4444_6666_7777_8888_9999";
             DateTime expectedDate = DateTime.UtcNow;
 
             User user = new User
@@ -26,16 +27,21 @@ namespace Infrastructure.Shared.Test.Services
                 UserName = "testusername",
             };
 
+            IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions
+            {
+                Secret = "super_secret_string"
+            });
+
             Mock<IDateProvider> dateProviderMock = new Mock<IDateProvider>();
             dateProviderMock
                 .Setup(m => m.UtcNow())
                 .Returns(expectedDate);
 
-            ICryptoService cryptoService = new CryptoService(dateProviderMock.Object);
+            ICryptoService cryptoService = new CryptoService(dateProviderMock.Object, jwtOptionsMock);
 
             // Act
-            string firstToken = cryptoService.GenerateToken(user, secret);
-            string secondToken = cryptoService.GenerateToken(user, secret);
+            string firstToken = cryptoService.GenerateToken(user);
+            string secondToken = cryptoService.GenerateToken(user);
 
             // Assert
             Assert.NotNull(firstToken);
@@ -66,7 +72,10 @@ namespace Infrastructure.Shared.Test.Services
         public void GenerateToken_ShouldNotGenerateSameToken_GivenDifferentPayloads()
         {
             // Arrange
-            const string secret = "super_secret_string";
+            IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions
+            {
+                Secret = "super_secret_string"
+            });
 
             DateTime expectedDate = DateTime.UtcNow;
 
@@ -82,14 +91,14 @@ namespace Infrastructure.Shared.Test.Services
                 .Setup(m => m.UtcNow())
                 .Returns(expectedDate);
 
-            ICryptoService cryptoService = new CryptoService(dateProviderMock.Object);
+            ICryptoService cryptoService = new CryptoService(dateProviderMock.Object, jwtOptionsMock);
 
             // Act
-            string firstToken = cryptoService.GenerateToken(user, secret);
+            string firstToken = cryptoService.GenerateToken(user);
 
             user.Email = "different@email.address";
 
-            string secondToken = cryptoService.GenerateToken(user, secret);
+            string secondToken = cryptoService.GenerateToken(user);
 
             // Assert
             Assert.NotNull(firstToken);
@@ -102,7 +111,9 @@ namespace Infrastructure.Shared.Test.Services
         public void GenerateSalt_ShouldNotGenerateSameSaltTwice()
         {
             // Arrange
-            ICryptoService cryptoService = new CryptoService(null);
+            IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions());
+
+            ICryptoService cryptoService = new CryptoService(null, jwtOptionsMock);
 
             // Act
             byte[] firstSalt = cryptoService.GenerateSalt();
@@ -122,7 +133,9 @@ namespace Infrastructure.Shared.Test.Services
             const string password = "str0ngP4ssw0rd!";
             byte[] salt = new byte[16];
 
-            ICryptoService cryptoService = new CryptoService(null);
+            IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions());
+
+            ICryptoService cryptoService = new CryptoService(null, jwtOptionsMock);
 
             // Act
             byte[] firstHash = cryptoService.HashPassword(password, salt);
@@ -144,7 +157,9 @@ namespace Infrastructure.Shared.Test.Services
 
             byte[] salt = new byte[16];
 
-            ICryptoService cryptoService = new CryptoService(null);
+            IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions());
+
+            ICryptoService cryptoService = new CryptoService(null, jwtOptionsMock);
 
             // Act
             byte[] firstHash = cryptoService.HashPassword(firstPassword, salt);
@@ -165,7 +180,9 @@ namespace Infrastructure.Shared.Test.Services
             byte[] salt = new byte[16];
             byte[] hash = Convert.FromBase64String("2VxiBg7W1G3EQVlOucLRTQKLe0sTEBXt6QZVlfkfokQ=");
 
-            ICryptoService cryptoService = new CryptoService(null);
+            IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions());
+
+            ICryptoService cryptoService = new CryptoService(null, jwtOptionsMock);
 
             // Act
             bool result = cryptoService.VerifyPassword(hash, salt, password);
@@ -182,7 +199,9 @@ namespace Infrastructure.Shared.Test.Services
             byte[] salt = new byte[16];
             byte[] hash = Convert.FromBase64String("2VxiBg7W1G3EQVlOucLRTQKLe0sTEBXt6QZVlfkfokQ=");
 
-            ICryptoService cryptoService = new CryptoService(null);
+            IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions());
+
+            ICryptoService cryptoService = new CryptoService(null, jwtOptionsMock);
 
             // Act
             bool result = cryptoService.VerifyPassword(hash, salt, password);

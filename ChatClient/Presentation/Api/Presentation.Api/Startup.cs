@@ -30,8 +30,8 @@ namespace Presentation.Api
             services.AddPersistenceInfrastructureServices(Configuration);
 
             // Add shared infrastructure logic
-            services.AddSharedInfrastructureServices();
-            services.AddAuthentication();
+            services.AddSharedInfrastructureServices(Configuration);
+
             // Add business logic related services
             services.AddApplicationServices();
         }

@@ -1,10 +1,10 @@
-﻿using Core.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 
-namespace Core.Domain.Database
+namespace Core.Application.Database
 {
     public interface IChatContext : IDisposable
     {
