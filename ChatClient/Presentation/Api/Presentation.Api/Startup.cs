@@ -31,7 +31,7 @@ namespace Presentation.Api
 
             // Add shared infrastructure logic
             services.AddSharedInfrastructureServices();
-
+            services.AddAuthentication();
             // Add business logic related services
             services.AddApplicationServices();
         }

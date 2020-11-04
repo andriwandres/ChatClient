@@ -22,6 +22,7 @@ namespace Presentation.Api.Extensions
             services.AddAutoMapper(typeof(Startup));
 
             // Configure options
+            services.Configure<JwtOptions>(configuration.GetSection("JsonWebToken"));
             services.Configure<CorsOptions>(configuration.GetSection("CrossOriginResourceSharing"));
 
             // Add swagger
