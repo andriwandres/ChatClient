@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Core.Application.Services;
+﻿using Core.Application.Services;
 using Core.Domain.Entities;
 using Infrastructure.Shared.Services;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Moq;
+using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
+using System.Linq;
 using Xunit;
 
 namespace Infrastructure.Shared.Test.Services
@@ -41,7 +41,25 @@ namespace Infrastructure.Shared.Test.Services
             Assert.NotNull(firstToken);
             Assert.NotNull(secondToken);
 
-            Assert.Equal(firstToken, secondToken);
+            // Decode each token and assert on claim values
+            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+
+            JwtSecurityToken firstTokenDecoded = tokenHandler.ReadJwtToken(firstToken);
+            JwtSecurityToken secondTokenDecoded = tokenHandler.ReadJwtToken(secondToken);
+
+            string[] claimTypes = { "email", "nameid", "unique_name" };
+
+            IEnumerable<string> firstTokenClaims = firstTokenDecoded.Claims
+                .Where(claim => claimTypes.Contains(claim.Type))
+                .Select(claim => claim.Value);
+
+            IEnumerable<string> secondTokenClaims = secondTokenDecoded.Claims
+                .Where(claim => claimTypes.Contains(claim.Type))
+                .Select(claim => claim.Value);
+
+            bool isEqual = firstTokenClaims.SequenceEqual(secondTokenClaims);
+
+            Assert.True(isEqual);
         }
 
         [Fact]
