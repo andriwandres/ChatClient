@@ -1,6 +1,8 @@
 ﻿using Core.Application.Services;
 using Core.Domain.Entities;
+using Core.Domain.Options;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.IdentityModel.Tokens.Jwt;
@@ -8,8 +10,6 @@ using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
-using Core.Domain.Options;
-using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Shared.Services
 {

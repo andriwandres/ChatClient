@@ -14,20 +14,20 @@ namespace Core.Application.Requests.Users.Queries
 {
     public class AuthenticateQuery : IRequest<AuthenticatedUser>
     {
-        public class AuthenticateUserQueryHandler : IRequestHandler<AuthenticateQuery, AuthenticatedUser>
+        public class AuthenticateQueryHandler : IRequestHandler<AuthenticateQuery, AuthenticatedUser>
         {
             private readonly IMapper _mapper;
             private readonly IUnitOfWork _unitOfWork;
             private readonly IHttpContextAccessor _httpContextAccessor;
 
-            public AuthenticateUserQueryHandler(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor)
+            public AuthenticateQueryHandler(IUnitOfWork unitOfWork, IMapper mapper, IHttpContextAccessor httpContextAccessor)
             {
                 _mapper = mapper;
                 _unitOfWork = unitOfWork;
                 _httpContextAccessor = httpContextAccessor;
             }
 
-            public async Task<AuthenticatedUser> Handle(AuthenticateQuery request, CancellationToken cancellationToken)
+            public async Task<AuthenticatedUser> Handle(AuthenticateQuery request, CancellationToken cancellationToken = default)
             {
                 string id = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
@@ -38,6 +38,11 @@ namespace Core.Application.Requests.Users.Queries
                     .GetUserById(int.Parse(id))
                     .ProjectTo<AuthenticatedUser>(_mapper.ConfigurationProvider)
                     .SingleOrDefaultAsync(cancellationToken);
+
+                if (user == null)
+                {
+                    return null;
+                }
 
                 user.Token = token;
 
