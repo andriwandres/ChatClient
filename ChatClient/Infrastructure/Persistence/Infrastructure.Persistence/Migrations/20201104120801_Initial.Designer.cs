@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    [Migration("20201103225340_Initial")]
+    [Migration("20201104120801_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -468,12 +468,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("DisplayId")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(8)")
-                        .HasMaxLength(8);
-
                     b.Property<int>("GroupMembershipId")
                         .HasColumnType("int");
 
@@ -481,9 +475,6 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("RecipientId");
-
-                    b.HasIndex("DisplayId")
-                        .IsUnique();
 
                     b.HasIndex("GroupMembershipId")
                         .IsUnique();
@@ -609,12 +600,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<DateTime>("Created")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("DisplayId")
-                        .IsRequired()
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("nvarchar(8)")
-                        .HasMaxLength(8);
-
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
@@ -642,9 +627,6 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasKey("UserId");
 
                     b.HasIndex("CountryId");
-
-                    b.HasIndex("DisplayId")
-                        .IsUnique();
 
                     b.HasIndex("Email")
                         .IsUnique();

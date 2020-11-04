@@ -1,5 +1,4 @@
 ﻿using Core.Domain.Entities;
-using Infrastructure.Persistence.Generators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,9 +12,6 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasKey(user => user.UserId);
 
             // Indexes
-            builder.HasIndex(user => user.DisplayId)
-                .IsUnique();
-
             builder.HasIndex(user => user.UserName)
                 .IsUnique();
 
@@ -26,12 +22,6 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(user => user.CountryId);
 
             builder.Property(user => user.ProfileImageId);
-
-            builder.Property(user => user.DisplayId)
-                .HasMaxLength(8)
-                .IsRequired()
-                .ValueGeneratedOnAdd()
-                .HasValueGenerator<DisplayIdGenerator>();
 
             builder.Property(user => user.UserName)
                 .IsRequired();

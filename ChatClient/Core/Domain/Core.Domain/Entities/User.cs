@@ -6,7 +6,6 @@ namespace Core.Domain.Entities
     public class User
     {
         public int UserId { get; set; }
-        public string DisplayId { get; set; }
 
         public int? CountryId { get; set; }
         public int? ProfileImageId { get; set; }

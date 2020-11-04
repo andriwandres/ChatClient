@@ -32,7 +32,7 @@ namespace Infrastructure.Shared.Services
                 {
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.NameIdentifier, user.DisplayId),
+                    new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString()),
                 }),
                 Expires = _dateProvider.UtcNow().AddHours(7),
                 SigningCredentials = new SigningCredentials(

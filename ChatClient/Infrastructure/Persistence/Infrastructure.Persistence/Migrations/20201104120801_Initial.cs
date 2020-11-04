@@ -132,7 +132,6 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     UserId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DisplayId = table.Column<string>(maxLength: 8, nullable: false),
                     CountryId = table.Column<int>(nullable: true),
                     ProfileImageId = table.Column<int>(nullable: true),
                     UserName = table.Column<string>(nullable: false),
@@ -396,7 +395,6 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     RecipientId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DisplayId = table.Column<string>(maxLength: 8, nullable: false),
                     GroupMembershipId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false)
                 },
@@ -662,12 +660,6 @@ namespace Infrastructure.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Recipients_DisplayId",
-                table: "Recipients",
-                column: "DisplayId",
-                unique: true);
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Recipients_GroupMembershipId",
                 table: "Recipients",
                 column: "GroupMembershipId",
@@ -716,12 +708,6 @@ namespace Infrastructure.Persistence.Migrations
                 name: "IX_Users_CountryId",
                 table: "Users",
                 column: "CountryId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Users_DisplayId",
-                table: "Users",
-                column: "DisplayId",
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Email",

@@ -1,5 +1,4 @@
 ﻿using Core.Domain.Entities;
-using Infrastructure.Persistence.Generators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -12,10 +11,6 @@ namespace Infrastructure.Persistence.Configurations
             // Keys
             builder.HasKey(recipient => recipient.RecipientId);
 
-            // Indexes
-            builder.HasIndex(recipient => recipient.DisplayId)
-                .IsUnique();
-
             builder.HasIndex(recipient => new { recipient.UserId, recipient.GroupMembershipId })
                 .IsUnique();
 
@@ -23,12 +18,6 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(recipient => recipient.UserId);
 
             builder.Property(recipient => recipient.GroupMembershipId);
-
-            builder.Property(recipient => recipient.DisplayId)
-                .IsRequired()
-                .HasMaxLength(8)
-                .ValueGeneratedOnAdd()
-                .HasValueGenerator<DisplayIdGenerator>();
 
             // Relationships
             builder.HasMany(recipient => recipient.Archives)

@@ -5,7 +5,6 @@ namespace Core.Domain.Entities
     public class Recipient
     {
         public int RecipientId { get; set; }
-        public string DisplayId { get; set; }
         public int GroupMembershipId { get; set; }
         public int UserId { get; set; }
 

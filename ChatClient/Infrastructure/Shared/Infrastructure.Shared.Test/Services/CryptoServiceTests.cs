@@ -21,9 +21,9 @@ namespace Infrastructure.Shared.Test.Services
 
             User user = new User
             {
+                UserId = 1,
                 Email = "test@test.test",
                 UserName = "testusername",
-                DisplayId = "test7357"
             };
 
             Mock<IDateProvider> dateProviderMock = new Mock<IDateProvider>();
@@ -47,7 +47,7 @@ namespace Infrastructure.Shared.Test.Services
             JwtSecurityToken firstTokenDecoded = tokenHandler.ReadJwtToken(firstToken);
             JwtSecurityToken secondTokenDecoded = tokenHandler.ReadJwtToken(secondToken);
 
-            string[] claimTypes = { "email", "nameid", "unique_name" };
+            string[] claimTypes = { "email", "name", "unique_name" };
 
             IEnumerable<string> firstTokenClaims = firstTokenDecoded.Claims
                 .Where(claim => claimTypes.Contains(claim.Type))
@@ -72,9 +72,9 @@ namespace Infrastructure.Shared.Test.Services
 
             User user = new User
             {
+                UserId = 1,
                 Email = "test@test.test",
                 UserName = "testusername",
-                DisplayId = "test7357"
             };
 
             Mock<IDateProvider> dateProviderMock = new Mock<IDateProvider>();
@@ -149,8 +149,6 @@ namespace Infrastructure.Shared.Test.Services
             // Act
             byte[] firstHash = cryptoService.HashPassword(firstPassword, salt);
             byte[] secondHash = cryptoService.HashPassword(secondPassword, salt);
-
-            string s = Convert.ToBase64String(firstHash);
 
             // Assert
             Assert.NotNull(firstHash);
