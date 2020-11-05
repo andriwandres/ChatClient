@@ -10,7 +10,8 @@ namespace Presentation.Api.Mapping
     {
         public UserMappingProfile()
         {
-            CreateMap<User, AuthenticatedUser>();
+            CreateMap<User, AuthenticatedUser>()
+                .ForMember(destination => destination.Token, config => config.Ignore());
 
             CreateMap<LoginCredentialsDto, LoginQuery>();
             CreateMap<UserNameExistsDto, UserNameExistsQuery>();
