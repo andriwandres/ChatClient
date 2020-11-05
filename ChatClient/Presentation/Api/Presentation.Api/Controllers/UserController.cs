@@ -140,48 +140,6 @@ namespace Presentation.Api.Controllers
         }
 
         /// <summary>
-        /// Validates login credentials and returns the users information with a new access token
-        /// </summary>
-        /// 
-        /// <param name="credentials">
-        /// User credentials to be validated
-        /// </param>
-        /// 
-        /// <param name="cancellationToken">
-        /// Notifies asynchronous operations to cancel ongoing work and release resources
-        /// </param>
-        /// 
-        /// <returns>
-        /// User information alongside new access token
-        /// </returns>
-        [HttpPost("login")]
-        [AllowAnonymous]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [SwaggerRequestExample(typeof(LoginCredentialsDto), typeof(LoginRequestExample))]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(LoginResponseExample))]
-        public async Task<ActionResult<AuthenticatedUser>> Login([FromBody] LoginCredentialsDto credentials, CancellationToken cancellationToken = default)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            LoginQuery query = _mapper.Map<LoginCredentialsDto, LoginQuery>(credentials);
-
-            AuthenticatedUser user = await _mediator.Send(query, cancellationToken);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            return Ok(user);
-        }
-
-        /// <summary>
         /// Authenticates the current user, given a access token inside the Authorization request header
         /// </summary>
         ///

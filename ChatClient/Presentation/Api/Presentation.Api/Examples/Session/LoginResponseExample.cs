@@ -1,7 +1,7 @@
 ﻿using Core.Domain.Resources.Users;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Presentation.Api.Examples.Users
+namespace Presentation.Api.Examples.Session
 {
     public class LoginResponseExample : IExamplesProvider<AuthenticatedUser>
     {

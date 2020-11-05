@@ -1,4 +1,4 @@
-﻿namespace Core.Domain.Dtos.Users
+﻿namespace Core.Domain.Dtos.Session
 {
     public class LoginCredentialsDto
     {

@@ -4,6 +4,23 @@
         <name>Presentation.Api</name>
     </assembly>
     <members>
+        <member name="M:Presentation.Api.Controllers.SessionController.Login(Core.Domain.Dtos.Session.LoginCredentialsDto,System.Threading.CancellationToken)">
+            <summary>
+            Validates login credentials and returns the users information with a new access token
+            </summary>
+            
+            <param name="credentials">
+            User credentials to be validated
+            </param>
+            
+            <param name="cancellationToken">
+            Notifies asynchronous operations to cancel ongoing work and release resources
+            </param>
+            
+            <returns>
+            User information alongside new access token
+            </returns>
+        </member>
         <member name="M:Presentation.Api.Controllers.UserController.EmailExists(Core.Domain.Dtos.Users.EmailExistsDto,System.Threading.CancellationToken)">
              <summary>
              Checks whether a given email exists in the database
@@ -69,23 +86,6 @@
              <response code="500">
              An unexpected error occurred on the server
              </response>
-        </member>
-        <member name="M:Presentation.Api.Controllers.UserController.Login(Core.Domain.Dtos.Users.LoginCredentialsDto,System.Threading.CancellationToken)">
-            <summary>
-            Validates login credentials and returns the users information with a new access token
-            </summary>
-            
-            <param name="credentials">
-            User credentials to be validated
-            </param>
-            
-            <param name="cancellationToken">
-            Notifies asynchronous operations to cancel ongoing work and release resources
-            </param>
-            
-            <returns>
-            User information alongside new access token
-            </returns>
         </member>
         <member name="M:Presentation.Api.Controllers.UserController.Authenticate(System.Threading.CancellationToken)">
              <summary>

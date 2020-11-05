@@ -13,7 +13,6 @@ namespace Presentation.Api.Mapping
             CreateMap<User, AuthenticatedUser>()
                 .ForMember(destination => destination.Token, config => config.Ignore());
 
-            CreateMap<LoginCredentialsDto, LoginQuery>();
             CreateMap<UserNameExistsDto, UserNameExistsQuery>();
             CreateMap<EmailExistsDto, EmailExistsQuery>();
         }

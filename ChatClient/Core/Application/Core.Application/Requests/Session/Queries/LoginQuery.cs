@@ -1,14 +1,14 @@
-﻿using AutoMapper;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoMapper;
 using Core.Application.Database;
 using Core.Application.Services;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Core.Application.Requests.Users.Queries
+namespace Core.Application.Requests.Session.Queries
 {
     public class LoginQuery : IRequest<AuthenticatedUser>
     {

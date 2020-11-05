@@ -1,8 +1,8 @@
-﻿using Core.Domain.Dtos.Users;
+﻿using Core.Domain.Dtos.Session;
 using FluentValidation;
 using System.Text.RegularExpressions;
 
-namespace Presentation.Api.Validation.Users
+namespace Presentation.Api.Validation.Session
 {
     public class LoginCredentialsDtoValidator : AbstractValidator<LoginCredentialsDto>
     {
