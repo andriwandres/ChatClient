@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -7,18 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="9.0.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="Moq" Version="4.14.7" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="coverlet.collector" Version="1.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="3.1.0.0" />
-    
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Core\Application\Core.Application\Core.Application.csproj" />
-    <ProjectReference Include="..\Infrastructure.Shared\Infrastructure.Shared.csproj" />
+    <ProjectReference Include="..\..\..\Core\Domain\Core.Domain\Core.Domain.csproj" />
+    <ProjectReference Include="..\Presentation.Api\Presentation.Api.csproj" />
   </ItemGroup>
 
 </Project>

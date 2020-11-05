@@ -49,11 +49,11 @@ namespace Presentation.Api.Controllers
         /// An unexpected error occured on the server
         /// </response>
         [HttpGet]
-        [AllowAnonymous]
+        [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> Authenticate(CancellationToken cancellationToken = default)
+        public async Task<ActionResult<AuthenticatedUser>> Authenticate(CancellationToken cancellationToken = default)
         {
             AuthenticateQuery query = new AuthenticateQuery();
 

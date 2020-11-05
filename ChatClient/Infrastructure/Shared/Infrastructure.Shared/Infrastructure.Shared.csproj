@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
@@ -14,9 +14,4 @@
     <ProjectReference Include="..\..\..\Core\Application\Core.Application\Core.Application.csproj" />
     <ProjectReference Include="..\..\..\Core\Domain\Core.Domain\Core.Domain.csproj" />
   </ItemGroup>
-
-  <ItemGroup>
-    <FrameworkReference Include="Microsoft.AspNetCore.App"></FrameworkReference>
-  </ItemGroup>
-
 </Project>

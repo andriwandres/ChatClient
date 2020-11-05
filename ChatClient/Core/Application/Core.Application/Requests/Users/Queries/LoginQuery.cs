@@ -46,11 +46,11 @@ namespace Core.Application.Requests.Users.Queries
                     return null;
                 }
 
-                AuthenticatedUser mapped = _mapper.Map<User, AuthenticatedUser>(user);
+                AuthenticatedUser mappedUser = _mapper.Map<User, AuthenticatedUser>(user);
 
-                mapped.Token = _cryptoService.GenerateToken(user);
+                mappedUser.Token = _cryptoService.GenerateToken(user);
 
-                return mapped;
+                return mappedUser;
             }
         }
     }
