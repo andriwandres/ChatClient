@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading;
 using System.Threading.Tasks;
+using Presentation.Api.Examples.Users;
+using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Controllers
 {
@@ -158,6 +160,8 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerRequestExample(typeof(LoginCredentialsDto), typeof(LoginRequestExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(LoginResponseExample))]
         public async Task<ActionResult<AuthenticatedUser>> Login([FromBody] LoginCredentialsDto credentials, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
@@ -205,6 +209,7 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(AuthenticateResponseExample))]
         public async Task<ActionResult<AuthenticatedUser>> Authenticate(CancellationToken cancellationToken = default)
         {
             AuthenticateQuery query = new AuthenticateQuery();
