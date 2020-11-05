@@ -4,7 +4,7 @@
         <name>Presentation.Api</name>
     </assembly>
     <members>
-        <member name="M:Presentation.Api.Controllers.CurrentUserController.Authenticate(System.Threading.CancellationToken)">
+        <member name="M:Presentation.Api.Controllers.MeController.Authenticate(System.Threading.CancellationToken)">
              <summary>
              Authenticates the current given a access token inside the Authorization request header
              </summary>
@@ -29,7 +29,7 @@
              An unexpected error occured on the server
              </response>
         </member>
-        <member name="M:Presentation.Api.Controllers.CurrentUserController.Login(Core.Domain.Dtos.Users.LoginCredentialsDto,System.Threading.CancellationToken)">
+        <member name="M:Presentation.Api.Controllers.MeController.Login(Core.Domain.Dtos.Users.LoginCredentialsDto,System.Threading.CancellationToken)">
             <summary>
             Validates login credentials and returns the users information with a new access token
             </summary>

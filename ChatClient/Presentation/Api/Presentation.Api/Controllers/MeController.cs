@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 namespace Presentation.Api.Controllers
 {
     [ApiController]
-    [Route("api/user")]
+    [Route("api/me")]
     [Produces("application/json")]
-    public class CurrentUserController : ControllerBase
+    public class MeController : ControllerBase
     {
         private readonly IMapper _mapper;
         private readonly IMediator _mediator;
 
-        public CurrentUserController(IMediator mediator, IMapper mapper)
+        public MeController(IMediator mediator, IMapper mapper)
         {
             _mapper = mapper;
             _mediator = mediator;
