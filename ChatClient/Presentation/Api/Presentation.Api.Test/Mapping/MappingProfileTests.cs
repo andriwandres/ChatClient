@@ -10,6 +10,13 @@ namespace Presentation.Api.Test.Mapping
         public void UserMappingProfile_ShouldHaveValidMappings() =>
             AssertProfileIsValid<UserMappingProfile>();
 
+        [Fact]
+        public void UserMappingProfile_ShouldNotThrowOnExecution()
+        {
+            UserMappingProfile profile = new UserMappingProfile();
+            Assert.NotNull(profile);
+        }
+
         private static void AssertProfileIsValid<TProfile>() where TProfile : Profile, new()
         {
             MapperConfiguration configuration = new MapperConfiguration(config => 
