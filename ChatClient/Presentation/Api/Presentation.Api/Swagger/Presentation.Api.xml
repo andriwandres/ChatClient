@@ -4,9 +4,92 @@
         <name>Presentation.Api</name>
     </assembly>
     <members>
-        <member name="M:Presentation.Api.Controllers.MeController.Authenticate(System.Threading.CancellationToken)">
+        <member name="M:Presentation.Api.Controllers.UserController.EmailExists(Core.Domain.Dtos.Users.EmailExistsDto,System.Threading.CancellationToken)">
              <summary>
-             Authenticates the current given a access token inside the Authorization request header
+             Checks whether a given email exists in the database
+             </summary>
+             
+             <param name="model">
+             Specifies the email address to query by
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             No content, since HEAD requests carry no response body
+             </returns>
+            
+             <response code="200">
+             Given email address exists in the database
+             </response>
+            
+             <response code="400">
+             Given email address is in an invalid format
+             </response>
+            
+             <response code="404">
+             Given email address does not exist in the database
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred on the server
+             </response>
+        </member>
+        <member name="M:Presentation.Api.Controllers.UserController.UserNameExists(Core.Domain.Dtos.Users.UserNameExistsDto,System.Threading.CancellationToken)">
+             <summary>
+             Checks whether a given user name exists in the database
+             </summary>
+             
+             <param name="model">
+             Specifies the user name to query by
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             No content, since HEAD requests carry no response body
+             </returns>
+            
+             <response code="200">
+             Given user name exists in the database
+             </response>
+            
+             <response code="400">
+             Given user name is in an invalid format
+             </response>
+            
+             <response code="404">
+             Given user name does not exist in the database
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred on the server
+             </response>
+        </member>
+        <member name="M:Presentation.Api.Controllers.UserController.Login(Core.Domain.Dtos.Users.LoginCredentialsDto,System.Threading.CancellationToken)">
+            <summary>
+            Validates login credentials and returns the users information with a new access token
+            </summary>
+            
+            <param name="credentials">
+            User credentials to be validated
+            </param>
+            
+            <param name="cancellationToken">
+            Notifies asynchronous operations to cancel ongoing work and release resources
+            </param>
+            
+            <returns>
+            User information alongside new access token
+            </returns>
+        </member>
+        <member name="M:Presentation.Api.Controllers.UserController.Authenticate(System.Threading.CancellationToken)">
+             <summary>
+             Authenticates the current user, given a access token inside the Authorization request header
              </summary>
             
              <param name="cancellationToken">
@@ -28,23 +111,6 @@
              <response code="500">
              An unexpected error occured on the server
              </response>
-        </member>
-        <member name="M:Presentation.Api.Controllers.MeController.Login(Core.Domain.Dtos.Users.LoginCredentialsDto,System.Threading.CancellationToken)">
-            <summary>
-            Validates login credentials and returns the users information with a new access token
-            </summary>
-            
-            <param name="credentials">
-            User credentials to be validated
-            </param>
-            
-            <param name="cancellationToken">
-            Notifies asynchronous operations to cancel ongoing work and release resources
-            </param>
-            
-            <returns>
-            User information alongside new access token
-            </returns>
         </member>
     </members>
 </doc>

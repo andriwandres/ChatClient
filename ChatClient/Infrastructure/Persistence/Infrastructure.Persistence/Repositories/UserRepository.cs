@@ -4,6 +4,8 @@ using Core.Application.Repositories;
 using Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Repositories
 {
@@ -27,6 +29,24 @@ namespace Infrastructure.Persistence.Repositories
             return Context.Users
                 .AsNoTracking()
                 .Where(user => user.UserName.ToLower() == userNameOrEmail || user.Email.ToLower() == userNameOrEmail);
+        }
+
+        public async Task<bool> EmailExists(string email, CancellationToken cancellationToken = default)
+        {
+            email = email.ToLower();
+
+            return await Context.Users
+                .AsNoTracking()
+                .AnyAsync(user => user.Email.ToLower() == email, cancellationToken);
+        }
+
+        public async Task<bool> UserNameExists(string userName, CancellationToken cancellationToken = default)
+        {
+            userName = userName.ToLower();
+
+            return await Context.Users
+                .AsNoTracking()
+                .AnyAsync(user => user.UserName.ToLower() == userName, cancellationToken);
         }
     }
 }

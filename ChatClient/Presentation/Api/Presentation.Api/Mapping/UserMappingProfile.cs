@@ -13,6 +13,8 @@ namespace Presentation.Api.Mapping
             CreateMap<User, AuthenticatedUser>();
 
             CreateMap<LoginCredentialsDto, LoginQuery>();
+            CreateMap<UserNameExistsDto, UserNameExistsQuery>();
+            CreateMap<EmailExistsDto, EmailExistsQuery>();
         }
     }
 }

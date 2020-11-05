@@ -12,7 +12,7 @@ using Xunit;
 
 namespace Presentation.Api.Test.Controllers
 {
-    public class MeControllerTests
+    public class UserControllerTests
     {
         [Fact]
         public async Task Authenticate_ShouldReturnBadRequestResult_WhenUserCouldNotBeFound()
@@ -23,7 +23,7 @@ namespace Presentation.Api.Test.Controllers
                 .Setup(m => m.Send(It.IsAny<AuthenticateQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((AuthenticatedUser) null);
 
-            MeController controller = new MeController(mediatorMock.Object, null);
+            UserController controller = new UserController(mediatorMock.Object, null);
 
             // Act
             ActionResult<AuthenticatedUser> response = await controller.Authenticate();
@@ -46,7 +46,7 @@ namespace Presentation.Api.Test.Controllers
                 .Setup(m => m.Send(It.IsAny<AuthenticateQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(expectedUser);
 
-            MeController controller = new MeController(mediatorMock.Object, null);
+            UserController controller = new UserController(mediatorMock.Object, null);
 
             // Act
             ActionResult<AuthenticatedUser> response = await controller.Authenticate();
@@ -66,7 +66,7 @@ namespace Presentation.Api.Test.Controllers
             // Arrange
             LoginCredentialsDto credentials = new LoginCredentialsDto();
 
-            MeController controller = new MeController(null, null);
+            UserController controller = new UserController(null, null);
 
             controller.ModelState.AddModelError("Credentials", "Required");
 
@@ -99,7 +99,7 @@ namespace Presentation.Api.Test.Controllers
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();
 
-            MeController controller = new MeController(mediatorMock.Object, mapperMock);
+            UserController controller = new UserController(mediatorMock.Object, mapperMock);
 
             // Act
             ActionResult<AuthenticatedUser> response = await controller.Login(credentials);
@@ -132,7 +132,7 @@ namespace Presentation.Api.Test.Controllers
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();
 
-            MeController controller = new MeController(mediatorMock.Object, mapperMock);
+            UserController controller = new UserController(mediatorMock.Object, mapperMock);
 
             // Act
             ActionResult<AuthenticatedUser> response = await controller.Login(credentials);
