@@ -45,5 +45,67 @@ namespace Infrastructure.Persistence.Test.Repositories
             Assert.NotEmpty(actualLanguages);
             Assert.Equal(3, actualLanguages.Count());
         }
+
+        [Fact]
+        public async Task Exists_ShouldReturnTrue_WhenLanguageExists()
+        {
+            // Arrange
+            const int languageId = 1;
+
+            IEnumerable<Language> languages = new[]
+            {
+                new Language { LanguageId = 1, Code = "EN", Name = "Language.English" },
+                new Language { LanguageId = 2, Code = "DE", Name = "Language.German" },
+                new Language { LanguageId = 3, Code = "FR", Name = "Language.French" },
+            };
+
+            Mock<DbSet<Language>> languageDbSetMock = languages
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.Languages)
+                .Returns(languageDbSetMock.Object);
+
+            ILanguageRepository languageRepository = new LanguageRepository(contextMock.Object);
+
+            // Act
+            bool exists = await languageRepository.Exists(languageId);
+
+            // Assert
+            Assert.True(exists);
+        }
+
+        [Fact]
+        public async Task Exists_ShouldReturnFalse_WhenLanguageDoesNotExist()
+        {
+            // Arrange
+            const int languageId = 51;
+
+            IEnumerable<Language> languages = new[]
+            {
+                new Language { LanguageId = 1, Code = "EN", Name = "Language.English" },
+                new Language { LanguageId = 2, Code = "DE", Name = "Language.German" },
+                new Language { LanguageId = 3, Code = "FR", Name = "Language.French" },
+            };
+
+            Mock<DbSet<Language>> languageDbSetMock = languages
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.Languages)
+                .Returns(languageDbSetMock.Object);
+
+            ILanguageRepository languageRepository = new LanguageRepository(contextMock.Object);
+
+            // Act
+            bool exists = await languageRepository.Exists(languageId);
+
+            // Assert
+            Assert.False(exists);
+        }
     }
 }

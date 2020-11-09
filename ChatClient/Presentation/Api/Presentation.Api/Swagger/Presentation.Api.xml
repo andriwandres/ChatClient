@@ -4,6 +4,64 @@
         <name>Presentation.Api</name>
     </assembly>
     <members>
+        <member name="M:Presentation.Api.Controllers.LanguageController.GetAllLanguages(System.Threading.CancellationToken)">
+             <summary>
+             Gets a list of all available languages
+             </summary>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             A list of available languages
+             </returns>
+            
+             <response code="200">
+             Contains a list of available languages
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
+        <member name="M:Presentation.Api.Controllers.LanguageController.GetTranslationsByLanguage(System.Int32,Core.Domain.Dtos.Languages.GetTranslationsByLanguageDto,System.Threading.CancellationToken)">
+             <summary>
+             Gets a list of translations for a specific language
+             </summary>
+             
+             <param name="languageId">
+             ID of the language to get translations from
+             </param>
+             
+             <param name="model">
+             Specifies a pattern filter that can be applied to the translation key
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             A list of translations in the given language that satisfy the pattern filter
+             </returns>
+            
+             <response code="200">
+             Contains a list of translations for given language
+             </response>
+            
+             <response code="400">
+             Language ID and/or pattern filter are invalid
+             </response>
+            
+             <response code="404">
+             Language with given ID does not exist
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
         <member name="M:Presentation.Api.Controllers.SessionController.Login(Core.Domain.Dtos.Session.LoginUserDto,System.Threading.CancellationToken)">
             <summary>
             Validates login credentials and returns the users information with a new access token
