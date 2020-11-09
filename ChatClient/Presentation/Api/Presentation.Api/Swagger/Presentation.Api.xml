@@ -6,8 +6,12 @@
     <members>
         <member name="M:Presentation.Api.Controllers.LanguageController.GetAllLanguages(System.Threading.CancellationToken)">
              <summary>
-             Gets a list of all available languages
+             Gets a list of all languages
              </summary>
+            
+             <remarks>
+             Returns a list of all languages that are supported within this application
+             </remarks>
              
              <param name="cancellationToken">
              Notifies asynchronous operations to cancel ongoing work and release resources
@@ -27,8 +31,12 @@
         </member>
         <member name="M:Presentation.Api.Controllers.LanguageController.GetTranslationsByLanguage(System.Int32,Core.Domain.Dtos.Languages.GetTranslationsByLanguageDto,System.Threading.CancellationToken)">
              <summary>
-             Gets a list of translations for a specific language
+             Gets a list of translations
              </summary>
+            
+             <remarks>
+             Returns a list of translations for a given language. Translations within that language can also be filtered by pattern matching
+             </remarks>
              
              <param name="languageId">
              ID of the language to get translations from
@@ -63,26 +71,34 @@
              </response>
         </member>
         <member name="M:Presentation.Api.Controllers.SessionController.Login(Core.Domain.Dtos.Session.LoginUserDto,System.Threading.CancellationToken)">
-            <summary>
-            Validates login credentials and returns the users information with a new access token
-            </summary>
+             <summary>
+             Signs the user in to a new session
+             </summary>
             
-            <param name="credentials">
-            User credentials to be validated
-            </param>
-            
-            <param name="cancellationToken">
-            Notifies asynchronous operations to cancel ongoing work and release resources
-            </param>
-            
-            <returns>
-            User information alongside new access token
-            </returns>
+             <remarks>
+             Validates given user credentials and returns the user's information alongside a new valid access token
+             </remarks>
+             
+             <param name="credentials">
+             User credentials to be validated
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             User information alongside new access token
+             </returns>
         </member>
         <member name="M:Presentation.Api.Controllers.UserController.RegisterUser(Core.Domain.Dtos.Users.RegisterUserDto,System.Threading.CancellationToken)">
              <summary>
-             Creates a new user account based on given user information
+             Creates a new user account
              </summary>
+            
+             <remarks>
+             Validates given user credentials and creates a new user account
+             </remarks>
              
              <param name="credentials">
              Specifies the user credentials to be used for the new user account
@@ -109,42 +125,52 @@
              </response>
         </member>
         <member name="M:Presentation.Api.Controllers.UserController.GetUserProfile(System.Int32,System.Threading.CancellationToken)">
-            <summary>
-            Returns a users profile information
-            </summary>
+             <summary>
+             Gets a users profile information
+             </summary>
             
-            <param name="userId">
-            ID of the user to search by
-            </param>
-            
-            <param name="cancellationToken">
-            Notifies asynchronous operations to cancel ongoing work and release resources
-            </param>
-            
-            <returns>
-            User profile information
-            </returns>
-            
-            <response code="200">
-            Contains user profile information
-            </response>
-            
-            <response code="400">
-            The provided user ID is in an invalid format
-            </response>
-            
-            <response code="404">
-            The user with the given ID could not be found
-            </response>
-            
-            <response code="500">
-            An unexpected error occurred on the server
-            </response>
+             <remarks>
+             Returns profile information of the user with given id
+             </remarks>
+             
+             <param name="userId">
+             ID of the user to search by
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             User profile information
+             </returns>
+             
+             <response code="200">
+             Contains user profile information
+             </response>
+             
+             <response code="400">
+             The provided user ID is in an invalid format
+             </response>
+             
+             <response code="404">
+             The user with the given ID could not be found
+             </response>
+             
+             <response code="500">
+             An unexpected error occurred on the server
+             </response>
         </member>
         <member name="M:Presentation.Api.Controllers.UserController.EmailExists(Core.Domain.Dtos.Users.EmailExistsDto,System.Threading.CancellationToken)">
              <summary>
-             Checks whether a given email exists in the database
+             Checks email availability
              </summary>
+            
+             <remarks>
+             Checks whether or not a given email address already exists in the database.
+             A successful response (200 OK) means that the email address already exists, whereas an unsuccessful
+             response (404 Not Found) means that the email address is available and free to use in this system
+             </remarks>
              
              <param name="model">
              Specifies the email address to query by
@@ -176,8 +202,14 @@
         </member>
         <member name="M:Presentation.Api.Controllers.UserController.UserNameExists(Core.Domain.Dtos.Users.UserNameExistsDto,System.Threading.CancellationToken)">
              <summary>
-             Checks whether a given user name exists in the database
+             Checks user name availability
              </summary>
+            
+             <remarks>
+             Checks whether or not a given user name already exists in the database.
+             A successful response (200 OK) means that the user name already exists, whereas an unsuccessful
+             response (404 Not Found) means that the user name is available and free to use in this system
+             </remarks>
              
              <param name="model">
              Specifies the user name to query by
@@ -209,9 +241,13 @@
         </member>
         <member name="M:Presentation.Api.Controllers.UserController.Authenticate(System.Threading.CancellationToken)">
              <summary>
-             Authenticates the current user, given a access token inside the Authorization request header
+             Authenticates the current user
              </summary>
             
+             <remarks>
+             Authenticates the current user by his access token in the Authorization header and returns user information accordingly
+             </remarks>
+             
              <param name="cancellationToken">
              Notifies asynchronous operations to cancel ongoing work and release resources
              </param>

@@ -5,17 +5,19 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Api.Examples.Languages;
+using Swashbuckle.AspNetCore.Annotations;
+using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Presentation.Api.Examples.Languages;
-using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Controllers
 {
     [ApiController]
     [Route("api/languages")]
     [Produces("application/json")]
+    [SwaggerTag("Manages languages and translations")]
     public class LanguageController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -26,8 +28,12 @@ namespace Presentation.Api.Controllers
         }
 
         /// <summary>
-        /// Gets a list of all available languages
+        /// Gets a list of all languages
         /// </summary>
+        ///
+        /// <remarks>
+        /// Returns a list of all languages that are supported within this application
+        /// </remarks>
         /// 
         /// <param name="cancellationToken">
         /// Notifies asynchronous operations to cancel ongoing work and release resources
@@ -59,8 +65,12 @@ namespace Presentation.Api.Controllers
         }
 
         /// <summary>
-        /// Gets a list of translations for a specific language
+        /// Gets a list of translations
         /// </summary>
+        ///
+        /// <remarks>
+        /// Returns a list of translations for a given language. Translations within that language can also be filtered by pattern matching
+        /// </remarks>
         /// 
         /// <param name="languageId">
         /// ID of the language to get translations from

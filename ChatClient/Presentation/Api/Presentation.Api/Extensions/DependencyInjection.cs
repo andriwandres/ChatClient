@@ -8,6 +8,7 @@ using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -79,6 +80,8 @@ namespace Presentation.Api.Extensions
                 options.ExampleFilters();
 
                 options.OperationFilter<SecurityRequirementsOperationFilter>();
+
+                options.EnableAnnotations();
             });
 
             // Add swagger example providers from assemblies

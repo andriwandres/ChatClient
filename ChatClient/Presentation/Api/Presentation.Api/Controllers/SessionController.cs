@@ -1,20 +1,22 @@
-﻿using Core.Domain.Resources.Users;
+﻿using Core.Application.Requests.Session.Queries;
+using Core.Domain.Dtos.Session;
+using Core.Domain.Resources.Users;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Api.Examples.Session;
+using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Application.Requests.Session.Queries;
-using Core.Domain.Dtos.Session;
-using Presentation.Api.Examples.Session;
 
 namespace Presentation.Api.Controllers
 {
     [ApiController]
     [Route("api/session")]
     [Produces("application/json")]
+    [SwaggerTag("Manages sign-in session")]
     public class SessionController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -25,8 +27,12 @@ namespace Presentation.Api.Controllers
         }
 
         /// <summary>
-        /// Validates login credentials and returns the users information with a new access token
+        /// Signs the user in to a new session
         /// </summary>
+        ///
+        /// <remarks>
+        /// Validates given user credentials and returns the user's information alongside a new valid access token
+        /// </remarks>
         /// 
         /// <param name="credentials">
         /// User credentials to be validated

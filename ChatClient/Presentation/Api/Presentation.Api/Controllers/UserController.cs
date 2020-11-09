@@ -10,12 +10,14 @@ using Presentation.Api.Examples.Users;
 using Swashbuckle.AspNetCore.Filters;
 using System.Threading;
 using System.Threading.Tasks;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace Presentation.Api.Controllers
 {
     [ApiController]
     [Route("api/users")]
     [Produces("application/json")]
+    [SwaggerTag("Manages user-related data")]
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
@@ -26,8 +28,12 @@ namespace Presentation.Api.Controllers
         }
 
         /// <summary>
-        /// Creates a new user account based on given user information
+        /// Creates a new user account
         /// </summary>
+        ///
+        /// <remarks>
+        /// Validates given user credentials and creates a new user account
+        /// </remarks>
         /// 
         /// <param name="credentials">
         /// Specifies the user credentials to be used for the new user account
@@ -65,21 +71,36 @@ namespace Presentation.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            RegisterUserCommand command = new RegisterUserCommand
+            EmailExistsQuery emailExistsQuery = new EmailExistsQuery { Email = credentials.Email };
+            UserNameExistsQuery userNameExistsQuery = new UserNameExistsQuery() { UserName = credentials.UserName };
+
+            bool emailExists = await _mediator.Send(emailExistsQuery, cancellationToken);
+            bool userNameExists = await _mediator.Send(userNameExistsQuery, cancellationToken);
+
+            if (emailExists || userNameExists)
+            {
+                return BadRequest();
+            }
+
+            RegisterUserCommand registerCommand = new RegisterUserCommand
             {
                 UserName = credentials.UserName,
                 Email = credentials.Email,
                 Password = credentials.Password
             };
 
-            int id = await _mediator.Send(command, cancellationToken);
+            int id = await _mediator.Send(registerCommand, cancellationToken);
 
             return CreatedAtAction(nameof(GetUserProfile), new { id }, null);
         }
 
         /// <summary>
-        /// Returns a users profile information
+        /// Gets a users profile information
         /// </summary>
+        ///
+        /// <remarks>
+        /// Returns profile information of the user with given id
+        /// </remarks>
         /// 
         /// <param name="userId">
         /// ID of the user to search by
@@ -138,8 +159,14 @@ namespace Presentation.Api.Controllers
         }
 
         /// <summary>
-        /// Checks whether a given email exists in the database
+        /// Checks email availability
         /// </summary>
+        ///
+        /// <remarks>
+        /// Checks whether or not a given email address already exists in the database.
+        /// A successful response (200 OK) means that the email address already exists, whereas an unsuccessful
+        /// response (404 Not Found) means that the email address is available and free to use in this system
+        /// </remarks>
         /// 
         /// <param name="model">
         /// Specifies the email address to query by
@@ -197,8 +224,14 @@ namespace Presentation.Api.Controllers
         }
 
         /// <summary>
-        /// Checks whether a given user name exists in the database
+        /// Checks user name availability
         /// </summary>
+        ///
+        /// <remarks>
+        /// Checks whether or not a given user name already exists in the database.
+        /// A successful response (200 OK) means that the user name already exists, whereas an unsuccessful
+        /// response (404 Not Found) means that the user name is available and free to use in this system
+        /// </remarks>
         /// 
         /// <param name="model">
         /// Specifies the user name to query by
@@ -256,9 +289,13 @@ namespace Presentation.Api.Controllers
         }
 
         /// <summary>
-        /// Authenticates the current user, given a access token inside the Authorization request header
+        /// Authenticates the current user
         /// </summary>
         ///
+        /// <remarks>
+        /// Authenticates the current user by his access token in the Authorization header and returns user information accordingly
+        /// </remarks>
+        /// 
         /// <param name="cancellationToken">
         /// Notifies asynchronous operations to cancel ongoing work and release resources
         /// </param>

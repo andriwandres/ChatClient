@@ -54,6 +54,12 @@ namespace Presentation.Api
             {
                 options.SwaggerEndpoint("/swagger/master/swagger.json", "Chat Client Web API");
                 options.DocExpansion(DocExpansion.List);
+                options.EnableFilter();
+                options.DisplayRequestDuration();
+                options.ShowExtensions();
+                options.ShowCommonExtensions();
+                options.EnableValidator();
+                options.EnableDeepLinking();
             });
 
             app.UseHttpsRedirection();
