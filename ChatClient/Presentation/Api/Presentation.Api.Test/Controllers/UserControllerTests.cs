@@ -6,7 +6,6 @@ using Moq;
 using Presentation.Api.Controllers;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using Core.Application.Requests.Users.Commands;
 using Core.Domain.Dtos.Users;
 using Xunit;

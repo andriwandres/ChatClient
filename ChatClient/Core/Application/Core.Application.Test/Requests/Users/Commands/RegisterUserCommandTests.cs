@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Application.Database;
-using Core.Application.Repositories;
 using Core.Application.Requests.Users.Commands;
 using Core.Application.Services;
 using Core.Domain.Entities;

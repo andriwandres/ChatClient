@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Core.Application.Database;
 using Core.Application.Services;
-using Core.Domain.Dtos.Session;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Users;
 using MediatR;

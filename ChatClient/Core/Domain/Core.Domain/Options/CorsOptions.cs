@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Core.Domain.Options
+﻿namespace Core.Domain.Options
 {
     public class CorsOptions
     {

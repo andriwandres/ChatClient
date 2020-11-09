@@ -1,12 +1,8 @@
-﻿using AutoMapper;
-using Core.Application.Requests.Users.Queries;
-using Core.Domain.Dtos.Users;
-using Core.Domain.Resources.Users;
+﻿using Core.Domain.Resources.Users;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Presentation.Api.Examples.Users;
 using Swashbuckle.AspNetCore.Filters;
 using System.Threading;
 using System.Threading.Tasks;

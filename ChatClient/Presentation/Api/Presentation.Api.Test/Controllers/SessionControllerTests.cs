@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
 using Core.Application.Requests.Session.Queries;
-using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Session;
-using Core.Domain.Dtos.Users;
 using Core.Domain.Resources.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

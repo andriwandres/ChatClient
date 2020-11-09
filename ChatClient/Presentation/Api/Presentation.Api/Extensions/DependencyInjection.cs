@@ -77,6 +77,8 @@ namespace Presentation.Api.Extensions
 
                 // Add support for swagger examples
                 options.ExampleFilters();
+
+                options.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
             // Add swagger example providers from assemblies

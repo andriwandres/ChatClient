@@ -12,6 +12,7 @@ namespace Presentation.Api.Test.Validation
         {
             // Languages
             Assert.NotNull(new GetTranslationByLanguageDtoValidator());
+            Assert.NotNull(new LanguageResourceValidator());
 
             // Session
             Assert.NotNull(new LoginUserDtoValidator());
