@@ -8,6 +8,8 @@ namespace Infrastructure.Persistence.Database
 {
     public class UnitOfWork : IUnitOfWork
     {
+        private LanguageRepository _languageRepository;
+        private TranslationRepository _translationRepository;
         private UserRepository _userRepository;
 
         private readonly IChatContext _context;
@@ -17,6 +19,8 @@ namespace Infrastructure.Persistence.Database
             _context = context;
         }
 
+        public ILanguageRepository Languages => _languageRepository ??= new LanguageRepository(_context);
+        public ITranslationRepository Translations => _translationRepository ??= new TranslationRepository(_context);
         public IUserRepository Users => _userRepository ??= new UserRepository(_context);
 
         public int Commit()
