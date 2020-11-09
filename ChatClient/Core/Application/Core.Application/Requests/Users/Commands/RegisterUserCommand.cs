@@ -1,5 +1,6 @@
 ﻿using Core.Application.Database;
 using Core.Application.Services;
+using Core.Domain.Dtos.Users;
 using Core.Domain.Entities;
 using MediatR;
 using System.Threading;

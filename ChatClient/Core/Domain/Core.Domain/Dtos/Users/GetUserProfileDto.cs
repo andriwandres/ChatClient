@@ -1,7 +1,9 @@
-﻿namespace Core.Domain.Dtos.Users
+﻿using Microsoft.AspNetCore.Mvc;
+
+namespace Core.Domain.Dtos.Users
 {
     public class GetUserProfileDto
     {
-        public int Id { get; set; }
+        public int UserId { get; set; }
     }
 }

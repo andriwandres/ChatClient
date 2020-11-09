@@ -25,7 +25,7 @@ namespace Presentation.Api.Test.Controllers
             // Arrange
             LoginUserDto credentials = new LoginUserDto();
 
-            SessionController controller = new SessionController(null, null);
+            SessionController controller = new SessionController(null);
 
             controller.ModelState.AddModelError("Credentials", "Required");
 
@@ -51,14 +51,7 @@ namespace Presentation.Api.Test.Controllers
                 .Setup(m => m.Send(It.IsAny<LoginUserQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((AuthenticatedUser)null);
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
-            {
-                config.CreateMap<LoginUserDto, LoginUserQuery>();
-            });
-
-            IMapper mapperMock = mapperConfiguration.CreateMapper();
-
-            SessionController controller = new SessionController(mediatorMock.Object, mapperMock);
+            SessionController controller = new SessionController(mediatorMock.Object);
 
             // Act
             ActionResult<AuthenticatedUser> response = await controller.Login(credentials);
@@ -84,14 +77,7 @@ namespace Presentation.Api.Test.Controllers
                 .Setup(m => m.Send(It.IsAny<LoginUserQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(expectedUser);
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
-            {
-                config.CreateMap<LoginUserDto, LoginUserQuery>();
-            });
-
-            IMapper mapperMock = mapperConfiguration.CreateMapper();
-
-            SessionController controller = new SessionController(mediatorMock.Object, mapperMock);
+            SessionController controller = new SessionController(mediatorMock.Object);
 
             // Act
             ActionResult<AuthenticatedUser> response = await controller.Login(credentials);

@@ -21,12 +21,10 @@ namespace Presentation.Api.Controllers
     [Produces("application/json")]
     public class SessionController : ControllerBase
     {
-        private readonly IMapper _mapper;
         private readonly IMediator _mediator;
         
-        public SessionController(IMediator mediator, IMapper mapper)
+        public SessionController(IMediator mediator)
         {
-            _mapper = mapper;
             _mediator = mediator;
         }
 
@@ -60,7 +58,11 @@ namespace Presentation.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            LoginUserQuery userQuery = _mapper.Map<LoginUserDto, LoginUserQuery>(credentials);
+            LoginUserQuery userQuery = new LoginUserQuery
+            {
+                UserNameOrEmail = credentials.UserNameOrEmail,
+                Password = credentials.Password
+            };
 
             AuthenticatedUser user = await _mediator.Send(userQuery, cancellationToken);
 

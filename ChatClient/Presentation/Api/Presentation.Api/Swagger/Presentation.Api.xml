@@ -50,38 +50,38 @@
              An unexpected error occurred on the server
              </response>
         </member>
-        <member name="M:Presentation.Api.Controllers.UserController.GetUserProfile(Core.Domain.Dtos.Users.GetUserProfileDto,System.Threading.CancellationToken)">
-             <summary>
-             Returns a users profile information
-             </summary>
-             
-             <param name="model">
-             Specifies the ID of the user to search by
-             </param>
-             
-             <param name="cancellationToken">
-             Notifies asynchronous operations to cancel ongoing work and release resources
-             </param>
-             
-             <returns>
-             User profile information
-             </returns>
+        <member name="M:Presentation.Api.Controllers.UserController.GetUserProfile(System.Int32,System.Threading.CancellationToken)">
+            <summary>
+            Returns a users profile information
+            </summary>
             
-             <response code="200">
-             Contains user profile information
-             </response>
+            <param name="userId">
+            ID of the user to search by
+            </param>
             
-             <response code="400">
-             The provided user ID is in an invalid format
-             </response>
+            <param name="cancellationToken">
+            Notifies asynchronous operations to cancel ongoing work and release resources
+            </param>
             
-             <response code="404">
-             The user with the given ID could not be found
-             </response>
+            <returns>
+            User profile information
+            </returns>
             
-             <response code="500">
-             An unexpected error occurred on the server
-             </response>
+            <response code="200">
+            Contains user profile information
+            </response>
+            
+            <response code="400">
+            The provided user ID is in an invalid format
+            </response>
+            
+            <response code="404">
+            The user with the given ID could not be found
+            </response>
+            
+            <response code="500">
+            An unexpected error occurred on the server
+            </response>
         </member>
         <member name="M:Presentation.Api.Controllers.UserController.EmailExists(Core.Domain.Dtos.Users.EmailExistsDto,System.Threading.CancellationToken)">
              <summary>

@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Core.Application.Requests.Users.Commands;
+﻿using Core.Application.Requests.Users.Commands;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Users;
 using Core.Domain.Resources.Users;
@@ -19,12 +18,10 @@ namespace Presentation.Api.Controllers
     [Produces("application/json")]
     public class UserController : ControllerBase
     {
-        private readonly IMapper _mapper;
         private readonly IMediator _mediator;
 
-        public UserController(IMediator mediator, IMapper mapper)
+        public UserController(IMediator mediator)
         {
-            _mapper = mapper;
             _mediator = mediator;
         }
 
@@ -67,7 +64,12 @@ namespace Presentation.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            RegisterUserCommand command = _mapper.Map<RegisterUserDto, RegisterUserCommand>(credentials);
+            RegisterUserCommand command = new RegisterUserCommand
+            {
+                UserName = credentials.UserName,
+                Email = credentials.Email,
+                Password = credentials.Password
+            };
 
             int id = await _mediator.Send(command, cancellationToken);
 
@@ -78,8 +80,8 @@ namespace Presentation.Api.Controllers
         /// Returns a users profile information
         /// </summary>
         /// 
-        /// <param name="model">
-        /// Specifies the ID of the user to search by
+        /// <param name="userId">
+        /// ID of the user to search by
         /// </param>
         /// 
         /// <param name="cancellationToken">
@@ -89,36 +91,39 @@ namespace Presentation.Api.Controllers
         /// <returns>
         /// User profile information
         /// </returns>
-        ///
+        /// 
         /// <response code="200">
         /// Contains user profile information
         /// </response>
-        ///
+        /// 
         /// <response code="400">
         /// The provided user ID is in an invalid format
         /// </response>
-        ///
+        /// 
         /// <response code="404">
         /// The user with the given ID could not be found
         /// </response>
-        ///
+        /// 
         /// <response code="500">
         /// An unexpected error occurred on the server
         /// </response>
-        [HttpGet("{id:int}")]
+        [HttpGet("{userId:int}")]
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<UserProfileResource>> GetUserProfile([FromRoute] GetUserProfileDto model, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<UserProfileResource>> GetUserProfile([FromRoute] int userId, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            GetUserProfileQuery query = _mapper.Map<GetUserProfileDto, GetUserProfileQuery>(model);
+            GetUserProfileQuery query = new GetUserProfileQuery
+            {
+                UserId = userId
+            };
 
             UserProfileResource userProfile = await _mediator.Send(query, cancellationToken);
 
@@ -174,7 +179,10 @@ namespace Presentation.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            EmailExistsQuery query = _mapper.Map<EmailExistsDto, EmailExistsQuery>(model);
+            EmailExistsQuery query = new EmailExistsQuery
+            {
+                Email = model.Email
+            };
 
             bool exists = await _mediator.Send(query, cancellationToken);
 
@@ -230,7 +238,10 @@ namespace Presentation.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            UserNameExistsQuery query = _mapper.Map<UserNameExistsDto, UserNameExistsQuery>(model);
+            UserNameExistsQuery query = new UserNameExistsQuery
+            {
+                UserName = model.UserName
+            };
 
             bool exists = await _mediator.Send(query, cancellationToken);
 
@@ -241,8 +252,6 @@ namespace Presentation.Api.Controllers
 
             return NotFound();
         }
-
-        
 
         /// <summary>
         /// Authenticates the current user, given a access token inside the Authorization request header
