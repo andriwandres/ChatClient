@@ -4,7 +4,7 @@
         <name>Presentation.Api</name>
     </assembly>
     <members>
-        <member name="M:Presentation.Api.Controllers.SessionController.Login(Core.Domain.Dtos.Session.LoginCredentialsDto,System.Threading.CancellationToken)">
+        <member name="M:Presentation.Api.Controllers.SessionController.Login(Core.Domain.Dtos.Session.LoginUserDto,System.Threading.CancellationToken)">
             <summary>
             Validates login credentials and returns the users information with a new access token
             </summary>
@@ -20,6 +20,68 @@
             <returns>
             User information alongside new access token
             </returns>
+        </member>
+        <member name="M:Presentation.Api.Controllers.UserController.RegisterUser(Core.Domain.Dtos.Users.RegisterUserDto,System.Threading.CancellationToken)">
+             <summary>
+             Creates a new user account based on given user information
+             </summary>
+             
+             <param name="credentials">
+             Specifies the user credentials to be used for the new user account
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             Location of where to fetch the created user data ('Location' header)
+             </returns>
+            
+             <response code="201">
+             Contains the location of where to fetch the created user data inside the 'Location' header
+             </response>
+            
+             <response code="400">
+             Provided user credentials are in an invalid format or a user with provided credentials already exists
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred on the server
+             </response>
+        </member>
+        <member name="M:Presentation.Api.Controllers.UserController.GetUserProfile(Core.Domain.Dtos.Users.GetUserProfileDto,System.Threading.CancellationToken)">
+             <summary>
+             Returns a users profile information
+             </summary>
+             
+             <param name="model">
+             Specifies the ID of the user to search by
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             User profile information
+             </returns>
+            
+             <response code="200">
+             Contains user profile information
+             </response>
+            
+             <response code="400">
+             The provided user ID is in an invalid format
+             </response>
+            
+             <response code="404">
+             The user with the given ID could not be found
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred on the server
+             </response>
         </member>
         <member name="M:Presentation.Api.Controllers.UserController.EmailExists(Core.Domain.Dtos.Users.EmailExistsDto,System.Threading.CancellationToken)">
              <summary>

@@ -10,25 +10,25 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Application.Requests.Session.Queries
 {
-    public class LoginQuery : IRequest<AuthenticatedUser>
+    public class LoginUserQuery : IRequest<AuthenticatedUser>
     {
         public string UserNameOrEmail { get; set; }
         public string Password { get; set; }
 
-        public class LoginQueryHandler : IRequestHandler<LoginQuery, AuthenticatedUser>
+        public class LoginUserQueryHandler : IRequestHandler<LoginUserQuery, AuthenticatedUser>
         {
             private readonly IMapper _mapper;
             private readonly IUnitOfWork _unitOfWork;
             private readonly ICryptoService _cryptoService;
 
-            public LoginQueryHandler(IUnitOfWork unitOfWork, IMapper mapper, ICryptoService cryptoService)
+            public LoginUserQueryHandler(IUnitOfWork unitOfWork, IMapper mapper, ICryptoService cryptoService)
             {
                 _mapper = mapper;
                 _unitOfWork = unitOfWork;
                 _cryptoService = cryptoService;
             }
 
-            public async Task<AuthenticatedUser> Handle(LoginQuery request, CancellationToken cancellationToken = default)
+            public async Task<AuthenticatedUser> Handle(LoginUserQuery request, CancellationToken cancellationToken = default)
             {
                 User user = await _unitOfWork.Users
                     .GetByUserNameOrEmail(request.UserNameOrEmail)

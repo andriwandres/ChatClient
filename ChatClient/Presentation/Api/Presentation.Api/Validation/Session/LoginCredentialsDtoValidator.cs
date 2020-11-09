@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace Presentation.Api.Validation.Session
 {
-    public class LoginCredentialsDtoValidator : AbstractValidator<LoginCredentialsDto>
+    public class LoginCredentialsDtoValidator : AbstractValidator<LoginUserDto>
     {
         public LoginCredentialsDtoValidator()
         {

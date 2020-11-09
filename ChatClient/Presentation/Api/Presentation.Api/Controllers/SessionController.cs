@@ -51,18 +51,18 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        [SwaggerRequestExample(typeof(LoginCredentialsDto), typeof(LoginRequestExample))]
+        [SwaggerRequestExample(typeof(LoginUserDto), typeof(LoginRequestExample))]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(LoginResponseExample))]
-        public async Task<ActionResult<AuthenticatedUser>> Login([FromBody] LoginCredentialsDto credentials, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<AuthenticatedUser>> Login([FromBody] LoginUserDto credentials, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            LoginQuery query = _mapper.Map<LoginCredentialsDto, LoginQuery>(credentials);
+            LoginUserQuery userQuery = _mapper.Map<LoginUserDto, LoginUserQuery>(credentials);
 
-            AuthenticatedUser user = await _mediator.Send(query, cancellationToken);
+            AuthenticatedUser user = await _mediator.Send(userQuery, cancellationToken);
 
             if (user == null)
             {

@@ -11,5 +11,6 @@ namespace Core.Application.Repositories
         IQueryable<User> GetByUserNameOrEmail(string userNameOrEmail);
         Task<bool> EmailExists(string email, CancellationToken cancellationToken = default);
         Task<bool> UserNameExists(string userName, CancellationToken cancellationToken = default);
+        Task Add(User user, CancellationToken cancellationToken = default);
     }
 }

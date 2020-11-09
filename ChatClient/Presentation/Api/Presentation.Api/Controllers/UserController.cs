@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Application.Requests.Users.Commands;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Users;
 using Core.Domain.Resources.Users;
@@ -6,10 +7,10 @@ using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using System.Threading;
-using System.Threading.Tasks;
 using Presentation.Api.Examples.Users;
 using Swashbuckle.AspNetCore.Filters;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Presentation.Api.Controllers
 {
@@ -25,6 +26,108 @@ namespace Presentation.Api.Controllers
         {
             _mapper = mapper;
             _mediator = mediator;
+        }
+
+        /// <summary>
+        /// Creates a new user account based on given user information
+        /// </summary>
+        /// 
+        /// <param name="credentials">
+        /// Specifies the user credentials to be used for the new user account
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">
+        /// Notifies asynchronous operations to cancel ongoing work and release resources
+        /// </param>
+        /// 
+        /// <returns>
+        /// Location of where to fetch the created user data ('Location' header)
+        /// </returns>
+        ///
+        /// <response code="201">
+        /// Contains the location of where to fetch the created user data inside the 'Location' header
+        /// </response>
+        ///
+        /// <response code="400">
+        /// Provided user credentials are in an invalid format or a user with provided credentials already exists
+        /// </response>
+        ///
+        /// <response code="500">
+        /// An unexpected error occurred on the server
+        /// </response>
+        [HttpPost]
+        [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> RegisterUser([FromBody] RegisterUserDto credentials, CancellationToken cancellationToken = default)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            RegisterUserCommand command = _mapper.Map<RegisterUserDto, RegisterUserCommand>(credentials);
+
+            int id = await _mediator.Send(command, cancellationToken);
+
+            return CreatedAtAction(nameof(GetUserProfile), new { id }, null);
+        }
+
+        /// <summary>
+        /// Returns a users profile information
+        /// </summary>
+        /// 
+        /// <param name="model">
+        /// Specifies the ID of the user to search by
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">
+        /// Notifies asynchronous operations to cancel ongoing work and release resources
+        /// </param>
+        /// 
+        /// <returns>
+        /// User profile information
+        /// </returns>
+        ///
+        /// <response code="200">
+        /// Contains user profile information
+        /// </response>
+        ///
+        /// <response code="400">
+        /// The provided user ID is in an invalid format
+        /// </response>
+        ///
+        /// <response code="404">
+        /// The user with the given ID could not be found
+        /// </response>
+        ///
+        /// <response code="500">
+        /// An unexpected error occurred on the server
+        /// </response>
+        [HttpGet("{id:int}")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult<UserProfileResource>> GetUserProfile([FromRoute] GetUserProfileDto model, CancellationToken cancellationToken = default)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            GetUserProfileQuery query = _mapper.Map<GetUserProfileDto, GetUserProfileQuery>(model);
+
+            UserProfileResource userProfile = await _mediator.Send(query, cancellationToken);
+
+            if (userProfile == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(userProfile);
         }
 
         /// <summary>
@@ -138,6 +241,8 @@ namespace Presentation.Api.Controllers
 
             return NotFound();
         }
+
+        
 
         /// <summary>
         /// Authenticates the current user, given a access token inside the Authorization request header

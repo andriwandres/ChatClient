@@ -12,7 +12,7 @@ namespace Presentation.Api.Mapping
     {
         public SessionMappingProfile()
         {
-            CreateMap<LoginCredentialsDto, LoginQuery>();
+            CreateMap<LoginUserDto, LoginUserQuery>();
         }
     }
 }

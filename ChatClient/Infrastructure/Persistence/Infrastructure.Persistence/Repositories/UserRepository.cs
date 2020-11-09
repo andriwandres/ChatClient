@@ -48,5 +48,10 @@ namespace Infrastructure.Persistence.Repositories
                 .AsNoTracking()
                 .AnyAsync(user => user.UserName.ToLower() == userName, cancellationToken);
         }
+
+        public async Task Add(User user, CancellationToken cancellationToken = default)
+        {
+            await Context.Users.AddAsync(user, cancellationToken);
+        }
     }
 }

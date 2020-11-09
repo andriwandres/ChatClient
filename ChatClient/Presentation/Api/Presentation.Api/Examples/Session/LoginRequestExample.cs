@@ -3,11 +3,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.Session
 {
-    public class LoginRequestExample : IExamplesProvider<LoginCredentialsDto>
+    public class LoginRequestExample : IExamplesProvider<LoginUserDto>
     {
-        public LoginCredentialsDto GetExamples()
+        public LoginUserDto GetExamples()
         {
-            return new LoginCredentialsDto
+            return new LoginUserDto
             {
                 UserNameOrEmail = "alfred.miller@gmail.com",
                 Password = "p455w0rd"

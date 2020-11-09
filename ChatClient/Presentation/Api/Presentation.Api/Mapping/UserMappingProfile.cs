@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Application.Requests.Users.Commands;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Users;
 using Core.Domain.Entities;
@@ -11,10 +12,18 @@ namespace Presentation.Api.Mapping
         public UserMappingProfile()
         {
             CreateMap<User, AuthenticatedUser>()
-                .ForMember(destination => destination.Token, config => config.Ignore());
+                .ForMember(destination => destination.Token, 
+                    config => config.Ignore());
+
+            CreateMap<User, UserProfileResource>();
 
             CreateMap<UserNameExistsDto, UserNameExistsQuery>();
             CreateMap<EmailExistsDto, EmailExistsQuery>();
+            CreateMap<RegisterUserDto, RegisterUserCommand>();
+
+            CreateMap<GetUserProfileDto, GetUserProfileQuery>()
+                .ForMember(query => query.UserId,
+                    config => config.MapFrom(source => source.Id));
         }
     }
 }
