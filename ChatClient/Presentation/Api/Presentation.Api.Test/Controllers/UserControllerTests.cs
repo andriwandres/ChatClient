@@ -240,12 +240,12 @@ namespace Presentation.Api.Test.Controllers
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
             mediatorMock
                 .Setup(m => m.Send(It.IsAny<AuthenticateQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((AuthenticatedUser) null);
+                .ReturnsAsync((AuthenticatedUserResource) null);
 
             UserController controller = new UserController(mediatorMock.Object);
 
             // Act
-            ActionResult<AuthenticatedUser> response = await controller.Authenticate();
+            ActionResult<AuthenticatedUserResource> response = await controller.Authenticate();
 
             // Assert
             Assert.IsType<BadRequestResult>(response.Result);
@@ -255,7 +255,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task Authenticate_ShouldReturnUser_WhenAuthenticationWasSuccessful()
         {
             // Arrange
-            AuthenticatedUser expectedUser = new AuthenticatedUser()
+            AuthenticatedUserResource expectedUser = new AuthenticatedUserResource()
             {
                 UserId = 1
             };
@@ -268,12 +268,12 @@ namespace Presentation.Api.Test.Controllers
             UserController controller = new UserController(mediatorMock.Object);
 
             // Act
-            ActionResult<AuthenticatedUser> response = await controller.Authenticate();
+            ActionResult<AuthenticatedUserResource> response = await controller.Authenticate();
 
             // Assert
             OkObjectResult okResult = Assert.IsType<OkObjectResult>(response.Result);
 
-            AuthenticatedUser actualUser = (AuthenticatedUser) okResult.Value;
+            AuthenticatedUserResource actualUser = (AuthenticatedUserResource) okResult.Value;
 
             Assert.NotNull(actualUser);
             Assert.Equal(expectedUser.UserId, actualUser.UserId);

@@ -38,7 +38,7 @@ namespace Core.Application.Test.Requests.Session.Queries
             LoginUserQuery.LoginUserQueryHandler handler = new LoginUserQuery.LoginUserQueryHandler(unitOfWorkMock.Object, null, null);
 
             // Act
-            AuthenticatedUser user = await handler.Handle(request);
+            AuthenticatedUserResource user = await handler.Handle(request);
 
             // Assert
             Assert.Null(user);
@@ -73,7 +73,7 @@ namespace Core.Application.Test.Requests.Session.Queries
             LoginUserQuery.LoginUserQueryHandler handler = new LoginUserQuery.LoginUserQueryHandler(unitOfWorkMock.Object, null, cryptoServiceMock.Object);
 
             // Act
-            AuthenticatedUser user = await handler.Handle(request);
+            AuthenticatedUserResource user = await handler.Handle(request);
 
             // Assert
             Assert.Null(user);
@@ -116,7 +116,7 @@ namespace Core.Application.Test.Requests.Session.Queries
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.CreateMap<User, AuthenticatedUser>();
+                config.CreateMap<User, AuthenticatedUserResource>();
             });
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();
@@ -124,7 +124,7 @@ namespace Core.Application.Test.Requests.Session.Queries
             LoginUserQuery.LoginUserQueryHandler handler = new LoginUserQuery.LoginUserQueryHandler(unitOfWorkMock.Object, mapperMock, cryptoServiceMock.Object);
 
             // Act
-            AuthenticatedUser user = await handler.Handle(request);
+            AuthenticatedUserResource user = await handler.Handle(request);
 
             // Assert
             Assert.NotNull(user);

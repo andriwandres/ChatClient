@@ -51,7 +51,7 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerRequestExample(typeof(LoginUserDto), typeof(LoginRequestExample))]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(LoginResponseExample))]
-        public async Task<ActionResult<AuthenticatedUser>> Login([FromBody] LoginUserDto credentials, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<AuthenticatedUserResource>> Login([FromBody] LoginUserDto credentials, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
@@ -64,7 +64,7 @@ namespace Presentation.Api.Controllers
                 Password = credentials.Password
             };
 
-            AuthenticatedUser user = await _mediator.Send(userQuery, cancellationToken);
+            AuthenticatedUserResource user = await _mediator.Send(userQuery, cancellationToken);
 
             if (user == null)
             {

@@ -4,9 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace Presentation.Api.Validation.Users
 {
-    public class AuthenticatedUserValidator : AbstractValidator<AuthenticatedUser>
+    public class AuthenticatedUserResourceValidator : AbstractValidator<AuthenticatedUserResource>
     {
-        public AuthenticatedUserValidator()
+        public AuthenticatedUserResourceValidator()
         {
             RuleFor(model => model.UserId)
                 .NotEmpty()

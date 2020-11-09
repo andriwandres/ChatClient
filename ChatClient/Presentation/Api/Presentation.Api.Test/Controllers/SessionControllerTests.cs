@@ -30,7 +30,7 @@ namespace Presentation.Api.Test.Controllers
             controller.ModelState.AddModelError("Credentials", "Required");
 
             // Act
-            ActionResult<AuthenticatedUser> response = await controller.Login(credentials);
+            ActionResult<AuthenticatedUserResource> response = await controller.Login(credentials);
 
             // Assert
             Assert.IsType<BadRequestObjectResult>(response.Result);
@@ -49,12 +49,12 @@ namespace Presentation.Api.Test.Controllers
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
             mediatorMock
                 .Setup(m => m.Send(It.IsAny<LoginUserQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((AuthenticatedUser)null);
+                .ReturnsAsync((AuthenticatedUserResource)null);
 
             SessionController controller = new SessionController(mediatorMock.Object);
 
             // Act
-            ActionResult<AuthenticatedUser> response = await controller.Login(credentials);
+            ActionResult<AuthenticatedUserResource> response = await controller.Login(credentials);
 
             // Assert
             Assert.IsType<NotFoundResult>(response.Result);
@@ -64,7 +64,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task Login_ShouldReturnUser_WhenCredentialsAreValid()
         {
             // Arrange
-            AuthenticatedUser expectedUser = new AuthenticatedUser() { UserId = 1 };
+            AuthenticatedUserResource expectedUser = new AuthenticatedUserResource() { UserId = 1 };
 
             LoginUserDto credentials = new LoginUserDto
             {
@@ -80,12 +80,12 @@ namespace Presentation.Api.Test.Controllers
             SessionController controller = new SessionController(mediatorMock.Object);
 
             // Act
-            ActionResult<AuthenticatedUser> response = await controller.Login(credentials);
+            ActionResult<AuthenticatedUserResource> response = await controller.Login(credentials);
 
             // Assert
             OkObjectResult okResult = Assert.IsType<OkObjectResult>(response.Result);
 
-            AuthenticatedUser actualUser = (AuthenticatedUser)okResult.Value;
+            AuthenticatedUserResource actualUser = (AuthenticatedUserResource)okResult.Value;
 
             Assert.NotNull(actualUser);
             Assert.Equal(expectedUser.UserId, actualUser.UserId);

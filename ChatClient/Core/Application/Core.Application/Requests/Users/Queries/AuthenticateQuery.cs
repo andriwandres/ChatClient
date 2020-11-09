@@ -12,9 +12,9 @@ using System.Threading.Tasks;
 
 namespace Core.Application.Requests.Users.Queries
 {
-    public class AuthenticateQuery : IRequest<AuthenticatedUser>
+    public class AuthenticateQuery : IRequest<AuthenticatedUserResource>
     {
-        public class AuthenticateQueryHandler : IRequestHandler<AuthenticateQuery, AuthenticatedUser>
+        public class AuthenticateQueryHandler : IRequestHandler<AuthenticateQuery, AuthenticatedUserResource>
         {
             private readonly IMapper _mapper;
             private readonly IUnitOfWork _unitOfWork;
@@ -27,16 +27,16 @@ namespace Core.Application.Requests.Users.Queries
                 _httpContextAccessor = httpContextAccessor;
             }
 
-            public async Task<AuthenticatedUser> Handle(AuthenticateQuery request, CancellationToken cancellationToken = default)
+            public async Task<AuthenticatedUserResource> Handle(AuthenticateQuery request, CancellationToken cancellationToken = default)
             {
                 string id = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value;
 
                 string authorizationHeader = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
                 string token = authorizationHeader.Split(' ').Last();
 
-                AuthenticatedUser user = await _unitOfWork.Users
+                AuthenticatedUserResource user = await _unitOfWork.Users
                     .GetById(int.Parse(id))
-                    .ProjectTo<AuthenticatedUser>(_mapper.ConfigurationProvider)
+                    .ProjectTo<AuthenticatedUserResource>(_mapper.ConfigurationProvider)
                     .SingleOrDefaultAsync(cancellationToken);
 
                 if (user == null)

@@ -52,7 +52,7 @@ namespace Core.Application.Test.Requests.Users.Queries
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.CreateMap<User, AuthenticatedUser>();
+                config.CreateMap<User, AuthenticatedUserResource>();
             });
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();
@@ -61,7 +61,7 @@ namespace Core.Application.Test.Requests.Users.Queries
                 new AuthenticateQuery.AuthenticateQueryHandler(unitOfWorkMock.Object, mapperMock, httpContextAccessorMock.Object);
 
             // Act
-            AuthenticatedUser user = await handler.Handle(new AuthenticateQuery());
+            AuthenticatedUserResource user = await handler.Handle(new AuthenticateQuery());
 
             // Assert
             Assert.NotNull(user);
@@ -102,7 +102,7 @@ namespace Core.Application.Test.Requests.Users.Queries
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.CreateMap<User, AuthenticatedUser>();
+                config.CreateMap<User, AuthenticatedUserResource>();
             });
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();
@@ -111,7 +111,7 @@ namespace Core.Application.Test.Requests.Users.Queries
                 new AuthenticateQuery.AuthenticateQueryHandler(unitOfWorkMock.Object, mapperMock, httpContextAccessorMock.Object);
 
             // Act
-            AuthenticatedUser user = await handler.Handle(new AuthenticateQuery());
+            AuthenticatedUserResource user = await handler.Handle(new AuthenticateQuery());
 
             // Assert
             Assert.Null(user);

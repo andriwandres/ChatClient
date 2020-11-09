@@ -8,7 +8,7 @@ namespace Presentation.Api.Mapping
     {
         public UserMappingProfile()
         {
-            CreateMap<User, AuthenticatedUser>()
+            CreateMap<User, AuthenticatedUserResource>()
                 .ForMember(destination => destination.Token, 
                     config => config.Ignore());
 

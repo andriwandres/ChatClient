@@ -282,11 +282,11 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(AuthenticateResponseExample))]
-        public async Task<ActionResult<AuthenticatedUser>> Authenticate(CancellationToken cancellationToken = default)
+        public async Task<ActionResult<AuthenticatedUserResource>> Authenticate(CancellationToken cancellationToken = default)
         {
             AuthenticateQuery query = new AuthenticateQuery();
 
-            AuthenticatedUser user = await _mediator.Send(query, cancellationToken);
+            AuthenticatedUserResource user = await _mediator.Send(query, cancellationToken);
 
             if (user == null)
             {

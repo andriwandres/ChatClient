@@ -3,11 +3,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.Session
 {
-    public class LoginResponseExample : IExamplesProvider<AuthenticatedUser>
+    public class LoginResponseExample : IExamplesProvider<AuthenticatedUserResource>
     {
-        public AuthenticatedUser GetExamples()
+        public AuthenticatedUserResource GetExamples()
         {
-            return new AuthenticatedUser
+            return new AuthenticatedUserResource
             {
                 UserId = 1,
                 Token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InVzZXIxQHRlc3QuY2giLCJ1bmlxdWVfbmFtZSI6IlVzZXIgMSIsIm5hbWVpZCI6IjEiLCJuYmYiOjE2MDI2MDg5MjgsImV4cCI6MTYwMzIxMzcyOCwiaWF0IjoxNjAyNjA4OTI4fQ.KeSLWq1n353Edpd913oxxQ_hzNrTkzbz39MwaF1NR10",
