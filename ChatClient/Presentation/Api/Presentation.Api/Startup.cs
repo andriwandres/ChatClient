@@ -1,4 +1,5 @@
 using Core.Application.Extensions;
+using Core.Domain.Options;
 using Infrastructure.Persistence.Extensions;
 using Infrastructure.Shared.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -6,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Options;
 using Presentation.Api.Extensions;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -37,12 +39,14 @@ namespace Presentation.Api
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IOptions<CorsOptions> cors)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseAuthentication();
 
             // Use swagger UI
             app.UseSwagger();
@@ -55,6 +59,13 @@ namespace Presentation.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+            app.UseCors(builder =>
+            {
+                builder.WithOrigins(cors.Value.AllowedOrigins);
+                builder.WithMethods(cors.Value.AllowedMethods);
+                builder.WithHeaders(cors.Value.AllowedHeaders);
+            });
 
             app.UseAuthorization();
 

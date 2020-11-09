@@ -28,10 +28,8 @@ namespace Presentation.Api.Test
 
             Startup startup = new Startup(configurationMock);
 
-            // Act
+            // Act + Assert
             startup.ConfigureServices(serviceCollectionMock);
-
-            // Assert
         }
     }
 }
