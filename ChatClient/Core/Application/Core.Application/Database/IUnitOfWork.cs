@@ -10,7 +10,8 @@ namespace Core.Application.Database
         ILanguageRepository Languages { get; }
         ITranslationRepository Translations { get; }
         IUserRepository Users { get; }
-
+        IFriendshipRepository Friendships { get; }
+        IFriendshipChangeRepository FriendshipChanges { get; }
 
         int Commit();
         Task<int> CommitAsync(CancellationToken cancellationToken = default);

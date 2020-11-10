@@ -11,6 +11,8 @@ namespace Infrastructure.Persistence.Database
         private LanguageRepository _languageRepository;
         private TranslationRepository _translationRepository;
         private UserRepository _userRepository;
+        private FriendshipChangeRepository _friendshipChangeRepository;
+        private FriendshipRepository _friendshipRepository;
 
         private readonly IChatContext _context;
 
@@ -22,6 +24,8 @@ namespace Infrastructure.Persistence.Database
         public ILanguageRepository Languages => _languageRepository ??= new LanguageRepository(_context);
         public ITranslationRepository Translations => _translationRepository ??= new TranslationRepository(_context);
         public IUserRepository Users => _userRepository ??= new UserRepository(_context);
+        public IFriendshipChangeRepository FriendshipChanges => _friendshipChangeRepository ??= new FriendshipChangeRepository(_context);
+        public IFriendshipRepository Friendships => _friendshipRepository ??= new FriendshipRepository(_context);
 
         public int Commit()
         {

@@ -12,5 +12,10 @@ namespace Core.Domain.Entities
         public User Addressee { get; set; }
 
         public ICollection<FriendshipChange> StatusChanges { get; set; }
+
+        public Friendship()
+        {
+            StatusChanges = new HashSet<FriendshipChange>();
+        }
     }
 }
