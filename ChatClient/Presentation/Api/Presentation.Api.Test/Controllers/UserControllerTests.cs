@@ -32,6 +32,78 @@ namespace Presentation.Api.Test.Controllers
         }
 
         [Fact]
+        public async Task RegisterUser_ShouldReturnBadRequestResult_WhenEmailAlreadyExists()
+        {
+            // Arrange
+            RegisterUserDto credentials = new RegisterUserDto {UserName = "", Email = "", Password = ""};
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<EmailExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<UserNameExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            UserController controller = new UserController(mediatorMock.Object);
+
+            // Act
+            ActionResult response = await controller.RegisterUser(credentials);
+
+            // Assert
+            Assert.IsType<BadRequestResult>(response);
+        }
+
+        [Fact]
+        public async Task RegisterUser_ShouldReturnBadRequestResult_WhenUserNameAlreadyExists()
+        {
+            // Arrange
+            RegisterUserDto credentials = new RegisterUserDto { UserName = "", Email = "", Password = "" };
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<EmailExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<UserNameExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            UserController controller = new UserController(mediatorMock.Object);
+
+            // Act
+            ActionResult response = await controller.RegisterUser(credentials);
+
+            // Assert
+            Assert.IsType<BadRequestResult>(response);
+        }
+
+        [Fact]
+        public async Task RegisterUser_ShouldReturnBadRequestResult_WhenBothEmailAndUserNameAlreadyExist()
+        {
+            // Arrange
+            RegisterUserDto credentials = new RegisterUserDto { UserName = "", Email = "", Password = "" };
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<EmailExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<UserNameExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            UserController controller = new UserController(mediatorMock.Object);
+
+            // Act
+            ActionResult response = await controller.RegisterUser(credentials);
+
+            // Assert
+            Assert.IsType<BadRequestResult>(response);
+        }
+
+        [Fact]
         public async Task RegisterUser_ShouldReturnCreatedResult_WhenCredentialsAreValid()
         {
             // Arrange

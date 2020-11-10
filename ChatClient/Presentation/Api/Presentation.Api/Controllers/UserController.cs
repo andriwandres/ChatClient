@@ -72,7 +72,7 @@ namespace Presentation.Api.Controllers
             }
 
             EmailExistsQuery emailExistsQuery = new EmailExistsQuery { Email = credentials.Email };
-            UserNameExistsQuery userNameExistsQuery = new UserNameExistsQuery() { UserName = credentials.UserName };
+            UserNameExistsQuery userNameExistsQuery = new UserNameExistsQuery { UserName = credentials.UserName };
 
             bool emailExists = await _mediator.Send(emailExistsQuery, cancellationToken);
             bool userNameExists = await _mediator.Send(userNameExistsQuery, cancellationToken);
