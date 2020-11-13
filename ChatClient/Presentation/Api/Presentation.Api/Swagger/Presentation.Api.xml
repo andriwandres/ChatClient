@@ -37,6 +37,43 @@
              An unexpected error occurred
              </response>
         </member>
+        <member name="M:Presentation.Api.Controllers.FriendshipController.GetFriendshipById(System.Int32,System.Threading.CancellationToken)">
+             <summary>
+             Gets a single friendship
+             </summary>
+            
+             <remarks>
+             Returns a single friendship according to the provided friendship ID
+             </remarks>
+             
+             <param name="friendshipId">
+             ID of the friendship to get
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             Friendship instance
+             </returns>
+            
+             <response code="200">
+             Contains the friendship
+             </response>
+            
+             <response code="400">
+             Provided friendshipId is not in a valid format
+             </response>
+            
+             <response code="404">
+             Friendship with the provided ID does not exist
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
         <member name="M:Presentation.Api.Controllers.LanguageController.GetAllLanguages(System.Threading.CancellationToken)">
              <summary>
              Gets a list of all languages

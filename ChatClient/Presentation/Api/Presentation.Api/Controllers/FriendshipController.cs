@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Application.Requests.Friendships.Queries;
 using Microsoft.AspNetCore.Http;
 
 namespace Presentation.Api.Controllers
@@ -77,11 +78,63 @@ namespace Presentation.Api.Controllers
             return CreatedAtAction(nameof(GetFriendshipById), new { friendshipId = friendship.FriendshipId }, friendship);
         }
 
+        /// <summary>
+        /// Gets a single friendship
+        /// </summary>
+        ///
+        /// <remarks>
+        /// Returns a single friendship according to the provided friendship ID
+        /// </remarks>
+        /// 
+        /// <param name="friendshipId">
+        /// ID of the friendship to get
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">
+        /// Notifies asynchronous operations to cancel ongoing work and release resources
+        /// </param>
+        /// 
+        /// <returns>
+        /// Friendship instance
+        /// </returns>
+        ///
+        /// <response code="200">
+        /// Contains the friendship
+        /// </response>
+        ///
+        /// <response code="400">
+        /// Provided friendshipId is not in a valid format
+        /// </response>
+        ///
+        /// <response code="404">
+        /// Friendship with the provided ID does not exist
+        /// </response>
+        ///
+        /// <response code="500">
+        /// An unexpected error occurred
+        /// </response>
         [HttpGet("{friendshipId:int}")]
         [Authorize]
-        public async Task<ActionResult> GetFriendshipById([FromRoute] int friendshipId)
+        public async Task<ActionResult> GetFriendshipById([FromRoute] int friendshipId, CancellationToken cancellationToken)
         {
-            return NoContent();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            GetFriendshipByIdQuery query = new GetFriendshipByIdQuery
+            {
+                FriendshipId = friendshipId
+            };
+
+            FriendshipResource friendship = await _mediator.Send(query, cancellationToken);
+
+            if (friendship == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(friendship);
         }
 
         [HttpPut("{friendshipId:int}")]
