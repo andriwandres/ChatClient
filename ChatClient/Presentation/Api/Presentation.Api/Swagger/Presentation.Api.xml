@@ -4,6 +4,39 @@
         <name>Presentation.Api</name>
     </assembly>
     <members>
+        <member name="M:Presentation.Api.Controllers.FriendshipController.RequestFriendship(Core.Domain.Dtos.Friendships.RequestFriendshipDto,System.Threading.CancellationToken)">
+             <summary>
+             Requests a new friendship
+             </summary>
+            
+             <remarks>
+             Creates a new friendship between two users
+             </remarks>
+             
+             <param name="model">
+             Specifies the user ID of the addresse to create the new friendship with
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             Created friendship
+             </returns>
+            
+             <response code="200">
+             Contains the created friendship
+             </response>
+            
+             <response code="400">
+             Request body failed validation or the user combination for this friendship already exists
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
         <member name="M:Presentation.Api.Controllers.LanguageController.GetAllLanguages(System.Threading.CancellationToken)">
              <summary>
              Gets a list of all languages

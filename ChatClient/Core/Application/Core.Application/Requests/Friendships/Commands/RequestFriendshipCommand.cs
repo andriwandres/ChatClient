@@ -1,16 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Claims;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Application.Database;
 using Core.Application.Services;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Friendships;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Core.Application.Requests.Friendships.Commands
 {
@@ -45,8 +42,8 @@ namespace Core.Application.Requests.Friendships.Commands
 
                 FriendshipChange change = new FriendshipChange
                 {
-                    StatusId = 1,
-                    Created = _dateProvider.UtcNow()
+                    Created = _dateProvider.UtcNow(),
+                    StatusId = FriendshipStatusId.Pending,
                 };
 
                 friendship.StatusChanges.Add(change);

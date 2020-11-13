@@ -5,7 +5,7 @@ namespace Core.Domain.Entities
     public class Availability
     {
         public int AvailabilityId { get; set; }
-        public int StatusId { get; set; }
+        public AvailabilityStatusId StatusId { get; set; }
         public int UserId { get; set; }
         public bool ModifiedManually { get; set; }
         public DateTime Modified { get; set; }

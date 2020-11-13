@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
 using Core.Application.Requests.Session.Queries;
 using Core.Domain.Dtos.Session;
 using Core.Domain.Resources.Users;
@@ -19,7 +20,7 @@ namespace Presentation.Api.Test.Controllers
             // Arrange
             LoginUserDto credentials = new LoginUserDto();
 
-            SessionController controller = new SessionController(null);
+            SessionController controller = new SessionController(null, null);
 
             controller.ModelState.AddModelError("Credentials", "Required");
 
@@ -45,7 +46,14 @@ namespace Presentation.Api.Test.Controllers
                 .Setup(m => m.Send(It.IsAny<LoginUserQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((AuthenticatedUserResource)null);
 
-            SessionController controller = new SessionController(mediatorMock.Object);
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            {
+                config.CreateMap<LoginUserDto, LoginUserQuery>();
+            });
+
+            IMapper mapperMock = mapperConfiguration.CreateMapper();
+
+            SessionController controller = new SessionController(mediatorMock.Object, mapperMock);
 
             // Act
             ActionResult<AuthenticatedUserResource> response = await controller.Login(credentials);
@@ -71,7 +79,14 @@ namespace Presentation.Api.Test.Controllers
                 .Setup(m => m.Send(It.IsAny<LoginUserQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(expectedUser);
 
-            SessionController controller = new SessionController(mediatorMock.Object);
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            {
+                config.CreateMap<LoginUserDto, LoginUserQuery>();
+            });
+
+            IMapper mapperMock = mapperConfiguration.CreateMapper();
+
+            SessionController controller = new SessionController(mediatorMock.Object, mapperMock);
 
             // Act
             ActionResult<AuthenticatedUserResource> response = await controller.Login(credentials);

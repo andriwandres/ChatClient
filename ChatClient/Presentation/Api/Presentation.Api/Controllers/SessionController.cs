@@ -1,4 +1,5 @@
-﻿using Core.Application.Requests.Session.Queries;
+﻿using AutoMapper;
+using Core.Application.Requests.Session.Queries;
 using Core.Domain.Dtos.Session;
 using Core.Domain.Resources.Users;
 using MediatR;
@@ -20,10 +21,12 @@ namespace Presentation.Api.Controllers
     public class SessionController : ControllerBase
     {
         private readonly IMediator _mediator;
-        
-        public SessionController(IMediator mediator)
+        private readonly IMapper _mapper;
+
+        public SessionController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -60,13 +63,9 @@ namespace Presentation.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            LoginUserQuery userQuery = new LoginUserQuery
-            {
-                UserNameOrEmail = credentials.UserNameOrEmail,
-                Password = credentials.Password
-            };
+            LoginUserQuery query = _mapper.Map<LoginUserDto, LoginUserQuery>(credentials);
 
-            AuthenticatedUserResource user = await _mediator.Send(userQuery, cancellationToken);
+            AuthenticatedUserResource user = await _mediator.Send(query, cancellationToken);
 
             if (user == null)
             {

@@ -1,4 +1,5 @@
-﻿using Core.Application.Requests.Users.Commands;
+﻿using AutoMapper;
+using Core.Application.Requests.Users.Commands;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Users;
 using Core.Domain.Resources.Users;
@@ -7,10 +8,10 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Examples.Users;
+using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 using System.Threading;
 using System.Threading.Tasks;
-using Swashbuckle.AspNetCore.Annotations;
 
 namespace Presentation.Api.Controllers
 {
@@ -21,10 +22,12 @@ namespace Presentation.Api.Controllers
     public class UserController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IMapper _mapper;
 
-        public UserController(IMediator mediator)
+        public UserController(IMediator mediator, IMapper mapper)
         {
             _mediator = mediator;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -71,23 +74,16 @@ namespace Presentation.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            EmailExistsQuery emailExistsQuery = new EmailExistsQuery { Email = credentials.Email };
-            UserNameExistsQuery userNameExistsQuery = new UserNameExistsQuery { UserName = credentials.UserName };
+            UserNameOrEmailExistsQuery existsQuery = _mapper.Map<RegisterUserDto, UserNameOrEmailExistsQuery>(credentials);
 
-            bool emailExists = await _mediator.Send(emailExistsQuery, cancellationToken);
-            bool userNameExists = await _mediator.Send(userNameExistsQuery, cancellationToken);
+            bool exists = await _mediator.Send(existsQuery, cancellationToken);
 
-            if (emailExists || userNameExists)
+            if (exists)
             {
                 return BadRequest();
             }
 
-            RegisterUserCommand registerCommand = new RegisterUserCommand
-            {
-                UserName = credentials.UserName,
-                Email = credentials.Email,
-                Password = credentials.Password
-            };
+            RegisterUserCommand registerCommand = _mapper.Map<RegisterUserDto, RegisterUserCommand>(credentials);
 
             int id = await _mediator.Send(registerCommand, cancellationToken);
 
@@ -197,9 +193,7 @@ namespace Presentation.Api.Controllers
         /// </response>
         [HttpHead("email")]
         [AllowAnonymous]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> EmailExists([FromQuery] EmailExistsDto model, CancellationToken cancellationToken = default)
         {
@@ -208,10 +202,7 @@ namespace Presentation.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            EmailExistsQuery query = new EmailExistsQuery
-            {
-                Email = model.Email
-            };
+            EmailExistsQuery query = _mapper.Map<EmailExistsDto, EmailExistsQuery>(model);
 
             bool exists = await _mediator.Send(query, cancellationToken);
 
@@ -262,9 +253,7 @@ namespace Presentation.Api.Controllers
         /// </response>
         [HttpHead("username")]
         [AllowAnonymous]
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> UserNameExists([FromQuery] UserNameExistsDto model, CancellationToken cancellationToken = default)
         {
@@ -273,10 +262,7 @@ namespace Presentation.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            UserNameExistsQuery query = new UserNameExistsQuery
-            {
-                UserName = model.UserName
-            };
+            UserNameExistsQuery query = _mapper.Map<UserNameExistsDto, UserNameExistsQuery>(model);
 
             bool exists = await _mediator.Send(query, cancellationToken);
 
@@ -335,5 +321,11 @@ namespace Presentation.Api.Controllers
             return Ok(user);
         }
 
+        [HttpGet("me/friendships")]
+        [Authorize]
+        public async Task<ActionResult> GetOwnFriendships(CancellationToken cancellationToken = default)
+        {
+            return NoContent();
+        }
     }
 }
