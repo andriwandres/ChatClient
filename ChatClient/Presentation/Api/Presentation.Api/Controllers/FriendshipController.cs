@@ -1,13 +1,14 @@
-﻿using System.Threading;
+﻿using AutoMapper;
+using Core.Application.Requests.Friendships.Commands;
+using Core.Domain.Dtos.Friendships;
+using Core.Domain.Resources.Friendships;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Threading;
 using System.Threading.Tasks;
-using AutoMapper;
-using Core.Application.Requests.Friendships.Commands;
-using Core.Domain.Dtos.Friendships;
-using Core.Domain.Resources.Friendships;
+using Microsoft.AspNetCore.Http;
 
 namespace Presentation.Api.Controllers
 {
@@ -46,7 +47,7 @@ namespace Presentation.Api.Controllers
         /// Created friendship
         /// </returns>
         ///
-        /// <response code="200">
+        /// <response code="201">
         /// Contains the created friendship
         /// </response>
         ///
@@ -59,6 +60,9 @@ namespace Presentation.Api.Controllers
         /// </response>
         [HttpPost]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> RequestFriendship([FromBody] RequestFriendshipDto model, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
@@ -70,7 +74,14 @@ namespace Presentation.Api.Controllers
 
             FriendshipResource friendship = await _mediator.Send(command, cancellationToken);
 
-            return Ok(friendship);
+            return CreatedAtAction(nameof(GetFriendshipById), new { friendshipId = friendship.FriendshipId }, friendship);
+        }
+
+        [HttpGet("{friendshipId:int}")]
+        [Authorize]
+        public async Task<ActionResult> GetFriendshipById([FromRoute] int friendshipId)
+        {
+            return NoContent();
         }
 
         [HttpPut("{friendshipId:int}")]
@@ -86,5 +97,7 @@ namespace Presentation.Api.Controllers
         {
             return NoContent();
         }
+
+        
     }
 }

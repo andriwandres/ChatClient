@@ -13,5 +13,6 @@ namespace Core.Application.Repositories
         Task<bool> UserNameExists(string userName, CancellationToken cancellationToken = default);
         Task<bool> UserNameOrEmailExists(string userName, string email, CancellationToken cancellationToken = default);
         Task Add(User user, CancellationToken cancellationToken = default);
+        IQueryable<Friendship> GetFriendships(int userId);
     }
 }

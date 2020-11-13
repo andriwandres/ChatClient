@@ -1,4 +1,7 @@
-﻿using Core.Application.Requests.Users.Queries;
+﻿using AutoMapper;
+using Core.Application.Requests.Users.Commands;
+using Core.Application.Requests.Users.Queries;
+using Core.Domain.Dtos.Users;
 using Core.Domain.Resources.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -6,8 +9,6 @@ using Moq;
 using Presentation.Api.Controllers;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Application.Requests.Users.Commands;
-using Core.Domain.Dtos.Users;
 using Xunit;
 
 namespace Presentation.Api.Test.Controllers
@@ -20,7 +21,7 @@ namespace Presentation.Api.Test.Controllers
             // Arrange
             RegisterUserDto credentials = new RegisterUserDto();
 
-            UserController controller = new UserController(null);
+            UserController controller = new UserController(null, null);
 
             controller.ModelState.AddModelError("", "");
 
@@ -32,69 +33,25 @@ namespace Presentation.Api.Test.Controllers
         }
 
         [Fact]
-        public async Task RegisterUser_ShouldReturnBadRequestResult_WhenEmailAlreadyExists()
+        public async Task RegisterUser_ShouldReturnBadRequestResult_WhenUserNameOrEmailAlreadyExists()
         {
             // Arrange
             RegisterUserDto credentials = new RegisterUserDto {UserName = "", Email = "", Password = ""};
 
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            
             mediatorMock
-                .Setup(m => m.Send(It.IsAny<EmailExistsQuery>(), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.IsAny<UserNameOrEmailExistsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            mediatorMock
-                .Setup(m => m.Send(It.IsAny<UserNameExistsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            {
+                config.CreateMap<RegisterUserDto, UserNameOrEmailExistsQuery>();
+            });
 
-            UserController controller = new UserController(mediatorMock.Object);
+            IMapper mapperMock = mapperConfiguration.CreateMapper();
 
-            // Act
-            ActionResult response = await controller.RegisterUser(credentials);
-
-            // Assert
-            Assert.IsType<BadRequestResult>(response);
-        }
-
-        [Fact]
-        public async Task RegisterUser_ShouldReturnBadRequestResult_WhenUserNameAlreadyExists()
-        {
-            // Arrange
-            RegisterUserDto credentials = new RegisterUserDto { UserName = "", Email = "", Password = "" };
-
-            Mock<IMediator> mediatorMock = new Mock<IMediator>();
-            mediatorMock
-                .Setup(m => m.Send(It.IsAny<EmailExistsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
-
-            mediatorMock
-                .Setup(m => m.Send(It.IsAny<UserNameExistsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
-
-            UserController controller = new UserController(mediatorMock.Object);
-
-            // Act
-            ActionResult response = await controller.RegisterUser(credentials);
-
-            // Assert
-            Assert.IsType<BadRequestResult>(response);
-        }
-
-        [Fact]
-        public async Task RegisterUser_ShouldReturnBadRequestResult_WhenBothEmailAndUserNameAlreadyExist()
-        {
-            // Arrange
-            RegisterUserDto credentials = new RegisterUserDto { UserName = "", Email = "", Password = "" };
-
-            Mock<IMediator> mediatorMock = new Mock<IMediator>();
-            mediatorMock
-                .Setup(m => m.Send(It.IsAny<EmailExistsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
-
-            mediatorMock
-                .Setup(m => m.Send(It.IsAny<UserNameExistsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
-
-            UserController controller = new UserController(mediatorMock.Object);
+            UserController controller = new UserController(mediatorMock.Object, mapperMock);
 
             // Act
             ActionResult response = await controller.RegisterUser(credentials);
@@ -116,10 +73,22 @@ namespace Presentation.Api.Test.Controllers
 
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
             mediatorMock
+                .Setup(m => m.Send(It.IsAny<UserNameOrEmailExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            mediatorMock
                 .Setup(m => m.Send(It.IsAny<RegisterUserCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            UserController controller = new UserController(mediatorMock.Object);
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            {
+                config.CreateMap<RegisterUserDto, RegisterUserCommand>();
+                config.CreateMap<RegisterUserDto, UserNameOrEmailExistsQuery>();
+            });
+
+            IMapper mapperMock = mapperConfiguration.CreateMapper();
+
+            UserController controller = new UserController(mediatorMock.Object, mapperMock);
 
             // Act
             ActionResult response = await controller.RegisterUser(credentials);
@@ -137,7 +106,7 @@ namespace Presentation.Api.Test.Controllers
             // Arrange
             const int userId = -3;
 
-            UserController controller = new UserController(null);
+            UserController controller = new UserController(null, null);
 
             controller.ModelState.AddModelError("", "");
 
@@ -159,7 +128,7 @@ namespace Presentation.Api.Test.Controllers
                 .Setup(m => m.Send(It.IsAny<GetUserProfileQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((UserProfileResource) null);
 
-            UserController controller = new UserController(mediatorMock.Object);
+            UserController controller = new UserController(mediatorMock.Object, null);
 
             // Act
             ActionResult<UserProfileResource> response = await controller.GetUserProfile(userId);
@@ -181,7 +150,7 @@ namespace Presentation.Api.Test.Controllers
                 .Setup(m => m.Send(It.IsAny<GetUserProfileQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(expectedUserProfile);
 
-            UserController controller = new UserController(mediatorMock.Object);
+            UserController controller = new UserController(mediatorMock.Object, null);
 
             // Act
             ActionResult<UserProfileResource> response = await controller.GetUserProfile(userId);
@@ -198,7 +167,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task EmailExists_ShouldReturnBadRequestResult_WhenEmailIsInvalid()
         {
             // Arrange
-            UserController controller = new UserController(null);
+            UserController controller = new UserController(null, null);
 
             controller.ModelState.AddModelError("Email", "Required");
 
@@ -220,7 +189,14 @@ namespace Presentation.Api.Test.Controllers
                 .Setup(m => m.Send(It.IsAny<EmailExistsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            UserController controller = new UserController(mediatorMock.Object);
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            {
+                config.CreateMap<EmailExistsDto, EmailExistsQuery>();
+            });
+
+            IMapper mapperMock = mapperConfiguration.CreateMapper();
+
+            UserController controller = new UserController(mediatorMock.Object, mapperMock);
 
             // Act
             ActionResult response = await controller.EmailExists(dto);
@@ -240,7 +216,14 @@ namespace Presentation.Api.Test.Controllers
                 .Setup(m => m.Send(It.IsAny<EmailExistsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
-            UserController controller = new UserController(mediatorMock.Object);
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            {
+                config.CreateMap<EmailExistsDto, EmailExistsQuery>();
+            });
+
+            IMapper mapperMock = mapperConfiguration.CreateMapper();
+
+            UserController controller = new UserController(mediatorMock.Object, mapperMock);
 
             // Act
             ActionResult response = await controller.EmailExists(dto);
@@ -253,7 +236,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task UserNameExists_ShouldReturnBadRequestResult_WhenUserNameIsInvalid()
         {
             // Arrange
-            UserController controller = new UserController(null);
+            UserController controller = new UserController(null, null);
 
             controller.ModelState.AddModelError("UserName", "Required");
 
@@ -275,7 +258,14 @@ namespace Presentation.Api.Test.Controllers
                 .Setup(m => m.Send(It.IsAny<UserNameExistsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            UserController controller = new UserController(mediatorMock.Object);
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            {
+                config.CreateMap<UserNameExistsDto, UserNameExistsQuery>();
+            });
+
+            IMapper mapperMock = mapperConfiguration.CreateMapper();
+
+            UserController controller = new UserController(mediatorMock.Object, mapperMock);
 
             // Act
             ActionResult response = await controller.UserNameExists(dto);
@@ -295,7 +285,14 @@ namespace Presentation.Api.Test.Controllers
                 .Setup(m => m.Send(It.IsAny<UserNameExistsQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
-            UserController controller = new UserController(mediatorMock.Object);
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            {
+                config.CreateMap<UserNameExistsDto, UserNameExistsQuery>();
+            });
+
+            IMapper mapperMock = mapperConfiguration.CreateMapper();
+
+            UserController controller = new UserController(mediatorMock.Object, mapperMock);
 
             // Act
             ActionResult response = await controller.UserNameExists(dto);
@@ -313,7 +310,7 @@ namespace Presentation.Api.Test.Controllers
                 .Setup(m => m.Send(It.IsAny<AuthenticateQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((AuthenticatedUserResource) null);
 
-            UserController controller = new UserController(mediatorMock.Object);
+            UserController controller = new UserController(mediatorMock.Object, null);
 
             // Act
             ActionResult<AuthenticatedUserResource> response = await controller.Authenticate();
@@ -336,7 +333,7 @@ namespace Presentation.Api.Test.Controllers
                 .Setup(m => m.Send(It.IsAny<AuthenticateQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(expectedUser);
 
-            UserController controller = new UserController(mediatorMock.Object);
+            UserController controller = new UserController(mediatorMock.Object, null);
 
             // Act
             ActionResult<AuthenticatedUserResource> response = await controller.Authenticate();

@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Collections.Generic;
+using AutoMapper;
 using Core.Application.Requests.Users.Commands;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Users;
@@ -12,6 +13,7 @@ using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.Resources.Friendships;
 
 namespace Presentation.Api.Controllers
 {
@@ -85,9 +87,9 @@ namespace Presentation.Api.Controllers
 
             RegisterUserCommand registerCommand = _mapper.Map<RegisterUserDto, RegisterUserCommand>(credentials);
 
-            int id = await _mediator.Send(registerCommand, cancellationToken);
+            int userId = await _mediator.Send(registerCommand, cancellationToken);
 
-            return CreatedAtAction(nameof(GetUserProfile), new { id }, null);
+            return CreatedAtAction(nameof(GetUserProfile), new { userId }, null);
         }
 
         /// <summary>
@@ -321,11 +323,40 @@ namespace Presentation.Api.Controllers
             return Ok(user);
         }
 
+        /// <summary>
+        /// Gets all friendships of the current user
+        /// </summary>
+        ///
+        /// <remarks>
+        /// Returns all the friendships where the current user is either the requester or the addressee
+        /// </remarks>
+        /// 
+        /// <param name="cancellationToken">
+        /// Notifies asynchronous operations to cancel ongoing work and release resources
+        /// </param>
+        /// 
+        /// <returns>
+        /// List of friendships
+        /// </returns>
+        ///
+        /// <response code="200">
+        /// Contains a list of the current users friendships
+        /// </response>
+        ///
+        /// <response code="500">
+        /// An unexpected error occurred
+        /// </response>
         [HttpGet("me/friendships")]
         [Authorize]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> GetOwnFriendships(CancellationToken cancellationToken = default)
         {
-            return NoContent();
+            GetOwnFriendshipsQuery query = new GetOwnFriendshipsQuery();
+
+            IEnumerable<FriendshipResource> friendships = await _mediator.Send(query, cancellationToken);
+
+            return Ok(friendships);
         }
     }
 }

@@ -25,7 +25,7 @@
              Created friendship
              </returns>
             
-             <response code="200">
+             <response code="201">
              Contains the created friendship
              </response>
             
@@ -299,6 +299,31 @@
             
              <response code="500">
              An unexpected error occured on the server
+             </response>
+        </member>
+        <member name="M:Presentation.Api.Controllers.UserController.GetOwnFriendships(System.Threading.CancellationToken)">
+             <summary>
+             Gets all friendships of the current user
+             </summary>
+            
+             <remarks>
+             Returns all the friendships where the current user is either the requester or the addressee
+             </remarks>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             List of friendships
+             </returns>
+            
+             <response code="200">
+             Contains a list of the current users friendships
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
              </response>
         </member>
     </members>

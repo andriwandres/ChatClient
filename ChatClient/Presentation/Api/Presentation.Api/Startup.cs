@@ -46,7 +46,7 @@ namespace Presentation.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseAuthentication();
+            
 
             // Use swagger UI
             app.UseSwagger();
@@ -72,6 +72,8 @@ namespace Presentation.Api
                 builder.WithMethods(cors.Value.AllowedMethods);
                 builder.WithHeaders(cors.Value.AllowedHeaders);
             });
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 
