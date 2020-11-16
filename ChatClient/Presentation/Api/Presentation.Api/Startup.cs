@@ -1,15 +1,23 @@
 using Core.Application.Extensions;
 using Core.Domain.Options;
+using Core.Domain.Resources.Errors;
 using Infrastructure.Persistence.Extensions;
 using Infrastructure.Shared.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using Presentation.Api.Extensions;
 using Swashbuckle.AspNetCore.SwaggerUI;
+using System.Collections.Generic;
+using System.Globalization;
+using System.Net.Mime;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Presentation.Api
 {
@@ -46,7 +54,20 @@ namespace Presentation.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            
+            app.UseStatusCodePages(async context =>
+            {
+                context.HttpContext.Response.ContentType = MediaTypeNames.Application.Json;
+
+                ErrorResource details = new ErrorResource
+                {
+                    StatusCode = context.HttpContext.Response.StatusCode,
+                    Message = ReasonPhrases.GetReasonPhrase(context.HttpContext.Response.StatusCode),
+                };
+
+                string json = JsonSerializer.Serialize(details);
+
+                await context.HttpContext.Response.WriteAsync(json);
+            });
 
             // Use swagger UI
             app.UseSwagger();
@@ -76,6 +97,15 @@ namespace Presentation.Api
             app.UseAuthentication();
 
             app.UseAuthorization();
+
+            CultureInfo culture = new CultureInfo("en-GB");
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture(culture),
+                SupportedCultures = new List<CultureInfo> { culture },
+                SupportedUICultures = new List<CultureInfo> { culture },
+            });
 
             app.UseEndpoints(endpoints =>
             {

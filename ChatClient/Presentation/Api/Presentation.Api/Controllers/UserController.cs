@@ -2,12 +2,14 @@
 using Core.Application.Requests.Users.Commands;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Users;
+using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Friendships;
 using Core.Domain.Resources.Users;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Api.Examples;
 using Presentation.Api.Examples.Users;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
@@ -69,6 +71,8 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerRequestExample(typeof(RegisterUserDto), typeof(RegisterUserRequestExample))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult> RegisterUser([FromBody] RegisterUserDto credentials, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
@@ -82,7 +86,11 @@ namespace Presentation.Api.Controllers
 
             if (exists)
             {
-                return BadRequest();
+                return BadRequest(new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = "A user with the same user name or email already exists. Please use different credentials for creating an account"
+                });
             }
 
             RegisterUserCommand registerCommand = _mapper.Map<RegisterUserDto, RegisterUserCommand>(credentials);
@@ -134,6 +142,8 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetUserProfileResponseExample))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult<UserProfileResource>> GetUserProfile([FromRoute] int userId, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
@@ -150,7 +160,11 @@ namespace Presentation.Api.Controllers
 
             if (userProfile == null)
             {
-                return NotFound();
+                return NotFound(new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = $"A user with the ID '{userId}' does not exist"
+                });
             }
 
             return Ok(userProfile);
@@ -309,6 +323,8 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(AuthenticateResponseExample))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult<AuthenticatedUserResource>> Authenticate(CancellationToken cancellationToken = default)
         {
             AuthenticateQuery query = new AuthenticateQuery();
@@ -317,7 +333,11 @@ namespace Presentation.Api.Controllers
 
             if (user == null)
             {
-                return BadRequest();
+                return BadRequest(new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = "Access token in the Authorization header is expired or invalid"
+                });
             }
 
             return Ok(user);
@@ -350,6 +370,8 @@ namespace Presentation.Api.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult<IEnumerable<FriendshipResource>>> GetOwnFriendships(CancellationToken cancellationToken = default)
         {
             GetOwnFriendshipsQuery query = new GetOwnFriendshipsQuery();

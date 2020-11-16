@@ -1,13 +1,16 @@
 ﻿using AutoMapper;
 using Core.Domain.Options;
+using Core.Domain.Resources.Errors;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -91,9 +94,30 @@ namespace Presentation.Api.Extensions
 
             // Add support for controllers
             services.AddControllers()
+                .AddNewtonsoftJson()
                 .AddFluentValidation(config =>
                 {
                     config.RegisterValidatorsFromAssemblyContaining<Startup>();
+                })
+                .ConfigureApiBehaviorOptions(options =>
+                {
+                    options.SuppressMapClientErrors = true;
+                    options.InvalidModelStateResponseFactory = context =>
+                    {
+                        IDictionary<string, IEnumerable<string>> errors = context.ModelState.ToDictionary(
+                            state => state.Key,
+                            state => state.Value.Errors.Select(error => error.ErrorMessage)
+                        );
+
+                        ValidationErrorResource details = new ValidationErrorResource
+                        {
+                            Errors = errors,
+                            StatusCode = 400,
+                            Message = "One or multiple validation errors occurred",
+                        };
+
+                        return new ObjectResult(details) {StatusCode = 400};
+                    };
                 });
         }
     }

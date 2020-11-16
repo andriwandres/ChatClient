@@ -1,11 +1,13 @@
 ﻿using AutoMapper;
 using Core.Application.Requests.Session.Queries;
 using Core.Domain.Dtos.Session;
+using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Users;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Api.Examples;
 using Presentation.Api.Examples.Session;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
@@ -48,14 +50,32 @@ namespace Presentation.Api.Controllers
         /// <returns>
         /// User information alongside new access token
         /// </returns>
+        ///
+        /// <response code="200">
+        /// Login was successful. User information is returned
+        /// </response>
+        ///
+        /// <response code="400">
+        /// User credentials are in an incorrect format
+        /// </response>
+        ///
+        /// <response code="401">
+        /// UserName, e-mail and/or password were incorrect
+        /// </response>
+        ///
+        /// <response code="500">
+        /// An unexpected error occurred
+        /// </response>
         [HttpPut]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerRequestExample(typeof(LoginUserDto), typeof(LoginRequestExample))]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(LoginResponseExample))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult<AuthenticatedUserResource>> Login([FromBody] LoginUserDto credentials, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
@@ -69,7 +89,11 @@ namespace Presentation.Api.Controllers
 
             if (user == null)
             {
-                return NotFound();
+                return Unauthorized(new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status401Unauthorized,
+                    Message = "UserName, e-mail and/or password are incorrect"
+                });
             }
 
             return Ok(user);

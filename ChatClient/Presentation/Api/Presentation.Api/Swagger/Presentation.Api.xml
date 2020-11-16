@@ -160,6 +160,22 @@
              <returns>
              User information alongside new access token
              </returns>
+            
+             <response code="200">
+             Login was successful. User information is returned
+             </response>
+            
+             <response code="400">
+             User credentials are in an incorrect format
+             </response>
+            
+             <response code="401">
+             UserName, e-mail and/or password were incorrect
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
         </member>
         <member name="M:Presentation.Api.Controllers.UserController.RegisterUser(Core.Domain.Dtos.Users.RegisterUserDto,System.Threading.CancellationToken)">
              <summary>

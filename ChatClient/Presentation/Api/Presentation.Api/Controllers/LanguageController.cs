@@ -1,10 +1,12 @@
 ﻿using Core.Application.Requests.Languages.Queries;
 using Core.Domain.Dtos.Languages;
+using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Languages;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Api.Examples;
 using Presentation.Api.Examples.Languages;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
@@ -55,6 +57,8 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetAllLanguagesResponseExample))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult<IEnumerable<LanguageResource>>> GetAllLanguages(CancellationToken cancellationToken = default)
         {
             GetAllLanguagesQuery query = new GetAllLanguagesQuery();
@@ -110,6 +114,8 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetTranslationsByLanguageResponseExample))]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult<IDictionary<string, string>>> GetTranslationsByLanguage([FromRoute] int languageId, [FromQuery] GetTranslationsByLanguageDto model, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
@@ -123,7 +129,11 @@ namespace Presentation.Api.Controllers
 
             if (!languageExists)
             {
-                return NotFound();
+                return NotFound(new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = $"Language with ID '{languageId}' does not exist"
+                });
             }
 
             GetTranslationsByLanguageQuery translationsQuery = new GetTranslationsByLanguageQuery

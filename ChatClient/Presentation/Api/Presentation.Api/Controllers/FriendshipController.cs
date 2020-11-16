@@ -2,12 +2,15 @@
 using Core.Application.Requests.Friendships.Commands;
 using Core.Application.Requests.Friendships.Queries;
 using Core.Domain.Dtos.Friendships;
+using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Friendships;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.Api.Examples;
 using Swashbuckle.AspNetCore.Annotations;
+using Swashbuckle.AspNetCore.Filters;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
@@ -65,6 +68,8 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult<FriendshipResource>> RequestFriendship([FromBody] RequestFriendshipDto model, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
@@ -116,6 +121,8 @@ namespace Presentation.Api.Controllers
         /// </response>
         [HttpGet("{friendshipId:int}")]
         [Authorize]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult<FriendshipResource>> GetFriendshipById([FromRoute] int friendshipId, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
@@ -132,7 +139,11 @@ namespace Presentation.Api.Controllers
 
             if (friendship == null)
             {
-                return NotFound();
+                return NotFound(new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = $"Friendship with ID '{friendshipId}' does not exist"
+                });
             }
 
             return Ok(friendship);
