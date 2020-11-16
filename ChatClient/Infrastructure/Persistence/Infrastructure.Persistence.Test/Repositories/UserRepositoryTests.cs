@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -402,6 +403,262 @@ namespace Infrastructure.Persistence.Test.Repositories
 
             // Assert
             contextMock.Verify(m => m.Users.AddAsync(user, It.IsAny<CancellationToken>()));
+        }
+
+        [Fact]
+        public async Task UserNameOrEmailExists_ShouldReturnFalse_WhenNeitherUserNameNorEmailMatch()
+        {
+            // Arrange
+            const string userName = "myUserName";
+            const string email = "my@email.address";
+
+            IEnumerable<User> users = new[]
+            {
+                new User {Email = "Something@else.com", UserName = "Somethingelse"},
+                new User {Email = "Something@else.again", UserName = "Somethingelseagain"},
+            };
+
+            Mock<DbSet<User>> userDbSetMock = users
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.Users)
+                .Returns(userDbSetMock.Object);
+
+            UserRepository repository = new UserRepository(contextMock.Object);
+
+            // Act
+            bool exists = await repository.UserNameOrEmailExists(userName, email);
+
+            // Assert
+            Assert.False(exists);
+        }
+
+        [Fact]
+        public async Task UserNameOrEmailExists_ShouldReturnTrue_WhenJustUserNameMatches()
+        {
+            // Arrange
+            const string userName = "myUserName";
+            const string email = "my@email.address";
+
+            IEnumerable<User> users = new[]
+            {
+                new User {Email = "Something@else.com", UserName = "MyUSERNAME"},
+                new User {Email = "Something@else.again", UserName = "Somethingelseagain"},
+            };
+
+            Mock<DbSet<User>> userDbSetMock = users
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.Users)
+                .Returns(userDbSetMock.Object);
+
+            UserRepository repository = new UserRepository(contextMock.Object);
+
+            // Act
+            bool exists = await repository.UserNameOrEmailExists(userName, email);
+
+            // Assert
+            Assert.True(exists);
+        }
+
+        [Fact]
+        public async Task UserNameOrEmailExists_ShouldReturnTrue_WhenJustEmailMatches()
+        {
+            // Arrange
+            const string userName = "myUserName";
+            const string email = "my@email.address";
+
+            IEnumerable<User> users = new[]
+            {
+                new User {Email = "Something@else.com", UserName = "Somethingelse"},
+                new User {Email = "my@EMAIL.address", UserName = "Somethingelseagain"},
+            };
+
+            Mock<DbSet<User>> userDbSetMock = users
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.Users)
+                .Returns(userDbSetMock.Object);
+
+            UserRepository repository = new UserRepository(contextMock.Object);
+
+            // Act
+            bool exists = await repository.UserNameOrEmailExists(userName, email);
+
+            // Assert
+            Assert.True(exists);
+        }
+
+        [Fact]
+        public async Task UserNameOrEmailExists_ShouldReturnTrue_WhenBothEmailAndUserNameMatch_OnTheSameRecord()
+        {
+            // Arrange
+            const string userName = "myUserName";
+            const string email = "my@email.address";
+
+            IEnumerable<User> users = new[]
+            {
+                new User {Email = "Something@else.com", UserName = "Somethingelse"},
+                new User {Email = "my@EMAIL.address", UserName = "myUserNAME"},
+            };
+
+            Mock<DbSet<User>> userDbSetMock = users
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.Users)
+                .Returns(userDbSetMock.Object);
+
+            UserRepository repository = new UserRepository(contextMock.Object);
+
+            // Act
+            bool exists = await repository.UserNameOrEmailExists(userName, email);
+
+            // Assert
+            Assert.True(exists);
+        }
+
+        [Fact]
+        public async Task UserNameOrEmailExists_ShouldReturnTrue_WhenBothEmailAndUserNameMatch_OnDifferentRecords()
+        {
+            // Arrange
+            const string userName = "myUserName";
+            const string email = "my@email.address";
+
+            IEnumerable<User> users = new[]
+            {
+                new User {Email = "Something@else.com", UserName = "myUserNAME"},
+                new User {Email = "my@EMAIL.address", UserName = "Somethingelse"},
+            };
+
+            Mock<DbSet<User>> userDbSetMock = users
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.Users)
+                .Returns(userDbSetMock.Object);
+
+            UserRepository repository = new UserRepository(contextMock.Object);
+
+            // Act
+            bool exists = await repository.UserNameOrEmailExists(userName, email);
+
+            // Assert
+            Assert.True(exists);
+        }
+
+        [Fact]
+        public async Task GetFriendshipsOfUser_ShouldReturnNoFriendships_WhenUserIdDoesntMatch()
+        {
+            // Arrange
+            const int userId = 1;
+
+            IEnumerable<Friendship> expectedFriendships = new[]
+            {
+                new Friendship { FriendshipId = 1, RequesterId = 3, AddresseeId = 5 },
+                new Friendship { FriendshipId = 2, RequesterId = 4, AddresseeId = 2 },
+                new Friendship { FriendshipId = 3, RequesterId = 2, AddresseeId = 3 },
+            };
+
+            Mock<DbSet<Friendship>> friendshipDbSetMock = expectedFriendships
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.Friendships)
+                .Returns(friendshipDbSetMock.Object);
+
+            UserRepository repository = new UserRepository(contextMock.Object);
+
+            // Act
+            IEnumerable<Friendship> ownFriendships = await repository
+                .GetFriendshipsOfUser(userId)
+                .ToListAsync();
+
+            // Assert
+            Assert.Empty(ownFriendships);
+        }
+
+        [Fact]
+        public async Task GetFriendshipsOfUser_ShouldReturnNoFriendships_WhenAddresseeIdMatches()
+        {
+            // Arrange
+            const int userId = 1;
+
+            IEnumerable<Friendship> expectedFriendships = new[]
+            {
+                new Friendship { FriendshipId = 1, RequesterId = 3, AddresseeId = 5 },
+                new Friendship { FriendshipId = 2, RequesterId = 4, AddresseeId = 1 },
+                new Friendship { FriendshipId = 3, RequesterId = 2, AddresseeId = 3 },
+            };
+
+            Mock<DbSet<Friendship>> friendshipDbSetMock = expectedFriendships
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.Friendships)
+                .Returns(friendshipDbSetMock.Object);
+
+            UserRepository repository = new UserRepository(contextMock.Object);
+
+            // Act
+            IEnumerable<Friendship> ownFriendships = await repository
+                .GetFriendshipsOfUser(userId)
+                .ToListAsync();
+
+            // Assert
+            Assert.Single(ownFriendships);
+            Assert.Equal(2, ownFriendships.First().FriendshipId);
+        }
+
+        [Fact]
+        public async Task GetFriendshipsOfUser_ShouldReturnNoFriendships_WhenRequesterIdMatches()
+        {
+            // Arrange
+            const int userId = 1;
+
+            IEnumerable<Friendship> expectedFriendships = new[]
+            {
+                new Friendship { FriendshipId = 1, RequesterId = 3, AddresseeId = 5 },
+                new Friendship { FriendshipId = 2, RequesterId = 2, AddresseeId = 3 },
+                new Friendship { FriendshipId = 3, RequesterId = 1, AddresseeId = 2 },
+            };
+
+            Mock<DbSet<Friendship>> friendshipDbSetMock = expectedFriendships
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.Friendships)
+                .Returns(friendshipDbSetMock.Object);
+
+            UserRepository repository = new UserRepository(contextMock.Object);
+
+            // Act
+            IEnumerable<Friendship> ownFriendships = await repository
+                .GetFriendshipsOfUser(userId)
+                .ToListAsync();
+
+            // Assert
+            Assert.Single(ownFriendships);
+            Assert.Equal(3, ownFriendships.First().FriendshipId);
         }
     }
 }

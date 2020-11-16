@@ -1,21 +1,22 @@
 ﻿using AutoMapper;
 using Core.Application.Requests.Friendships.Commands;
+using Core.Application.Requests.Friendships.Queries;
 using Core.Domain.Dtos.Friendships;
 using Core.Domain.Resources.Friendships;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
+using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Application.Requests.Friendships.Queries;
-using Microsoft.AspNetCore.Http;
 
 namespace Presentation.Api.Controllers
 {
     [ApiController]
     [Route("api/friendships")]
-    [Produces("application/json")]
+    [Produces(MediaTypeNames.Application.Json)]
     [SwaggerTag("Manages friendships between users")]
     public class FriendshipController : ControllerBase
     {
@@ -64,7 +65,7 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> RequestFriendship([FromBody] RequestFriendshipDto model, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<FriendshipResource>> RequestFriendship([FromBody] RequestFriendshipDto model, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
@@ -115,7 +116,7 @@ namespace Presentation.Api.Controllers
         /// </response>
         [HttpGet("{friendshipId:int}")]
         [Authorize]
-        public async Task<ActionResult> GetFriendshipById([FromRoute] int friendshipId, CancellationToken cancellationToken)
+        public async Task<ActionResult<FriendshipResource>> GetFriendshipById([FromRoute] int friendshipId, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
@@ -150,7 +151,5 @@ namespace Presentation.Api.Controllers
         {
             return NoContent();
         }
-
-        
     }
 }

@@ -56,7 +56,7 @@ namespace Infrastructure.Persistence.Repositories
 
             return await Context.Users
                 .AsNoTracking()
-                .AnyAsync(user => user.UserName == userName || user.Email == email, cancellationToken);
+                .AnyAsync(user => user.UserName.ToLower() == userName || user.Email.ToLower() == email, cancellationToken);
         }
 
         public async Task Add(User user, CancellationToken cancellationToken = default)
@@ -64,7 +64,7 @@ namespace Infrastructure.Persistence.Repositories
             await Context.Users.AddAsync(user, cancellationToken);
         }
 
-        public IQueryable<Friendship> GetFriendships(int userId)
+        public IQueryable<Friendship> GetFriendshipsOfUser(int userId)
         {
             return Context.Friendships
                 .AsNoTracking()

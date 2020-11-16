@@ -2,11 +2,13 @@
 using Core.Application.Requests.Users.Commands;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Users;
+using Core.Domain.Resources.Friendships;
 using Core.Domain.Resources.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Presentation.Api.Controllers;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -345,6 +347,33 @@ namespace Presentation.Api.Test.Controllers
 
             Assert.NotNull(actualUser);
             Assert.Equal(expectedUser.UserId, actualUser.UserId);
+        }
+
+        [Fact]
+        public async Task GetOwnFriendships_ShouldReturnOkResult()
+        {
+            // Arrange
+            IEnumerable<FriendshipResource> expectedFriendships = new[]
+            {
+                new FriendshipResource {FriendshipId = 1}
+            };
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GetOwnFriendshipsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expectedFriendships);
+
+            UserController controller = new UserController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult<IEnumerable<FriendshipResource>> response = await controller.GetOwnFriendships();
+
+            // Assert
+            OkObjectResult result = Assert.IsType<OkObjectResult>(response.Result);
+
+            IEnumerable<FriendshipResource> actualFriendships = (IEnumerable<FriendshipResource>) result.Value;
+
+            Assert.Single(actualFriendships);
         }
     }
 }

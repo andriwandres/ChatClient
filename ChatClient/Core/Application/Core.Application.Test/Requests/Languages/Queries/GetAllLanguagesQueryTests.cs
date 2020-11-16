@@ -10,7 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.Languages
+namespace Core.Application.Test.Requests.Languages.Queries
 {
     public class GetAllLanguagesQueryTests
     {

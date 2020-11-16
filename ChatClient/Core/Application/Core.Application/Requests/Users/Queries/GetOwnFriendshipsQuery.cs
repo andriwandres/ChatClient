@@ -33,7 +33,7 @@ namespace Core.Application.Requests.Users.Queries
                 int userId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
                 IEnumerable<FriendshipResource> friendships = await _unitOfWork.Users
-                    .GetFriendships(userId)
+                    .GetFriendshipsOfUser(userId)
                     .ProjectTo<FriendshipResource>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken);
 

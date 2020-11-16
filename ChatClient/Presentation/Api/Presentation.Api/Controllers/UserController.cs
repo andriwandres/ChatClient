@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Application.Requests.Users.Commands;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Users;
+using Core.Domain.Resources.Friendships;
 using Core.Domain.Resources.Users;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -11,9 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Examples.Users;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Domain.Resources.Friendships;
 
 namespace Presentation.Api.Controllers
 {
@@ -350,7 +350,7 @@ namespace Presentation.Api.Controllers
         [Authorize]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> GetOwnFriendships(CancellationToken cancellationToken = default)
+        public async Task<ActionResult<IEnumerable<FriendshipResource>>> GetOwnFriendships(CancellationToken cancellationToken = default)
         {
             GetOwnFriendshipsQuery query = new GetOwnFriendshipsQuery();
 

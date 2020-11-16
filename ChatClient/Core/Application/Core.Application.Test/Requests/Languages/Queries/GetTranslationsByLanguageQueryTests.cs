@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Core.Application.Database;
+﻿using Core.Application.Database;
 using Core.Application.Requests.Languages.Queries;
 using Core.Domain.Entities;
 using MockQueryable.Moq;
 using Moq;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.Languages
+namespace Core.Application.Test.Requests.Languages.Queries
 {
     public class GetTranslationsByLanguageQueryTests
     {
