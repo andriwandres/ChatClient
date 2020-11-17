@@ -54,9 +54,11 @@ namespace Presentation.Api.Controllers
         /// </response>
         [HttpGet]
         [AllowAnonymous]
+
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetAllLanguagesResponseExample))]
+
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult<IEnumerable<LanguageResource>>> GetAllLanguages(CancellationToken cancellationToken = default)
@@ -109,15 +111,19 @@ namespace Presentation.Api.Controllers
         /// </response>
         [HttpGet("{languageId:int}/translations")]
         [AllowAnonymous]
+
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetTranslationsByLanguageResponseExample))]
+
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(GetTranslationsByLanguageValidationErrorResponseExample))]
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(LanguageNotFoundResponseExample))]
+
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult<IDictionary<string, string>>> GetTranslationsByLanguage([FromRoute] int languageId, [FromQuery] GetTranslationsByLanguageDto model, CancellationToken cancellationToken = default)

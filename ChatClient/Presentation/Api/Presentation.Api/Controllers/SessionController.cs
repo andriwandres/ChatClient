@@ -68,12 +68,20 @@ namespace Presentation.Api.Controllers
         /// </response>
         [HttpPut]
         [AllowAnonymous]
+
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerRequestExample(typeof(LoginUserDto), typeof(LoginRequestExample))]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(LoginResponseExample))]
+
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(LoginValidationErrorResponseExample))]
+
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        [SwaggerResponse(StatusCodes.Status401Unauthorized, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status401Unauthorized, typeof(LoginCredentialsInvalidResponseExample))]
+
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult<AuthenticatedUserResource>> Login([FromBody] LoginUserDto credentials, CancellationToken cancellationToken = default)
