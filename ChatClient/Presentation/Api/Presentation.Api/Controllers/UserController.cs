@@ -16,6 +16,7 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Presentation.Api.Examples.Friendships;
 
 namespace Presentation.Api.Controllers
 {
@@ -59,7 +60,11 @@ namespace Presentation.Api.Controllers
         /// </response>
         ///
         /// <response code="400">
-        /// Provided user credentials are in an invalid format or a user with provided credentials already exists
+        /// Provided user credentials are in an invalid format
+        /// </response>
+        ///
+        /// <response code="403">
+        /// There is already a user with provided userName or email. The user is not allowed to sign up with provided credentials
         /// </response>
         ///
         /// <response code="500">
@@ -67,10 +72,19 @@ namespace Presentation.Api.Controllers
         /// </response>
         [HttpPost]
         [AllowAnonymous]
+
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerRequestExample(typeof(RegisterUserDto), typeof(RegisterUserRequestExample))]
+
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(RegisterUserValidationErrorResponseExample))]
+
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(RegisterUserForbiddenErrorResponse))]
+
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult> RegisterUser([FromBody] RegisterUserDto credentials, CancellationToken cancellationToken = default)
@@ -79,16 +93,16 @@ namespace Presentation.Api.Controllers
             {
                 return BadRequest(ModelState);
             }
-
+            
             UserNameOrEmailExistsQuery existsQuery = _mapper.Map<RegisterUserDto, UserNameOrEmailExistsQuery>(credentials);
 
             bool exists = await _mediator.Send(existsQuery, cancellationToken);
 
             if (exists)
             {
-                return BadRequest(new ErrorResource
+                return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
                 {
-                    StatusCode = StatusCodes.Status400BadRequest,
+                    StatusCode = StatusCodes.Status403Forbidden,
                     Message = "A user with the same user name or email already exists. Please use different credentials for creating an account"
                 });
             }
@@ -124,9 +138,6 @@ namespace Presentation.Api.Controllers
         /// Contains user profile information
         /// </response>
         /// 
-        /// <response code="400">
-        /// The provided user ID is in an invalid format
-        /// </response>
         /// 
         /// <response code="404">
         /// The user with the given ID could not be found
@@ -137,20 +148,19 @@ namespace Presentation.Api.Controllers
         /// </response>
         [HttpGet("{userId:int}")]
         [Authorize]
+
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetUserProfileResponseExample))]
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GetUserProfileNotFoundResponseExample))]
+        
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult<UserProfileResource>> GetUserProfile([FromRoute] int userId, CancellationToken cancellationToken = default)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             GetUserProfileQuery query = new GetUserProfileQuery
             {
                 UserId = userId
@@ -209,7 +219,9 @@ namespace Presentation.Api.Controllers
         /// </response>
         [HttpHead("email")]
         [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> EmailExists([FromQuery] EmailExistsDto model, CancellationToken cancellationToken = default)
         {
@@ -269,7 +281,9 @@ namespace Presentation.Api.Controllers
         /// </response>
         [HttpHead("username")]
         [AllowAnonymous]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult> UserNameExists([FromQuery] UserNameExistsDto model, CancellationToken cancellationToken = default)
         {
@@ -310,19 +324,16 @@ namespace Presentation.Api.Controllers
         /// Contains authenticated user alongside access token
         /// </response>
         ///
-        /// <response code="400">
-        /// Access token in authorization header is invalid or expired
-        /// </response>
-        ///
         /// <response code="500">
         /// An unexpected error occured on the server
         /// </response>
         [HttpGet("me")]
         [Authorize]
+
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(AuthenticateResponseExample))]
+
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult<AuthenticatedUserResource>> Authenticate(CancellationToken cancellationToken = default)
@@ -330,15 +341,6 @@ namespace Presentation.Api.Controllers
             AuthenticateQuery query = new AuthenticateQuery();
 
             AuthenticatedUserResource user = await _mediator.Send(query, cancellationToken);
-
-            if (user == null)
-            {
-                return BadRequest(new ErrorResource
-                {
-                    StatusCode = StatusCodes.Status400BadRequest,
-                    Message = "Access token in the Authorization header is expired or invalid"
-                });
-            }
 
             return Ok(user);
         }
@@ -368,7 +370,10 @@ namespace Presentation.Api.Controllers
         /// </response>
         [HttpGet("me/friendships")]
         [Authorize]
+
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetOwnFriendshipsResponseExample))]
+
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]

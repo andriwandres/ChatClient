@@ -11,7 +11,6 @@ namespace Presentation.Api.Examples.Users
             {
                 UserId = 1,
                 UserName = "alfred_miller",
-                Email = "alfred.miller@gmail.com",
             };
         }
     }

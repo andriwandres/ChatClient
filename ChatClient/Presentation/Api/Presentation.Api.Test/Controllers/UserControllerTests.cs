@@ -61,11 +61,11 @@ namespace Presentation.Api.Test.Controllers
             ActionResult response = await controller.RegisterUser(credentials);
 
             // Assert
-            BadRequestObjectResult result = Assert.IsType<BadRequestObjectResult>(response);
+            ObjectResult result = Assert.IsType<ObjectResult>(response);
 
             ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
 
-            Assert.Equal(StatusCodes.Status400BadRequest, error.StatusCode);
+            Assert.Equal(StatusCodes.Status403Forbidden, error.StatusCode);
         }
 
         [Fact]
@@ -106,23 +106,6 @@ namespace Presentation.Api.Test.Controllers
 
             Assert.NotEmpty(result.ActionName);
             Assert.NotEmpty(result.RouteValues);
-        }
-
-        [Fact]
-        public async Task GetUserProfile_ShouldReturnBadRequestResult_WhenUserIdFailsValidation()
-        {
-            // Arrange
-            const int userId = -3;
-
-            UserController controller = new UserController(null, null);
-
-            controller.ModelState.AddModelError("", "");
-
-            // Act
-            ActionResult<UserProfileResource> response = await controller.GetUserProfile(userId);
-
-            // Assert
-            Assert.IsType<BadRequestObjectResult>(response.Result);
         }
 
         [Fact]

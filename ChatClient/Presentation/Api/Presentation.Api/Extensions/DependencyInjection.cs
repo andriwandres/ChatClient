@@ -3,6 +3,7 @@ using Core.Domain.Options;
 using Core.Domain.Resources.Errors;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -94,7 +95,6 @@ namespace Presentation.Api.Extensions
 
             // Add support for controllers
             services.AddControllers()
-                .AddNewtonsoftJson()
                 .AddFluentValidation(config =>
                 {
                     config.RegisterValidatorsFromAssemblyContaining<Startup>();
@@ -112,11 +112,11 @@ namespace Presentation.Api.Extensions
                         ValidationErrorResource details = new ValidationErrorResource
                         {
                             Errors = errors,
-                            StatusCode = 400,
+                            StatusCode = StatusCodes.Status400BadRequest,
                             Message = "One or multiple validation errors occurred",
                         };
 
-                        return new ObjectResult(details) {StatusCode = 400};
+                        return new BadRequestObjectResult(details) { StatusCode = StatusCodes.Status400BadRequest };
                     };
                 });
         }

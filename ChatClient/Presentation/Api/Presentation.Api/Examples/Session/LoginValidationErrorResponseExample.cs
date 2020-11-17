@@ -21,7 +21,7 @@ namespace Presentation.Api.Examples.Session
                         Message = "One or multiple validation errors occurred",
                         Errors = new Dictionary<string, IEnumerable<string>>
                         {
-                            { "Password", new [] { "The length of 'Password' must be at least 8 characters. You entered 5 characters." } }
+                            { "Password", new [] { "The length of 'Password' must be at least 8 characters. You entered x characters." } }
                         }
                     }
                 },
@@ -35,7 +35,7 @@ namespace Presentation.Api.Examples.Session
                         Message = "One or multiple validation errors occurred",
                         Errors = new Dictionary<string, IEnumerable<string>>
                         {
-                            { "UserNameOrEmail", new [] { "The length of 'UserNameOrEmail' must be at least 2 characters. You entered 1 characters." } }
+                            { "UserNameOrEmail", new [] { "The length of 'UserNameOrEmail' must be at least 2 characters. You entered x characters." } }
                         }
                     }
                 },

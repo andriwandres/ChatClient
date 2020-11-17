@@ -203,7 +203,11 @@
              </response>
             
              <response code="400">
-             Provided user credentials are in an invalid format or a user with provided credentials already exists
+             Provided user credentials are in an invalid format
+             </response>
+            
+             <response code="403">
+             There is already a user with provided userName or email. The user is not allowed to sign up with provided credentials
              </response>
             
              <response code="500">
@@ -235,9 +239,6 @@
              Contains user profile information
              </response>
              
-             <response code="400">
-             The provided user ID is in an invalid format
-             </response>
              
              <response code="404">
              The user with the given ID could not be found
@@ -344,10 +345,6 @@
             
              <response code="200">
              Contains authenticated user alongside access token
-             </response>
-            
-             <response code="400">
-             Access token in authorization header is invalid or expired
              </response>
             
              <response code="500">

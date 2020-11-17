@@ -12,10 +12,6 @@ namespace Presentation.Api.Validation.Users
                 .NotEmpty()
                 .GreaterThan(0);
 
-            RuleFor(model => model.Email)
-                .NotEmpty()
-                .EmailAddress();
-
             RuleFor(model => model.UserName)
                 .NotEmpty()
                 .MinimumLength(2)
