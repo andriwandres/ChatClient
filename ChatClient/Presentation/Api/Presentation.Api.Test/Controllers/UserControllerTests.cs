@@ -2,9 +2,11 @@
 using Core.Application.Requests.Users.Commands;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Users;
+using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Friendships;
 using Core.Domain.Resources.Users;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Presentation.Api.Controllers;
@@ -59,7 +61,11 @@ namespace Presentation.Api.Test.Controllers
             ActionResult response = await controller.RegisterUser(credentials);
 
             // Assert
-            Assert.IsType<BadRequestResult>(response);
+            BadRequestObjectResult result = Assert.IsType<BadRequestObjectResult>(response);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.Equal(StatusCodes.Status400BadRequest, error.StatusCode);
         }
 
         [Fact]
@@ -136,7 +142,11 @@ namespace Presentation.Api.Test.Controllers
             ActionResult<UserProfileResource> response = await controller.GetUserProfile(userId);
 
             // Assert
-            Assert.IsType<NotFoundResult>(response.Result);
+            NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.Equal(StatusCodes.Status404NotFound, error.StatusCode);
         }
 
         [Fact]
@@ -318,7 +328,11 @@ namespace Presentation.Api.Test.Controllers
             ActionResult<AuthenticatedUserResource> response = await controller.Authenticate();
 
             // Assert
-            Assert.IsType<BadRequestResult>(response.Result);
+            BadRequestObjectResult result = Assert.IsType<BadRequestObjectResult>(response.Result);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.Equal(StatusCodes.Status400BadRequest, error.StatusCode);
         }
 
         [Fact]
@@ -350,7 +364,7 @@ namespace Presentation.Api.Test.Controllers
         }
 
         [Fact]
-        public async Task GetOwnFriendships_ShouldReturnOkResult()
+        public async Task GetOwnFriendships_ShouldReturnFriendships()
         {
             // Arrange
             IEnumerable<FriendshipResource> expectedFriendships = new[]

@@ -9,6 +9,8 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Domain.Dtos.Languages;
+using Core.Domain.Resources.Errors;
+using Microsoft.AspNetCore.Http;
 using Xunit;
 
 namespace Presentation.Api.Test.Controllers
@@ -78,7 +80,11 @@ namespace Presentation.Api.Test.Controllers
                 await controller.GetTranslationsByLanguage(languageId, model);
 
             // Assert
-            Assert.IsType<NotFoundResult>(response.Result);
+            NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.Equal(StatusCodes.Status404NotFound, error.StatusCode);
         }
 
         [Fact]

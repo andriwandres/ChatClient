@@ -3,8 +3,10 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Core.Application.Requests.Session.Queries;
 using Core.Domain.Dtos.Session;
+using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Users;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Presentation.Api.Controllers;
@@ -59,7 +61,11 @@ namespace Presentation.Api.Test.Controllers
             ActionResult<AuthenticatedUserResource> response = await controller.Login(credentials);
 
             // Assert
-            Assert.IsType<NotFoundResult>(response.Result);
+            UnauthorizedObjectResult result = Assert.IsType<UnauthorizedObjectResult>(response.Result);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.Equal(StatusCodes.Status401Unauthorized, error.StatusCode);
         }
 
         [Fact]

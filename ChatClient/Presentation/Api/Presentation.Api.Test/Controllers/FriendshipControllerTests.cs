@@ -1,14 +1,16 @@
-﻿using System.Threading;
-using Core.Domain.Dtos.Friendships;
-using Microsoft.AspNetCore.Mvc;
-using Presentation.Api.Controllers;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Application.Requests.Friendships.Commands;
 using Core.Application.Requests.Friendships.Queries;
+using Core.Domain.Dtos.Friendships;
+using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Friendships;
 using MediatR;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
+using Presentation.Api.Controllers;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Presentation.Api.Test.Controllers
@@ -102,7 +104,11 @@ namespace Presentation.Api.Test.Controllers
             ActionResult<FriendshipResource> response = await controller.GetFriendshipById(friendshipId);
 
             // Assert
-            Assert.IsType<NotFoundResult>(response.Result);
+            NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.Equal(StatusCodes.Status404NotFound, error.StatusCode);
         }
 
         [Fact]

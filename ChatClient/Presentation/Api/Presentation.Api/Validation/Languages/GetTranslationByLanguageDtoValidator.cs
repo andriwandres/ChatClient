@@ -1,4 +1,5 @@
-﻿using Core.Domain.Dtos.Languages;
+﻿using System.Text.RegularExpressions;
+using Core.Domain.Dtos.Languages;
 using FluentValidation;
 
 namespace Presentation.Api.Validation.Languages
@@ -7,7 +8,8 @@ namespace Presentation.Api.Validation.Languages
     {
         public GetTranslationByLanguageDtoValidator()
         {
-            RuleFor(model => model.Pattern);
+            RuleFor(model => model.Pattern)
+                .Matches(new Regex(@"^[A-Za-z0-9.*]+?$"));
         }
     }
 }

@@ -97,7 +97,7 @@ namespace Presentation.Api.Controllers
         /// </response>
         ///
         /// <response code="400">
-        /// Language ID and/or pattern filter are invalid
+        /// Search pattern is not in the correct format
         /// </response>
         ///
         /// <response code="404">
@@ -114,6 +114,10 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetTranslationsByLanguageResponseExample))]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(GetTranslationsByLanguageValidationErrorResponseExample))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(LanguageNotFoundResponseExample))]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult<IDictionary<string, string>>> GetTranslationsByLanguage([FromRoute] int languageId, [FromQuery] GetTranslationsByLanguageDto model, CancellationToken cancellationToken = default)
