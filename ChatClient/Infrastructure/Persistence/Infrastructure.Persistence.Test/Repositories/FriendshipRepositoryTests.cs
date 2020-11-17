@@ -1,16 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Core.Application.Database;
+﻿using Core.Application.Database;
 using Core.Application.Repositories;
 using Core.Domain.Entities;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using MockQueryable.Moq;
 using Moq;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Infrastructure.Persistence.Test.Repositories
@@ -164,35 +162,6 @@ namespace Infrastructure.Persistence.Test.Repositories
 
             // Assert
             contextMock.Verify(m => m.Friendships.AddAsync(friendship, It.IsAny<CancellationToken>()));
-        }
-
-        [Fact]
-        public void Remove_ShouldRemoveFriendship()
-        {
-            // Arrange
-            Friendship friendship = new Friendship { FriendshipId = 1 };
-
-            IEnumerable<Friendship> expectedFriendship = new[]
-            {
-                new Friendship {FriendshipId = 1}
-            };
-
-            Mock<DbSet<Friendship>> friendshipDbSetMock = expectedFriendship
-                .AsQueryable()
-                .BuildMockDbSet();
-
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Friendships)
-                .Returns(friendshipDbSetMock.Object);
-
-            IFriendshipRepository repository = new FriendshipRepository(contextMock.Object);
-
-            // Act
-            repository.Remove(friendship);
-
-            // Assert
-            contextMock.Verify(m => m.Friendships.Remove(friendship));
         }
     }
 }

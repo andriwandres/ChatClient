@@ -35,9 +35,11 @@ namespace Infrastructure.Persistence.Repositories
             await Context.Friendships.AddAsync(friendship, cancellationToken);
         }
 
-        public void Remove(Friendship friendship)
+        public IQueryable<FriendshipChange> GetChanges(int friendshipId)
         {
-            Context.Friendships.Remove(friendship);
+            return Context.FriendshipChanges
+                .AsNoTracking()
+                .Where(change => change.FriendshipId == friendshipId);
         }
     }
 }

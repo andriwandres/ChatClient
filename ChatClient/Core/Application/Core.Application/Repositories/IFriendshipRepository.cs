@@ -10,6 +10,6 @@ namespace Core.Application.Repositories
         IQueryable<Friendship> GetById(int friendshipId);
         Task<bool> Exists(int friendshipId, CancellationToken cancellationToken = default);
         Task Add(Friendship friendship, CancellationToken cancellationToken = default);
-        void Remove(Friendship friendship);
+        IQueryable<FriendshipChange> GetChanges(int friendshipId);
     }
 }

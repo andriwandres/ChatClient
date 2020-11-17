@@ -297,28 +297,6 @@ namespace Presentation.Api.Test.Controllers
         }
 
         [Fact]
-        public async Task Authenticate_ShouldReturnBadRequestResult_WhenUserCouldNotBeFound()
-        {
-            // Arrange
-            Mock<IMediator> mediatorMock = new Mock<IMediator>();
-            mediatorMock
-                .Setup(m => m.Send(It.IsAny<AuthenticateQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync((AuthenticatedUserResource) null);
-
-            UserController controller = new UserController(mediatorMock.Object, null);
-
-            // Act
-            ActionResult<AuthenticatedUserResource> response = await controller.Authenticate();
-
-            // Assert
-            BadRequestObjectResult result = Assert.IsType<BadRequestObjectResult>(response.Result);
-
-            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
-
-            Assert.Equal(StatusCodes.Status400BadRequest, error.StatusCode);
-        }
-
-        [Fact]
         public async Task Authenticate_ShouldReturnUser_WhenAuthenticationWasSuccessful()
         {
             // Arrange
