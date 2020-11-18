@@ -99,7 +99,7 @@ namespace Presentation.Api.Controllers
         /// </response>
         ///
         /// <response code="400">
-        /// Search pattern is not in the correct format
+        /// Search pattern contains illegal characters
         /// </response>
         ///
         /// <response code="404">

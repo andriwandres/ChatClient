@@ -1,4 +1,5 @@
-﻿using Core.Domain.Resources.Errors;
+﻿using Core.Domain.Dtos.Users;
+using Core.Domain.Resources.Errors;
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
@@ -9,6 +10,13 @@ namespace Presentation.Api.Examples.Users
     {
         public IEnumerable<SwaggerExample<ValidationErrorResource>> GetExamples()
         {
+            const string emailName = nameof(RegisterUserDto.Email);
+            const string userNameName = nameof(RegisterUserDto.UserName);
+            const string passwordName = nameof(RegisterUserDto.Password);
+
+            const int userNameMinLength = 2;
+            const int passwordMinLength = 8;
+
             return new[]
             {
                 new SwaggerExample<ValidationErrorResource>
@@ -21,7 +29,13 @@ namespace Presentation.Api.Examples.Users
                         Message = "One or multiple validation errors occurred",
                         Errors = new Dictionary<string, IEnumerable<string>>
                         {
-                            { "Email", new []{ "'Email' is not a valid email address." }}
+                            {
+                                emailName, 
+                                new []
+                                {
+                                    $"'{emailName}' has an invalid e-mail address format"
+                                }
+                            }
                         }
                     }
                 },
@@ -35,7 +49,13 @@ namespace Presentation.Api.Examples.Users
                         Message = "One or multiple validation errors occurred",
                         Errors = new Dictionary<string, IEnumerable<string>>
                         {
-                            { "UserName", new []{ "'The length of 'User Name' must be at least 2 characters. You entered x characters." }}
+                            {
+                                userNameName,
+                                new []
+                                {
+                                    $"'{userNameName}' must be at least {userNameMinLength} characters long. You entered xxx characters"
+                                }
+                            }
                         }
                     }
                 },
@@ -49,7 +69,13 @@ namespace Presentation.Api.Examples.Users
                         Message = "One or multiple validation errors occurred",
                         Errors = new Dictionary<string, IEnumerable<string>>
                         {
-                            { "UserName", new []{ "'User Name' is not in the correct format." }}
+                            {
+                                userNameName, 
+                                new []
+                                {
+                                    $"'{userNameName}' contains illegal characters. Use only alphanumeric characters including underscores"
+                                }
+                            }
                         }
                     }
                 },
@@ -63,7 +89,13 @@ namespace Presentation.Api.Examples.Users
                         Message = "One or multiple validation errors occurred",
                         Errors = new Dictionary<string, IEnumerable<string>>
                         {
-                            { "Password", new []{ "The length of 'Password' must be at least 8 characters. You entered x characters." }}
+                            {
+                                passwordName, 
+                                new []
+                                {
+                                    $"'{passwordName}' must be at least {passwordMinLength} characters long. You entered xxx characters"
+                                }
+                            }
                         }
                     }
                 },

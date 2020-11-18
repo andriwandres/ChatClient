@@ -1,4 +1,5 @@
-﻿using Core.Domain.Resources.Errors;
+﻿using Core.Domain.Dtos.Session;
+using Core.Domain.Resources.Errors;
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
@@ -9,6 +10,12 @@ namespace Presentation.Api.Examples.Session
     {
         public IEnumerable<SwaggerExample<ValidationErrorResource>> GetExamples()
         {
+            const string passwordName = nameof(LoginUserDto.Password);
+            const int passwordMinLength = 8;
+
+            const string userNameOrEmailName = nameof(LoginUserDto.UserNameOrEmail);
+            const int userNameMinLength = 2;
+
             return new[]
             {
                 new SwaggerExample<ValidationErrorResource>()
@@ -21,7 +28,13 @@ namespace Presentation.Api.Examples.Session
                         Message = "One or multiple validation errors occurred",
                         Errors = new Dictionary<string, IEnumerable<string>>
                         {
-                            { "Password", new [] { "The length of 'Password' must be at least 8 characters. You entered x characters." } }
+                            {
+                                passwordName,
+                                new []
+                                {
+                                    $"'{passwordName}' must be at least {passwordMinLength} characters long. You entered xxx characters"
+                                }
+                            }
                         }
                     }
                 },
@@ -35,7 +48,13 @@ namespace Presentation.Api.Examples.Session
                         Message = "One or multiple validation errors occurred",
                         Errors = new Dictionary<string, IEnumerable<string>>
                         {
-                            { "UserNameOrEmail", new [] { "The length of 'UserNameOrEmail' must be at least 2 characters. You entered x characters." } }
+                            {
+                                userNameOrEmailName, 
+                                new []
+                                {
+                                    $"'{userNameOrEmailName}' must be at least {userNameMinLength} characters long. You entered xxx characters"
+                                }
+                            }
                         }
                     }
                 },
@@ -49,7 +68,13 @@ namespace Presentation.Api.Examples.Session
                         Message = "One or multiple validation errors occurred",
                         Errors = new Dictionary<string, IEnumerable<string>>
                         {
-                            { "UserNameOrEmail", new [] { "'UserNameOrEmail' is not in the correct format." } }
+                            { 
+                                userNameOrEmailName, 
+                                new []
+                                {
+                                    $"'{userNameOrEmailName}' must be a valid e-mail address, in case e-mail is the preffered login value"
+                                }
+                            }
                         }
                     }
                 },
