@@ -69,8 +69,9 @@ namespace Presentation.Api.Controllers
         [HttpPut]
         [AllowAnonymous]
 
-        [ProducesResponseType(StatusCodes.Status200OK)]
         [SwaggerRequestExample(typeof(LoginUserDto), typeof(LoginRequestExample))]
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(LoginResponseExample))]
 
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

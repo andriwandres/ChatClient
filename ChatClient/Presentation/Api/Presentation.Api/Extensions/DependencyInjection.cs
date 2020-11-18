@@ -107,7 +107,9 @@ namespace Presentation.Api.Extensions
                         IDictionary<string, IEnumerable<string>> errors = context.ModelState.ToDictionary(
                             state => state.Key,
                             state => state.Value.Errors.Select(error => error.ErrorMessage)
-                        );
+                        )
+                        .Where(pair => pair.Value.Any())
+                        .ToDictionary(pair => pair.Key, pair => pair.Value);
 
                         ValidationErrorResource details = new ValidationErrorResource
                         {

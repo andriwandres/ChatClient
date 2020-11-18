@@ -67,10 +67,14 @@ namespace Presentation.Api.Controllers
         [HttpPost]
         [Authorize]
 
+        [SwaggerRequestExample(typeof(RequestFriendshipDto), typeof(RequestFriendshipRequestExample))]
+
         [ProducesResponseType(StatusCodes.Status201Created)]
+        [SwaggerResponseExample(StatusCodes.Status201Created, typeof(FriendshipResponseExample))]
 
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(RequestFriendshipValidationErrorResponseExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
@@ -113,10 +117,6 @@ namespace Presentation.Api.Controllers
         /// Contains the friendship
         /// </response>
         ///
-        /// <response code="400">
-        /// Provided friendshipId is not in a valid format
-        /// </response>
-        ///
         /// <response code="404">
         /// Friendship with the provided ID does not exist
         /// </response>
@@ -128,9 +128,7 @@ namespace Presentation.Api.Controllers
         [Authorize]
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(FriendshipResponseExample))]
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
@@ -141,11 +139,6 @@ namespace Presentation.Api.Controllers
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult<FriendshipResource>> GetFriendshipById([FromRoute] int friendshipId, CancellationToken cancellationToken = default)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
             GetFriendshipByIdQuery query = new GetFriendshipByIdQuery
             {
                 FriendshipId = friendshipId
@@ -205,8 +198,11 @@ namespace Presentation.Api.Controllers
         
         [ProducesResponseType(StatusCodes.Status204NoContent)]
 
+        [SwaggerRequestExample(typeof(UpdateFriendshipStatusDto), typeof(UpdateFriendshipStatusRequestExample))]
+
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(UpdateFriendshipStatusValidationErrorResponseExample))]
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]

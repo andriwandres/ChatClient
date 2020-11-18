@@ -7,9 +7,12 @@ namespace Presentation.Api.Validation.Users
     {
         public EmailExistsDtoValidator()
         {
+            const string emailName = nameof(EmailExistsDto.Email);
             RuleFor(model => model.Email)
                 .NotEmpty()
-                .EmailAddress();
+                .WithMessage($"'{emailName}' must not be empty")
+                .EmailAddress()
+                .WithMessage($"'{emailName}' must be a valid e-mail address");
         }
     }
 }

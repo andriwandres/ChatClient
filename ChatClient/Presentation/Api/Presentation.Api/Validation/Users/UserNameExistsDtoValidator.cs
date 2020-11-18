@@ -8,10 +8,15 @@ namespace Presentation.Api.Validation.Users
     {
         public UserNameExistsDtoValidator()
         {
+            const int userNameMinLength = 2;
+            const string userNameName = nameof(UserNameExistsDto.UserName);
             RuleFor(model => model.UserName)
                 .NotEmpty()
+                .WithMessage($"'{userNameName}' must not be empty")
                 .MinimumLength(2)
-                .Matches(new Regex(@"\w{2,}"));
+                .WithMessage(actual => $"'{userNameName}' must be at least {userNameMinLength} characters long. You entered {actual.UserName.Length} characters")
+                .Matches(new Regex(@"\w*"))
+                .WithMessage($"'{userNameName}' contains illegal characters. Use only alphanumeric characters including underscores");
         }
     }
 }

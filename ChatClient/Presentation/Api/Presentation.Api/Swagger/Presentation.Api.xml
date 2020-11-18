@@ -62,10 +62,6 @@
              Contains the friendship
              </response>
             
-             <response code="400">
-             Provided friendshipId is not in a valid format
-             </response>
-            
              <response code="404">
              Friendship with the provided ID does not exist
              </response>

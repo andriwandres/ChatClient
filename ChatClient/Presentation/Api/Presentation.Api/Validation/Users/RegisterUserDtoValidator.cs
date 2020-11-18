@@ -8,18 +8,30 @@ namespace Presentation.Api.Validation.Users
     {
         public RegisterUserDtoValidator()
         {
+            const string emailName = nameof(RegisterUserDto.Email);
             RuleFor(model => model.Email)
                 .NotEmpty()
-                .EmailAddress();
+                .WithMessage($"'{emailName}' must not be empty")
+                .EmailAddress()
+                .WithMessage($"'{emailName}' has an invalid e-mail address format");
 
+            const int userNameMinLength = 2;
+            const string userNameName = nameof(RegisterUserDto.UserName);
             RuleFor(model => model.UserName)
                 .NotEmpty()
-                .MinimumLength(2)
-                .Matches(new Regex(@"\w{2,}"));
+                .WithMessage($"'{userNameName}' must not be empty")
+                .MinimumLength(userNameMinLength)
+                .WithMessage(actual => $"'{userNameName}' must be at least {userNameMinLength} characters long. You entered {actual.UserName.Length} characters")
+                .Matches(new Regex(@"\w*"))
+                .WithMessage($"'{userNameName}' contains illegal characters. Use only alphanumeric characters including underscores");
 
+            const int passwordMinLength = 8;
+            const string passwordName = nameof(RegisterUserDto.Password);
             RuleFor(model => model.Password)
                 .NotEmpty()
-                .MinimumLength(8);
+                .WithMessage($"'{passwordName}' must not be empty")
+                .MinimumLength(8)
+                .WithMessage(actual => $"'{passwordName}' must be at least {passwordMinLength} characters long. You entered {actual.UserName.Length} characters");
         }
     }
 }
