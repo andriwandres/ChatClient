@@ -10,7 +10,7 @@ using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.Users.Queries
+namespace Core.Application.Requests.Friendships.Queries
 {
     public class GetOwnFriendshipsQuery : IRequest<IEnumerable<FriendshipResource>>
     {
@@ -32,8 +32,8 @@ namespace Core.Application.Requests.Users.Queries
                 // Get the current users id
                 int userId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-                IEnumerable<FriendshipResource> friendships = await _unitOfWork.Users
-                    .GetFriendshipsOfUser(userId)
+                IEnumerable<FriendshipResource> friendships = await _unitOfWork.Friendships
+                    .GetByUser(userId)
                     .ProjectTo<FriendshipResource>(_mapper.ConfigurationProvider)
                     .ToListAsync(cancellationToken);
 

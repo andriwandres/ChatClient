@@ -1,4 +1,5 @@
 ﻿using Presentation.Api.Examples.Languages;
+using Presentation.Api.Examples.Translations;
 using Xunit;
 
 namespace Presentation.Api.Test.Examples

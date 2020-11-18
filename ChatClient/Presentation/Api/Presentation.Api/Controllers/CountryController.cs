@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
+using Presentation.Api.Examples.Countries;
 
 namespace Presentation.Api.Controllers
 {
@@ -55,11 +56,12 @@ namespace Presentation.Api.Controllers
         [AllowAnonymous]
 
         [ProducesResponseType(StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetCountriesResponseExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-        public async Task<ActionResult> GetCountries(CancellationToken cancellationToken = default)
+        public async Task<ActionResult<IEnumerable<CountryResource>>> GetCountries(CancellationToken cancellationToken = default)
         {
             GetCountriesQuery query = new GetCountriesQuery();
 

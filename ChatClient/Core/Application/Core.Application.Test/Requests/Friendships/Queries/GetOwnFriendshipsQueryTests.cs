@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Core.Application.Database;
-using Core.Application.Requests.Users.Queries;
+using Core.Application.Requests.Friendships.Queries;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Friendships;
 using Microsoft.AspNetCore.Http;
@@ -12,7 +12,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.Users.Queries
+namespace Core.Application.Test.Requests.Friendships.Queries
 {
     public class GetOwnFriendshipsQueryTests
     {
@@ -39,7 +39,7 @@ namespace Core.Application.Test.Requests.Users.Queries
 
             Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
             unitOfWorkMock
-                .Setup(m => m.Users.GetFriendshipsOfUser(1))
+                .Setup(m => m.Friendships.GetByUser(1))
                 .Returns(friendshipQueryableMock.Object);
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>

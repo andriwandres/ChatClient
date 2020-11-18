@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 
-namespace Presentation.Api.Examples.Languages
+namespace Presentation.Api.Examples.Translations
 {
     public class GetTranslationsByLanguageValidationErrorResponseExample : IExamplesProvider<ValidationErrorResource>
     {

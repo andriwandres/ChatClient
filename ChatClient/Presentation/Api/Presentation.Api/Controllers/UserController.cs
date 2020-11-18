@@ -16,6 +16,7 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Application.Requests.Friendships.Queries;
 using Presentation.Api.Examples.Friendships;
 
 namespace Presentation.Api.Controllers

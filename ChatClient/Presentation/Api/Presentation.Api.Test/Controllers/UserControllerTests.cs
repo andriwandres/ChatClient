@@ -13,6 +13,7 @@ using Presentation.Api.Controllers;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Application.Requests.Friendships.Queries;
 using Xunit;
 
 namespace Presentation.Api.Test.Controllers

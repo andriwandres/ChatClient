@@ -23,6 +23,13 @@ namespace Infrastructure.Persistence.Repositories
                 .Where(friendship => friendship.FriendshipId == friendshipId);
         }
 
+        public IQueryable<Friendship> GetByUser(int userId)
+        {
+            return Context.Friendships
+                .AsNoTracking()
+                .Where(friendship => friendship.RequesterId == userId || friendship.AddresseeId == userId);
+        }
+
         public async Task<bool> Exists(int friendshipId, CancellationToken cancellationToken = default)
         {
             return await Context.Friendships
@@ -33,13 +40,6 @@ namespace Infrastructure.Persistence.Repositories
         public async Task Add(Friendship friendship, CancellationToken cancellationToken = default)
         {
             await Context.Friendships.AddAsync(friendship, cancellationToken);
-        }
-
-        public IQueryable<FriendshipChange> GetChanges(int friendshipId)
-        {
-            return Context.FriendshipChanges
-                .AsNoTracking()
-                .Where(change => change.FriendshipId == friendshipId);
         }
     }
 }

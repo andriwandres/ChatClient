@@ -13,6 +13,8 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Application.Requests.Translations.Queries;
+using Presentation.Api.Examples.Translations;
 
 namespace Presentation.Api.Controllers
 {

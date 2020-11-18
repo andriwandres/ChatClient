@@ -163,5 +163,42 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Assert
             contextMock.Verify(m => m.Friendships.AddAsync(friendship, It.IsAny<CancellationToken>()));
         }
+
+        [Fact]
+        public async Task GetByUser_ShouldGetFriendships()
+        {
+            // Arrange
+            const int userId = 1;
+
+            IEnumerable<Friendship> friendships = new[]
+            {
+                new Friendship { FriendshipId = 1, RequesterId = 1, AddresseeId = 2},
+                new Friendship { FriendshipId = 2, RequesterId = 3, AddresseeId = 1},
+                new Friendship { FriendshipId = 3, RequesterId = 3, AddresseeId = 2},
+                new Friendship { FriendshipId = 4, RequesterId = 2, AddresseeId = 4},
+            };
+
+            Mock<DbSet<Friendship>> friendshipsDbSetMock = friendships
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.Friendships)
+                .Returns(friendshipsDbSetMock.Object);
+
+            FriendshipRepository repository = new FriendshipRepository(contextMock.Object);
+
+            // Act
+            IEnumerable<Friendship> actualFriendships = await repository
+                .GetByUser(userId)
+                .ToListAsync();
+
+            // Assert
+            Assert.Equal(2, actualFriendships.Count());
+            Assert.All(actualFriendships, 
+                friendship => Assert.True(friendship.RequesterId == userId || friendship.AddresseeId == userId)
+            );
+        }
     }
 }

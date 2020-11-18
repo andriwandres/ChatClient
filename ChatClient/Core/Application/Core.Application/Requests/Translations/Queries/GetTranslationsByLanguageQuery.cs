@@ -1,13 +1,13 @@
-﻿using Core.Application.Database;
-using Core.Domain.Entities;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Application.Database;
+using Core.Domain.Entities;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
 
-namespace Core.Application.Requests.Languages.Queries
+namespace Core.Application.Requests.Translations.Queries
 {
     public class GetTranslationsByLanguageQuery : IRequest<IDictionary<string, string>>
     {

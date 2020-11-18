@@ -63,12 +63,5 @@ namespace Infrastructure.Persistence.Repositories
         {
             await Context.Users.AddAsync(user, cancellationToken);
         }
-
-        public IQueryable<Friendship> GetFriendshipsOfUser(int userId)
-        {
-            return Context.Friendships
-                .AsNoTracking()
-                .Where(friendship => friendship.RequesterId == userId || friendship.AddresseeId == userId);
-        }
     }
 }

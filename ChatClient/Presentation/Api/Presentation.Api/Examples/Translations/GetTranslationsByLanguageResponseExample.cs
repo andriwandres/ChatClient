@@ -1,7 +1,7 @@
 ﻿using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 
-namespace Presentation.Api.Examples.Languages
+namespace Presentation.Api.Examples.Translations
 {
     public class GetTranslationsByLanguageResponseExample : IExamplesProvider<IDictionary<string, string>>
     {

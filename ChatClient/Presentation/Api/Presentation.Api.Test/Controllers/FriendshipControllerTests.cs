@@ -2,6 +2,7 @@
 using Core.Application.Requests.Friendships.Commands;
 using Core.Application.Requests.Friendships.Queries;
 using Core.Domain.Dtos.Friendships;
+using Core.Domain.Entities;
 using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Friendships;
 using MediatR;
@@ -118,6 +119,80 @@ namespace Presentation.Api.Test.Controllers
             FriendshipResource friendship = Assert.IsType<FriendshipResource>(result.Value);
 
             Assert.Equal(friendshipId, friendship.FriendshipId);
+        }
+
+        [Fact]
+        public async Task UpdateFriendshipStatus_ShouldReturnBadRequestResult_WhenModelValidationFails()
+        {
+            // Arrange
+            FriendshipController controller = new FriendshipController(null, null);
+
+            controller.ModelState.AddModelError("", "");
+
+            // Act
+            ActionResult response = await controller.UpdateFriendshipStatus(0, null);
+
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(response);
+        }
+
+        [Fact]
+        public async Task UpdateFriendshipStatus_ShouldReturnNotFound_WhenFriendshipDoesNotExist()
+        {
+            // Arrange
+            const int friendshipId = 87921;
+
+            UpdateFriendshipStatusDto model = new UpdateFriendshipStatusDto
+            {
+                FriendshipStatusId = FriendshipStatusId.Accepted
+            };
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<FriendshipExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            FriendshipController controller = new FriendshipController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult response = await controller.UpdateFriendshipStatus(friendshipId, model);
+
+            // Assert
+            NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.Equal(StatusCodes.Status404NotFound, error.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateFriendshipStatus_ShouldReturnNoContentResult()
+        {
+            // Arrange
+            const int friendshipId = 1;
+
+            UpdateFriendshipStatusDto model = new UpdateFriendshipStatusDto
+            {
+                FriendshipStatusId = FriendshipStatusId.Accepted
+            };
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<FriendshipExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<UpdateFriendshipStatusCommand>(), It.IsAny<CancellationToken>()))
+                .Returns(Unit.Task);
+
+            FriendshipController controller = new FriendshipController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult response = await controller.UpdateFriendshipStatus(friendshipId, model);
+
+            // Assert
+            Assert.IsType<NoContentResult>(response);
+            mediatorMock.Verify(m => m.Send(It.IsAny<UpdateFriendshipStatusCommand>(), It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

@@ -1,15 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics.Contracts;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using Core.Application.Database;
+﻿using Core.Application.Database;
 using Core.Application.Repositories;
 using Core.Domain.Entities;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using MockQueryable.Moq;
 using Moq;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Infrastructure.Persistence.Test.Repositories
@@ -558,107 +557,6 @@ namespace Infrastructure.Persistence.Test.Repositories
 
             // Assert
             Assert.True(exists);
-        }
-
-        [Fact]
-        public async Task GetFriendshipsOfUser_ShouldReturnNoFriendships_WhenUserIdDoesntMatch()
-        {
-            // Arrange
-            const int userId = 1;
-
-            IEnumerable<Friendship> expectedFriendships = new[]
-            {
-                new Friendship { FriendshipId = 1, RequesterId = 3, AddresseeId = 5 },
-                new Friendship { FriendshipId = 2, RequesterId = 4, AddresseeId = 2 },
-                new Friendship { FriendshipId = 3, RequesterId = 2, AddresseeId = 3 },
-            };
-
-            Mock<DbSet<Friendship>> friendshipDbSetMock = expectedFriendships
-                .AsQueryable()
-                .BuildMockDbSet();
-
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Friendships)
-                .Returns(friendshipDbSetMock.Object);
-
-            UserRepository repository = new UserRepository(contextMock.Object);
-
-            // Act
-            IEnumerable<Friendship> ownFriendships = await repository
-                .GetFriendshipsOfUser(userId)
-                .ToListAsync();
-
-            // Assert
-            Assert.Empty(ownFriendships);
-        }
-
-        [Fact]
-        public async Task GetFriendshipsOfUser_ShouldReturnNoFriendships_WhenAddresseeIdMatches()
-        {
-            // Arrange
-            const int userId = 1;
-
-            IEnumerable<Friendship> expectedFriendships = new[]
-            {
-                new Friendship { FriendshipId = 1, RequesterId = 3, AddresseeId = 5 },
-                new Friendship { FriendshipId = 2, RequesterId = 4, AddresseeId = 1 },
-                new Friendship { FriendshipId = 3, RequesterId = 2, AddresseeId = 3 },
-            };
-
-            Mock<DbSet<Friendship>> friendshipDbSetMock = expectedFriendships
-                .AsQueryable()
-                .BuildMockDbSet();
-
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Friendships)
-                .Returns(friendshipDbSetMock.Object);
-
-            UserRepository repository = new UserRepository(contextMock.Object);
-
-            // Act
-            IEnumerable<Friendship> ownFriendships = await repository
-                .GetFriendshipsOfUser(userId)
-                .ToListAsync();
-
-            // Assert
-            Assert.Single(ownFriendships);
-            Assert.Equal(2, ownFriendships.First().FriendshipId);
-        }
-
-        [Fact]
-        public async Task GetFriendshipsOfUser_ShouldReturnNoFriendships_WhenRequesterIdMatches()
-        {
-            // Arrange
-            const int userId = 1;
-
-            IEnumerable<Friendship> expectedFriendships = new[]
-            {
-                new Friendship { FriendshipId = 1, RequesterId = 3, AddresseeId = 5 },
-                new Friendship { FriendshipId = 2, RequesterId = 2, AddresseeId = 3 },
-                new Friendship { FriendshipId = 3, RequesterId = 1, AddresseeId = 2 },
-            };
-
-            Mock<DbSet<Friendship>> friendshipDbSetMock = expectedFriendships
-                .AsQueryable()
-                .BuildMockDbSet();
-
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Friendships)
-                .Returns(friendshipDbSetMock.Object);
-
-            UserRepository repository = new UserRepository(contextMock.Object);
-
-            // Act
-            IEnumerable<Friendship> ownFriendships = await repository
-                .GetFriendshipsOfUser(userId)
-                .ToListAsync();
-
-            // Assert
-            Assert.Single(ownFriendships);
-            Assert.Equal(3, ownFriendships.First().FriendshipId);
         }
     }
 }
