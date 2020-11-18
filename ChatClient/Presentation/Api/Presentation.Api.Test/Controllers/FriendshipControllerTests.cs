@@ -71,23 +71,6 @@ namespace Presentation.Api.Test.Controllers
         }
 
         [Fact]
-        public async Task GetFriendshipById_ShouldReturnBadRequestResult_WhenModelValidationFails()
-        {
-            // Arrange
-            const int friendshipId = 0;
-            
-            FriendshipController controller = new FriendshipController(null, null);
-
-            controller.ModelState.AddModelError("", "");
-
-            // Act
-            ActionResult<FriendshipResource> response = await controller.GetFriendshipById(friendshipId);
-
-            // Assert
-            Assert.IsType<BadRequestObjectResult>(response.Result);
-        }
-
-        [Fact]
         public async Task GetFriendshipById_ShouldReturnNotFoundResult_WhenFriendshipIsNotFound()
         {
             // Arrange

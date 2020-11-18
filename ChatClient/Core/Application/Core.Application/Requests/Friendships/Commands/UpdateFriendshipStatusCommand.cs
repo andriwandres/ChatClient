@@ -2,8 +2,6 @@
 using Core.Application.Services;
 using Core.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,11 +25,6 @@ namespace Core.Application.Requests.Friendships.Commands
 
             public async Task<Unit> Handle(UpdateFriendshipStatusCommand request, CancellationToken cancellationToken = default)
             {
-                FriendshipChange latestMutation = await _unitOfWork.Friendships
-                    .GetChanges(request.FriendshipId)
-                    .OrderByDescending(mutation => mutation.Created)
-                    .FirstAsync(cancellationToken);
-
                 FriendshipChange newChange = new FriendshipChange
                 {
                     FriendshipId = request.FriendshipId,

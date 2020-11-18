@@ -4,6 +4,31 @@
         <name>Presentation.Api</name>
     </assembly>
     <members>
+        <member name="M:Presentation.Api.Controllers.CountryController.GetCountries(System.Threading.CancellationToken)">
+             <summary>
+             Gets a list of countries
+             </summary>
+            
+             <remarks>
+             Returns a list of all available countries
+             </remarks>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             List of countries
+             </returns>
+            
+             <response code="200">
+             Contains list of countries
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
         <member name="M:Presentation.Api.Controllers.FriendshipController.RequestFriendship(Core.Domain.Dtos.Friendships.RequestFriendshipDto,System.Threading.CancellationToken)">
              <summary>
              Requests a new friendship

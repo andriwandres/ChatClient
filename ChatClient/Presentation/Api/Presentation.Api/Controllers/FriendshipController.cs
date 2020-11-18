@@ -231,7 +231,11 @@ namespace Presentation.Api.Controllers
                 });
             }
 
-            UpdateFriendshipStatusCommand updateCommand = _mapper.Map<UpdateFriendshipStatusDto, UpdateFriendshipStatusCommand>(model);
+            UpdateFriendshipStatusCommand updateCommand = new UpdateFriendshipStatusCommand
+            {
+                FriendshipId = friendshipId,
+                FriendshipStatusId = model.FriendshipStatusId
+            };
 
             await _mediator.Send(updateCommand, cancellationToken);
 

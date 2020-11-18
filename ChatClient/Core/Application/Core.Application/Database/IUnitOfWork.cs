@@ -1,17 +1,18 @@
-﻿using System;
+﻿using Core.Application.Repositories;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Application.Repositories;
 
 namespace Core.Application.Database
 {
     public interface IUnitOfWork : IDisposable
     {
+        ICountryRepository Countries { get; }
+        IFriendshipChangeRepository FriendshipChanges { get; }
+        IFriendshipRepository Friendships { get; }
         ILanguageRepository Languages { get; }
         ITranslationRepository Translations { get; }
         IUserRepository Users { get; }
-        IFriendshipRepository Friendships { get; }
-        IFriendshipChangeRepository FriendshipChanges { get; }
 
         int Commit();
         Task<int> CommitAsync(CancellationToken cancellationToken = default);
