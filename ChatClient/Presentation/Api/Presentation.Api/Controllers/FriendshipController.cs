@@ -162,6 +162,10 @@ namespace Presentation.Api.Controllers
         /// Updates a friendships status
         /// </summary>
         ///
+        /// <remarks>
+        /// Updates the friendship status of a given friendship
+        /// </remarks>
+        /// 
         /// <param name="friendshipId">
         /// ID of the friendship to update
         /// </param>

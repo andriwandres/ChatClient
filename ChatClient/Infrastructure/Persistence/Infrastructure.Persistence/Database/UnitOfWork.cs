@@ -11,6 +11,7 @@ namespace Infrastructure.Persistence.Database
         private CountryRepository _countryRepository;
         private FriendshipChangeRepository _friendshipChangeRepository;
         private FriendshipRepository _friendshipRepository;
+        private GroupRepository _groupRepository;
         private LanguageRepository _languageRepository;
         private TranslationRepository _translationRepository;
         private UserRepository _userRepository;
@@ -25,6 +26,7 @@ namespace Infrastructure.Persistence.Database
         public ICountryRepository Countries => _countryRepository ??= new CountryRepository(_context);
         public IFriendshipChangeRepository FriendshipChanges => _friendshipChangeRepository ??= new FriendshipChangeRepository(_context);
         public IFriendshipRepository Friendships => _friendshipRepository ??= new FriendshipRepository(_context);
+        public IGroupRepository Groups => _groupRepository ??= new GroupRepository(_context);
         public ILanguageRepository Languages => _languageRepository ??= new LanguageRepository(_context);
         public ITranslationRepository Translations => _translationRepository ??= new TranslationRepository(_context);
         public IUserRepository Users => _userRepository ??= new UserRepository(_context);

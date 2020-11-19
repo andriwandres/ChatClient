@@ -132,6 +132,39 @@
              An unexpected error occurred
              </response>
         </member>
+        <member name="M:Presentation.Api.Controllers.GroupController.CreateGroup(Core.Domain.Dtos.Groups.CreateGroupDto,System.Threading.CancellationToken)">
+             <summary>
+             Creates a new group
+             </summary>
+            
+             <remarks>
+             Creates a new group of users in the database and returns the newly created resource as well as a url for resource creation in the Location header
+             </remarks>
+             
+             <param name="model">
+             Specifies information of the group to be created
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             Created group resource
+             </returns>
+            
+             <response code="201">
+             Group has been created and is returned in the response
+             </response>
+            
+             <response code="400">
+             Group name is invalid
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
         <member name="M:Presentation.Api.Controllers.LanguageController.GetAllLanguages(System.Threading.CancellationToken)">
              <summary>
              Gets a list of all languages

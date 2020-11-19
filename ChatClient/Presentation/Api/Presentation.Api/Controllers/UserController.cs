@@ -280,7 +280,7 @@ namespace Presentation.Api.Controllers
         /// <response code="500">
         /// An unexpected error occurred on the server
         /// </response>
-        [HttpHead("username")]
+        [HttpHead("name")]
         [AllowAnonymous]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
