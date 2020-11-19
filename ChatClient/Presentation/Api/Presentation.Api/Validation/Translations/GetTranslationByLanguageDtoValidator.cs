@@ -1,8 +1,8 @@
-﻿using Core.Domain.Dtos.Languages;
+﻿using System.Text.RegularExpressions;
+using Core.Domain.Dtos.Languages;
 using FluentValidation;
-using System.Text.RegularExpressions;
 
-namespace Presentation.Api.Validation.Languages
+namespace Presentation.Api.Validation.Translations
 {
     public class GetTranslationByLanguageDtoValidator : AbstractValidator<GetTranslationsByLanguageDto>
     {

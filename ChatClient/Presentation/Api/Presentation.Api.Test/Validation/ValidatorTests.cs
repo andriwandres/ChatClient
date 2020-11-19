@@ -1,5 +1,9 @@
-﻿using Presentation.Api.Validation.Languages;
+﻿using Presentation.Api.Validation.Countries;
+using Presentation.Api.Validation.Errors;
+using Presentation.Api.Validation.Friendships;
+using Presentation.Api.Validation.Languages;
 using Presentation.Api.Validation.Session;
+using Presentation.Api.Validation.Translations;
 using Presentation.Api.Validation.Users;
 using Xunit;
 
@@ -10,12 +14,26 @@ namespace Presentation.Api.Test.Validation
         [Fact]
         public void Validators_DoNotThrow()
         {
+            // Countries
+            Assert.NotNull(new CountryResourceValidator());
+
+            // Errors
+            Assert.NotNull(new ErrorResourceValidator());
+            Assert.NotNull(new ValidationErrorResourceValidator());
+
+            // Friendships
+            Assert.NotNull(new FriendshipResourceValidator());
+            Assert.NotNull(new RequestFriendshipDtoValidator());
+            Assert.NotNull(new UpdateFriendshipStatusDtoValidator());
+
             // Languages
-            Assert.NotNull(new GetTranslationByLanguageDtoValidator());
             Assert.NotNull(new LanguageResourceValidator());
 
             // Session
             Assert.NotNull(new LoginUserDtoValidator());
+
+            // Translations
+            Assert.NotNull(new GetTranslationByLanguageDtoValidator());
 
             // Users
             Assert.NotNull(new AuthenticatedUserResourceValidator());
