@@ -1,17 +1,21 @@
 ﻿using AutoMapper;
+using Core.Application.Requests.GroupMemberships.Queries;
 using Core.Application.Requests.Groups.Commands;
 using Core.Application.Requests.Groups.Queries;
 using Core.Domain.Dtos.Groups;
 using Core.Domain.Resources.Errors;
+using Core.Domain.Resources.GroupMemberships;
 using Core.Domain.Resources.Groups;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Examples;
+using Presentation.Api.Examples.GroupMemberships;
 using Presentation.Api.Examples.Groups;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
+using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
@@ -312,11 +316,70 @@ namespace Presentation.Api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Gets all memberships of a group
+        /// </summary>
+        ///
+        /// <remarks>
+        /// Returns a list of all memberships of a group, given the groups ID
+        /// </remarks>
+        /// 
+        /// <param name="groupId">
+        /// ID of the group to fetch the members from
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">
+        /// Notifies asynchronous operations to cancel ongoing work and release resources
+        /// </param>
+        /// 
+        /// <returns>
+        /// List of memberships in given group
+        /// </returns>
+        ///
+        /// <response code="200">
+        /// Contains a list of memberships within the given group
+        /// </response>
+        ///
+        /// <response code="404">
+        /// The group with given ID does not exist
+        /// </response>
+        ///
+        /// <response code="500">
+        /// An unexpected error occurred
+        /// </response>
         [HttpGet("{groupId:int}/memberships")]
         [Authorize]
-        public async Task<ActionResult> GetMemberships()
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetMembershipsByGroupResponseExample))]
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GroupNotFoundResponseExample))]
+
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
+        public async Task<ActionResult<IEnumerable<GroupMembershipResource>>> GetMembershipsByGroup([FromRoute] int groupId, CancellationToken cancellationToken = default)
         {
-            return NoContent();
+            GroupExistsQuery existsQuery = new GroupExistsQuery { GroupId = groupId };
+
+            bool exists = await _mediator.Send(existsQuery, cancellationToken);
+
+            if (!exists)
+            {
+                return NotFound(new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = $"Group with ID '{groupId}' does not exist"
+                });
+            }
+
+            GetMembershipsByGroupQuery membershipsQuery = new GetMembershipsByGroupQuery { GroupId = groupId };
+
+            IEnumerable<GroupMembershipResource> memberships = await _mediator.Send(membershipsQuery, cancellationToken);
+
+            return Ok(memberships);
         }
     }
 }
