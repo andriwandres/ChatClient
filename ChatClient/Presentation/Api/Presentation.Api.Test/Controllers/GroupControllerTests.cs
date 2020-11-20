@@ -130,5 +130,78 @@ namespace Presentation.Api.Test.Controllers
             Assert.NotNull(actualGroup);
             Assert.Equal(groupId, actualGroup.GroupId);
         }
+
+        [Fact]
+        public async Task UpdateGroup_ShouldReturnBadRequestResult_WhenModelValidationFails()
+        {
+            // Arrange
+            GroupController controller = new GroupController(null, null);
+
+            controller.ModelState.AddModelError("", "");
+
+            // Act
+            ActionResult response = await controller.UpdateGroup(0, null);
+
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(response);
+        }
+
+        [Fact]
+        public async Task UpdateGroup_ShouldReturnNotFoundResult_WhenGroupDoesNotExist()
+        {
+            // Arrange
+            const int groupId = 15453;
+
+            UpdateGroupDto model = new UpdateGroupDto
+            {
+                Name = "Some updated name",
+                Description = "Some updated description"
+            };
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GroupExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            GroupController controller = new GroupController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult response = await controller.UpdateGroup(groupId, model);
+
+            // Assert
+            NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.Equal(StatusCodes.Status404NotFound, error.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateGroup_ShouldReturnUpdateGroup_WhenGroupExists()
+        {
+            // Arrange
+            const int groupId = 1;
+
+            UpdateGroupDto model = new UpdateGroupDto
+            {
+                Name = "Some updated name",
+                Description = "Some updated description"
+            };
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GroupExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            GroupController controller = new GroupController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult response = await controller.UpdateGroup(groupId, model);
+
+            // Assert
+            Assert.IsType<NoContentResult>(response);
+
+            mediatorMock.Verify(m => m.Send(It.IsAny<UpdateGroupCommand>(), It.IsAny<CancellationToken>()));
+        }
     }
 }

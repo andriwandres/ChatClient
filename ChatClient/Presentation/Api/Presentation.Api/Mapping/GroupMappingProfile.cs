@@ -12,6 +12,7 @@ namespace Presentation.Api.Mapping
         {
             CreateMap<Group, GroupResource>();
             CreateMap<CreateGroupDto, CreateGroupCommand>();
+            CreateMap<UpdateGroupDto, UpdateGroupCommand>(MemberList.Source);
         }
     }
 }

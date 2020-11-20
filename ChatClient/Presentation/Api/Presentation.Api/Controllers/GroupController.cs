@@ -1,5 +1,4 @@
-﻿using System.Net;
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Application.Requests.Groups.Commands;
 using Core.Application.Requests.Groups.Queries;
 using Core.Domain.Dtos.Groups;
@@ -159,10 +158,92 @@ namespace Presentation.Api.Controllers
             return Ok(group);
         }
 
+        /// <summary>
+        /// Updates a group
+        /// </summary>
+        ///
+        /// <remarks>
+        /// Updates a groups information
+        /// </remarks>
+        /// 
+        /// <param name="groupId">
+        /// ID of the group to update
+        /// </param>
+        /// 
+        /// <param name="model">
+        /// Specifies the groups information to update
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">
+        /// Notifies asynchronous operations to cancel ongoing work and release resources
+        /// </param>
+        /// 
+        /// <returns>
+        /// No content
+        /// </returns>
+        ///
+        /// <response code="204">
+        /// Update was successful
+        /// </response>
+        ///
+        /// <response code="400">
+        /// Request body is invalid
+        /// </response>
+        ///
+        /// <response code="404">
+        /// Group with given ID does not exist
+        /// </response>
+        ///
+        /// <response code="500">
+        /// An unexpected error occurred
+        /// </response>
         [HttpPut("{groupId:int}")]
         [Authorize]
-        public async Task<ActionResult> UpdateGroup()
+
+        [SwaggerRequestExample(typeof(UpdateGroupDto), typeof(UpdateGroupRequestExample))]
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(UpdateGroupValidationErrorResponseExample))]
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GroupNotFoundResponseExample))]
+
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
+        public async Task<ActionResult> UpdateGroup([FromRoute] int groupId, [FromBody] UpdateGroupDto model, CancellationToken cancellationToken = default)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            GroupExistsQuery existsQuery = new GroupExistsQuery { GroupId = groupId };
+
+            bool exists = await _mediator.Send(existsQuery, cancellationToken);
+
+            if (!exists)
+            {
+                return NotFound(new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = $"Group with ID '{groupId}' does not exist"
+                });
+            }
+
+            UpdateGroupCommand updateCommand = new UpdateGroupCommand
+            {
+                GroupId = groupId,
+                Name = model.Name,
+                Description = model.Description
+            };
+
+            await _mediator.Send(updateCommand, cancellationToken);
+
             return NoContent();
         }
 

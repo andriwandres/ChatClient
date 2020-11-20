@@ -29,6 +29,7 @@ namespace Presentation.Api.Test.Validation
 
             // Groups
             Assert.NotNull(new CreateGroupDtoValidator());
+            Assert.NotNull(new UpdateGroupDtoValidator());
 
             // Languages
             Assert.NotNull(new LanguageResourceValidator());

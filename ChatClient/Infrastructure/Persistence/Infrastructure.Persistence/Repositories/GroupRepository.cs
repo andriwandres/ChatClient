@@ -22,9 +22,21 @@ namespace Infrastructure.Persistence.Repositories
                 .Where(group => group.GroupId == groupId);
         }
 
+        public Task<bool> Exists(int groupId, CancellationToken cancellationToken = default)
+        {
+            return Context.Groups
+                .AsNoTracking()
+                .AnyAsync(group => group.GroupId == groupId, cancellationToken);
+        }
+
         public async Task Add(Group group, CancellationToken cancellationToken = default)
         {
             await Context.Groups.AddAsync(group, cancellationToken);
+        }
+
+        public void Update(Group group)
+        {
+            Context.Groups.Update(group);
         }
     }
 }
