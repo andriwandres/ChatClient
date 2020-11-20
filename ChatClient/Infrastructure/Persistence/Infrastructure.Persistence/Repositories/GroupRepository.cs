@@ -19,16 +19,16 @@ namespace Infrastructure.Persistence.Repositories
         {
             return Context.Groups
                 .AsNoTracking()
-                .Where(group => group.GroupId == groupId);
+                .Where(group => group.GroupId == groupId && group.IsDeleted == false);
         }
 
         public Task<bool> Exists(int groupId, CancellationToken cancellationToken = default)
         {
             return Context.Groups
                 .AsNoTracking()
-                .AnyAsync(group => group.GroupId == groupId, cancellationToken);
+                .AnyAsync(group => group.GroupId == groupId && group.IsDeleted == false, cancellationToken);
         }
-
+         
         public async Task Add(Group group, CancellationToken cancellationToken = default)
         {
             await Context.Groups.AddAsync(group, cancellationToken);

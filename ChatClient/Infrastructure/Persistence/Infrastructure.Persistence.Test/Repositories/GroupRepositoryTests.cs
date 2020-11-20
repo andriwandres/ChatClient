@@ -74,6 +74,40 @@ namespace Infrastructure.Persistence.Test.Repositories
         }
 
         [Fact]
+        public async Task GetById_ShouldReturnEmptyQueryable_WhenGroupWasDeleted()
+        {
+            // Arrange
+            const int groupId = 1;
+
+            IEnumerable<Group> databaseGroups = new[]
+            {
+                new Group {GroupId = 1, IsDeleted = true },
+                new Group {GroupId = 2},
+                new Group {GroupId = 3},
+            };
+
+            Mock<DbSet<Group>> groupDbSetMock = databaseGroups
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.Groups)
+                .Returns(groupDbSetMock.Object);
+
+            GroupRepository repository = new GroupRepository(contextMock.Object);
+
+            // Act
+            IEnumerable<Group> group = await repository
+                .GetById(groupId)
+                .ToListAsync();
+
+            // Assert
+            Assert.NotNull(group);
+            Assert.Empty(group);
+        }
+
+        [Fact]
         public async Task GetById_ShouldReturnSingleGroup_WhenIdMatches()
         {
             // Arrange
@@ -148,6 +182,38 @@ namespace Infrastructure.Persistence.Test.Repositories
             IEnumerable<Group> databaseGroups = new[]
             {
                 new Group { GroupId = 1 },
+                new Group { GroupId = 2 },
+                new Group { GroupId = 3 },
+            };
+
+            DbSet<Group> mockDbSet = databaseGroups
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.Groups)
+                .Returns(mockDbSet);
+
+            GroupRepository repository = new GroupRepository(contextMock.Object);
+
+            // Act
+            bool exists = await repository.Exists(groupId);
+
+            // Assert
+            Assert.False(exists);
+        }
+
+        [Fact]
+        public async Task Exists_ShouldReturnFalse_WhenGroupWasDeleted()
+        {
+            // Arrange
+            const int groupId = 1;
+
+            IEnumerable<Group> databaseGroups = new[]
+            {
+                new Group { GroupId = 1, IsDeleted = true },
                 new Group { GroupId = 2 },
                 new Group { GroupId = 3 },
             };

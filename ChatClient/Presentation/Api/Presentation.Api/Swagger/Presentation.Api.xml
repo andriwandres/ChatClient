@@ -243,6 +243,39 @@
              An unexpected error occurred
              </response>
         </member>
+        <member name="M:Presentation.Api.Controllers.GroupController.DeleteGroup(System.Int32,System.Threading.CancellationToken)">
+             <summary>
+             Deletes a group
+             </summary>
+            
+             <remarks>
+             Deletes a group from the database, given the ID
+             </remarks>
+             
+             <param name="groupId">
+             ID of the group to delete
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             No content
+             </returns>
+            
+             <response code="204">
+             Deletion was successful
+             </response>
+            
+             <response code="404">
+             Group with given ID does not exist
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
         <member name="M:Presentation.Api.Controllers.LanguageController.GetAllLanguages(System.Threading.CancellationToken)">
              <summary>
              Gets a list of all languages

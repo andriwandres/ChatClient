@@ -247,10 +247,68 @@ namespace Presentation.Api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes a group
+        /// </summary>
+        ///
+        /// <remarks>
+        /// Deletes a group from the database, given the ID
+        /// </remarks>
+        /// 
+        /// <param name="groupId">
+        /// ID of the group to delete
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">
+        /// Notifies asynchronous operations to cancel ongoing work and release resources
+        /// </param>
+        /// 
+        /// <returns>
+        /// No content
+        /// </returns>
+        ///
+        /// <response code="204">
+        /// Deletion was successful
+        /// </response>
+        ///
+        /// <response code="404">
+        /// Group with given ID does not exist
+        /// </response>
+        ///
+        /// <response code="500">
+        /// An unexpected error occurred
+        /// </response>
         [HttpDelete("{groupId:int}")]
         [Authorize]
-        public async Task<ActionResult> DeleteGroup()
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GroupNotFoundResponseExample))]
+
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
+        public async Task<ActionResult> DeleteGroup([FromRoute] int groupId, CancellationToken cancellationToken = default)
         {
+            GroupExistsQuery existsQuery = new GroupExistsQuery { GroupId = groupId };
+
+            bool exists = await _mediator.Send(existsQuery, cancellationToken);
+
+            if (!exists)
+            {
+                return NotFound(new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = $"Group with ID '{groupId}' does not exist"
+                });
+            }
+
+            DeleteGroupCommand deleteCommand = new DeleteGroupCommand { GroupId = groupId };
+
+            await _mediator.Send(deleteCommand, cancellationToken);
+
             return NoContent();
         }
 
