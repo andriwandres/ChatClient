@@ -12,6 +12,8 @@ namespace Core.Domain.Entities
         public string Description { get; set; }
         public DateTime Created { get; set; }
 
+        public bool IsDeleted { get; set; }
+
         public DisplayImage GroupImage { get; set; }
         public ICollection<GroupMembership> Memberships { get; set; }
 

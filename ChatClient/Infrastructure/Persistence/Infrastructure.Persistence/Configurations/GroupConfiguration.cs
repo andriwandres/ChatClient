@@ -23,6 +23,10 @@ namespace Infrastructure.Persistence.Configurations
             builder.Property(group => group.Created)
                 .IsRequired();
 
+            builder.Property(group => group.IsDeleted)
+                .IsRequired()
+                .HasDefaultValue(false);
+
             // Relationships
             builder.HasOne(group => group.GroupImage)
                 .WithOne()
