@@ -8,6 +8,11 @@ namespace Core.Domain.Entities
         public string Name { get; set; }
 
         public ICollection<FriendshipChange> StatusChanges { get; set; }
+
+        public FriendshipStatus()
+        {
+            StatusChanges = new HashSet<FriendshipChange>();
+        }
     }
 
     public enum FriendshipStatusId : int

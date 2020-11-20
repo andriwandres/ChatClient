@@ -49,5 +49,10 @@ namespace Infrastructure.Persistence.Database
         {
             _context.Dispose();
         }
+
+        public async ValueTask DisposeAsync()
+        {
+            await _context.DisposeAsync();
+        }
     }
 }

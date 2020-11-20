@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Core.Application.Database
 {
-    public interface IUnitOfWork : IDisposable
+    public interface IUnitOfWork : IDisposable, IAsyncDisposable
     {
         ICountryRepository Countries { get; }
         IFriendshipChangeRepository FriendshipChanges { get; }

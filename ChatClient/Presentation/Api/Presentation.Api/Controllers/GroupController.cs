@@ -1,4 +1,5 @@
-﻿using AutoMapper;
+﻿using System.Net;
+using AutoMapper;
 using Core.Application.Requests.Groups.Commands;
 using Core.Application.Requests.Groups.Queries;
 using Core.Domain.Dtos.Groups;

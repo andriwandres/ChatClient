@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Application.Requests.Groups.Commands;
+using Core.Application.Requests.Groups.Queries;
 using Core.Domain.Dtos.Groups;
+using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Groups;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Presentation.Api.Controllers;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Presentation.Api.Test.Controllers
@@ -75,6 +75,60 @@ namespace Presentation.Api.Test.Controllers
             Assert.Equal(1, actualGroup.GroupId);
 
             mediatorMock.Verify(m => m.Send(It.IsAny<CreateGroupCommand>(), It.IsAny<CancellationToken>()));
+        }
+
+        [Fact]
+        public async Task GetGroupById_ShouldReturnNotFoundResult_WhenGroupDoesNotExist()
+        {
+            // Arrange
+            const int groupId = 8821;
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GetGroupByIdQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((GroupResource) null);
+
+            GroupController controller = new GroupController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult<GroupResource> response = await controller.GetGroupById(groupId);
+
+            // Assert
+            NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.Equal(StatusCodes.Status404NotFound, error.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetGroupById_ShouldReturnGroup_WhenGroupExists()
+        {
+            // Arrange
+            const int groupId = 1;
+
+            GroupResource expectedGroup = new GroupResource
+            {
+                GroupId = groupId
+            };
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GetGroupByIdQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expectedGroup);
+
+            GroupController controller = new GroupController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult<GroupResource> response = await controller.GetGroupById(groupId);
+
+            // Assert
+            OkObjectResult result = Assert.IsType<OkObjectResult>(response.Result);
+
+            GroupResource actualGroup = Assert.IsType<GroupResource>(result.Value);
+
+            Assert.NotNull(actualGroup);
+            Assert.Equal(groupId, actualGroup.GroupId);
         }
     }
 }

@@ -10,5 +10,10 @@ namespace Core.Domain.Entities
         public string Shortcut { get; set; }
 
         public ICollection<MessageReaction> Reactions { get; set; }
+
+        public Emoji()
+        {
+            Reactions = new HashSet<MessageReaction>();
+        }
     }
 }

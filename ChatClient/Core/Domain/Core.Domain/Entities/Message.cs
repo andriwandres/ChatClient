@@ -17,5 +17,11 @@ namespace Core.Domain.Entities
 
         public ICollection<MessageReaction> Reactions { get; set; }
         public ICollection<MessageRecipient> MessageRecipients { get; set; }
+
+        public Message()
+        {
+            Reactions = new HashSet<MessageReaction>();
+            MessageRecipients = new HashSet<MessageRecipient>();
+        }
     }
 }

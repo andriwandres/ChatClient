@@ -10,6 +10,11 @@ namespace Core.Domain.Entities
         public string IndicatorOverlay { get; set; }
 
         public ICollection<Availability> Availabilities { get; set; }
+
+        public AvailabilityStatus()
+        {
+            Availabilities = new HashSet<Availability>();
+        }
     }
 
     public enum AvailabilityStatusId : int

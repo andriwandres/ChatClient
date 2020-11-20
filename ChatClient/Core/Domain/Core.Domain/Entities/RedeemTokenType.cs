@@ -8,6 +8,11 @@ namespace Core.Domain.Entities
         public string Name { get; set; }
 
         public ICollection<RedeemToken> Tokens { get; set; }
+
+        public RedeemTokenType()
+        {
+            Tokens = new HashSet<RedeemToken>();
+        }
     }
 
     public enum RedeemTokenTypeId

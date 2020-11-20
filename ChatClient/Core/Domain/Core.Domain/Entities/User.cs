@@ -34,5 +34,19 @@ namespace Core.Domain.Entities
         public ICollection<MessageReaction> MessageReactions { get; set; }
         public ICollection<NicknameAssignment> AddressedNicknames { get; set; }
         public ICollection<NicknameAssignment> RequestedNicknames { get; set; }
+
+        public User()
+        {
+            RedeemTokens = new HashSet<RedeemToken>();
+            ArchivedRecipients = new HashSet<ArchivedRecipient>();
+            PinnedRecipients = new HashSet<PinnedRecipient>();
+            AddressedFriendships = new HashSet<Friendship>();
+            RequestedFriendships = new HashSet<Friendship>();
+            GroupMemberships = new HashSet<GroupMembership>();
+            AuthoredMessages = new HashSet<Message>();
+            MessageReactions = new HashSet<MessageReaction>();
+            AddressedNicknames = new HashSet<NicknameAssignment>();
+            RequestedNicknames = new HashSet<NicknameAssignment>();
+        }
     }
 }

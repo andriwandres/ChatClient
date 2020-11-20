@@ -10,8 +10,16 @@ namespace Core.Domain.Entities
 
         public User User { get; set; }
         public GroupMembership GroupMembership { get; set; }
+
         public ICollection<PinnedRecipient> Pins { get; set; }
         public ICollection<ArchivedRecipient> Archives { get; set; }
         public ICollection<MessageRecipient> ReceivedMessages { get; set; }
+
+        public Recipient()
+        {
+            Pins = new HashSet<PinnedRecipient>();
+            Archives = new HashSet<ArchivedRecipient>();
+            ReceivedMessages = new HashSet<MessageRecipient>();
+        }
     }
 }

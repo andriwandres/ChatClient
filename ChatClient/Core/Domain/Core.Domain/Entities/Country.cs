@@ -9,5 +9,10 @@ namespace Core.Domain.Entities
         public string Name { get; set; }
 
         public ICollection<User> Users { get; set; }
+
+        public Country()
+        {
+            Users = new HashSet<User>();
+        }
     }
 }

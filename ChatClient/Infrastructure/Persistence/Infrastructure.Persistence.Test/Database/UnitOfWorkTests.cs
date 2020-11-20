@@ -56,14 +56,93 @@ namespace Infrastructure.Persistence.Test.Database
         }
 
         [Fact]
-        public void Users_ShouldLazyLoadRepository()
+        public async Task DisposeAsync_ShouldDisposeContextAsynchronously()
+        {
+            // Arrange
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+
+            IUnitOfWork unitOfWork = new UnitOfWork(contextMock.Object);
+
+            // Act
+            await unitOfWork.DisposeAsync();
+
+            // Assert
+            contextMock.Verify(m => m.DisposeAsync());
+        }
+
+        [Fact]
+        public void Countries_ShouldLazyLoadRepository()
         {
             // Arrange
             IUnitOfWork unitOfWork = new UnitOfWork(null);
 
             // Act
-            IUserRepository firstRepository = unitOfWork.Users;
-            IUserRepository secondRepository = unitOfWork.Users;
+            ICountryRepository firstRepository = unitOfWork.Countries;
+            ICountryRepository secondRepository = unitOfWork.Countries;
+
+            // Assert
+            Assert.NotNull(firstRepository);
+            Assert.NotNull(secondRepository);
+            Assert.Equal(firstRepository, secondRepository);
+        }
+
+        [Fact]
+        public void FriendshipChanges_ShouldLazyLoadRepository()
+        {
+            // Arrange
+            IUnitOfWork unitOfWork = new UnitOfWork(null);
+
+            // Act
+            IFriendshipChangeRepository firstRepository = unitOfWork.FriendshipChanges;
+            IFriendshipChangeRepository secondRepository = unitOfWork.FriendshipChanges;
+
+            // Assert
+            Assert.NotNull(firstRepository);
+            Assert.NotNull(secondRepository);
+            Assert.Equal(firstRepository, secondRepository);
+        }
+
+        [Fact]
+        public void Friendships_ShouldLazyLoadRepository()
+        {
+            // Arrange
+            IUnitOfWork unitOfWork = new UnitOfWork(null);
+
+            // Act
+            IFriendshipRepository firstRepository = unitOfWork.Friendships;
+            IFriendshipRepository secondRepository = unitOfWork.Friendships;
+
+            // Assert
+            Assert.NotNull(firstRepository);
+            Assert.NotNull(secondRepository);
+            Assert.Equal(firstRepository, secondRepository);
+        }
+
+        [Fact]
+        public void GroupMemberships_ShouldLazyLoadRepository()
+        {
+            // Arrange
+            IUnitOfWork unitOfWork = new UnitOfWork(null);
+
+            // Act
+            IGroupMembershipRepository firstRepository = unitOfWork.GroupMemberships;
+            IGroupMembershipRepository secondRepository = unitOfWork.GroupMemberships;
+
+            // Assert
+            Assert.NotNull(firstRepository);
+            Assert.NotNull(secondRepository);
+            Assert.Equal(firstRepository, secondRepository);
+        }
+
+        [Fact]
+        public void Groups_ShouldLazyLoadRepository()
+        {
+            // Arrange
+            IUnitOfWork unitOfWork = new UnitOfWork(null);
+
+            // Act
+            IGroupRepository firstRepository = unitOfWork.Groups;
+            IGroupRepository secondRepository = unitOfWork.Groups;
 
             // Assert
             Assert.NotNull(firstRepository);
@@ -88,6 +167,22 @@ namespace Infrastructure.Persistence.Test.Database
         }
 
         [Fact]
+        public void Recipients_ShouldLazyLoadRepository()
+        {
+            // Arrange
+            IUnitOfWork unitOfWork = new UnitOfWork(null);
+
+            // Act
+            IRecipientRepository firstRepository = unitOfWork.Recipients;
+            IRecipientRepository secondRepository = unitOfWork.Recipients;
+
+            // Assert
+            Assert.NotNull(firstRepository);
+            Assert.NotNull(secondRepository);
+            Assert.Equal(firstRepository, secondRepository);
+        }
+
+        [Fact]
         public void Translations_ShouldLazyLoadRepository()
         {
             // Arrange
@@ -96,6 +191,22 @@ namespace Infrastructure.Persistence.Test.Database
             // Act
             ITranslationRepository firstRepository = unitOfWork.Translations;
             ITranslationRepository secondRepository = unitOfWork.Translations;
+
+            // Assert
+            Assert.NotNull(firstRepository);
+            Assert.NotNull(secondRepository);
+            Assert.Equal(firstRepository, secondRepository);
+        }
+
+        [Fact]
+        public void Users_ShouldLazyLoadRepository()
+        {
+            // Arrange
+            IUnitOfWork unitOfWork = new UnitOfWork(null);
+
+            // Act
+            IUserRepository firstRepository = unitOfWork.Users;
+            IUserRepository secondRepository = unitOfWork.Users;
 
             // Assert
             Assert.NotNull(firstRepository);

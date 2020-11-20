@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Core.Application.Database
 {
-    public interface IChatContext : IDisposable
+    public interface IChatContext : IDisposable, IAsyncDisposable
     {
         DbSet<ArchivedRecipient> ArchivedRecipients { get; set; }
         DbSet<Availability> Availabilities { get; set; }
