@@ -203,5 +203,51 @@ namespace Presentation.Api.Test.Controllers
 
             mediatorMock.Verify(m => m.Send(It.IsAny<UpdateGroupCommand>(), It.IsAny<CancellationToken>()));
         }
+
+        [Fact]
+        public async Task DeleteGroup_ShouldReturnNotFoundResult_WhenGroupDoesNotExist()
+        {
+            // Arrange
+            const int groupId = 3894;
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GroupExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            GroupController controller = new GroupController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult response = await controller.DeleteGroup(groupId);
+
+            // Assert
+            NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.Equal(StatusCodes.Status404NotFound, error.StatusCode);
+        }
+
+        [Fact]
+        public async Task DeleteGroup_ShouldReturnDeleteGroup_WhenGroupExists()
+        {
+            // Arrange
+            const int groupId = 1;
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GroupExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            GroupController controller = new GroupController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult response = await controller.DeleteGroup(groupId);
+
+            // Assert
+            Assert.IsType<NoContentResult>(response);
+
+            mediatorMock.Verify(m => m.Send(It.IsAny<DeleteGroupCommand>(), It.IsAny<CancellationToken>()));
+        }
     }
 }
