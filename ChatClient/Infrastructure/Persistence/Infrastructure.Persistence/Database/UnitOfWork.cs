@@ -8,15 +8,17 @@ namespace Infrastructure.Persistence.Database
 {
     public class UnitOfWork : IUnitOfWork
     {
+        private readonly IChatContext _context;
+
         private CountryRepository _countryRepository;
         private FriendshipChangeRepository _friendshipChangeRepository;
         private FriendshipRepository _friendshipRepository;
+        private GroupMembershipRepository _groupMembershipRepository;
         private GroupRepository _groupRepository;
         private LanguageRepository _languageRepository;
+        private RecipientRepository _recipientRepository;
         private TranslationRepository _translationRepository;
         private UserRepository _userRepository;
-
-        private readonly IChatContext _context;
 
         public UnitOfWork(IChatContext context)
         {
@@ -26,8 +28,10 @@ namespace Infrastructure.Persistence.Database
         public ICountryRepository Countries => _countryRepository ??= new CountryRepository(_context);
         public IFriendshipChangeRepository FriendshipChanges => _friendshipChangeRepository ??= new FriendshipChangeRepository(_context);
         public IFriendshipRepository Friendships => _friendshipRepository ??= new FriendshipRepository(_context);
+        public IGroupMembershipRepository GroupMemberships => _groupMembershipRepository ??= new GroupMembershipRepository(_context);
         public IGroupRepository Groups => _groupRepository ??= new GroupRepository(_context);
         public ILanguageRepository Languages => _languageRepository ??= new LanguageRepository(_context);
+        public IRecipientRepository Recipients => _recipientRepository ??= new RecipientRepository(_context);
         public ITranslationRepository Translations => _translationRepository ??= new TranslationRepository(_context);
         public IUserRepository Users => _userRepository ??= new UserRepository(_context);
 

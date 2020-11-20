@@ -10,8 +10,10 @@ namespace Core.Application.Database
         ICountryRepository Countries { get; }
         IFriendshipChangeRepository FriendshipChanges { get; }
         IFriendshipRepository Friendships { get; }
+        IGroupMembershipRepository GroupMemberships { get; }
         IGroupRepository Groups { get; }
         ILanguageRepository Languages { get; }
+        IRecipientRepository Recipients { get; }
         ITranslationRepository Translations { get; }
         IUserRepository Users { get; }
 

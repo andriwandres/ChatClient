@@ -2,7 +2,6 @@
 using Core.Application.Database;
 using Core.Application.Repositories;
 using Core.Domain.Entities;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,9 +13,9 @@ namespace Infrastructure.Persistence.Repositories
         {
         }
 
-        public async Task Add(Group @group, CancellationToken cancellationToken = default)
+        public async Task Add(Group group, CancellationToken cancellationToken = default)
         {
-            throw new NotImplementedException();
+            await Context.Groups.AddAsync(group, cancellationToken);
         }
     }
 }

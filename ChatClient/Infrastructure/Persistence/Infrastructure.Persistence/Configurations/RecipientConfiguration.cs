@@ -25,12 +25,14 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasOne(recipient => recipient.GroupMembership)
                 .WithOne(membership => membership.Recipient)
-                .HasForeignKey<Recipient>(recipient => recipient.GroupMembershipId);
+                .HasForeignKey<Recipient>(recipient => recipient.GroupMembershipId)
+                .IsRequired(false);
 
             builder.HasOne(recipient => recipient.User)
                 .WithOne(user => user.Recipient)
                 .HasForeignKey<Recipient>(recipient => recipient.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.NoAction)
+                .IsRequired(false);
 
             builder.HasMany(recipient => recipient.Pins)
                 .WithOne(pin => pin.Recipient);

@@ -31,7 +31,6 @@ namespace Core.Application.Test.Requests.Users.Commands
 
             unitOfWorkMock
                 .Setup(m => m.Users.Add(It.IsAny<User>(), It.IsAny<CancellationToken>()))
-                .Callback<User, CancellationToken>((user, _) => user.UserId = 1)
                 .Returns(Task.CompletedTask);
 
             Mock<ICryptoService> cryptoServiceMock = new Mock<ICryptoService>();
@@ -55,8 +54,6 @@ namespace Core.Application.Test.Requests.Users.Commands
             int id = await handler.Handle(request);
 
             // Assert
-            Assert.NotInRange(id, int.MinValue, 0);
-
             unitOfWorkMock.Verify(m => m.Users.Add(It.IsAny<User>(), It.IsAny<CancellationToken>()));
             unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()));
         }

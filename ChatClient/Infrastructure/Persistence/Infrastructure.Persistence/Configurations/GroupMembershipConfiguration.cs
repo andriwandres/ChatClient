@@ -24,6 +24,9 @@ namespace Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasDefaultValue(false);
 
+            builder.Property(membership => membership.Created)
+                .IsRequired();
+
             // Relationships
             builder.HasOne(membership => membership.Recipient)
                 .WithOne(recipient => recipient.GroupMembership);

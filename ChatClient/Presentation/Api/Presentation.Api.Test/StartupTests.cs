@@ -11,11 +11,11 @@ namespace Presentation.Api.Test
         public void ConfigureServices_ShouldCorrectlyRegisterDependencies()
         {
             // Arrange
-            Dictionary<string, string> configurationDictionary = new Dictionary<string, string>
+            IDictionary<string, string> configurationDictionary = new Dictionary<string, string>
             {
                 { "ConnectionStrings:DefaultConnection", "TestConnectionString" },
                 { "JsonWebToken:Secret", "some_secret_string" },
-                { "CrossOriginResourceSharing:AllowedOrigins:0", "https://google.com" },
+                { "CrossOriginResourceSharing:AllowedOrigins:0", "http://localhost" },
                 { "CrossOriginResourceSharing:AllowedMethods:0", "GET" },
                 { "CrossOriginResourceSharing:AllowedHeaders:0", "*" },
             };

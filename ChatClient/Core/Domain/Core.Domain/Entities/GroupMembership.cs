@@ -1,4 +1,6 @@
-﻿namespace Core.Domain.Entities
+﻿using System;
+
+namespace Core.Domain.Entities
 {
     public class GroupMembership
     {
@@ -6,6 +8,7 @@
         public int GroupId { get; set; }
         public int UserId { get; set; }
         public bool IsAdmin { get; set; }
+        public DateTime Created { get; set; }
 
         public User User { get; set; }
         public Group Group { get; set; }

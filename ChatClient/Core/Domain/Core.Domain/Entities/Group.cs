@@ -14,5 +14,10 @@ namespace Core.Domain.Entities
 
         public DisplayImage GroupImage { get; set; }
         public ICollection<GroupMembership> Memberships { get; set; }
+
+        public Group()
+        {
+            Memberships = new HashSet<GroupMembership>();
+        }
     }
 }

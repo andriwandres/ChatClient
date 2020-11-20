@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Persistence.Migrations
 {
@@ -13,8 +13,7 @@ namespace Infrastructure.Persistence.Migrations
                 name: "AvailabilityStatuses",
                 columns: table => new
                 {
-                    AvailabilityStatusId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    AvailabilityStatusId = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: false),
                     IndicatorColor = table.Column<string>(nullable: false),
                     IndicatorOverlay = table.Column<string>(nullable: true)
@@ -70,8 +69,7 @@ namespace Infrastructure.Persistence.Migrations
                 name: "FriendshipStatuses",
                 columns: table => new
                 {
-                    FriendshipStatusId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FriendshipStatusId = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -97,8 +95,7 @@ namespace Infrastructure.Persistence.Migrations
                 name: "RedeemTokenTypes",
                 columns: table => new
                 {
-                    RedeemTokenTypeId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RedeemTokenTypeId = table.Column<int>(nullable: false),
                     Name = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
@@ -242,7 +239,8 @@ namespace Infrastructure.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     GroupId = table.Column<int>(nullable: false),
                     UserId = table.Column<int>(nullable: false),
-                    IsAdmin = table.Column<bool>(nullable: false, defaultValue: false)
+                    IsAdmin = table.Column<bool>(nullable: false, defaultValue: false),
+                    Created = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -408,7 +406,7 @@ namespace Infrastructure.Persistence.Migrations
                         column: x => x.GroupMembershipId,
                         principalTable: "GroupMemberships",
                         principalColumn: "GroupMembershipId",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Recipients_Users_UserId",
                         column: x => x.UserId,
