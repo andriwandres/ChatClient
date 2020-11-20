@@ -1,14 +1,17 @@
 ﻿using AutoMapper;
+using Core.Application.Requests.GroupMemberships.Queries;
 using Core.Application.Requests.Groups.Commands;
 using Core.Application.Requests.Groups.Queries;
 using Core.Domain.Dtos.Groups;
 using Core.Domain.Resources.Errors;
+using Core.Domain.Resources.GroupMemberships;
 using Core.Domain.Resources.Groups;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Presentation.Api.Controllers;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -248,6 +251,65 @@ namespace Presentation.Api.Test.Controllers
             Assert.IsType<NoContentResult>(response);
 
             mediatorMock.Verify(m => m.Send(It.IsAny<DeleteGroupCommand>(), It.IsAny<CancellationToken>()));
+        }
+
+        [Fact]
+        public async Task GetMembershipsByGroup_ShouldReturnNotFoundResult_WhenGroupDoesNotExist()
+        {
+            // Arrange
+            const int groupId = 842;
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GroupExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            GroupController controller = new GroupController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult<IEnumerable<GroupMembershipResource>> response = await controller.GetMembershipsByGroup(groupId);
+
+            // Assert
+            NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.Equal(StatusCodes.Status404NotFound, error.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetMembershipsByGroup_ShouldGetMemberships_WhenGroupExists()
+        {
+            // Arrange
+            const int groupId = 1;
+
+            IEnumerable<GroupMembershipResource> expectedMemberships = new []
+            {
+                new GroupMembershipResource { GroupMembershipId = 1, GroupId = 1 }
+            };
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GroupExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GetMembershipsByGroupQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expectedMemberships);
+
+
+            GroupController controller = new GroupController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult<IEnumerable<GroupMembershipResource>> response = await controller.GetMembershipsByGroup(groupId);
+
+            // Assert
+            OkObjectResult result = Assert.IsType<OkObjectResult>(response.Result);
+
+            IEnumerable<GroupMembershipResource> actualMemberships = (IEnumerable<GroupMembershipResource>) result.Value;
+
+            Assert.NotNull(actualMemberships);
+            Assert.Single(actualMemberships);
         }
     }
 }

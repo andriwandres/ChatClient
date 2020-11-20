@@ -1,6 +1,7 @@
 ﻿using Presentation.Api.Validation.Countries;
 using Presentation.Api.Validation.Errors;
 using Presentation.Api.Validation.Friendships;
+using Presentation.Api.Validation.GroupMemberships;
 using Presentation.Api.Validation.Groups;
 using Presentation.Api.Validation.Languages;
 using Presentation.Api.Validation.Session;
@@ -26,6 +27,9 @@ namespace Presentation.Api.Test.Validation
             Assert.NotNull(new FriendshipResourceValidator());
             Assert.NotNull(new RequestFriendshipDtoValidator());
             Assert.NotNull(new UpdateFriendshipStatusDtoValidator());
+
+            // GroupMemberships
+            Assert.NotNull(new GroupMembershipResourceValidator());
 
             // Groups
             Assert.NotNull(new CreateGroupDtoValidator());
