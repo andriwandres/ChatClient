@@ -169,6 +169,39 @@
              An unexpected error occurred
              </response>
         </member>
+        <member name="M:Presentation.Api.Controllers.GroupController.GetGroupById(System.Int32,System.Threading.CancellationToken)">
+             <summary>
+             Gets group information
+             </summary>
+            
+             <remarks>
+             Returns a single group by its ID
+             </remarks>
+             
+             <param name="groupId">
+             ID of the group to get
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             Group with given ID
+             </returns>
+            
+             <response code="200">
+             Contains group with given ID
+             </response>
+            
+             <response code="404">
+             A group with the given ID does not exist
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
         <member name="M:Presentation.Api.Controllers.LanguageController.GetAllLanguages(System.Threading.CancellationToken)">
              <summary>
              Gets a list of all languages
