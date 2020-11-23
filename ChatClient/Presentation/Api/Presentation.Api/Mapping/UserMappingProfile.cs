@@ -17,11 +17,11 @@ namespace Presentation.Api.Mapping
 
             CreateMap<User, UserProfileResource>();
 
-            CreateMap<UserNameExistsDto, UserNameExistsQuery>();
-            CreateMap<EmailExistsDto, EmailExistsQuery>();
+            CreateMap<UserNameExistsQueryParams, UserNameExistsQuery>();
+            CreateMap<EmailExistsQueryParams, EmailExistsQuery>();
 
-            CreateMap<RegisterUserDto, RegisterUserCommand>();
-            CreateMap<RegisterUserDto, UserNameOrEmailExistsQuery>();
+            CreateMap<CreateAccountBody, RegisterUserCommand>();
+            CreateMap<CreateAccountBody, UserNameOrEmailExistsQuery>();
         }
     }
 }

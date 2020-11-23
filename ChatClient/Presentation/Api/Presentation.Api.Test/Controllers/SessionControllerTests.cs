@@ -20,7 +20,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task Login_ShouldReturnBadRequestResult_WhenCredentialsFailValidation()
         {
             // Arrange
-            LoginUserDto credentials = new LoginUserDto();
+            LoginBody credentials = new LoginBody();
 
             SessionController controller = new SessionController(null, null);
 
@@ -37,7 +37,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task Login_ShouldReturnNotFoundResult_WhenCredentialsAreInvalid()
         {
             // Arrange
-            LoginUserDto credentials = new LoginUserDto
+            LoginBody credentials = new LoginBody
             {
                 UserNameOrEmail = "myUsername",
                 Password = "myPassword"
@@ -45,12 +45,12 @@ namespace Presentation.Api.Test.Controllers
 
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
             mediatorMock
-                .Setup(m => m.Send(It.IsAny<LoginUserQuery>(), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.IsAny<LoginQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((AuthenticatedUserResource)null);
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.CreateMap<LoginUserDto, LoginUserQuery>();
+                config.CreateMap<LoginBody, LoginQuery>();
             });
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();
@@ -74,7 +74,7 @@ namespace Presentation.Api.Test.Controllers
             // Arrange
             AuthenticatedUserResource expectedUser = new AuthenticatedUserResource() { UserId = 1 };
 
-            LoginUserDto credentials = new LoginUserDto
+            LoginBody credentials = new LoginBody
             {
                 UserNameOrEmail = "myUsername",
                 Password = "myPassword"
@@ -82,12 +82,12 @@ namespace Presentation.Api.Test.Controllers
 
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
             mediatorMock
-                .Setup(m => m.Send(It.IsAny<LoginUserQuery>(), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.IsAny<LoginQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(expectedUser);
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.CreateMap<LoginUserDto, LoginUserQuery>();
+                config.CreateMap<LoginBody, LoginQuery>();
             });
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();

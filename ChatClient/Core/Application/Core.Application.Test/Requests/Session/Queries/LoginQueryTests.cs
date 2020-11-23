@@ -21,7 +21,7 @@ namespace Core.Application.Test.Requests.Session.Queries
             // Arrange
             IEnumerable<User> expectedUser = new User[] { };
 
-            LoginUserQuery request = new LoginUserQuery
+            LoginQuery request = new LoginQuery
             {
                 UserNameOrEmail = "invalid.username@or.email"
             };
@@ -35,7 +35,7 @@ namespace Core.Application.Test.Requests.Session.Queries
                 .Setup(m => m.Users.GetByUserNameOrEmail(It.IsAny<string>()))
                 .Returns(userQueryableMock.Object);
 
-            LoginUserQuery.LoginUserQueryHandler handler = new LoginUserQuery.LoginUserQueryHandler(unitOfWorkMock.Object, null, null);
+            LoginQuery.LoginUserQueryHandler handler = new LoginQuery.LoginUserQueryHandler(unitOfWorkMock.Object, null, null);
 
             // Act
             AuthenticatedUserResource user = await handler.Handle(request);
@@ -50,7 +50,7 @@ namespace Core.Application.Test.Requests.Session.Queries
             // Arrange
             IEnumerable<User> expectedUser = new [] { new User() };
 
-            LoginUserQuery request = new LoginUserQuery
+            LoginQuery request = new LoginQuery
             {
                 UserNameOrEmail = "my@email.com",
                 Password = "wrongpassword"
@@ -70,7 +70,7 @@ namespace Core.Application.Test.Requests.Session.Queries
                 .Setup(m => m.VerifyPassword(It.IsAny<byte[]>(), It.IsAny<byte[]>(), It.IsAny<string>()))
                 .Returns(false);
 
-            LoginUserQuery.LoginUserQueryHandler handler = new LoginUserQuery.LoginUserQueryHandler(unitOfWorkMock.Object, null, cryptoServiceMock.Object);
+            LoginQuery.LoginUserQueryHandler handler = new LoginQuery.LoginUserQueryHandler(unitOfWorkMock.Object, null, cryptoServiceMock.Object);
 
             // Act
             AuthenticatedUserResource user = await handler.Handle(request);
@@ -90,7 +90,7 @@ namespace Core.Application.Test.Requests.Session.Queries
                 new User { UserId = 1 }
             };
 
-            LoginUserQuery request = new LoginUserQuery
+            LoginQuery request = new LoginQuery
             {
                 UserNameOrEmail = "my@email.com",
                 Password = "correctpassword"
@@ -121,7 +121,7 @@ namespace Core.Application.Test.Requests.Session.Queries
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();
 
-            LoginUserQuery.LoginUserQueryHandler handler = new LoginUserQuery.LoginUserQueryHandler(unitOfWorkMock.Object, mapperMock, cryptoServiceMock.Object);
+            LoginQuery.LoginUserQueryHandler handler = new LoginQuery.LoginUserQueryHandler(unitOfWorkMock.Object, mapperMock, cryptoServiceMock.Object);
 
             // Act
             AuthenticatedUserResource user = await handler.Handle(request);

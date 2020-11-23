@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Application.Requests.Friendships.Commands;
 using Core.Application.Requests.Friendships.Queries;
+using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Friendships;
 using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Friendships;
@@ -61,32 +62,53 @@ namespace Presentation.Api.Controllers
         /// Request body failed validation or the user combination for this friendship already exists
         /// </response>
         ///
+        /// <response code="404">
+        /// Provided addressee user does not exist
+        /// </response>
+        ///
         /// <response code="500">
         /// An unexpected error occurred
         /// </response>
         [HttpPost]
         [Authorize]
 
-        [SwaggerRequestExample(typeof(RequestFriendshipDto), typeof(RequestFriendshipRequestExample))]
+        [SwaggerRequestExample(typeof(RequestFriendshipBody), typeof(RequestFriendshipBodyExample))]
 
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [SwaggerResponseExample(StatusCodes.Status201Created, typeof(FriendshipResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status201Created, typeof(RequestFriendshipCreatedExample))]
 
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(RequestFriendshipValidationErrorResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(RequestFriendshipBadRequestExample))]
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(RequestFriendshipNotFoundExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-        public async Task<ActionResult<FriendshipResource>> RequestFriendship([FromBody] RequestFriendshipDto model, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<FriendshipResource>> RequestFriendship([FromBody] RequestFriendshipBody model, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            RequestFriendshipCommand command = _mapper.Map<RequestFriendshipDto, RequestFriendshipCommand>(model);
+            UserExistsQuery existsQuery = new UserExistsQuery { UserId = model.AddresseeId };
+
+            bool userExists = await _mediator.Send(existsQuery, cancellationToken);
+
+            if (!userExists)
+            {
+                return NotFound(new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = $"User with ID '{model.AddresseeId}' does not exist"
+                });
+            }
+
+            RequestFriendshipCommand command = _mapper.Map<RequestFriendshipBody, RequestFriendshipCommand>(model);
 
             FriendshipResource friendship = await _mediator.Send(command, cancellationToken);
 
@@ -128,11 +150,11 @@ namespace Presentation.Api.Controllers
         [Authorize]
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(FriendshipResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetFriendshipByIdOkExample))]
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(FriendshipNotFoundResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GetFriendshipByIdNotFoundExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
@@ -202,20 +224,20 @@ namespace Presentation.Api.Controllers
         
         [ProducesResponseType(StatusCodes.Status204NoContent)]
 
-        [SwaggerRequestExample(typeof(UpdateFriendshipStatusDto), typeof(UpdateFriendshipStatusRequestExample))]
+        [SwaggerRequestExample(typeof(UpdateFriendshipStatusBody), typeof(UpdateFriendshipStatusBodyExample))]
 
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(UpdateFriendshipStatusValidationErrorResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(UpdateFriendshipStatusBadRequestExample))]
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(FriendshipNotFoundResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(UpdateFriendshipStatusNotFoundExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-        public async Task<ActionResult> UpdateFriendshipStatus([FromRoute] int friendshipId, [FromBody] UpdateFriendshipStatusDto model, CancellationToken cancellationToken = default)
+        public async Task<ActionResult> UpdateFriendshipStatus([FromRoute] int friendshipId, [FromBody] UpdateFriendshipStatusBody model, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {

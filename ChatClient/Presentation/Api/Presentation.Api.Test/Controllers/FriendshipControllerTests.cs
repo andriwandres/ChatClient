@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Core.Application.Requests.Friendships.Commands;
 using Core.Application.Requests.Friendships.Queries;
+using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Friendships;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Errors;
@@ -22,7 +23,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task RequestFriendship_ShouldReturnBadRequestResult_WhenModelValidationFails()
         {
             // Arrange
-            RequestFriendshipDto model = new RequestFriendshipDto { AddresseeId = -123 };
+            RequestFriendshipBody model = new RequestFriendshipBody { AddresseeId = -123 };
 
             FriendshipController controller = new FriendshipController(null, null);
 
@@ -36,10 +37,35 @@ namespace Presentation.Api.Test.Controllers
         }
 
         [Fact]
+        public async Task RegisterFriendship_ShouldReturnNotFoundResult_WhenAddresseeUserDoesNotExist()
+        {
+            // Arrange
+            RequestFriendshipBody model = new RequestFriendshipBody { AddresseeId = 4142 };
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<UserExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            FriendshipController controller = new FriendshipController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult<FriendshipResource> response = await controller.RequestFriendship(model);
+
+            // Assert
+            NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.NotNull(error);
+            Assert.Equal(StatusCodes.Status404NotFound, error.StatusCode);
+        }
+
+        [Fact]
         public async Task RegisterFriendship_ShouldReturnCreatedResult_WithCreatedResource()
         {
             // Arrange
-            RequestFriendshipDto model = new RequestFriendshipDto { AddresseeId = 2 };
+            RequestFriendshipBody model = new RequestFriendshipBody { AddresseeId = 2 };
 
             FriendshipResource expectedFriendship = new FriendshipResource
             {
@@ -53,9 +79,13 @@ namespace Presentation.Api.Test.Controllers
                 .Setup(m => m.Send(It.IsAny<RequestFriendshipCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(expectedFriendship);
 
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<UserExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.CreateMap<RequestFriendshipDto, RequestFriendshipCommand>();
+                config.CreateMap<RequestFriendshipBody, RequestFriendshipCommand>();
             });
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();
@@ -142,7 +172,7 @@ namespace Presentation.Api.Test.Controllers
             // Arrange
             const int friendshipId = 87921;
 
-            UpdateFriendshipStatusDto model = new UpdateFriendshipStatusDto
+            UpdateFriendshipStatusBody model = new UpdateFriendshipStatusBody
             {
                 FriendshipStatusId = FriendshipStatusId.Accepted
             };
@@ -171,7 +201,7 @@ namespace Presentation.Api.Test.Controllers
             // Arrange
             const int friendshipId = 1;
 
-            UpdateFriendshipStatusDto model = new UpdateFriendshipStatusDto
+            UpdateFriendshipStatusBody model = new UpdateFriendshipStatusBody
             {
                 FriendshipStatusId = FriendshipStatusId.Accepted
             };

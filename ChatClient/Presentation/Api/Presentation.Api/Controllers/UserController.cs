@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Core.Application.Requests.Friendships.Queries;
 using Core.Application.Requests.Users.Commands;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Users;
@@ -10,14 +11,13 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Examples;
+using Presentation.Api.Examples.Friendships;
 using Presentation.Api.Examples.Users;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Application.Requests.Friendships.Queries;
-using Presentation.Api.Examples.Friendships;
 
 namespace Presentation.Api.Controllers
 {
@@ -75,27 +75,27 @@ namespace Presentation.Api.Controllers
         [AllowAnonymous]
 
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [SwaggerRequestExample(typeof(RegisterUserDto), typeof(RegisterUserRequestExample))]
+        [SwaggerRequestExample(typeof(CreateAccountBody), typeof(CreateAccountBodyExample))]
 
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(RegisterUserValidationErrorResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(CreateAccountBadRequestExample))]
 
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(RegisterUserForbiddenErrorResponse))]
+        [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(CreateAccountForbiddenExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-        public async Task<ActionResult> RegisterUser([FromBody] RegisterUserDto credentials, CancellationToken cancellationToken = default)
+        public async Task<ActionResult> CreateAccount([FromBody] CreateAccountBody credentials, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
             
-            UserNameOrEmailExistsQuery existsQuery = _mapper.Map<RegisterUserDto, UserNameOrEmailExistsQuery>(credentials);
+            UserNameOrEmailExistsQuery existsQuery = _mapper.Map<CreateAccountBody, UserNameOrEmailExistsQuery>(credentials);
 
             bool exists = await _mediator.Send(existsQuery, cancellationToken);
 
@@ -108,7 +108,7 @@ namespace Presentation.Api.Controllers
                 });
             }
 
-            RegisterUserCommand registerCommand = _mapper.Map<RegisterUserDto, RegisterUserCommand>(credentials);
+            RegisterUserCommand registerCommand = _mapper.Map<CreateAccountBody, RegisterUserCommand>(credentials);
 
             int userId = await _mediator.Send(registerCommand, cancellationToken);
 
@@ -151,11 +151,11 @@ namespace Presentation.Api.Controllers
         [Authorize]
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetUserProfileResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetUserProfileOkExample))]
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GetUserProfileNotFoundResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GetUserProfileNotFoundExample))]
         
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
@@ -224,14 +224,14 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> EmailExists([FromQuery] EmailExistsDto model, CancellationToken cancellationToken = default)
+        public async Task<ActionResult> EmailExists([FromQuery] EmailExistsQueryParams model, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            EmailExistsQuery query = _mapper.Map<EmailExistsDto, EmailExistsQuery>(model);
+            EmailExistsQuery query = _mapper.Map<EmailExistsQueryParams, EmailExistsQuery>(model);
 
             bool exists = await _mediator.Send(query, cancellationToken);
 
@@ -286,14 +286,14 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> UserNameExists([FromQuery] UserNameExistsDto model, CancellationToken cancellationToken = default)
+        public async Task<ActionResult> UserNameExists([FromQuery] UserNameExistsQueryParams model, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            UserNameExistsQuery query = _mapper.Map<UserNameExistsDto, UserNameExistsQuery>(model);
+            UserNameExistsQuery query = _mapper.Map<UserNameExistsQueryParams, UserNameExistsQuery>(model);
 
             bool exists = await _mediator.Send(query, cancellationToken);
 
@@ -332,7 +332,7 @@ namespace Presentation.Api.Controllers
         [Authorize]
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(AuthenticateResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(AuthenticateOkExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
@@ -373,7 +373,7 @@ namespace Presentation.Api.Controllers
         [Authorize]
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetOwnFriendshipsResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetOwnFriendshipsOkExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]

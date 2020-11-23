@@ -71,26 +71,26 @@ namespace Presentation.Api.Controllers
         [HttpPost]
         [Authorize]
 
-        [SwaggerRequestExample(typeof(CreateGroupDto), typeof(CreateGroupRequestExample))]
+        [SwaggerRequestExample(typeof(CreateGroupBody), typeof(CreateGroupBodyExample))]
 
         [ProducesResponseType(StatusCodes.Status201Created)]
-        [SwaggerResponseExample(StatusCodes.Status201Created, typeof(CreateGroupResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status201Created, typeof(CreateGroupCreatedExample))]
 
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(CreateGroupValidationErrorResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(CreateGroupBadRequestExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-        public async Task<ActionResult<GroupResource>> CreateGroup([FromBody] CreateGroupDto model, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<GroupResource>> CreateGroup([FromBody] CreateGroupBody model, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            CreateGroupCommand command = _mapper.Map<CreateGroupDto, CreateGroupCommand>(model);
+            CreateGroupCommand command = _mapper.Map<CreateGroupBody, CreateGroupCommand>(model);
 
             GroupResource group = await _mediator.Send(command, cancellationToken);
 
@@ -132,11 +132,11 @@ namespace Presentation.Api.Controllers
         [Authorize]
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetGroupByIdResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetGroupByIdOkExample))]
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GroupNotFoundResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GetGroupByIdNotFoundExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
@@ -204,22 +204,22 @@ namespace Presentation.Api.Controllers
         [HttpPut("{groupId:int}")]
         [Authorize]
 
-        [SwaggerRequestExample(typeof(UpdateGroupDto), typeof(UpdateGroupRequestExample))]
+        [SwaggerRequestExample(typeof(UpdateGroupBody), typeof(UpdateGroupBodyExample))]
 
         [ProducesResponseType(StatusCodes.Status204NoContent)]
 
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(UpdateGroupValidationErrorResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(UpdateGroupBadRequestExample))]
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GroupNotFoundResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(UpdateGroupNotFoundExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-        public async Task<ActionResult> UpdateGroup([FromRoute] int groupId, [FromBody] UpdateGroupDto model, CancellationToken cancellationToken = default)
+        public async Task<ActionResult> UpdateGroup([FromRoute] int groupId, [FromBody] UpdateGroupBody model, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
@@ -289,7 +289,7 @@ namespace Presentation.Api.Controllers
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GroupNotFoundResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(DeleteGroupNotFoundExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
@@ -351,11 +351,11 @@ namespace Presentation.Api.Controllers
         [Authorize]
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetMembershipsByGroupResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetMembershipsByGroupOkExample))]
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GroupNotFoundResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GetMembershipsByGroupNotFoundExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]

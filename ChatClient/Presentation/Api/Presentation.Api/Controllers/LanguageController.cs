@@ -1,4 +1,5 @@
 ﻿using Core.Application.Requests.Languages.Queries;
+using Core.Application.Requests.Translations.Queries;
 using Core.Domain.Dtos.Languages;
 using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Languages;
@@ -8,13 +9,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Examples;
 using Presentation.Api.Examples.Languages;
+using Presentation.Api.Examples.Translations;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Application.Requests.Translations.Queries;
-using Presentation.Api.Examples.Translations;
 
 namespace Presentation.Api.Controllers
 {
@@ -58,12 +58,12 @@ namespace Presentation.Api.Controllers
         [AllowAnonymous]
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetAllLanguagesResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetLanguagesOkExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-        public async Task<ActionResult<IEnumerable<LanguageResource>>> GetAllLanguages(CancellationToken cancellationToken = default)
+        public async Task<ActionResult<IEnumerable<LanguageResource>>> GetLanguages(CancellationToken cancellationToken = default)
         {
             GetAllLanguagesQuery query = new GetAllLanguagesQuery();
 
@@ -115,20 +115,20 @@ namespace Presentation.Api.Controllers
         [AllowAnonymous]
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetTranslationsByLanguageResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetTranslationsByLanguageOkExample))]
 
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(GetTranslationsByLanguageValidationErrorResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(GetTranslationsByLanguageBadRequestExample))]
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(LanguageNotFoundResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GetTranslationsByLanguageNotFoundExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-        public async Task<ActionResult<IDictionary<string, string>>> GetTranslationsByLanguage([FromRoute] int languageId, [FromQuery] GetTranslationsByLanguageDto model, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<IDictionary<string, string>>> GetTranslationsByLanguage([FromRoute] int languageId, [FromQuery] GetTranslationsByLanguageQueryParams model, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {

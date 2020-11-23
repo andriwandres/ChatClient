@@ -4,12 +4,12 @@ using System.Text.RegularExpressions;
 
 namespace Presentation.Api.Validation.Users
 {
-    public class UserNameExistsDtoValidator : AbstractValidator<UserNameExistsDto>
+    public class UserNameExistsDtoValidator : AbstractValidator<UserNameExistsQueryParams>
     {
         public UserNameExistsDtoValidator()
         {
             const int userNameMinLength = 2;
-            const string userNameName = nameof(UserNameExistsDto.UserName);
+            const string userNameName = nameof(UserNameExistsQueryParams.UserName);
             RuleFor(model => model.UserName)
                 .NotEmpty()
                 .WithMessage($"'{userNameName}' must not be empty")

@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Presentation.Api.Validation.GroupMemberships
 {
-    public class CreateMembershipDtoValidator : AbstractValidator<CreateMembershipDto>
+    public class CreateMembershipDtoValidator : AbstractValidator<CreateMembershipBody>
     {
         public CreateMembershipDtoValidator()
         {

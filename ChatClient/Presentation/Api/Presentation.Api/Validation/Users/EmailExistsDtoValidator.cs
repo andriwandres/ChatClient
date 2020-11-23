@@ -3,11 +3,11 @@ using FluentValidation;
 
 namespace Presentation.Api.Validation.Users
 {
-    public class EmailExistsDtoValidator : AbstractValidator<EmailExistsDto>
+    public class EmailExistsDtoValidator : AbstractValidator<EmailExistsQueryParams>
     {
         public EmailExistsDtoValidator()
         {
-            const string emailName = nameof(EmailExistsDto.Email);
+            const string emailName = nameof(EmailExistsQueryParams.Email);
             RuleFor(model => model.Email)
                 .NotEmpty()
                 .WithMessage($"'{emailName}' must not be empty")

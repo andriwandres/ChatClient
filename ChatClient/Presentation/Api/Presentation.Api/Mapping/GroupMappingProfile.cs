@@ -11,8 +11,8 @@ namespace Presentation.Api.Mapping
         public GroupMappingProfile()
         {
             CreateMap<Group, GroupResource>();
-            CreateMap<CreateGroupDto, CreateGroupCommand>();
-            CreateMap<UpdateGroupDto, UpdateGroupCommand>(MemberList.Source);
+            CreateMap<CreateGroupBody, CreateGroupCommand>();
+            CreateMap<UpdateGroupBody, UpdateGroupCommand>(MemberList.Source);
         }
     }
 }

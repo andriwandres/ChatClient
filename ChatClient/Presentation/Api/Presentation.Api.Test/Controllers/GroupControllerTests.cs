@@ -39,7 +39,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task CreateGroup_ShouldReturnCreatedResult_WhenGroupIsCreated()
         {
             // Arrange
-            CreateGroupDto model = new CreateGroupDto
+            CreateGroupBody model = new CreateGroupBody
             {
                 Name = "Some group name",
                 Description = "Some group description"
@@ -59,7 +59,7 @@ namespace Presentation.Api.Test.Controllers
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.CreateMap<CreateGroupDto, CreateGroupCommand>();
+                config.CreateMap<CreateGroupBody, CreateGroupCommand>();
             });
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();
@@ -155,7 +155,7 @@ namespace Presentation.Api.Test.Controllers
             // Arrange
             const int groupId = 15453;
 
-            UpdateGroupDto model = new UpdateGroupDto
+            UpdateGroupBody model = new UpdateGroupBody
             {
                 Name = "Some updated name",
                 Description = "Some updated description"
@@ -185,7 +185,7 @@ namespace Presentation.Api.Test.Controllers
             // Arrange
             const int groupId = 1;
 
-            UpdateGroupDto model = new UpdateGroupDto
+            UpdateGroupBody model = new UpdateGroupBody
             {
                 Name = "Some updated name",
                 Description = "Some updated description"

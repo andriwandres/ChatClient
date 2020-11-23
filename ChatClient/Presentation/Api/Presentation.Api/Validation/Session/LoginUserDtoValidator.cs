@@ -4,13 +4,13 @@ using System.Text.RegularExpressions;
 
 namespace Presentation.Api.Validation.Session
 {
-    public class LoginUserDtoValidator : AbstractValidator<LoginUserDto>
+    public class LoginUserDtoValidator : AbstractValidator<LoginBody>
     {
         public LoginUserDtoValidator()
         {
             // UserNameOrEmail
             const int userNameOrEmailMinLength = 2;
-            const string userNameOrEmailName = nameof(LoginUserDto.UserNameOrEmail);
+            const string userNameOrEmailName = nameof(LoginBody.UserNameOrEmail);
             RuleFor(model => model.UserNameOrEmail)
                 .NotEmpty()
                 .WithMessage($"'{userNameOrEmailName}' must not be empty")
@@ -33,7 +33,7 @@ namespace Presentation.Api.Validation.Session
 
             // Password
             const int passwordMinLength = 8;
-            const string passwordName = nameof(LoginUserDto.Password);
+            const string passwordName = nameof(LoginBody.Password);
             RuleFor(model => model.Password)
                 .NotEmpty()
                 .WithMessage($"'{passwordName}' must not be empty")

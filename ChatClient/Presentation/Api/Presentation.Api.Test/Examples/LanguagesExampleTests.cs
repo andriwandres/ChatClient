@@ -9,7 +9,7 @@ namespace Presentation.Api.Test.Examples
         [Fact]
         public void GetAllLanguagesResponseExample_ReturnsValidExample()
         {
-            GetAllLanguagesResponseExample provider = new GetAllLanguagesResponseExample();
+            GetLanguagesOkExample provider = new GetLanguagesOkExample();
 
             Assert.NotNull(provider.GetExamples());
             Assert.NotEmpty(provider.GetExamples());
@@ -18,7 +18,7 @@ namespace Presentation.Api.Test.Examples
         [Fact]
         public void GetTranslationsByLanguageResponseExample_ReturnsValidExample()
         {
-            GetTranslationsByLanguageResponseExample provider = new GetTranslationsByLanguageResponseExample();
+            GetTranslationsByLanguageOkExample provider = new GetTranslationsByLanguageOkExample();
 
             Assert.NotNull(provider.GetExamples());
             Assert.NotEmpty(provider.GetExamples());

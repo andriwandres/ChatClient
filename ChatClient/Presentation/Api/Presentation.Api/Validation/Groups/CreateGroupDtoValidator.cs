@@ -3,12 +3,12 @@ using FluentValidation;
 
 namespace Presentation.Api.Validation.Groups
 {
-    public class CreateGroupDtoValidator : AbstractValidator<CreateGroupDto>
+    public class CreateGroupDtoValidator : AbstractValidator<CreateGroupBody>
     {
         public CreateGroupDtoValidator()
         {
             const int nameMinLength = 2;
-            const string nameName = nameof(CreateGroupDto.Name);
+            const string nameName = nameof(CreateGroupBody.Name);
 
             RuleFor(model => model.Name)
                 .NotEmpty()

@@ -24,14 +24,14 @@ namespace Presentation.Api.Test.Controllers
         public async Task RegisterUser_ShouldReturnBadRequestResult_WhenCredentialsAreInvalid()
         {
             // Arrange
-            RegisterUserDto credentials = new RegisterUserDto();
+            CreateAccountBody credentials = new CreateAccountBody();
 
             UserController controller = new UserController(null, null);
 
             controller.ModelState.AddModelError("", "");
 
             // Act
-            ActionResult response = await controller.RegisterUser(credentials);
+            ActionResult response = await controller.CreateAccount(credentials);
 
             // Assert
             Assert.IsType<BadRequestObjectResult>(response);
@@ -41,7 +41,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task RegisterUser_ShouldReturnBadRequestResult_WhenUserNameOrEmailAlreadyExists()
         {
             // Arrange
-            RegisterUserDto credentials = new RegisterUserDto {UserName = "", Email = "", Password = ""};
+            CreateAccountBody credentials = new CreateAccountBody {UserName = "", Email = "", Password = ""};
 
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
             
@@ -51,7 +51,7 @@ namespace Presentation.Api.Test.Controllers
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.CreateMap<RegisterUserDto, UserNameOrEmailExistsQuery>();
+                config.CreateMap<CreateAccountBody, UserNameOrEmailExistsQuery>();
             });
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();
@@ -59,7 +59,7 @@ namespace Presentation.Api.Test.Controllers
             UserController controller = new UserController(mediatorMock.Object, mapperMock);
 
             // Act
-            ActionResult response = await controller.RegisterUser(credentials);
+            ActionResult response = await controller.CreateAccount(credentials);
 
             // Assert
             ObjectResult result = Assert.IsType<ObjectResult>(response);
@@ -73,7 +73,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task RegisterUser_ShouldReturnCreatedResult_WhenCredentialsAreValid()
         {
             // Arrange
-            RegisterUserDto credentials = new RegisterUserDto
+            CreateAccountBody credentials = new CreateAccountBody
             {
                 UserName = "myUsername",
                 Email = "my@email.address",
@@ -91,8 +91,8 @@ namespace Presentation.Api.Test.Controllers
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.CreateMap<RegisterUserDto, RegisterUserCommand>();
-                config.CreateMap<RegisterUserDto, UserNameOrEmailExistsQuery>();
+                config.CreateMap<CreateAccountBody, RegisterUserCommand>();
+                config.CreateMap<CreateAccountBody, UserNameOrEmailExistsQuery>();
             });
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();
@@ -100,7 +100,7 @@ namespace Presentation.Api.Test.Controllers
             UserController controller = new UserController(mediatorMock.Object, mapperMock);
 
             // Act
-            ActionResult response = await controller.RegisterUser(credentials);
+            ActionResult response = await controller.CreateAccount(credentials);
 
             // Assert
             CreatedAtActionResult result = Assert.IsType<CreatedAtActionResult>(response);
@@ -178,7 +178,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task EmailExists_ShouldReturnOkResult_WhenEmailExists()
         {
             // Arrange
-            EmailExistsDto dto = new EmailExistsDto { Email = "test@test.test" };
+            EmailExistsQueryParams queryParams = new EmailExistsQueryParams { Email = "test@test.test" };
 
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
             mediatorMock
@@ -187,7 +187,7 @@ namespace Presentation.Api.Test.Controllers
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.CreateMap<EmailExistsDto, EmailExistsQuery>();
+                config.CreateMap<EmailExistsQueryParams, EmailExistsQuery>();
             });
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();
@@ -195,7 +195,7 @@ namespace Presentation.Api.Test.Controllers
             UserController controller = new UserController(mediatorMock.Object, mapperMock);
 
             // Act
-            ActionResult response = await controller.EmailExists(dto);
+            ActionResult response = await controller.EmailExists(queryParams);
 
             // Assert
             Assert.IsType<OkResult>(response);
@@ -205,7 +205,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task EmailExists_ShouldReturnNotFoundResult_WhenEmailDoesNotExists()
         {
             // Arrange
-            EmailExistsDto dto = new EmailExistsDto { Email = "not@existing.email" };
+            EmailExistsQueryParams queryParams = new EmailExistsQueryParams { Email = "not@existing.email" };
 
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
             mediatorMock
@@ -214,7 +214,7 @@ namespace Presentation.Api.Test.Controllers
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.CreateMap<EmailExistsDto, EmailExistsQuery>();
+                config.CreateMap<EmailExistsQueryParams, EmailExistsQuery>();
             });
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();
@@ -222,7 +222,7 @@ namespace Presentation.Api.Test.Controllers
             UserController controller = new UserController(mediatorMock.Object, mapperMock);
 
             // Act
-            ActionResult response = await controller.EmailExists(dto);
+            ActionResult response = await controller.EmailExists(queryParams);
 
             // Assert
             Assert.IsType<NotFoundResult>(response);
@@ -247,7 +247,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task UserNameExists_ShouldReturnOkResult_WhenUserNameExists()
         {
             // Arrange
-            UserNameExistsDto dto = new UserNameExistsDto { UserName = "myUserName" };
+            UserNameExistsQueryParams queryParams = new UserNameExistsQueryParams { UserName = "myUserName" };
 
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
             mediatorMock
@@ -256,7 +256,7 @@ namespace Presentation.Api.Test.Controllers
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.CreateMap<UserNameExistsDto, UserNameExistsQuery>();
+                config.CreateMap<UserNameExistsQueryParams, UserNameExistsQuery>();
             });
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();
@@ -264,7 +264,7 @@ namespace Presentation.Api.Test.Controllers
             UserController controller = new UserController(mediatorMock.Object, mapperMock);
 
             // Act
-            ActionResult response = await controller.UserNameExists(dto);
+            ActionResult response = await controller.UserNameExists(queryParams);
 
             // Assert
             Assert.IsType<OkResult>(response);
@@ -274,7 +274,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task UserNameExists_ShouldReturnNotFoundResult_WhenUserNameDoesNotExists()
         {
             // Arrange
-            UserNameExistsDto dto = new UserNameExistsDto { UserName = "myUserName" };
+            UserNameExistsQueryParams queryParams = new UserNameExistsQueryParams { UserName = "myUserName" };
 
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
             mediatorMock
@@ -283,7 +283,7 @@ namespace Presentation.Api.Test.Controllers
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.CreateMap<UserNameExistsDto, UserNameExistsQuery>();
+                config.CreateMap<UserNameExistsQueryParams, UserNameExistsQuery>();
             });
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();
@@ -291,7 +291,7 @@ namespace Presentation.Api.Test.Controllers
             UserController controller = new UserController(mediatorMock.Object, mapperMock);
 
             // Act
-            ActionResult response = await controller.UserNameExists(dto);
+            ActionResult response = await controller.UserNameExists(queryParams);
 
             // Assert
             Assert.IsType<NotFoundResult>(response);

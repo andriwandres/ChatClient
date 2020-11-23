@@ -7,11 +7,11 @@ using System.Linq;
 
 namespace Presentation.Api.Validation.Friendships
 {
-    public class UpdateFriendshipStatusDtoValidator : AbstractValidator<UpdateFriendshipStatusDto>
+    public class UpdateFriendshipStatusDtoValidator : AbstractValidator<UpdateFriendshipStatusBody>
     {
         public UpdateFriendshipStatusDtoValidator()
         {
-            const string friendshipStatusIdName = nameof(UpdateFriendshipStatusDto.FriendshipStatusId);
+            const string friendshipStatusIdName = nameof(UpdateFriendshipStatusBody.FriendshipStatusId);
             IEnumerable<int> values = Enum
                 .GetValues(typeof(FriendshipStatusId))
                 .Cast<int>();

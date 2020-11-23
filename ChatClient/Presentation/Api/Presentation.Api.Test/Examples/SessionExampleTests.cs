@@ -8,7 +8,7 @@ namespace Presentation.Api.Test.Examples
         [Fact]
         public void LoginRequestExample_ReturnsValidExample()
         {
-            LoginRequestExample provider = new LoginRequestExample();
+            LoginBodyExample provider = new LoginBodyExample();
 
             Assert.NotNull(provider.GetExamples());
             Assert.NotEmpty(provider.GetExamples());
@@ -17,7 +17,7 @@ namespace Presentation.Api.Test.Examples
         [Fact]
         public void LoginResponseExample_ReturnsValidExample()
         {
-            LoginResponseExample provider = new LoginResponseExample();
+            LoginOkExample provider = new LoginOkExample();
 
             Assert.NotNull(provider.GetExamples());
         }

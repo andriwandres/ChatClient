@@ -4,11 +4,11 @@ using System.Text.RegularExpressions;
 
 namespace Presentation.Api.Validation.Users
 {
-    public class RegisterUserDtoValidator : AbstractValidator<RegisterUserDto>
+    public class RegisterUserDtoValidator : AbstractValidator<CreateAccountBody>
     {
         public RegisterUserDtoValidator()
         {
-            const string emailName = nameof(RegisterUserDto.Email);
+            const string emailName = nameof(CreateAccountBody.Email);
             RuleFor(model => model.Email)
                 .NotEmpty()
                 .WithMessage($"'{emailName}' must not be empty")
@@ -16,7 +16,7 @@ namespace Presentation.Api.Validation.Users
                 .WithMessage($"'{emailName}' has an invalid e-mail address format");
 
             const int userNameMinLength = 2;
-            const string userNameName = nameof(RegisterUserDto.UserName);
+            const string userNameName = nameof(CreateAccountBody.UserName);
             RuleFor(model => model.UserName)
                 .NotEmpty()
                 .WithMessage($"'{userNameName}' must not be empty")
@@ -26,7 +26,7 @@ namespace Presentation.Api.Validation.Users
                 .WithMessage($"'{userNameName}' contains illegal characters. Use only alphanumeric characters including underscores");
 
             const int passwordMinLength = 8;
-            const string passwordName = nameof(RegisterUserDto.Password);
+            const string passwordName = nameof(CreateAccountBody.Password);
             RuleFor(model => model.Password)
                 .NotEmpty()
                 .WithMessage($"'{passwordName}' must not be empty")

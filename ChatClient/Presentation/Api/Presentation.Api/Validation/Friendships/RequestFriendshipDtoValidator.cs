@@ -3,11 +3,11 @@ using FluentValidation;
 
 namespace Presentation.Api.Validation.Friendships
 {
-    public class RequestFriendshipDtoValidator : AbstractValidator<RequestFriendshipDto>
+    public class RequestFriendshipDtoValidator : AbstractValidator<RequestFriendshipBody>
     {
         public RequestFriendshipDtoValidator()
         {
-            const string addresseeIdName = nameof(RequestFriendshipDto.AddresseeId);
+            const string addresseeIdName = nameof(RequestFriendshipBody.AddresseeId);
             RuleFor(request => request.AddresseeId)
                 .NotEmpty()
                 .WithMessage($"'{addresseeIdName}' must contain a value")

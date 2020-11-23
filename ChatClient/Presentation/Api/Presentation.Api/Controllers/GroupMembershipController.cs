@@ -73,14 +73,14 @@ namespace Presentation.Api.Controllers
         [HttpPost]
         [Authorize]
 
-        [SwaggerRequestExample(typeof(CreateMembershipDto), typeof(CreateMembershipBodyExample))]
+        [SwaggerRequestExample(typeof(CreateMembershipBody), typeof(CreateMembershipBodyExample))]
 
         [ProducesResponseType(StatusCodes.Status201Created)]
         [SwaggerResponseExample(StatusCodes.Status201Created, typeof(CreateMembershipCreatedExample))]
 
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(CreateMembershipValidationErrorResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(CreateMembershipBadRequestExample))]
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
@@ -89,7 +89,7 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-        public async Task<ActionResult<GroupMembershipResource>> CreateMembership([FromBody] CreateMembershipDto model, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<GroupMembershipResource>> CreateMembership([FromBody] CreateMembershipBody model, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
@@ -124,7 +124,7 @@ namespace Presentation.Api.Controllers
                 });
             }
 
-            CreateMembershipCommand createCommand = _mapper.Map<CreateMembershipDto, CreateMembershipCommand>(model);
+            CreateMembershipCommand createCommand = _mapper.Map<CreateMembershipBody, CreateMembershipCommand>(model);
 
             GroupMembershipResource membership = await _mediator.Send(createCommand, cancellationToken);
 

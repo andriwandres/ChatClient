@@ -11,7 +11,7 @@ namespace Presentation.Api.Mapping
         public FriendshipMappingProfile()
         {
             CreateMap<Friendship, FriendshipResource>();
-            CreateMap<RequestFriendshipDto, RequestFriendshipCommand>();
+            CreateMap<RequestFriendshipBody, RequestFriendshipCommand>();
         }
     }
 }

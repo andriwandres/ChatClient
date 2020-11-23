@@ -8,7 +8,7 @@ namespace Presentation.Api.Test.Examples
         [Fact]
         public void AuthenticateResponseExample_ReturnsValidExample()
         {
-            AuthenticateResponseExample provider = new AuthenticateResponseExample();
+            AuthenticateOkExample provider = new AuthenticateOkExample();
 
             Assert.NotNull(provider.GetExamples());
         }
@@ -16,7 +16,7 @@ namespace Presentation.Api.Test.Examples
         [Fact]
         public void GetUserProfileResponseExample_ReturnsValidExample()
         {
-            GetUserProfileResponseExample provider = new GetUserProfileResponseExample();
+            GetUserProfileOkExample provider = new GetUserProfileOkExample();
 
             Assert.NotNull(provider.GetExamples());
         }
@@ -24,7 +24,7 @@ namespace Presentation.Api.Test.Examples
         [Fact]
         public void RegisterUserRequestExample_ReturnsValidExample()
         {
-            RegisterUserRequestExample provider = new RegisterUserRequestExample();
+            CreateAccountBodyExample provider = new CreateAccountBodyExample();
 
             Assert.NotNull(provider.GetExamples());
         }

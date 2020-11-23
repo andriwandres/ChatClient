@@ -69,30 +69,30 @@ namespace Presentation.Api.Controllers
         [HttpPut]
         [AllowAnonymous]
 
-        [SwaggerRequestExample(typeof(LoginUserDto), typeof(LoginRequestExample))]
+        [SwaggerRequestExample(typeof(LoginBody), typeof(LoginBodyExample))]
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(LoginResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(LoginOkExample))]
 
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(LoginValidationErrorResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(LoginBadRequestExample))]
 
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         [SwaggerResponse(StatusCodes.Status401Unauthorized, Type = typeof(ErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status401Unauthorized, typeof(LoginCredentialsInvalidResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status401Unauthorized, typeof(LoginUnauthorizedExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-        public async Task<ActionResult<AuthenticatedUserResource>> Login([FromBody] LoginUserDto credentials, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<AuthenticatedUserResource>> Login([FromBody] LoginBody credentials, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            LoginUserQuery query = _mapper.Map<LoginUserDto, LoginUserQuery>(credentials);
+            LoginQuery query = _mapper.Map<LoginBody, LoginQuery>(credentials);
 
             AuthenticatedUserResource user = await _mediator.Send(query, cancellationToken);
 

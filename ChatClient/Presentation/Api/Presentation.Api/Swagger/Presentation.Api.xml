@@ -29,7 +29,7 @@
              An unexpected error occurred
              </response>
         </member>
-        <member name="M:Presentation.Api.Controllers.FriendshipController.RequestFriendship(Core.Domain.Dtos.Friendships.RequestFriendshipDto,System.Threading.CancellationToken)">
+        <member name="M:Presentation.Api.Controllers.FriendshipController.RequestFriendship(Core.Domain.Dtos.Friendships.RequestFriendshipBody,System.Threading.CancellationToken)">
              <summary>
              Requests a new friendship
              </summary>
@@ -56,6 +56,10 @@
             
              <response code="400">
              Request body failed validation or the user combination for this friendship already exists
+             </response>
+            
+             <response code="404">
+             Provided addressee user does not exist
              </response>
             
              <response code="500">
@@ -95,7 +99,7 @@
              An unexpected error occurred
              </response>
         </member>
-        <member name="M:Presentation.Api.Controllers.FriendshipController.UpdateFriendshipStatus(System.Int32,Core.Domain.Dtos.Friendships.UpdateFriendshipStatusDto,System.Threading.CancellationToken)">
+        <member name="M:Presentation.Api.Controllers.FriendshipController.UpdateFriendshipStatus(System.Int32,Core.Domain.Dtos.Friendships.UpdateFriendshipStatusBody,System.Threading.CancellationToken)">
              <summary>
              Updates a friendships status
              </summary>
@@ -136,7 +140,7 @@
              An unexpected error occurred
              </response>
         </member>
-        <member name="M:Presentation.Api.Controllers.GroupController.CreateGroup(Core.Domain.Dtos.Groups.CreateGroupDto,System.Threading.CancellationToken)">
+        <member name="M:Presentation.Api.Controllers.GroupController.CreateGroup(Core.Domain.Dtos.Groups.CreateGroupBody,System.Threading.CancellationToken)">
              <summary>
              Creates a new group
              </summary>
@@ -202,7 +206,7 @@
              An unexpected error occurred
              </response>
         </member>
-        <member name="M:Presentation.Api.Controllers.GroupController.UpdateGroup(System.Int32,Core.Domain.Dtos.Groups.UpdateGroupDto,System.Threading.CancellationToken)">
+        <member name="M:Presentation.Api.Controllers.GroupController.UpdateGroup(System.Int32,Core.Domain.Dtos.Groups.UpdateGroupBody,System.Threading.CancellationToken)">
              <summary>
              Updates a group
              </summary>
@@ -309,7 +313,7 @@
              An unexpected error occurred
              </response>
         </member>
-        <member name="M:Presentation.Api.Controllers.GroupMembershipController.CreateMembership(Core.Domain.Dtos.GroupMemberships.CreateMembershipDto,System.Threading.CancellationToken)">
+        <member name="M:Presentation.Api.Controllers.GroupMembershipController.CreateMembership(Core.Domain.Dtos.GroupMemberships.CreateMembershipBody,System.Threading.CancellationToken)">
              <summary>
              Creates a new group membership
              </summary>
@@ -372,7 +376,7 @@
              An unexpected error occurred
              </response>
         </member>
-        <member name="M:Presentation.Api.Controllers.LanguageController.GetTranslationsByLanguage(System.Int32,Core.Domain.Dtos.Languages.GetTranslationsByLanguageDto,System.Threading.CancellationToken)">
+        <member name="M:Presentation.Api.Controllers.LanguageController.GetTranslationsByLanguage(System.Int32,Core.Domain.Dtos.Languages.GetTranslationsByLanguageQueryParams,System.Threading.CancellationToken)">
              <summary>
              Gets a list of translations
              </summary>
@@ -413,7 +417,7 @@
              An unexpected error occurred
              </response>
         </member>
-        <member name="M:Presentation.Api.Controllers.SessionController.Login(Core.Domain.Dtos.Session.LoginUserDto,System.Threading.CancellationToken)">
+        <member name="M:Presentation.Api.Controllers.SessionController.Login(Core.Domain.Dtos.Session.LoginBody,System.Threading.CancellationToken)">
              <summary>
              Signs the user in to a new session
              </summary>
@@ -450,7 +454,7 @@
              An unexpected error occurred
              </response>
         </member>
-        <member name="M:Presentation.Api.Controllers.UserController.RegisterUser(Core.Domain.Dtos.Users.RegisterUserDto,System.Threading.CancellationToken)">
+        <member name="M:Presentation.Api.Controllers.UserController.RegisterUser(Core.Domain.Dtos.Users.CreateAccountBody,System.Threading.CancellationToken)">
              <summary>
              Creates a new user account
              </summary>
@@ -521,7 +525,7 @@
              An unexpected error occurred on the server
              </response>
         </member>
-        <member name="M:Presentation.Api.Controllers.UserController.EmailExists(Core.Domain.Dtos.Users.EmailExistsDto,System.Threading.CancellationToken)">
+        <member name="M:Presentation.Api.Controllers.UserController.EmailExists(Core.Domain.Dtos.Users.EmailExistsQueryParams,System.Threading.CancellationToken)">
              <summary>
              Checks email availability
              </summary>
@@ -560,7 +564,7 @@
              An unexpected error occurred on the server
              </response>
         </member>
-        <member name="M:Presentation.Api.Controllers.UserController.UserNameExists(Core.Domain.Dtos.Users.UserNameExistsDto,System.Threading.CancellationToken)">
+        <member name="M:Presentation.Api.Controllers.UserController.UserNameExists(Core.Domain.Dtos.Users.UserNameExistsQueryParams,System.Threading.CancellationToken)">
              <summary>
              Checks user name availability
              </summary>
