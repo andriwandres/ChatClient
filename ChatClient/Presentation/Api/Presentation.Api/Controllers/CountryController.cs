@@ -56,7 +56,7 @@ namespace Presentation.Api.Controllers
         [AllowAnonymous]
 
         [ProducesResponseType(StatusCodes.Status200OK)]
-        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetCountriesResponseExample))]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetCountriesOkExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]

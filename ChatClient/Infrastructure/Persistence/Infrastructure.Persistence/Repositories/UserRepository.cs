@@ -31,6 +31,13 @@ namespace Infrastructure.Persistence.Repositories
                 .Where(user => user.UserName.ToLower() == userNameOrEmail || user.Email.ToLower() == userNameOrEmail);
         }
 
+        public async Task<bool> Exists(int userId, CancellationToken cancellationToken = default)
+        {
+            return await Context.Users
+                .AsNoTracking()
+                .AnyAsync(user => user.UserId == userId, cancellationToken);
+        }
+
         public async Task<bool> EmailExists(string email, CancellationToken cancellationToken = default)
         {
             email = email.ToLower();

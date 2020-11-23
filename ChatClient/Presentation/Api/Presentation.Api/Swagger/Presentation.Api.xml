@@ -309,6 +309,44 @@
              An unexpected error occurred
              </response>
         </member>
+        <member name="M:Presentation.Api.Controllers.GroupMembershipController.CreateMembership(Core.Domain.Dtos.GroupMemberships.CreateMembershipDto,System.Threading.CancellationToken)">
+             <summary>
+             Creates a new group membership
+             </summary>
+            
+             <remarks>
+             Adds a new user to the list of members of a group
+             </remarks>
+             
+             <param name="model">
+             Specifies information about the membership to create
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             Created membership
+             </returns>
+            
+             <response code="201">
+             Creation was successful. Response contains created membership
+             </response>
+            
+             <response code="400">
+             Request body was invalid
+             </response>
+            
+             <response code="404">
+                 <para>1.) Provided user does not exist</para>
+                 <para>2.) Provided group does not exist</para>
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
         <member name="M:Presentation.Api.Controllers.LanguageController.GetAllLanguages(System.Threading.CancellationToken)">
              <summary>
              Gets a list of all languages

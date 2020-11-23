@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.Countries
 {
-    public class GetCountriesResponseExample : IExamplesProvider<IEnumerable<CountryResource>>
+    public class GetCountriesOkExample : IExamplesProvider<IEnumerable<CountryResource>>
     {
         public IEnumerable<CountryResource> GetExamples()
         {
