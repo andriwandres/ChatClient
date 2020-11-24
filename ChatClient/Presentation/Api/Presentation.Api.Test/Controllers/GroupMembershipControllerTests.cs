@@ -38,7 +38,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task CreateMembership_ShouldReturnNotFoundResult_WhenGroupDoesNotExist()
         {
             // Arrange
-            CreateMembershipBody body = new CreateMembershipBody {GroupId = 6541, UserId = 1};
+            CreateMembershipBody body = new CreateMembershipBody {GroupId = 6541, UserId = 1, IsAdmin = false};
 
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
             mediatorMock
@@ -63,7 +63,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task CreateMembership_ShouldReturnNotFoundResult_WhenUserDoesNotExist()
         {
             // Arrange
-            CreateMembershipBody body = new CreateMembershipBody { GroupId = 1, UserId = 751 };
+            CreateMembershipBody body = new CreateMembershipBody { GroupId = 1, UserId = 751, IsAdmin = false};
 
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
             mediatorMock
@@ -92,7 +92,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task CreateMembership_ShouldReturnForbiddenResult_WhenMembershipCombinationAlreadyExists()
         {
             // Arrange
-            CreateMembershipBody body = new CreateMembershipBody { GroupId = 1, UserId = 1 };
+            CreateMembershipBody body = new CreateMembershipBody { GroupId = 1, UserId = 1, IsAdmin = false};
 
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
             mediatorMock
@@ -132,7 +132,7 @@ namespace Presentation.Api.Test.Controllers
         public async Task CreateMembership_ShouldReturnCreatedResult_WhenMembershipWasCreated()
         {
             // Arrange
-            CreateMembershipBody body = new CreateMembershipBody {GroupId = 1, UserId = 1};
+            CreateMembershipBody body = new CreateMembershipBody {GroupId = 1, UserId = 1, IsAdmin = false};
 
             GroupMembershipResource expectedMembership = new GroupMembershipResource
             {
@@ -178,6 +178,58 @@ namespace Presentation.Api.Test.Controllers
 
             Assert.NotNull(createdMembership);
             Assert.Equal(expectedMembership, createdMembership);
+        }
+
+        [Fact]
+        public async Task GetMembershipById_ShouldReturnNotFoundResult_WhenMembershipDoesNotExist()
+        {
+            // Arrange
+            const int membershipId = 482;
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GetMembershipByIdQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync((GroupMembershipResource) null);
+
+            GroupMembershipController controller = new GroupMembershipController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult<GroupMembershipResource> response = await controller.GetMembershipById(membershipId);
+
+            // Assert
+            NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.NotNull(error);
+            Assert.Equal(StatusCodes.Status404NotFound, error.StatusCode);
+        }
+
+        [Fact]
+        public async Task GetMembershipById_ShouldReturnOkResult_WhenMembershipExists()
+        {
+            // Arrange
+            const int membershipId = 1;
+
+            GroupMembershipResource expectedMembership = new GroupMembershipResource {GroupMembershipId = membershipId};
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GetMembershipByIdQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expectedMembership);
+
+            GroupMembershipController controller = new GroupMembershipController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult<GroupMembershipResource> response = await controller.GetMembershipById(membershipId);
+
+            // Assert
+            OkObjectResult result = Assert.IsType<OkObjectResult>(response.Result);
+
+            GroupMembershipResource membership = Assert.IsType<GroupMembershipResource>(result.Value);
+
+            Assert.NotNull(membership);
+            Assert.Equal(expectedMembership, membership);
         }
     }
 }

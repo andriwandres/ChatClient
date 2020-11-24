@@ -154,11 +154,67 @@ namespace Presentation.Api.Controllers
             return CreatedAtAction(nameof(GetMembershipById), new { membershipId = membership.GroupMembershipId }, membership);
         }
 
+
+        /// <summary>
+        /// Gets a single membership
+        /// </summary>
+        ///
+        /// <remarks>
+        /// Returns a single group membership by its ID
+        /// </remarks>
+        /// 
+        /// <param name="membershipId">
+        /// The ID of the membership to get
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">
+        /// Notifies asynchronous operations to cancel ongoing work and release resources
+        /// </param>
+        /// 
+        /// <returns>
+        /// Group membership that matches given ID
+        /// </returns>
+        ///
+        /// <response code="200">
+        /// Contains matching membership
+        /// </response>
+        ///
+        /// <response code="404">
+        /// Membership with given ID does not exist
+        /// </response>
+        ///
+        /// <response code="500">
+        /// An unexpected error occurred
+        /// </response>
         [HttpGet("{membershipId:int}")]
         [Authorize]
+
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetMembershipByIdOkExample))]
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GetMembershipByIdNotFoundExample))]
+
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult<GroupMembershipResource>> GetMembershipById([FromRoute] int membershipId, CancellationToken cancellationToken = default)
         {
-            return NoContent();
+            GetMembershipByIdQuery fetchQuery = new GetMembershipByIdQuery {GroupMembershipId = membershipId};
+
+            GroupMembershipResource membership = await _mediator.Send(fetchQuery, cancellationToken);
+
+            if (membership == null)
+            {
+                return NotFound(new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = $"Membership with ID '{membershipId}' does not exist"
+                });
+            }
+
+            return Ok(membership);
         }
 
         [HttpPut("{membershipId:int}")]

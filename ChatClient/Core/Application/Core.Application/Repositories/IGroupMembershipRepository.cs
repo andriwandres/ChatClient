@@ -7,7 +7,9 @@ namespace Core.Application.Repositories
 {
     public interface IGroupMembershipRepository
     {
+        IQueryable<GroupMembership> GetById(int membershipId);
         IQueryable<GroupMembership> GetByGroup(int groupId);
+        Task<bool> Exists(int membershipId, CancellationToken cancellationToken = default);
         Task<bool> CombinationExists(int groupId, int userId, CancellationToken cancellationToken = default);
         Task Add(GroupMembership membership, CancellationToken cancellationToken = default);
     }

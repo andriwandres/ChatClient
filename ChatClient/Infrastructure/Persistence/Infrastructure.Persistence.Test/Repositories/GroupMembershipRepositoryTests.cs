@@ -143,5 +143,143 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Assert
             Assert.False(exists);
         }
+
+        [Fact]
+        public async Task GetById_ShouldReturnEmptyQueryable_WhenIdDoesNotMatch()
+        {
+            // Arrange
+            const int membershipId = 43289;
+
+            IEnumerable<GroupMembership> databaseMemberships = new[]
+            {
+                new GroupMembership { GroupMembershipId = 1, GroupId = 1, UserId = 1 },
+                new GroupMembership { GroupMembershipId = 2, GroupId = 1, UserId = 2},
+                new GroupMembership { GroupMembershipId = 3, GroupId = 2, UserId = 1 },
+                new GroupMembership { GroupMembershipId = 4, GroupId = 3, UserId = 1},
+            };
+
+            DbSet<GroupMembership> membershipDbSetMock = databaseMemberships
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.GroupMemberships)
+                .Returns(membershipDbSetMock);
+
+            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+
+            // Act
+            IEnumerable<GroupMembership> memberships = await repository
+                .GetById(membershipId)
+                .ToListAsync();
+
+            // Assert
+            Assert.NotNull(memberships);
+            Assert.Empty(memberships);
+        }
+
+        [Fact]
+        public async Task GetById_ShouldReturnMembership_WhenIdMatches()
+        {
+            // Arrange
+            const int membershipId = 2;
+
+            IEnumerable<GroupMembership> databaseMemberships = new[]
+            {
+                new GroupMembership { GroupMembershipId = 1, GroupId = 1, UserId = 1 },
+                new GroupMembership { GroupMembershipId = 2, GroupId = 1, UserId = 2},
+                new GroupMembership { GroupMembershipId = 3, GroupId = 2, UserId = 1 },
+                new GroupMembership { GroupMembershipId = 4, GroupId = 3, UserId = 1},
+            };
+
+            DbSet<GroupMembership> membershipDbSetMock = databaseMemberships
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.GroupMemberships)
+                .Returns(membershipDbSetMock);
+
+            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+
+            // Act
+            GroupMembership membership = await repository
+                .GetById(membershipId)
+                .SingleOrDefaultAsync();
+
+            // Assert
+            Assert.NotNull(membership);
+            Assert.Equal(membershipId, membership.GroupMembershipId);
+        }
+
+        [Fact]
+        public async Task Exists_ShouldReturnTrue_WhenIdMatches()
+        {
+            // Arrange
+            const int membershipId = 2;
+
+            IEnumerable<GroupMembership> databaseMemberships = new[]
+            {
+                new GroupMembership { GroupMembershipId = 1, GroupId = 1, UserId = 1 },
+                new GroupMembership { GroupMembershipId = 2, GroupId = 1, UserId = 2},
+                new GroupMembership { GroupMembershipId = 3, GroupId = 2, UserId = 1 },
+                new GroupMembership { GroupMembershipId = 4, GroupId = 3, UserId = 1},
+            };
+
+            DbSet<GroupMembership> membershipDbSetMock = databaseMemberships
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.GroupMemberships)
+                .Returns(membershipDbSetMock);
+
+            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+
+            // Act
+            bool exists = await repository.Exists(membershipId);
+
+            // Assert
+            Assert.True(exists);
+        }
+
+        [Fact]
+        public async Task Exists_ShouldReturnFalse_WhenIdDoesNotMatch()
+        {
+            // Arrange
+            const int membershipId = 5452;
+
+            IEnumerable<GroupMembership> databaseMemberships = new[]
+            {
+                new GroupMembership { GroupMembershipId = 1, GroupId = 1, UserId = 1 },
+                new GroupMembership { GroupMembershipId = 2, GroupId = 1, UserId = 2},
+                new GroupMembership { GroupMembershipId = 3, GroupId = 2, UserId = 1 },
+                new GroupMembership { GroupMembershipId = 4, GroupId = 3, UserId = 1},
+            };
+
+            DbSet<GroupMembership> membershipDbSetMock = databaseMemberships
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.GroupMemberships)
+                .Returns(membershipDbSetMock);
+
+            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+
+            // Act
+            bool exists = await repository.Exists(membershipId);
+
+            // Assert
+            Assert.False(exists);
+        }
     }
 }

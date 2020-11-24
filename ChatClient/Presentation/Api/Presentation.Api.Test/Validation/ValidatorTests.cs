@@ -35,6 +35,7 @@ namespace Presentation.Api.Test.Validation
             // Groups
             Assert.NotNull(new CreateGroupBodyValidator());
             Assert.NotNull(new UpdateGroupBodyValidator());
+            Assert.NotNull(new GroupResourceValidator());
 
             // Languages
             Assert.NotNull(new LanguageResourceValidator());

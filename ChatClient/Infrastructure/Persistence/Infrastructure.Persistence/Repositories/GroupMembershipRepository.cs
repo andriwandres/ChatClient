@@ -15,11 +15,25 @@ namespace Infrastructure.Persistence.Repositories
         {
         }
 
+        public IQueryable<GroupMembership> GetById(int membershipId)
+        {
+            return Context.GroupMemberships
+                .AsNoTracking()
+                .Where(membership => membership.GroupMembershipId == membershipId);
+        }
+
         public IQueryable<GroupMembership> GetByGroup(int groupId)
         {
             return Context.GroupMemberships
                 .AsNoTracking()
                 .Where(membership => membership.GroupId == groupId);
+        }
+
+        public async Task<bool> Exists(int membershipId, CancellationToken cancellationToken = default)
+        {
+            return await Context.GroupMemberships
+                .AsNoTracking()
+                .AnyAsync(membership => membership.GroupMembershipId == membershipId, cancellationToken);
         }
 
         public async Task<bool> CombinationExists(int groupId, int userId, CancellationToken cancellationToken = default)
