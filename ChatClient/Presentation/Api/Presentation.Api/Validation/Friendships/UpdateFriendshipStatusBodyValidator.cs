@@ -7,9 +7,9 @@ using System.Linq;
 
 namespace Presentation.Api.Validation.Friendships
 {
-    public class UpdateFriendshipStatusDtoValidator : AbstractValidator<UpdateFriendshipStatusBody>
+    public class UpdateFriendshipStatusBodyValidator : AbstractValidator<UpdateFriendshipStatusBody>
     {
-        public UpdateFriendshipStatusDtoValidator()
+        public UpdateFriendshipStatusBodyValidator()
         {
             const string friendshipStatusIdName = nameof(UpdateFriendshipStatusBody.FriendshipStatusId);
             IEnumerable<int> values = Enum

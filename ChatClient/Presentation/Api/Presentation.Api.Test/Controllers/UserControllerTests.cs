@@ -38,7 +38,7 @@ namespace Presentation.Api.Test.Controllers
         }
 
         [Fact]
-        public async Task RegisterUser_ShouldReturnBadRequestResult_WhenUserNameOrEmailAlreadyExists()
+        public async Task RegisterUser_ShouldReturnForbiddenResult_WhenUserNameOrEmailAlreadyExists()
         {
             // Arrange
             CreateAccountBody credentials = new CreateAccountBody {UserName = "", Email = "", Password = ""};
@@ -86,12 +86,12 @@ namespace Presentation.Api.Test.Controllers
                 .ReturnsAsync(false);
 
             mediatorMock
-                .Setup(m => m.Send(It.IsAny<RegisterUserCommand>(), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.IsAny<CreateAccountCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.CreateMap<CreateAccountBody, RegisterUserCommand>();
+                config.CreateMap<CreateAccountBody, CreateAccountCommand>();
                 config.CreateMap<CreateAccountBody, UserNameOrEmailExistsQuery>();
             });
 

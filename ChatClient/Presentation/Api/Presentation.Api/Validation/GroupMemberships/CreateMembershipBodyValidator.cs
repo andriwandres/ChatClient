@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Presentation.Api.Validation.GroupMemberships
 {
-    public class CreateMembershipDtoValidator : AbstractValidator<CreateMembershipBody>
+    public class CreateMembershipBodyValidator : AbstractValidator<CreateMembershipBody>
     {
-        public CreateMembershipDtoValidator()
+        public CreateMembershipBodyValidator()
         {
             RuleFor(model => model.UserId)
                 .NotEmpty()

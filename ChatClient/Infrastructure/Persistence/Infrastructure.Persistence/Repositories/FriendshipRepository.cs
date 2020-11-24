@@ -37,6 +37,17 @@ namespace Infrastructure.Persistence.Repositories
                 .AnyAsync(friendship => friendship.FriendshipId == friendshipId, cancellationToken);
         }
 
+        public async Task<bool> CombinationExists(int requesterId, int addresseeId, CancellationToken cancellationToken = default)
+        {
+            return await Context.Friendships
+                .AsNoTracking()
+                .AnyAsync(friendship =>
+                    (friendship.RequesterId == requesterId && friendship.AddresseeId == addresseeId) ||
+                    (friendship.AddresseeId == requesterId && friendship.RequesterId == addresseeId), 
+                    cancellationToken
+                );
+        }
+
         public async Task Add(Friendship friendship, CancellationToken cancellationToken = default)
         {
             await Context.Friendships.AddAsync(friendship, cancellationToken);

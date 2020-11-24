@@ -4,9 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace Presentation.Api.Validation.Session
 {
-    public class LoginUserDtoValidator : AbstractValidator<LoginBody>
+    public class LoginBodyValidator : AbstractValidator<LoginBody>
     {
-        public LoginUserDtoValidator()
+        public LoginBodyValidator()
         {
             // UserNameOrEmail
             const int userNameOrEmailMinLength = 2;

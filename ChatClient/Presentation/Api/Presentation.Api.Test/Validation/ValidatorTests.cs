@@ -25,30 +25,31 @@ namespace Presentation.Api.Test.Validation
 
             // Friendships
             Assert.NotNull(new FriendshipResourceValidator());
-            Assert.NotNull(new RequestFriendshipDtoValidator());
-            Assert.NotNull(new UpdateFriendshipStatusDtoValidator());
+            Assert.NotNull(new RequestFriendshipBodyValidator());
+            Assert.NotNull(new UpdateFriendshipStatusBodyValidator());
 
             // GroupMemberships
             Assert.NotNull(new GroupMembershipResourceValidator());
+            Assert.NotNull(new CreateMembershipBodyValidator());
 
             // Groups
-            Assert.NotNull(new CreateGroupDtoValidator());
-            Assert.NotNull(new UpdateGroupDtoValidator());
+            Assert.NotNull(new CreateGroupBodyValidator());
+            Assert.NotNull(new UpdateGroupBodyValidator());
 
             // Languages
             Assert.NotNull(new LanguageResourceValidator());
 
             // Session
-            Assert.NotNull(new LoginUserDtoValidator());
+            Assert.NotNull(new LoginBodyValidator());
 
             // Translations
-            Assert.NotNull(new GetTranslationByLanguageDtoValidator());
+            Assert.NotNull(new GetTranslationsByLanguageQueryParamsValidator());
 
             // Users
             Assert.NotNull(new AuthenticatedUserResourceValidator());
-            Assert.NotNull(new EmailExistsDtoValidator());
-            Assert.NotNull(new RegisterUserDtoValidator());
-            Assert.NotNull(new UserNameExistsDtoValidator());
+            Assert.NotNull(new EmailExistsQueryParamsValidator());
+            Assert.NotNull(new CreateAccountBodyValidator());
+            Assert.NotNull(new UserNameExistsQueryParamsValidator());
             Assert.NotNull(new UserProfileResourceValidator());
         }
     }

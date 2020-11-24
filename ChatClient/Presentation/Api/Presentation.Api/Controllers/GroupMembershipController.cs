@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.Application.Requests.GroupMemberships.Commands;
+using Core.Application.Requests.GroupMemberships.Queries;
 using Core.Application.Requests.Groups.Queries;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.GroupMemberships;
@@ -42,7 +43,7 @@ namespace Presentation.Api.Controllers
         /// Adds a new user to the list of members of a group
         /// </remarks>
         /// 
-        /// <param name="model">
+        /// <param name="body">
         /// Specifies information about the membership to create
         /// </param>
         /// 
@@ -62,6 +63,10 @@ namespace Presentation.Api.Controllers
         /// Request body was invalid
         /// </response>
         ///
+        /// <response code="403">
+        /// The user is already a member of this group
+        /// </response>
+        /// 
         /// <response code="404">
         ///     <para>1.) Provided user does not exist</para>
         ///     <para>2.) Provided group does not exist</para>
@@ -82,6 +87,10 @@ namespace Presentation.Api.Controllers
         [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(CreateMembershipBadRequestExample))]
 
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(CreateMembershipForbiddenExample))]
+
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(CreateMembershipNotFoundExample))]
@@ -89,7 +98,7 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-        public async Task<ActionResult<GroupMembershipResource>> CreateMembership([FromBody] CreateMembershipBody model, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<GroupMembershipResource>> CreateMembership([FromBody] CreateMembershipBody body, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
@@ -97,7 +106,7 @@ namespace Presentation.Api.Controllers
             }
 
             // Check if the provided group exists
-            GroupExistsQuery groupExistsQuery = new GroupExistsQuery { GroupId = model.GroupId };
+            GroupExistsQuery groupExistsQuery = new GroupExistsQuery { GroupId = body.GroupId };
 
             bool groupExists = await _mediator.Send(groupExistsQuery, cancellationToken);
 
@@ -106,12 +115,12 @@ namespace Presentation.Api.Controllers
                 return NotFound(new ErrorResource
                 {
                     StatusCode = StatusCodes.Status404NotFound,
-                    Message = $"Group with ID '{model.GroupId}' does not exist"
+                    Message = $"Group with ID '{body.GroupId}' does not exist"
                 });
             }
             
             // Check if the provided user exists
-            UserExistsQuery userExistsQuery = new UserExistsQuery { UserId = model.UserId };
+            UserExistsQuery userExistsQuery = new UserExistsQuery { UserId = body.UserId };
 
             bool userExists = await _mediator.Send(userExistsQuery, cancellationToken);
 
@@ -120,11 +129,25 @@ namespace Presentation.Api.Controllers
                 return NotFound(new ErrorResource
                 {
                     StatusCode = StatusCodes.Status404NotFound,
-                    Message = $"User with ID '{model.UserId}' does not exist"
+                    Message = $"User with ID '{body.UserId}' does not exist"
                 });
             }
 
-            CreateMembershipCommand createCommand = _mapper.Map<CreateMembershipBody, CreateMembershipCommand>(model);
+            // Check if such a membership does not already exist
+            MembershipCombinationExistsQuery membershipExistsQuery = _mapper.Map<CreateMembershipBody, MembershipCombinationExistsQuery>(body);
+
+            bool membershipExists = await _mediator.Send(membershipExistsQuery, cancellationToken);
+
+            if (membershipExists)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "This user is already a member of this group"
+                });
+            }
+
+            CreateMembershipCommand createCommand = _mapper.Map<CreateMembershipBody, CreateMembershipCommand>(body);
 
             GroupMembershipResource membership = await _mediator.Send(createCommand, cancellationToken);
 

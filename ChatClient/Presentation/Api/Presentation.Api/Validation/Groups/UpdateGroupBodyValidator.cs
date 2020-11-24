@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Presentation.Api.Validation.Groups
 {
-    public class UpdateGroupDtoValidator : AbstractValidator<UpdateGroupBody>
+    public class UpdateGroupBodyValidator : AbstractValidator<UpdateGroupBody>
     {
-        public UpdateGroupDtoValidator()
+        public UpdateGroupBodyValidator()
         {
             const int nameMinLength = 2;
             const string nameName = nameof(UpdateGroupBody.Name);

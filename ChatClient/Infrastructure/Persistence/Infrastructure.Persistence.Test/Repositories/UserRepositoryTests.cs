@@ -558,5 +558,67 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Assert
             Assert.True(exists);
         }
+
+        [Fact]
+        public async Task Exists_ShouldReturnTrue_WhenIdMatches()
+        {
+            // Arrange
+            const int userId = 1;
+
+            IEnumerable<User> users = new[]
+            {
+                new User { UserId = 1 },
+                new User { UserId = 2 },
+                new User { UserId = 3 },
+            };
+
+            Mock<DbSet<User>> userDbSetMock = users
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.Users)
+                .Returns(userDbSetMock.Object);
+
+            UserRepository repository = new UserRepository(contextMock.Object);
+
+            // Act
+            bool exists = await repository.Exists(userId);
+
+            // Assert
+            Assert.True(exists);
+        }
+
+        [Fact]
+        public async Task Exists_ShouldReturnFalse_WhenIdDoesNotMatch()
+        {
+            // Arrange
+            const int userId = 48721;
+
+            IEnumerable<User> users = new[]
+            {
+                new User { UserId = 1 },
+                new User { UserId = 2 },
+                new User { UserId = 3 },
+            };
+
+            Mock<DbSet<User>> userDbSetMock = users
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.Users)
+                .Returns(userDbSetMock.Object);
+
+            UserRepository repository = new UserRepository(contextMock.Object);
+
+            // Act
+            bool exists = await repository.Exists(userId);
+
+            // Assert
+            Assert.False(exists);
+        }
     }
 }

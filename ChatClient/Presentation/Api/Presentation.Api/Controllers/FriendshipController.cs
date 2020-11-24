@@ -14,6 +14,7 @@ using Presentation.Api.Examples.Friendships;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 using System.Net.Mime;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -42,7 +43,7 @@ namespace Presentation.Api.Controllers
         /// Creates a new friendship between two users
         /// </remarks>
         /// 
-        /// <param name="model">
+        /// <param name="body">
         /// Specifies the user ID of the addresse to create the new friendship with
         /// </param>
         /// 
@@ -82,20 +83,34 @@ namespace Presentation.Api.Controllers
         [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(RequestFriendshipBadRequestExample))]
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ErrorResource))]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(RequestFriendshipNotFoundExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-        public async Task<ActionResult<FriendshipResource>> RequestFriendship([FromBody] RequestFriendshipBody model, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<FriendshipResource>> RequestFriendship([FromBody] RequestFriendshipBody body, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            UserExistsQuery existsQuery = new UserExistsQuery { UserId = model.AddresseeId };
+            // Get the current user id
+            int requesterId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            // Check if requester + addressee id are the same
+            if (requesterId == body.AddresseeId)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "You cannot create a friendship with yourself"
+                });
+            }
+
+            // Check if the addressed user exists
+            UserExistsQuery existsQuery = new UserExistsQuery { UserId = body.AddresseeId };
 
             bool userExists = await _mediator.Send(existsQuery, cancellationToken);
 
@@ -104,11 +119,30 @@ namespace Presentation.Api.Controllers
                 return NotFound(new ErrorResource
                 {
                     StatusCode = StatusCodes.Status404NotFound,
-                    Message = $"User with ID '{model.AddresseeId}' does not exist"
+                    Message = $"User with ID '{body.AddresseeId}' does not exist"
                 });
             }
 
-            RequestFriendshipCommand command = _mapper.Map<RequestFriendshipBody, RequestFriendshipCommand>(model);
+            // Check if there is already a friendship with the given user combination
+            FriendshipCombinationExistsQuery combinationExistsQuery = new FriendshipCombinationExistsQuery
+            {
+                RequesterId = requesterId,
+                AddresseeId = body.AddresseeId
+            };
+
+            bool combinationExists = await _mediator.Send(combinationExistsQuery, cancellationToken);
+
+            if (combinationExists)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = $"There is already a friendship with user {body.AddresseeId}"
+                });
+            }
+
+            // Create friendship
+            RequestFriendshipCommand command = _mapper.Map<RequestFriendshipBody, RequestFriendshipCommand>(body);
 
             FriendshipResource friendship = await _mediator.Send(command, cancellationToken);
 

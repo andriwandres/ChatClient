@@ -4,9 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace Presentation.Api.Validation.Users
 {
-    public class RegisterUserDtoValidator : AbstractValidator<CreateAccountBody>
+    public class CreateAccountBodyValidator : AbstractValidator<CreateAccountBody>
     {
-        public RegisterUserDtoValidator()
+        public CreateAccountBodyValidator()
         {
             const string emailName = nameof(CreateAccountBody.Email);
             RuleFor(model => model.Email)

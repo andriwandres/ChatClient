@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Presentation.Api.Validation.Users
 {
-    public class EmailExistsDtoValidator : AbstractValidator<EmailExistsQueryParams>
+    public class EmailExistsQueryParamsValidator : AbstractValidator<EmailExistsQueryParams>
     {
-        public EmailExistsDtoValidator()
+        public EmailExistsQueryParamsValidator()
         {
             const string emailName = nameof(EmailExistsQueryParams.Email);
             RuleFor(model => model.Email)

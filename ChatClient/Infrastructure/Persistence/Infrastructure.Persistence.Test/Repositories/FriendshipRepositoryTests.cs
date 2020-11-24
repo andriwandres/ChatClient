@@ -200,5 +200,71 @@ namespace Infrastructure.Persistence.Test.Repositories
                 friendship => Assert.True(friendship.RequesterId == userId || friendship.AddresseeId == userId)
             );
         }
+
+        [Fact]
+        public async Task CombinationExists_ShouldReturnTrue_WhenIdsInCombinationExist()
+        {
+            // Arrange
+            const int requesterId = 1;
+            const int addresseeId = 2;
+
+            IEnumerable<Friendship> expectedFriendship = new[]
+            {
+                new Friendship {FriendshipId = 1, RequesterId = 1, AddresseeId = 3},
+                new Friendship {FriendshipId = 2, RequesterId = 2, AddresseeId = 1},
+                new Friendship {FriendshipId = 3, RequesterId = 1, AddresseeId = 5},
+                new Friendship {FriendshipId = 3, RequesterId = 4, AddresseeId = 1},
+            };
+
+            Mock<DbSet<Friendship>> friendshipDbSetMock = expectedFriendship
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.Friendships)
+                .Returns(friendshipDbSetMock.Object);
+
+            IFriendshipRepository repository = new FriendshipRepository(contextMock.Object);
+
+            // Act
+            bool exists = await repository.CombinationExists(requesterId, addresseeId);
+
+            // Assert
+            Assert.True(exists);
+        }
+
+        [Fact]
+        public async Task CombinationExists_ShouldReturnFalse_WhenIdsInCombinationDontExist()
+        {
+            // Arrange
+            const int requesterId = 4351;
+            const int addresseeId = 12;
+
+            IEnumerable<Friendship> expectedFriendship = new[]
+            {
+                new Friendship {FriendshipId = 1, RequesterId = 1, AddresseeId = 3},
+                new Friendship {FriendshipId = 2, RequesterId = 2, AddresseeId = 1},
+                new Friendship {FriendshipId = 3, RequesterId = 1, AddresseeId = 5},
+                new Friendship {FriendshipId = 3, RequesterId = 4, AddresseeId = 1},
+            };
+
+            Mock<DbSet<Friendship>> friendshipDbSetMock = expectedFriendship
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.Friendships)
+                .Returns(friendshipDbSetMock.Object);
+
+            IFriendshipRepository repository = new FriendshipRepository(contextMock.Object);
+
+            // Act
+            bool exists = await repository.CombinationExists(requesterId, addresseeId);
+
+            // Assert
+            Assert.False(exists);
+        }
     }
 }

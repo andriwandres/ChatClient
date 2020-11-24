@@ -75,5 +75,73 @@ namespace Infrastructure.Persistence.Test.Repositories
             Assert.Equal(2, actualMemberships.Count());
             Assert.All(actualMemberships, m => Assert.Equal(groupId, m.GroupId));
         }
+
+        [Fact]
+        public async Task CombinationExists_ShouldReturnTrue_WhenCombinationExists()
+        {
+            // Arrange
+            const int userId = 1;
+            const int groupId = 2;
+
+            IEnumerable<GroupMembership> databaseMemberships = new[]
+            {
+                new GroupMembership { GroupMembershipId = 1, GroupId = 1, UserId = 1 },
+                new GroupMembership { GroupMembershipId = 2, GroupId = 1, UserId = 2},
+                new GroupMembership { GroupMembershipId = 3, GroupId = 2, UserId = 1 },
+                new GroupMembership { GroupMembershipId = 4, GroupId = 3, UserId = 1},
+            };
+
+            DbSet<GroupMembership> membershipDbSetMock = databaseMemberships
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.GroupMemberships)
+                .Returns(membershipDbSetMock);
+
+            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+
+            // Act
+            bool exists = await repository.CombinationExists(groupId, userId);
+
+            // Assert
+            Assert.True(exists);
+        }
+
+        [Fact]
+        public async Task CombinationExists_ShouldReturnFalse_WhenCombinationDoesNotExist()
+        {
+            // Arrange
+            const int userId = 2131;
+            const int groupId = 412;
+
+            IEnumerable<GroupMembership> databaseMemberships = new[]
+            {
+                new GroupMembership { GroupMembershipId = 1, GroupId = 1, UserId = 1 },
+                new GroupMembership { GroupMembershipId = 2, GroupId = 1, UserId = 2},
+                new GroupMembership { GroupMembershipId = 3, GroupId = 2, UserId = 1 },
+                new GroupMembership { GroupMembershipId = 4, GroupId = 3, UserId = 1},
+            };
+
+            DbSet<GroupMembership> membershipDbSetMock = databaseMemberships
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.GroupMemberships)
+                .Returns(membershipDbSetMock);
+
+            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+
+            // Act
+            bool exists = await repository.CombinationExists(groupId, userId);
+
+            // Assert
+            Assert.False(exists);
+        }
     }
 }

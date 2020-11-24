@@ -38,7 +38,7 @@
              Creates a new friendship between two users
              </remarks>
              
-             <param name="model">
+             <param name="body">
              Specifies the user ID of the addresse to create the new friendship with
              </param>
              
@@ -322,7 +322,7 @@
              Adds a new user to the list of members of a group
              </remarks>
              
-             <param name="model">
+             <param name="body">
              Specifies information about the membership to create
              </param>
              
@@ -342,6 +342,10 @@
              Request body was invalid
              </response>
             
+             <response code="403">
+             The user is already a member of this group
+             </response>
+             
              <response code="404">
                  <para>1.) Provided user does not exist</para>
                  <para>2.) Provided group does not exist</para>
@@ -351,7 +355,7 @@
              An unexpected error occurred
              </response>
         </member>
-        <member name="M:Presentation.Api.Controllers.LanguageController.GetAllLanguages(System.Threading.CancellationToken)">
+        <member name="M:Presentation.Api.Controllers.LanguageController.GetLanguages(System.Threading.CancellationToken)">
              <summary>
              Gets a list of all languages
              </summary>
@@ -454,7 +458,7 @@
              An unexpected error occurred
              </response>
         </member>
-        <member name="M:Presentation.Api.Controllers.UserController.RegisterUser(Core.Domain.Dtos.Users.CreateAccountBody,System.Threading.CancellationToken)">
+        <member name="M:Presentation.Api.Controllers.UserController.CreateAccount(Core.Domain.Dtos.Users.CreateAccountBody,System.Threading.CancellationToken)">
              <summary>
              Creates a new user account
              </summary>

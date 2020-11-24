@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Core.Application.Test.Requests.Users.Queries
 {
-    public class GetUserNameOrEmailExistsQueryTests
+    public class UserNameOrEmailExistsQueryTests
     {
         [Fact]
         public async Task GetUserNameOrEmailExistsQueryHandler_ShouldReturnTrue_WhenCredentialsExist()

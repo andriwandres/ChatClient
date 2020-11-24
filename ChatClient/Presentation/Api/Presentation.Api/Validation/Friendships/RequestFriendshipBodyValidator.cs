@@ -3,9 +3,9 @@ using FluentValidation;
 
 namespace Presentation.Api.Validation.Friendships
 {
-    public class RequestFriendshipDtoValidator : AbstractValidator<RequestFriendshipBody>
+    public class RequestFriendshipBodyValidator : AbstractValidator<RequestFriendshipBody>
     {
-        public RequestFriendshipDtoValidator()
+        public RequestFriendshipBodyValidator()
         {
             const string addresseeIdName = nameof(RequestFriendshipBody.AddresseeId);
             RuleFor(request => request.AddresseeId)

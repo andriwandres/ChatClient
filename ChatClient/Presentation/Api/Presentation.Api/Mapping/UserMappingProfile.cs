@@ -20,7 +20,7 @@ namespace Presentation.Api.Mapping
             CreateMap<UserNameExistsQueryParams, UserNameExistsQuery>();
             CreateMap<EmailExistsQueryParams, EmailExistsQuery>();
 
-            CreateMap<CreateAccountBody, RegisterUserCommand>();
+            CreateMap<CreateAccountBody, CreateAccountCommand>();
             CreateMap<CreateAccountBody, UserNameOrEmailExistsQuery>();
         }
     }

@@ -1,22 +1,22 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using Core.Application.Database;
+﻿using Core.Application.Database;
 using Core.Application.Requests.Users.Commands;
 using Core.Application.Services;
 using Core.Domain.Entities;
 using Moq;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Core.Application.Test.Requests.Users.Commands
 {
-    public class RegisterUserCommandTests
+    public class CreateAccountCommandHandler
     {
         [Fact]
-        public async Task RegisterUserCommandHandler_ShouldReturnGeneratedUserId()
+        public async Task CreateAccountCommandHandler_ShouldReturnGeneratedUserId()
         {
             // Arrange
-            RegisterUserCommand request = new RegisterUserCommand
+            CreateAccountCommand request = new CreateAccountCommand
             {
                 Email = "new@user.account",
                 UserName = "newUser",
@@ -47,11 +47,11 @@ namespace Core.Application.Test.Requests.Users.Commands
                 .Setup(m => m.UtcNow())
                 .Returns(expectedDate);
 
-            RegisterUserCommand.RegisterUserCommandHandler handler = 
-                new RegisterUserCommand.RegisterUserCommandHandler(cryptoServiceMock.Object, unitOfWorkMock.Object, dateProviderMock.Object);
+            CreateAccountCommand.RegisterUserCommandHandler handler = 
+                new CreateAccountCommand.RegisterUserCommandHandler(cryptoServiceMock.Object, unitOfWorkMock.Object, dateProviderMock.Object);
 
             // Act
-            int id = await handler.Handle(request);
+            await handler.Handle(request);
 
             // Assert
             unitOfWorkMock.Verify(m => m.Users.Add(It.IsAny<User>(), It.IsAny<CancellationToken>()));

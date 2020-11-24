@@ -4,9 +4,9 @@ using System.Text.RegularExpressions;
 
 namespace Presentation.Api.Validation.Users
 {
-    public class UserNameExistsDtoValidator : AbstractValidator<UserNameExistsQueryParams>
+    public class UserNameExistsQueryParamsValidator : AbstractValidator<UserNameExistsQueryParams>
     {
-        public UserNameExistsDtoValidator()
+        public UserNameExistsQueryParamsValidator()
         {
             const int userNameMinLength = 2;
             const string userNameName = nameof(UserNameExistsQueryParams.UserName);

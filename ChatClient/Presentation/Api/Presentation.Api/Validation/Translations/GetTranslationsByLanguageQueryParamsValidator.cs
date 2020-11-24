@@ -1,12 +1,12 @@
-﻿using System.Text.RegularExpressions;
-using Core.Domain.Dtos.Languages;
+﻿using Core.Domain.Dtos.Languages;
 using FluentValidation;
+using System.Text.RegularExpressions;
 
 namespace Presentation.Api.Validation.Translations
 {
-    public class GetTranslationByLanguageDtoValidator : AbstractValidator<GetTranslationsByLanguageQueryParams>
+    public class GetTranslationsByLanguageQueryParamsValidator : AbstractValidator<GetTranslationsByLanguageQueryParams>
     {
-        public GetTranslationByLanguageDtoValidator()
+        public GetTranslationsByLanguageQueryParamsValidator()
         {
             const string patternName = nameof(GetTranslationsByLanguageQueryParams.Pattern);
             RuleFor(model => model.Pattern)

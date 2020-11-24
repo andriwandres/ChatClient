@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace Core.Application.Requests.Users.Commands
 {
-    public class RegisterUserCommand : IRequest<int>
+    public class CreateAccountCommand : IRequest<int>
     {
         public string Email { get; set; }
         public string UserName { get; set; }
         public string Password { get; set; }
 
-        public class RegisterUserCommandHandler : IRequestHandler<RegisterUserCommand, int>
+        public class RegisterUserCommandHandler : IRequestHandler<CreateAccountCommand, int>
         {
             private readonly IUnitOfWork _unitOfWork;
             private readonly ICryptoService _cryptoService;
@@ -26,7 +26,7 @@ namespace Core.Application.Requests.Users.Commands
                 _cryptoService = cryptoService;
             }
 
-            public async Task<int> Handle(RegisterUserCommand request, CancellationToken cancellationToken = default)
+            public async Task<int> Handle(CreateAccountCommand request, CancellationToken cancellationToken = default)
             {
                 User user = new User
                 {

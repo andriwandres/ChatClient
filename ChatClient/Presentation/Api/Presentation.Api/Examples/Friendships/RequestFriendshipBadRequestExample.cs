@@ -22,7 +22,7 @@ namespace Presentation.Api.Examples.Friendships
                         addresseeIdName, 
                         new []
                         {
-                            $"'{addresseeIdName}' must be greater than 0"
+                            $"'{addresseeIdName}' must not be empty"
                         }
                     }
                 }

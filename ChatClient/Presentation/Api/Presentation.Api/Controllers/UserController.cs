@@ -108,7 +108,7 @@ namespace Presentation.Api.Controllers
                 });
             }
 
-            RegisterUserCommand registerCommand = _mapper.Map<CreateAccountBody, RegisterUserCommand>(credentials);
+            CreateAccountCommand registerCommand = _mapper.Map<CreateAccountBody, CreateAccountCommand>(credentials);
 
             int userId = await _mediator.Send(registerCommand, cancellationToken);
 

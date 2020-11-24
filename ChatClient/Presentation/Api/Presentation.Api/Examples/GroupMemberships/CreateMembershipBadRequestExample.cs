@@ -17,8 +17,8 @@ namespace Presentation.Api.Examples.GroupMemberships
             {
                 new SwaggerExample<ValidationErrorResource>
                 {
-                    Name = "GroupNotFound",
-                    Summary = "Group not found",
+                    Name = "GroupIdEmpty",
+                    Summary = "Group ID is left empty",
                     Value = new ValidationErrorResource
                     {
                         StatusCode = StatusCodes.Status400BadRequest,
@@ -29,7 +29,7 @@ namespace Presentation.Api.Examples.GroupMemberships
                                 groupIdName,
                                 new []
                                 {
-                                    "Group with ID 'xxx' does not exist"
+                                    $"'{groupIdName}' must not be empty"
                                 }
                             }
                         }
@@ -37,8 +37,8 @@ namespace Presentation.Api.Examples.GroupMemberships
                 },
                 new SwaggerExample<ValidationErrorResource>
                 {
-                    Name = "UserNotFound",
-                    Summary = "User not found",
+                    Name = "UserIdEmpty",
+                    Summary = "User ID is left empty",
                     Value = new ValidationErrorResource
                     {
                         StatusCode = StatusCodes.Status400BadRequest,
@@ -49,7 +49,7 @@ namespace Presentation.Api.Examples.GroupMemberships
                                 userIdName,
                                 new []
                                 {
-                                    "User with ID 'xxx' does not exist"
+                                    $"'{userIdName}' must not be empty"
                                 }
                             }
                         }
