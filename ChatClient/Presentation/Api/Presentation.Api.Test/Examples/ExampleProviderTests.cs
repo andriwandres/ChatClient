@@ -49,17 +49,6 @@ namespace Presentation.Api.Test.Examples
                 object exampleValue = methodInfo.Invoke(instance, null);
 
                 Assert.NotNull(exampleValue);
-
-                Type valueType = exampleValue.GetType();
-
-                if (!valueType.IsAssignableFrom(typeof(IEnumerable)))
-                {
-                    continue;
-                }
-
-                IEnumerable collection = (IEnumerable)exampleValue;
-
-                Assert.NotEmpty(collection);
             }
         }
 
@@ -99,17 +88,7 @@ namespace Presentation.Api.Test.Examples
 
                     object exampleValue = valuePropertyInfo.GetValue(exampleWrapper);
 
-                    Assert.NotNull(exampleWrapper);
-
-                    if (!exampleWrapper.GetType().IsAssignableFrom(typeof(IEnumerable)))
-                    {
-                        continue;
-                    }
-
-                    IEnumerable collectionValue = (IEnumerable) exampleValue;
-
-                    Assert.NotNull(collectionValue);
-                    Assert.NotEmpty(collectionValue);
+                    Assert.NotNull(exampleValue);
                 }
             }
         }

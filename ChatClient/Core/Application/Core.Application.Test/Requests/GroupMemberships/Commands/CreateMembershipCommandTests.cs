@@ -4,7 +4,10 @@ using Core.Application.Requests.GroupMemberships.Commands;
 using Core.Application.Services;
 using Core.Domain.Entities;
 using Core.Domain.Resources.GroupMemberships;
+using MockQueryable.Moq;
 using Moq;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -24,6 +27,20 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
                 IsAdmin = true
             };
 
+            IEnumerable<User> expectedUsers = new[]
+            {
+                new User
+                {
+                    UserId = 1,
+                    UserName = "alfred_miller"
+                }
+            };
+
+            IQueryable<User> queryableMock = expectedUsers
+                .AsQueryable()
+                .BuildMock()
+                .Object;
+
             IDateProvider dateProviderMock = Mock.Of<IDateProvider>();
 
             Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
@@ -38,6 +55,10 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
             unitOfWorkMock
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(2);
+
+            unitOfWorkMock
+                .Setup(m => m.Users.GetById(It.IsAny<int>()))
+                .Returns(queryableMock);
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
