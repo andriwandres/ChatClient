@@ -272,5 +272,117 @@ namespace Presentation.Api.Test.Controllers
             Assert.NotNull(membership);
             Assert.Equal(expectedMembership, membership);
         }
+
+        [Fact]
+        public async Task UpdateMembership_ShouldReturnBadRequestResult_WhenModelValidationFails()
+        {
+            // Arrange
+            const int membershipId = -3;
+            UpdateMembershipBody body = new UpdateMembershipBody();
+
+            GroupMembershipController controller = new GroupMembershipController(null, null);
+
+            controller.ModelState.AddModelError("", "");
+
+            // Act
+            ActionResult response = await controller.UpdateMembership(membershipId, body);
+
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(response);
+        }
+
+        [Fact]
+        public async Task UpdateMembership_ShouldReturnNotFoundResult_WhenMembershipDoesNotExist()
+        {
+            // Arrange
+            const int membershipId = 56431;
+            UpdateMembershipBody body = new UpdateMembershipBody { IsAdmin = true };
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<MembershipExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            GroupMembershipController controller = new GroupMembershipController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult response = await controller.UpdateMembership(membershipId, body);
+
+            // Assert
+            NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.NotNull(error);
+            Assert.Equal(StatusCodes.Status404NotFound, error.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateMembership_ShouldReturnForbiddenResult_WhenCurrentUserIsNotAdmin()
+        {
+            // Arrange
+            const int membershipId = 1;
+            UpdateMembershipBody body = new UpdateMembershipBody { IsAdmin = true };
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<MembershipExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<CanUpdateMembershipQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            GroupMembershipController controller = new GroupMembershipController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult response = await controller.UpdateMembership(membershipId, body);
+
+            // Assert
+            ObjectResult result = Assert.IsType<ObjectResult>(response);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.NotNull(error);
+            Assert.Equal(StatusCodes.Status403Forbidden, error.StatusCode);
+        }
+
+        [Fact]
+        public async Task UpdateMembership_ShouldUpdateMembership()
+        {
+            // Arrange
+            const int membershipId = 1;
+            UpdateMembershipBody body = new UpdateMembershipBody { IsAdmin = true };
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<MembershipExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<CanUpdateMembershipQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            UpdateMembershipCommand passedUpdateCommand = null;
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<UpdateMembershipCommand>(), It.IsAny<CancellationToken>()))
+                .Callback<IRequest<Unit>, CancellationToken>((c, _) => passedUpdateCommand = (UpdateMembershipCommand) c)
+                .ReturnsAsync(Unit.Value);
+
+            GroupMembershipController controller = new GroupMembershipController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult response = await controller.UpdateMembership(membershipId, body);
+
+            // Assert
+            Assert.IsType<NoContentResult>(response);
+
+            mediatorMock.Verify(m => m.Send(It.IsAny<UpdateMembershipCommand>(), It.IsAny<CancellationToken>()), Times.Once);
+
+            Assert.NotNull(passedUpdateCommand);
+            Assert.Equal(membershipId, passedUpdateCommand.GroupMembershipId);
+            Assert.Equal(body.IsAdmin, passedUpdateCommand.IsAdmin);
+        }
     }
 }
