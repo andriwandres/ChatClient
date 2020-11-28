@@ -58,6 +58,14 @@ namespace Infrastructure.Persistence.Repositories
                 .SingleOrDefaultAsync(cancellationToken);
         }
 
+        public async Task<bool> CanDeleteMembership(int userId, int membershipIdToDelete, CancellationToken cancellationToken = default)
+        {
+            return await Context.GroupMemberships
+                .Where(membership => membership.GroupMembershipId == membershipIdToDelete)
+                .Select(membership => membership.Group.Memberships.Any(member => member.UserId == userId && member.IsAdmin))
+                .SingleOrDefaultAsync(cancellationToken);
+        }
+
         public async Task Add(GroupMembership membership, CancellationToken cancellationToken = default)
         {
             await Context.GroupMemberships.AddAsync(membership, cancellationToken);
@@ -66,6 +74,11 @@ namespace Infrastructure.Persistence.Repositories
         public void Update(GroupMembership membership)
         {
             Context.GroupMemberships.Update(membership);
+        }
+
+        public void Delete(GroupMembership membership)
+        {
+            Context.GroupMemberships.Remove(membership);
         }
     }
 }

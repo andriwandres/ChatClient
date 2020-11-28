@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Core.Domain.Entities;
+﻿using Core.Domain.Entities;
 using Xunit;
 
 namespace Core.Domain.Test.Entities

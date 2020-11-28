@@ -507,5 +507,160 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Assert
             Assert.True(canUpdate);
         }
+
+        [Fact]
+        public async Task CanDeleteMembership_ShouldReturnFalse_WhenTheUserIsNotPartOfTheGroup()
+        {
+            // Arrange
+            const int userId = 1;
+            const int membershipIdToDelete = 1;
+
+            IEnumerable<GroupMembership> memberships = new[]
+            {
+                new GroupMembership
+                {
+                    GroupMembershipId = 1,
+                    GroupId = 1,
+                    UserId = 2,
+                    Group = new Group
+                    {
+                        Memberships = new HashSet<GroupMembership>
+                        {
+                            new GroupMembership { GroupMembershipId = 2, UserId = 2, IsAdmin = true }
+                        }
+                    }
+                },
+            };
+
+            DbSet<GroupMembership> dbSetMock = memberships
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.GroupMemberships)
+                .Returns(dbSetMock);
+
+            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+
+            // Act
+            bool canDelete = await repository.CanDeleteMembership(userId, membershipIdToDelete);
+
+            // Assert
+            Assert.False(canDelete);
+        }
+
+        [Fact]
+        public async Task CanDeleteMembership_ShouldReturnFalse_WhenTheUserIsNotAnAdministrator()
+        {
+            // Arrange
+            const int userId = 1;
+            const int membershipIdToDelete = 1;
+
+            IEnumerable<GroupMembership> memberships = new[]
+            {
+                new GroupMembership
+                {
+                    GroupMembershipId = 1,
+                    GroupId = 1,
+                    UserId = 2,
+                    Group = new Group
+                    {
+                        Memberships = new HashSet<GroupMembership>
+                        {
+                            new GroupMembership { GroupMembershipId = 2, UserId = 1, IsAdmin = false }
+                        }
+                    }
+                },
+            };
+
+            DbSet<GroupMembership> dbSetMock = memberships
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.GroupMemberships)
+                .Returns(dbSetMock);
+
+            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+
+            // Act
+            bool canDelete = await repository.CanDeleteMembership(userId, membershipIdToDelete);
+
+            // Assert
+            Assert.False(canDelete);
+        }
+
+        [Fact]
+        public async Task CanDeleteMembership_ShouldReturnTrue_WhenTheUserIsAnAdministrator()
+        {
+            // Arrange
+            const int userId = 1;
+            const int membershipIdToDelete = 1;
+
+            IEnumerable<GroupMembership> memberships = new[]
+            {
+                new GroupMembership
+                {
+                    GroupMembershipId = 1,
+                    GroupId = 1,
+                    UserId = 2,
+                    Group = new Group
+                    {
+                        Memberships = new HashSet<GroupMembership>
+                        {
+                            new GroupMembership { GroupMembershipId = 2, UserId = 1, IsAdmin = true }
+                        }
+                    }
+                },
+            };
+
+            DbSet<GroupMembership> dbSetMock = memberships
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.GroupMemberships)
+                .Returns(dbSetMock);
+
+            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+
+            // Act
+            bool canDelete = await repository.CanDeleteMembership(userId, membershipIdToDelete);
+
+            // Assert
+            Assert.True(canDelete);
+        }
+
+        [Fact]
+        public void Delete_ShouldDeleteMembershipFromContext()
+        {
+            // Arrange
+            GroupMembership membership = new GroupMembership {GroupMembershipId = 1};
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+
+            GroupMembership passedMembership = null;
+
+            contextMock
+                .Setup(m => m.GroupMemberships.Remove(It.IsAny<GroupMembership>()))
+                .Callback<GroupMembership>(gm => passedMembership = gm);
+
+            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+
+            // Act
+            repository.Delete(membership);
+
+            // Assert
+            contextMock.Verify(m => m.GroupMemberships.Remove(It.IsAny<GroupMembership>()));
+
+            Assert.NotNull(passedMembership);
+            Assert.Equal(membership.GroupMembershipId, passedMembership.GroupMembershipId);
+        }
     }
 }

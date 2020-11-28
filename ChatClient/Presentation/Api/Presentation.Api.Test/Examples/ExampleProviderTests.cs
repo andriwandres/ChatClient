@@ -12,8 +12,7 @@ namespace Presentation.Api.Test.Examples
     {
         private static IEnumerable<Type> GetTypesThatImplementOpenGenericInterface(Type genericInterface)
         {
-            return AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(assembly => assembly.GetTypes())
+            return typeof(Startup).Assembly.GetTypes()
                 .SelectMany(type => type.GetInterfaces(), (type, @interface) => new {type, @interface})
                 .Select(t => new {t, baseType = t.type.BaseType})
                 .Where(t =>
@@ -32,6 +31,8 @@ namespace Presentation.Api.Test.Examples
             Type openProviderType = typeof(IExamplesProvider<>);
 
             IEnumerable<Type> types = GetTypesThatImplementOpenGenericInterface(openProviderType);
+
+            Assert.NotEmpty(types);
 
             IEnumerable<object> providerInstances = types.Select(Activator.CreateInstance);
 
@@ -59,6 +60,8 @@ namespace Presentation.Api.Test.Examples
             Type openProviderType = typeof(IMultipleExamplesProvider<>);
 
             IEnumerable<Type> types = GetTypesThatImplementOpenGenericInterface(openProviderType);
+
+            Assert.NotEmpty(types);
 
             IEnumerable<object> providerInstances = types.Select(Activator.CreateInstance);
 

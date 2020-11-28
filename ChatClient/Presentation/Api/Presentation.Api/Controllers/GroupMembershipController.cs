@@ -264,7 +264,8 @@ namespace Presentation.Api.Controllers
         /// </response>
         ///
         /// <response code="403">
-        /// User is not permitted to update this membership. Only administrators of a group can update memberships
+        /// <para>1.) User tried to update his own membership</para>
+        /// <para>2.) User is not permitted to update this membership. Only administrators of a group can update memberships</para>
         /// </response>
         ///
         /// <response code="404">
@@ -317,6 +318,20 @@ namespace Presentation.Api.Controllers
                 });
             }
 
+            // Check if the user wants to update himself
+            IsOwnMembershipQuery isOwnMembershipQuery = new IsOwnMembershipQuery {GroupMembershipId = membershipId};
+
+            bool isOwnMembership = await _mediator.Send(isOwnMembershipQuery, cancellationToken);
+
+            if (isOwnMembership)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "Cannot update your own membership"
+                });
+            }
+
             // Check if the current user is allowed to update the membership
             CanUpdateMembershipQuery canUpdateQuery = new CanUpdateMembershipQuery {GroupMembershipIdToUpdate = membershipId};
 
@@ -343,10 +358,91 @@ namespace Presentation.Api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes a membership
+        /// </summary>
+        ///
+        /// <remarks>
+        /// Deletes a user from a group
+        /// </remarks>
+        /// 
+        /// <param name="membershipId">
+        /// ID of the membership to delete
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">
+        /// Notifies asynchronous operations to cancel ongoing work and release resources
+        /// </param>
+        /// 
+        /// <returns>
+        /// No content
+        /// </returns>
+        ///
+        /// <response code="204">
+        /// Deletion was successful
+        /// </response>
+        ///
+        /// <response code="403">
+        /// The user is not permitted to delete this user from this group
+        /// </response>
+        /// 
+        /// <response code="404">
+        /// Membership with given ID does not exist
+        /// </response>
+        ///
+        /// <response code="500">
+        /// An unexpected error occurred
+        /// </response>
         [HttpDelete("{membershipId:int}")]
         [Authorize]
-        public async Task<ActionResult> DeleteMembership()
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(DeleteMembershipForbiddenExample))]
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(DeleteMembershipNotFoundExample))]
+
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
+        public async Task<ActionResult> DeleteMembership([FromRoute] int membershipId, CancellationToken cancellationToken = default)
         {
+            // Check if the membership exists
+            MembershipExistsQuery existsQuery = new MembershipExistsQuery {GroupMembershipId = membershipId};
+
+            bool exists = await _mediator.Send(existsQuery, cancellationToken);
+
+            if (!exists)
+            {
+                return NotFound(new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = $"Membership with ID '{membershipId}' does not exist"
+                });
+            }
+
+            // Check if the user is permitted to delete
+            CanDeleteMembershipQuery canDeleteQuery = new CanDeleteMembershipQuery { GroupMembershipIdToDelete = membershipId };
+            bool canDelete = await _mediator.Send(canDeleteQuery, cancellationToken);
+
+            if (!canDelete)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "You are not permitted to delete users from this group. This privilege is only granted to administrators of the group"
+                });
+            }
+
+            // Delete the membership
+            DeleteMembershipCommand deleteCommand = new DeleteMembershipCommand {GroupMembershipId = membershipId};
+
+            await _mediator.Send(deleteCommand, cancellationToken);
+
             return NoContent();
         }
     }

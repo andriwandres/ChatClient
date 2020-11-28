@@ -423,9 +423,47 @@
              </response>
             
              <response code="403">
-             User is not permitted to update this membership. Only administrators of a group can update memberships
+             <para>1.) User tried to update his own membership</para>
+             <para>2.) User is not permitted to update this membership. Only administrators of a group can update memberships</para>
              </response>
             
+             <response code="404">
+             Membership with given ID does not exist
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
+        <member name="M:Presentation.Api.Controllers.GroupMembershipController.DeleteMembership(System.Int32,System.Threading.CancellationToken)">
+             <summary>
+             Deletes a membership
+             </summary>
+            
+             <remarks>
+             Deletes a user from a group
+             </remarks>
+             
+             <param name="membershipId">
+             ID of the membership to delete
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             No content
+             </returns>
+            
+             <response code="204">
+             Deletion was successful
+             </response>
+            
+             <response code="403">
+             The user is not permitted to delete this user from this group
+             </response>
+             
              <response code="404">
              Membership with given ID does not exist
              </response>

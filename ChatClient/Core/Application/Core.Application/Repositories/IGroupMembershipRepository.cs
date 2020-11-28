@@ -14,8 +14,10 @@ namespace Core.Application.Repositories
         Task<bool> Exists(int membershipId, CancellationToken cancellationToken = default);
         Task<bool> CombinationExists(int groupId, int userId, CancellationToken cancellationToken = default);
         Task<bool> CanUpdateMembership(int userId, int membershipIdToUpdate, CancellationToken cancellationToken = default);
+        Task<bool> CanDeleteMembership(int userId, int membershipIdToDelete, CancellationToken cancellationToken = default);
 
         Task Add(GroupMembership membership, CancellationToken cancellationToken = default);
         void Update(GroupMembership membership);
+        void Delete(GroupMembership membership);
     }
 }
