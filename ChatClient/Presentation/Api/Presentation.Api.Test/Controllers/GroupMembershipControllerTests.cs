@@ -89,6 +89,39 @@ namespace Presentation.Api.Test.Controllers
         }
 
         [Fact]
+        public async Task CreateMembership_ShouldReturnForbiddenResult_WhenUserIsNotAdministrator()
+        {
+            // Arrange
+            CreateMembershipBody body = new CreateMembershipBody { GroupId = 1, UserId = 1, IsAdmin = false };
+
+            Mock<IMediator> mediatorMock = new Mock<IMediator>();
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<GroupExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<UserExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<CanCreateMembershipQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            GroupMembershipController controller = new GroupMembershipController(mediatorMock.Object, null);
+
+            // Act
+            ActionResult<GroupMembershipResource> response = await controller.CreateMembership(body);
+
+            // Assert
+            ObjectResult result = Assert.IsType<ObjectResult>(response.Result);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.NotNull(error);
+            Assert.Equal(StatusCodes.Status403Forbidden, error.StatusCode);
+        }
+
+        [Fact]
         public async Task CreateMembership_ShouldReturnForbiddenResult_WhenMembershipCombinationAlreadyExists()
         {
             // Arrange
@@ -101,6 +134,10 @@ namespace Presentation.Api.Test.Controllers
 
             mediatorMock
                 .Setup(m => m.Send(It.IsAny<UserExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<CanCreateMembershipQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
             mediatorMock
@@ -148,6 +185,10 @@ namespace Presentation.Api.Test.Controllers
 
             mediatorMock
                 .Setup(m => m.Send(It.IsAny<UserExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            mediatorMock
+                .Setup(m => m.Send(It.IsAny<CanCreateMembershipQuery>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
             mediatorMock

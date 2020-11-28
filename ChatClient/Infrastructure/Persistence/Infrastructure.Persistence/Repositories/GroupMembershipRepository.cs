@@ -29,6 +29,13 @@ namespace Infrastructure.Persistence.Repositories
                 .Where(membership => membership.GroupId == groupId);
         }
 
+        public IQueryable<GroupMembership> GetByCombination(int groupId, int userId)
+        {
+            return Context.GroupMemberships
+                .AsNoTracking()
+                .Where(membership => membership.GroupId == groupId && membership.UserId == userId);
+        }
+
         public async Task<bool> Exists(int membershipId, CancellationToken cancellationToken = default)
         {
             return await Context.GroupMemberships
@@ -43,9 +50,22 @@ namespace Infrastructure.Persistence.Repositories
                 .AnyAsync(membership => membership.GroupId == groupId && membership.UserId == userId, cancellationToken);
         }
 
+        public async Task<bool> CanUpdateMembership(int userId, int membershipIdToUpdate, CancellationToken cancellationToken = default)
+        {
+            return await Context.GroupMemberships
+                .Where(membership => membership.GroupMembershipId == membershipIdToUpdate)
+                .Select(membership => membership.Group.Memberships.Any(member => member.UserId == userId && member.IsAdmin))
+                .SingleOrDefaultAsync(cancellationToken);
+        }
+
         public async Task Add(GroupMembership membership, CancellationToken cancellationToken = default)
         {
             await Context.GroupMemberships.AddAsync(membership, cancellationToken);
+        }
+
+        public void Update(GroupMembership membership)
+        {
+            Context.GroupMemberships.Update(membership);
         }
     }
 }

@@ -28,7 +28,7 @@ namespace Infrastructure.Persistence.Migrations
                 oldType: "int");
 
             migrationBuilder.AlterColumn<int>(
-                name: "GroupMembershipId",
+                name: "GroupMembershipIdToUpdate",
                 table: "Recipients",
                 nullable: true,
                 oldClrType: typeof(int),
@@ -37,9 +37,9 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Recipients_GroupMembershipId",
                 table: "Recipients",
-                column: "GroupMembershipId",
+                column: "GroupMembershipIdToUpdate",
                 unique: true,
-                filter: "[GroupMembershipId] IS NOT NULL");
+                filter: "[GroupMembershipIdToUpdate] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Recipients_UserId",
@@ -51,9 +51,9 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Recipients_UserId_GroupMembershipId",
                 table: "Recipients",
-                columns: new[] { "UserId", "GroupMembershipId" },
+                columns: new[] { "UserId", "GroupMembershipIdToUpdate" },
                 unique: true,
-                filter: "[UserId] IS NOT NULL AND [GroupMembershipId] IS NOT NULL");
+                filter: "[UserId] IS NOT NULL AND [GroupMembershipIdToUpdate] IS NOT NULL");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -79,7 +79,7 @@ namespace Infrastructure.Persistence.Migrations
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<int>(
-                name: "GroupMembershipId",
+                name: "GroupMembershipIdToUpdate",
                 table: "Recipients",
                 type: "int",
                 nullable: false,
@@ -89,7 +89,7 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Recipients_GroupMembershipId",
                 table: "Recipients",
-                column: "GroupMembershipId",
+                column: "GroupMembershipIdToUpdate",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -101,7 +101,7 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Recipients_UserId_GroupMembershipId",
                 table: "Recipients",
-                columns: new[] { "UserId", "GroupMembershipId" },
+                columns: new[] { "UserId", "GroupMembershipIdToUpdate" },
                 unique: true);
         }
     }

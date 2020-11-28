@@ -405,7 +405,7 @@ namespace Infrastructure.Persistence.Migrations
                         name: "FK_Recipients_GroupMemberships_GroupMembershipId",
                         column: x => x.GroupMembershipId,
                         principalTable: "GroupMemberships",
-                        principalColumn: "GroupMembershipId",
+                        principalColumn: "GroupMembershipIdToUpdate",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Recipients_Users_UserId",
@@ -662,7 +662,7 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Recipients_GroupMembershipId",
                 table: "Recipients",
-                column: "GroupMembershipId",
+                column: "GroupMembershipIdToUpdate",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -674,7 +674,7 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Recipients_UserId_GroupMembershipId",
                 table: "Recipients",
-                columns: new[] { "UserId", "GroupMembershipId" },
+                columns: new[] { "UserId", "GroupMembershipIdToUpdate" },
                 unique: true);
 
             migrationBuilder.CreateIndex(

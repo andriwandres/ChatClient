@@ -64,12 +64,13 @@ namespace Presentation.Api.Controllers
         /// </response>
         ///
         /// <response code="403">
-        /// The user is already a member of this group
+        /// <para>1.) The user is already a member of this group</para>
+        /// <para>2.) You are not permitted to create users in this group</para>
         /// </response>
         /// 
         /// <response code="404">
-        ///     <para>1.) Provided user does not exist</para>
-        ///     <para>2.) Provided group does not exist</para>
+        /// <para>1.) Provided user does not exist</para>
+        /// <para>2.) Provided group does not exist</para>
         /// </response>
         ///
         /// <response code="500">
@@ -133,6 +134,20 @@ namespace Presentation.Api.Controllers
                 });
             }
 
+            // Check if the current user is permitted to create memberships in this group
+            CanCreateMembershipQuery canCreateQuery = new CanCreateMembershipQuery { GroupId = body.GroupId };
+
+            bool canCreate = await _mediator.Send(canCreateQuery, cancellationToken);
+
+            if (!canCreate)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "You are not permitted to add users to this group. This privilege is only granted to administrators of the group"
+                });
+            }
+
             // Check if such a membership does not already exist
             MembershipCombinationExistsQuery membershipExistsQuery = _mapper.Map<CreateMembershipBody, MembershipCombinationExistsQuery>(body);
 
@@ -153,7 +168,6 @@ namespace Presentation.Api.Controllers
 
             return CreatedAtAction(nameof(GetMembershipById), new { membershipId = membership.GroupMembershipId }, membership);
         }
-
 
         /// <summary>
         /// Gets a single membership
@@ -217,10 +231,115 @@ namespace Presentation.Api.Controllers
             return Ok(membership);
         }
 
+        /// <summary>
+        /// Updates a membership
+        /// </summary>
+        ///
+        /// <remarks>
+        /// Updates the admin status of an existing group membership
+        /// </remarks>
+        /// 
+        /// <param name="membershipId">
+        /// ID of the membership to update
+        /// </param>
+        /// 
+        /// <param name="body">
+        /// Specifies the admin status to be updated
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">
+        /// Notifies asynchronous operations to cancel ongoing work and release resources
+        /// </param>
+        /// 
+        /// <returns>
+        /// No content
+        /// </returns>
+        ///
+        /// <response code="204">
+        /// Update was successful
+        /// </response>
+        ///
+        /// <response code="400">
+        /// Request body failed model validation
+        /// </response>
+        ///
+        /// <response code="403">
+        /// User is not permitted to update this membership. Only administrators of a group can update memberships
+        /// </response>
+        ///
+        /// <response code="404">
+        /// Membership with given ID does not exist
+        /// </response>
+        ///
+        /// <response code="500">
+        /// An unexpected error occurred
+        /// </response>
         [HttpPut("{membershipId:int}")]
         [Authorize]
-        public async Task<ActionResult> UpdateMembership()
+
+        [SwaggerRequestExample(typeof(UpdateMembershipBody), typeof(UpdateMembershipBodyExample))]
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(UpdateMembershipBadRequestExample))]
+
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(UpdateMembershipForbiddenExample))]
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(UpdateMembershipNotFoundExample))]
+
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
+        public async Task<ActionResult> UpdateMembership([FromRoute] int membershipId, [FromBody] UpdateMembershipBody body, CancellationToken cancellationToken = default)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check if membership exists
+            MembershipExistsQuery existsQuery = new MembershipExistsQuery {GroupMembershipId = membershipId};
+
+            bool exists = await _mediator.Send(existsQuery, cancellationToken);
+
+            if (!exists)
+            {
+                return NotFound(new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = $"Membership with ID '{membershipId}' does not exist"
+                });
+            }
+
+            // Check if the current user is allowed to update the membership
+            CanUpdateMembershipQuery canUpdateQuery = new CanUpdateMembershipQuery {GroupMembershipIdToUpdate = membershipId};
+
+            bool canUpdate = await _mediator.Send(canUpdateQuery, cancellationToken);
+
+            if (!canUpdate)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "You are not permitted to mutate users in this group. This privilege is only granted to administrators of the group"
+                });
+            }
+
+            // Update membership
+            UpdateMembershipCommand updateCommand = new UpdateMembershipCommand
+            {
+                GroupMembershipId = membershipId,
+                IsAdmin = body.IsAdmin
+            };
+
+            await _mediator.Send(updateCommand, cancellationToken);
+
             return NoContent();
         }
 

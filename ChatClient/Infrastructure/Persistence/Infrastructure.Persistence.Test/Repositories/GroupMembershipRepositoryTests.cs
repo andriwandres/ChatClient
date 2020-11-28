@@ -281,5 +281,231 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Assert
             Assert.False(exists);
         }
+
+        [Fact]
+        public void Update_ShouldUpdateMembership()
+        {
+            // Arrange
+            DbSet<GroupMembership> dbSetMock = Enumerable
+                .Empty<GroupMembership>()
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.GroupMemberships)
+                .Returns(dbSetMock);
+
+            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+
+            // Act
+            repository.Update(new GroupMembership());
+
+            // Assert
+            contextMock.Verify(m => m.GroupMemberships.Update(It.IsAny<GroupMembership>()));
+        }
+
+        [Fact]
+        public async Task GetByCombination_ShouldReturnEmptyQueryable_WhenCombinationDoesNotMatch()
+        {
+            // Arrange
+            const int userId = 4311;
+            const int groupId = 411;
+
+            IEnumerable<GroupMembership> memberships = new[]
+            {
+                new GroupMembership {GroupMembershipId = 1, GroupId = 1, UserId = 2},
+                new GroupMembership {GroupMembershipId = 2, GroupId = 1, UserId = 1},
+                new GroupMembership {GroupMembershipId = 3, GroupId = 2, UserId = 1},
+                new GroupMembership {GroupMembershipId = 4, GroupId = 2, UserId = 2},
+            };
+
+            DbSet<GroupMembership> dbSetMock = memberships
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.GroupMemberships)
+                .Returns(dbSetMock);
+
+            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+
+            // Act
+            GroupMembership actualMembership = await repository
+                .GetByCombination(groupId, userId)
+                .SingleOrDefaultAsync();
+
+            // Assert
+            Assert.Null(actualMembership);
+        }
+
+        [Fact]
+        public async Task GetByCombination_ShouldReturnMembership_WhenCombinationMatches()
+        {
+            // Arrange
+            const int userId = 1;
+            const int groupId = 1;
+
+            IEnumerable<GroupMembership> memberships = new[]
+            {
+                new GroupMembership {GroupMembershipId = 1, GroupId = 1, UserId = 2},
+                new GroupMembership {GroupMembershipId = 2, GroupId = 1, UserId = 1},
+                new GroupMembership {GroupMembershipId = 3, GroupId = 2, UserId = 1},
+                new GroupMembership {GroupMembershipId = 4, GroupId = 2, UserId = 2},
+            };
+
+            DbSet<GroupMembership> dbSetMock = memberships
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.GroupMemberships)
+                .Returns(dbSetMock);
+
+            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+
+            // Act
+            GroupMembership actualMembership = await repository
+                .GetByCombination(groupId, userId)
+                .SingleOrDefaultAsync();
+
+            // Assert
+            Assert.NotNull(actualMembership);
+            Assert.Equal(2, actualMembership.GroupMembershipId);
+        }
+
+        [Fact]
+        public async Task CanUpdateMembership_ShouldReturnFalse_WhenTheUserIsNotPartOfTheGroup()
+        {
+            // Arrange
+            const int userId = 1;
+            const int membershipIdToUpdate = 1;
+
+            IEnumerable<GroupMembership> memberships = new[]
+            {
+                new GroupMembership 
+                {
+                    GroupMembershipId = 1, 
+                    GroupId = 1, 
+                    UserId = 2,
+                    Group = new Group
+                    {
+                        Memberships = new HashSet<GroupMembership>
+                        {
+                            new GroupMembership { GroupMembershipId = 2, UserId = 2, IsAdmin = true }
+                        }
+                    }
+                },
+            };
+
+            DbSet<GroupMembership> dbSetMock = memberships
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.GroupMemberships)
+                .Returns(dbSetMock);
+
+            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+
+            // Act
+            bool canUpdate = await repository.CanUpdateMembership(userId, membershipIdToUpdate);
+
+            // Assert
+            Assert.False(canUpdate);
+        }
+
+        [Fact]
+        public async Task CanUpdateMembership_ShouldReturnFalse_WhenTheUserIsNotAnAdministrator()
+        {
+            // Arrange
+            const int userId = 1;
+            const int membershipIdToUpdate = 1;
+
+            IEnumerable<GroupMembership> memberships = new[]
+            {
+                new GroupMembership
+                {
+                    GroupMembershipId = 1,
+                    GroupId = 1,
+                    UserId = 2,
+                    Group = new Group
+                    {
+                        Memberships = new HashSet<GroupMembership>
+                        {
+                            new GroupMembership { GroupMembershipId = 2, UserId = 1, IsAdmin = false }
+                        }
+                    }
+                },
+            };
+
+            DbSet<GroupMembership> dbSetMock = memberships
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.GroupMemberships)
+                .Returns(dbSetMock);
+
+            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+
+            // Act
+            bool canUpdate = await repository.CanUpdateMembership(userId, membershipIdToUpdate);
+
+            // Assert
+            Assert.False(canUpdate);
+        }
+
+        [Fact]
+        public async Task CanUpdateMembership_ShouldReturnTrue_WhenTheUserIsAnAdministrator()
+        {
+            // Arrange
+            const int userId = 1;
+            const int membershipIdToUpdate = 1;
+
+            IEnumerable<GroupMembership> memberships = new[]
+            {
+                new GroupMembership
+                {
+                    GroupMembershipId = 1,
+                    GroupId = 1,
+                    UserId = 2,
+                    Group = new Group
+                    {
+                        Memberships = new HashSet<GroupMembership>
+                        {
+                            new GroupMembership { GroupMembershipId = 2, UserId = 1, IsAdmin = true }
+                        }
+                    }
+                },
+            };
+
+            DbSet<GroupMembership> dbSetMock = memberships
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            contextMock
+                .Setup(m => m.GroupMemberships)
+                .Returns(dbSetMock);
+
+            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+
+            // Act
+            bool canUpdate = await repository.CanUpdateMembership(userId, membershipIdToUpdate);
+
+            // Assert
+            Assert.True(canUpdate);
+        }
     }
 }

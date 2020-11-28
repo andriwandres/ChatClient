@@ -343,12 +343,13 @@
              </response>
             
              <response code="403">
-             The user is already a member of this group
+             <para>1.) The user is already a member of this group</para>
+             <para>2.) You are not permitted to create users in this group</para>
              </response>
              
              <response code="404">
-                 <para>1.) Provided user does not exist</para>
-                 <para>2.) Provided group does not exist</para>
+             <para>1.) Provided user does not exist</para>
+             <para>2.) Provided group does not exist</para>
              </response>
             
              <response code="500">
@@ -378,6 +379,51 @@
             
              <response code="200">
              Contains matching membership
+             </response>
+            
+             <response code="404">
+             Membership with given ID does not exist
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
+        <member name="M:Presentation.Api.Controllers.GroupMembershipController.UpdateMembership(System.Int32,Core.Domain.Dtos.GroupMemberships.UpdateMembershipBody,System.Threading.CancellationToken)">
+             <summary>
+             Updates a membership
+             </summary>
+            
+             <remarks>
+             Updates the admin status of an existing group membership
+             </remarks>
+             
+             <param name="membershipId">
+             ID of the membership to update
+             </param>
+             
+             <param name="body">
+             Specifies the admin status to be updated
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             No content
+             </returns>
+            
+             <response code="204">
+             Update was successful
+             </response>
+            
+             <response code="400">
+             Request body failed model validation
+             </response>
+            
+             <response code="403">
+             User is not permitted to update this membership. Only administrators of a group can update memberships
              </response>
             
              <response code="404">

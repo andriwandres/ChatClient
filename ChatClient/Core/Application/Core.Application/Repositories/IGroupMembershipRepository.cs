@@ -9,8 +9,13 @@ namespace Core.Application.Repositories
     {
         IQueryable<GroupMembership> GetById(int membershipId);
         IQueryable<GroupMembership> GetByGroup(int groupId);
+        IQueryable<GroupMembership> GetByCombination(int groupId, int userId);
+
         Task<bool> Exists(int membershipId, CancellationToken cancellationToken = default);
         Task<bool> CombinationExists(int groupId, int userId, CancellationToken cancellationToken = default);
+        Task<bool> CanUpdateMembership(int userId, int membershipIdToUpdate, CancellationToken cancellationToken = default);
+
         Task Add(GroupMembership membership, CancellationToken cancellationToken = default);
+        void Update(GroupMembership membership);
     }
 }

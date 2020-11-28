@@ -252,7 +252,7 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Core.Domain.Entities.GroupMembership", b =>
                 {
-                    b.Property<int>("GroupMembershipId")
+                    b.Property<int>("GroupMembershipIdToUpdate")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
@@ -271,7 +271,7 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.HasKey("GroupMembershipId");
+                    b.HasKey("GroupMembershipIdToUpdate");
 
                     b.HasIndex("GroupId");
 
@@ -467,7 +467,7 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("GroupMembershipId")
+                    b.Property<int?>("GroupMembershipIdToUpdate")
                         .HasColumnType("int");
 
                     b.Property<int?>("UserId")
@@ -475,17 +475,17 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("RecipientId");
 
-                    b.HasIndex("GroupMembershipId")
+                    b.HasIndex("GroupMembershipIdToUpdate")
                         .IsUnique()
-                        .HasFilter("[GroupMembershipId] IS NOT NULL");
+                        .HasFilter("[GroupMembershipIdToUpdate] IS NOT NULL");
 
                     b.HasIndex("UserId")
                         .IsUnique()
                         .HasFilter("[UserId] IS NOT NULL");
 
-                    b.HasIndex("UserId", "GroupMembershipId")
+                    b.HasIndex("UserId", "GroupMembershipIdToUpdate")
                         .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL AND [GroupMembershipId] IS NOT NULL");
+                        .HasFilter("[UserId] IS NOT NULL AND [GroupMembershipIdToUpdate] IS NOT NULL");
 
                     b.ToTable("Recipients");
                 });
@@ -808,7 +808,7 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     b.HasOne("Core.Domain.Entities.GroupMembership", "GroupMembership")
                         .WithOne("Recipient")
-                        .HasForeignKey("Core.Domain.Entities.Recipient", "GroupMembershipId");
+                        .HasForeignKey("Core.Domain.Entities.Recipient", "GroupMembershipIdToUpdate");
 
                     b.HasOne("Core.Domain.Entities.User", "User")
                         .WithOne("Recipient")
