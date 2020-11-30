@@ -32,7 +32,7 @@ namespace Core.Application.Requests.GroupMemberships.Queries
                     .GetById(request.GroupMembershipId)
                     .SingleOrDefaultAsync(cancellationToken);
 
-                return membership.GroupMembershipId == currentUserId;
+                return membership.UserId == currentUserId;
             }
         }
     }

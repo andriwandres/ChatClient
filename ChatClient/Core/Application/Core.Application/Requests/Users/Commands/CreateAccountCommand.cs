@@ -31,8 +31,10 @@ namespace Core.Application.Requests.Users.Commands
                 User user = new User
                 {
                     Email = request.Email,
-                    UserName = request.UserName
+                    UserName = request.UserName,
                 };
+
+                Recipient recipient = new Recipient { User = user };
 
                 // Generate salt + password hash
                 byte[] salt = _cryptoService.GenerateSalt();
@@ -42,7 +44,10 @@ namespace Core.Application.Requests.Users.Commands
                 user.PasswordHash = hash;
                 user.Created = _dateProvider.UtcNow();
 
+                // Add entites
                 await _unitOfWork.Users.Add(user, cancellationToken);
+                await _unitOfWork.Recipients.Add(recipient, cancellationToken);
+
                 await _unitOfWork.CommitAsync(cancellationToken);
 
                 return user.UserId;

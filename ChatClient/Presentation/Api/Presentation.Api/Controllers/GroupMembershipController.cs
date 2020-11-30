@@ -351,7 +351,7 @@ namespace Presentation.Api.Controllers
             UpdateMembershipCommand updateCommand = new UpdateMembershipCommand
             {
                 GroupMembershipId = membershipId,
-                IsAdmin = body.IsAdmin
+                IsAdmin = body.IsAdmin != null && (bool) body.IsAdmin
             };
 
             await _mediator.Send(updateCommand, cancellationToken);

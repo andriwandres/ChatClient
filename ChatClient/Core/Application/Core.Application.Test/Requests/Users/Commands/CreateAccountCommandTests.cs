@@ -4,13 +4,14 @@ using Core.Application.Services;
 using Core.Domain.Entities;
 using Moq;
 using System;
+using System.Net.Mail;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
 namespace Core.Application.Test.Requests.Users.Commands
 {
-    public class CreateAccountCommandHandler
+    public class CreateAccountCommandTests
     {
         [Fact]
         public async Task CreateAccountCommandHandler_ShouldReturnGeneratedUserId()
@@ -31,6 +32,10 @@ namespace Core.Application.Test.Requests.Users.Commands
 
             unitOfWorkMock
                 .Setup(m => m.Users.Add(It.IsAny<User>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
+            unitOfWorkMock
+                .Setup(m => m.Recipients.Add(It.IsAny<Recipient>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
             Mock<ICryptoService> cryptoServiceMock = new Mock<ICryptoService>();
@@ -55,6 +60,7 @@ namespace Core.Application.Test.Requests.Users.Commands
 
             // Assert
             unitOfWorkMock.Verify(m => m.Users.Add(It.IsAny<User>(), It.IsAny<CancellationToken>()));
+            unitOfWorkMock.Verify(m => m.Recipients.Add(It.IsAny<Recipient>(), It.IsAny<CancellationToken>()));
             unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()));
         }
     }

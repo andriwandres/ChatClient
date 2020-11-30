@@ -14,39 +14,39 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
     public class IsOwnMembershipQueryTests
     {
         private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
-        private readonly Mock<IUnitOfWork> _unitOfWork;
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
         public IsOwnMembershipQueryTests()
         {
-            Claim expectedNameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, 1.ToString());
+            Claim expectedNameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, 2.ToString());
 
             _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
             _httpContextAccessorMock
                 .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
                 .Returns(expectedNameIdentifierClaim);
 
-            _unitOfWork = new Mock<IUnitOfWork>();
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
         }
 
         [Fact]
         public async Task IsOwnMembershipQueryHandler_ShouldReturnTrue_WhenMembershipIsOwn()
         {
             // Arrange
-            IsOwnMembershipQuery request = new IsOwnMembershipQuery {GroupMembershipId = 1};
+            IsOwnMembershipQuery request = new IsOwnMembershipQuery {GroupMembershipId = 2};
 
             IQueryable<GroupMembership> expectedMembership = new[]
             {
-                new GroupMembership { GroupMembershipId = 1, UserId = 1, GroupId = 1 }
+                new GroupMembership { GroupMembershipId = 1, UserId = 2, GroupId = 1 }
             }
             .AsQueryable()
             .BuildMock()
             .Object;
 
-            _unitOfWork
-                .Setup(m => m.GroupMemberships.GetById(1))
+            _unitOfWorkMock
+                .Setup(m => m.GroupMemberships.GetById(request.GroupMembershipId))
                 .Returns(expectedMembership);
 
-            IsOwnMembershipQuery.Handler handler = new IsOwnMembershipQuery.Handler(_unitOfWork.Object, _httpContextAccessorMock.Object);
+            IsOwnMembershipQuery.Handler handler = new IsOwnMembershipQuery.Handler(_unitOfWorkMock.Object, _httpContextAccessorMock.Object);
 
             // Act
             bool isOwn = await handler.Handle(request);
@@ -59,7 +59,7 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
         public async Task IsOwnMembershipQueryHandler_ShouldReturnFalse_WhenMembershipIsForeign()
         {
             // Arrange
-            IsOwnMembershipQuery request = new IsOwnMembershipQuery { GroupMembershipId = 1 };
+            IsOwnMembershipQuery request = new IsOwnMembershipQuery { GroupMembershipId = 2 };
 
             IQueryable<GroupMembership> expectedMembership = new[]
             {
@@ -69,17 +69,17 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
             .BuildMock()
             .Object;
 
-            _unitOfWork
-                .Setup(m => m.GroupMemberships.GetById(1))
+            _unitOfWorkMock
+                .Setup(m => m.GroupMemberships.GetById(request.GroupMembershipId))
                 .Returns(expectedMembership);
 
-            IsOwnMembershipQuery.Handler handler = new IsOwnMembershipQuery.Handler(_unitOfWork.Object, _httpContextAccessorMock.Object);
+            IsOwnMembershipQuery.Handler handler = new IsOwnMembershipQuery.Handler(_unitOfWorkMock.Object, _httpContextAccessorMock.Object);
 
             // Act
             bool isOwn = await handler.Handle(request);
 
             // Assert
-            Assert.True(isOwn);
+            Assert.False(isOwn);
         }
     }
 }

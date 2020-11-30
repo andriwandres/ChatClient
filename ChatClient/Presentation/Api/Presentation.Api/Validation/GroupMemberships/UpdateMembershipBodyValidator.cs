@@ -10,8 +10,8 @@ namespace Presentation.Api.Validation.GroupMemberships
             const string isAdminName = nameof(UpdateMembershipBody.IsAdmin);
 
             RuleFor(body => body.IsAdmin)
-                .NotNull()
-                .WithMessage($"'{isAdminName}' must not be null");
+                .NotEmpty()
+                .WithMessage($"'{isAdminName}' must not be empty");
         }
     }
 }
