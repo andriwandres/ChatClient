@@ -17,4 +17,8 @@
   <ItemGroup>
     <ProjectReference Include="..\Core.Application\Core.Application.csproj" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Requests\Messages\Commands\" />
+  </ItemGroup>
 </Project>

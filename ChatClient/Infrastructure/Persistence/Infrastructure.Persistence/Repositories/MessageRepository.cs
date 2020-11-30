@@ -15,7 +15,6 @@ namespace Infrastructure.Persistence.Repositories
         {
         }
 
-
         public IQueryable<Message> GetById(int messageId)
         {
             return Context.Messages
