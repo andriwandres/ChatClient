@@ -1,6 +1,9 @@
 ﻿using Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Infrastructure.Persistence.Configurations
 {
@@ -18,6 +21,18 @@ namespace Infrastructure.Persistence.Configurations
             // Relationships
             builder.HasMany(status => status.StatusChanges)
                 .WithOne(change => change.Status);
+
+            // Seed data
+            IEnumerable<FriendshipStatus> friendshipStatuses = Enum
+                .GetValues(typeof(FriendshipStatusId))
+                .Cast<FriendshipStatusId>()
+                .Select(status => new FriendshipStatus()
+                {
+                    FriendshipStatusId = status,
+                    Name = status.ToString()
+                });
+
+            builder.HasData(friendshipStatuses);
         }
     }
 }

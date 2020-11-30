@@ -1,10 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Persistence.Migrations
 {
-    [ExcludeFromCodeCoverage]
     public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -112,7 +110,8 @@ namespace Infrastructure.Persistence.Migrations
                     GroupImageId = table.Column<int>(nullable: true),
                     Name = table.Column<string>(nullable: false),
                     Description = table.Column<string>(nullable: false),
-                    Created = table.Column<DateTime>(nullable: false)
+                    Created = table.Column<DateTime>(nullable: false),
+                    IsDeleted = table.Column<bool>(nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
@@ -395,8 +394,8 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     RecipientId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    GroupMembershipId = table.Column<int>(nullable: false),
-                    UserId = table.Column<int>(nullable: false)
+                    GroupMembershipId = table.Column<int>(nullable: true),
+                    UserId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -405,13 +404,14 @@ namespace Infrastructure.Persistence.Migrations
                         name: "FK_Recipients_GroupMemberships_GroupMembershipId",
                         column: x => x.GroupMembershipId,
                         principalTable: "GroupMemberships",
-                        principalColumn: "GroupMembershipIdToUpdate",
-                        onDelete: ReferentialAction.Restrict);
+                        principalColumn: "GroupMembershipId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Recipients_Users_UserId",
                         column: x => x.UserId,
                         principalTable: "Users",
-                        principalColumn: "UserId");
+                        principalColumn: "UserId",
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateTable(
@@ -524,6 +524,26 @@ namespace Infrastructure.Persistence.Migrations
                         column: x => x.UserId,
                         principalTable: "Users",
                         principalColumn: "UserId");
+                });
+
+            migrationBuilder.InsertData(
+                table: "FriendshipStatuses",
+                columns: new[] { "FriendshipStatusId", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Pending" },
+                    { 2, "Accepted" },
+                    { 3, "Ignored" },
+                    { 4, "Blocked" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "RedeemTokenTypes",
+                columns: new[] { "RedeemTokenTypeId", "Name" },
+                values: new object[,]
+                {
+                    { 1, "EmailConfirmation" },
+                    { 2, "PasswordRecovery" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -662,20 +682,23 @@ namespace Infrastructure.Persistence.Migrations
             migrationBuilder.CreateIndex(
                 name: "IX_Recipients_GroupMembershipId",
                 table: "Recipients",
-                column: "GroupMembershipIdToUpdate",
-                unique: true);
+                column: "GroupMembershipId",
+                unique: true,
+                filter: "[GroupMembershipId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Recipients_UserId",
                 table: "Recipients",
                 column: "UserId",
-                unique: true);
+                unique: true,
+                filter: "[UserId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Recipients_UserId_GroupMembershipId",
                 table: "Recipients",
-                columns: new[] { "UserId", "GroupMembershipIdToUpdate" },
-                unique: true);
+                columns: new[] { "UserId", "GroupMembershipId" },
+                unique: true,
+                filter: "[UserId] IS NOT NULL AND [GroupMembershipId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_RedeemTokens_TypeId",

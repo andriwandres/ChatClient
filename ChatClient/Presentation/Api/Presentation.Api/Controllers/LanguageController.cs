@@ -13,6 +13,7 @@ using Presentation.Api.Examples.Translations;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
+using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,7 +21,8 @@ namespace Presentation.Api.Controllers
 {
     [ApiController]
     [Route("api/languages")]
-    [Produces("application/json")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
     [SwaggerTag("Manages languages and translations")]
     public class LanguageController : ControllerBase
     {

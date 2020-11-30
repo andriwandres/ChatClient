@@ -22,6 +22,7 @@ namespace Presentation.Api.Controllers
 {
     [ApiController]
     [Route("api/friendships")]
+    [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [SwaggerTag("Manages friendships between users")]
     public class FriendshipController : ControllerBase

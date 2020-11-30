@@ -16,6 +16,7 @@ using Presentation.Api.Examples.Users;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
+using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,7 +24,8 @@ namespace Presentation.Api.Controllers
 {
     [ApiController]
     [Route("api/users")]
-    [Produces("application/json")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
     [SwaggerTag("Manages user-related data")]
     public class UserController : ControllerBase
     {

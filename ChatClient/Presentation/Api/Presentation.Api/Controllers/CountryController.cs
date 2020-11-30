@@ -6,18 +6,19 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Examples;
+using Presentation.Api.Examples.Countries;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
-using Presentation.Api.Examples.Countries;
 
 namespace Presentation.Api.Controllers
 {
     [ApiController]
     [Route("api/countries")]
+    [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [SwaggerTag("Manages countries")]
     public class CountryController : ControllerBase

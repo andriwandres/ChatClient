@@ -24,6 +24,7 @@ namespace Presentation.Api.Controllers
 {
     [ApiController]
     [Route("api/groups")]
+    [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [SwaggerTag("Manages groups of users")]
     public class GroupController : ControllerBase

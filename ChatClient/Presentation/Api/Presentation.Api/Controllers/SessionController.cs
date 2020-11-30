@@ -11,6 +11,7 @@ using Presentation.Api.Examples;
 using Presentation.Api.Examples.Session;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
+using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,7 +19,8 @@ namespace Presentation.Api.Controllers
 {
     [ApiController]
     [Route("api/session")]
-    [Produces("application/json")]
+    [Consumes(MediaTypeNames.Application.Json)]
+    [Produces(MediaTypeNames.Application.Json)]
     [SwaggerTag("Manages sign-in session")]
     public class SessionController : ControllerBase
     {

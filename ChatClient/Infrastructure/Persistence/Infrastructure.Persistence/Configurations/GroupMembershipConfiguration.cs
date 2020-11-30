@@ -29,7 +29,8 @@ namespace Infrastructure.Persistence.Configurations
 
             // Relationships
             builder.HasOne(membership => membership.Recipient)
-                .WithOne(recipient => recipient.GroupMembership);
+                .WithOne(recipient => recipient.GroupMembership)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(membership => membership.Group)
                 .WithMany(group => group.Memberships)

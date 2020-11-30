@@ -22,6 +22,7 @@ namespace Presentation.Api.Controllers
 {
     [ApiController]
     [Route("api/group-memberships")]
+    [Consumes(MediaTypeNames.Application.Json)]
     [Produces(MediaTypeNames.Application.Json)]
     [SwaggerTag("Manages memberships of groups")]
     public class GroupMembershipController : ControllerBase
