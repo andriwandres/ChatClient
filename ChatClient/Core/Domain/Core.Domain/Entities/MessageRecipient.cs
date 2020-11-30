@@ -9,7 +9,7 @@ namespace Core.Domain.Entities
         public int MessageId { get; set; }
         public bool IsForwarded { get; set; }
         public bool IsRead { get; set; }
-        public DateTime ReadDate { get; set; }
+        public DateTime? ReadDate { get; set; }
 
         public Recipient Recipient { get; set; }
         public Message Message { get; set; }

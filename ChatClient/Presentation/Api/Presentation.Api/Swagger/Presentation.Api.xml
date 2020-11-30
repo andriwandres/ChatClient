@@ -538,6 +538,43 @@
              An unexpected error occurred
              </response>
         </member>
+        <member name="M:Presentation.Api.Controllers.MessageController.GetMessageById(System.Int32,System.Threading.CancellationToken)">
+             <summary>
+             Gets information about a message
+             </summary>
+            
+             <remarks>
+             Gets detailed information about a single message, given its unique ID.
+             </remarks>
+             
+             <param name="messageId">
+             The ID of the message to get
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             Message with given ID
+             </returns>
+            
+             <response code="200">
+             Contains message with given ID
+             </response>
+            
+             <response code="403">
+             The user is not permitted to access the given message.
+             </response>
+            
+             <response code="404">
+             Message with given ID does not exist
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
         <member name="M:Presentation.Api.Controllers.SessionController.Login(Core.Domain.Dtos.Session.LoginBody,System.Threading.CancellationToken)">
              <summary>
              Signs the user in to a new session

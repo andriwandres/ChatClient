@@ -16,6 +16,8 @@ namespace Infrastructure.Persistence.Database
         private GroupMembershipRepository _groupMembershipRepository;
         private GroupRepository _groupRepository;
         private LanguageRepository _languageRepository;
+        private MessageRecipientRepository _messageRecipientRepository;
+        private MessageRepository _messageRepository;
         private RecipientRepository _recipientRepository;
         private TranslationRepository _translationRepository;
         private UserRepository _userRepository;
@@ -31,6 +33,8 @@ namespace Infrastructure.Persistence.Database
         public IGroupMembershipRepository GroupMemberships => _groupMembershipRepository ??= new GroupMembershipRepository(_context);
         public IGroupRepository Groups => _groupRepository ??= new GroupRepository(_context);
         public ILanguageRepository Languages => _languageRepository ??= new LanguageRepository(_context);
+        public IMessageRecipientRepository MessageRecipients => _messageRecipientRepository ??= new MessageRecipientRepository(_context);
+        public IMessageRepository Messages => _messageRepository ??= new MessageRepository(_context);
         public IRecipientRepository Recipients => _recipientRepository ??= new RecipientRepository(_context);
         public ITranslationRepository Translations => _translationRepository ??= new TranslationRepository(_context);
         public IUserRepository Users => _userRepository ??= new UserRepository(_context);

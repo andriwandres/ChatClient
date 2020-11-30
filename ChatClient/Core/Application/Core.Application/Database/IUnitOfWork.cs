@@ -13,6 +13,8 @@ namespace Core.Application.Database
         IGroupMembershipRepository GroupMemberships { get; }
         IGroupRepository Groups { get; }
         ILanguageRepository Languages { get; }
+        IMessageRecipientRepository MessageRecipients { get; }
+        IMessageRepository Messages { get; }
         IRecipientRepository Recipients { get; }
         ITranslationRepository Translations { get; }
         IUserRepository Users { get; }
