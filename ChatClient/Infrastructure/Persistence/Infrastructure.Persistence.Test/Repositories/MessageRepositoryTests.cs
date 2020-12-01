@@ -6,6 +6,7 @@ using MockQueryable.Moq;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -19,6 +20,8 @@ namespace Infrastructure.Persistence.Test.Repositories
         {
             _contextMock = new Mock<IChatContext>();
         }
+
+        #region GetById()
 
         [Fact]
         public async Task GetById_ShouldReturnEmptyQueryable_WhenIdDoesNotMatch()
@@ -83,6 +86,10 @@ namespace Infrastructure.Persistence.Test.Repositories
             Assert.Equal(messageId, message.MessageId);
         }
 
+        #endregion
+
+        #region Exists()
+
         [Fact]
         public async Task Exists_ShouldReturnTrue_WhenMessageExists()
         {
@@ -140,6 +147,10 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Assert
             Assert.False(exists);
         }
+
+        #endregion
+
+        #region CanAccess()
 
         [Fact]
         public async Task CanAccess_ShouldReturnTrue_WhenTheUserIsTheAuthorOfTheMessage()
@@ -269,5 +280,28 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Assert
             Assert.False(canAccess);
         }
+
+        #endregion
+
+        #region Add()
+
+        [Fact]
+        public async Task Add_ShouldAddMessage()
+        {
+            // Arrange
+            Message message = new Message();
+
+            _contextMock.Setup(m => m.Messages.AddAsync(message, It.IsAny<CancellationToken>()));
+
+            MessageRepository repository = new MessageRepository(_contextMock.Object);
+
+            // Act
+            await repository.Add(message);
+
+            // Assert
+            _contextMock.Verify(m => m.Messages.AddAsync(message, It.IsAny<CancellationToken>()));
+        }
+
+        #endregion
     }
 }
