@@ -40,5 +40,10 @@ namespace Infrastructure.Persistence.Repositories
                     cancellationToken
                 );
         }
+
+        public async Task Add(Message message, CancellationToken cancellationToken = default)
+        {
+            await Context.Messages.AddAsync(message, cancellationToken);
+        }
     }
 }

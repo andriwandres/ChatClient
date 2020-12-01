@@ -11,5 +11,7 @@ namespace Core.Application.Repositories
 
         Task<bool> Exists(int messageId, CancellationToken cancellationToken = default);
         Task<bool> CanAccess(int messageId, int userId, CancellationToken cancellationToken = default);
+
+        Task Add(Message message, CancellationToken cancellationToken = default);
     }
 }

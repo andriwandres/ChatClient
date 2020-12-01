@@ -1,5 +1,8 @@
 ﻿using AutoMapper;
+using Core.Application.Requests.Messages.Commands;
 using Core.Application.Requests.Messages.Queries;
+using Core.Application.Requests.Recipients.Queries;
+using Core.Domain.Dtos.Messages;
 using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Messages;
 using MediatR;
@@ -34,9 +37,78 @@ namespace Presentation.Api.Controllers
 
         [HttpPost]
         [Authorize]
-        public async Task<ActionResult> SendMessage(CancellationToken cancellationToken = default)
+        public async Task<ActionResult> SendMessage([FromBody] SendMessageBody body, CancellationToken cancellationToken = default)
         {
-            return NoContent();
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check if recipient exists
+            RecipientExistsQuery recipientExistsQuery = new RecipientExistsQuery { RecipientId = body.RecipientId };
+
+            bool recipientExists = await _mediator.Send(recipientExistsQuery, cancellationToken);
+
+            if (!recipientExists)
+            {
+                return NotFound(new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = $"Recipient with ID '{body.RecipientId}' does not exist"
+                });
+            }
+
+            // Check if the the user wants to message himself
+            IsOwnRecipientQuery isOwnRecipientQuery = new IsOwnRecipientQuery { RecipientId = body.RecipientId };
+
+            bool isOwnRecipient = await _mediator.Send(isOwnRecipientQuery, cancellationToken);
+
+            if (isOwnRecipient)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "You cannot write messages to yourself"
+                });
+            }
+
+            if (body.ParentId != null)
+            {
+                // Check if parent message exists
+                MessageExistsQuery parentMessageExistsQuery = new MessageExistsQuery { MessageId = body.ParentId.Value };
+
+                bool parentMessageExists = await _mediator.Send(parentMessageExistsQuery, cancellationToken);
+
+                if (!parentMessageExists)
+                {
+                    return NotFound(new ErrorResource
+                    {
+                        StatusCode = StatusCodes.Status404NotFound,
+                        Message = $"Parent message with ID '{body.ParentId}' does not exist"
+                    });
+                }
+
+                // Check if the user should have access to the parent message
+                CanAccessMessageQuery canAccessParentMessageQuery = new CanAccessMessageQuery { MessageId = body.ParentId.Value };
+
+                bool canAccessParentMessage = await _mediator.Send(canAccessParentMessageQuery, cancellationToken);
+
+                if (!canAccessParentMessage)
+                {
+                    return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+                    {
+                        StatusCode = StatusCodes.Status403Forbidden,
+                        Message = "You cannot answer messages from another chat"
+                    });
+                }
+            }
+
+            // Send message to their recipients
+            SendMessageCommand sendMessageCommand = _mapper.Map<SendMessageBody, SendMessageCommand>(body);
+
+            int messageId = await _mediator.Send(sendMessageCommand, cancellationToken);
+
+            return CreatedAtAction(nameof(GetMessageById), new { messageId }, null);
         }
 
         /// <summary>

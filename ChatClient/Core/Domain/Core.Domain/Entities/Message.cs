@@ -7,7 +7,7 @@ namespace Core.Domain.Entities
     {
         public int MessageId { get; set; }
         public int AuthorId { get; set; }
-        public int ParentId { get; set; }
+        public int? ParentId { get; set; }
         public string HtmlContent { get; set; }
         public bool IsEdited { get; set; }
         public DateTime Created { get; set; }
