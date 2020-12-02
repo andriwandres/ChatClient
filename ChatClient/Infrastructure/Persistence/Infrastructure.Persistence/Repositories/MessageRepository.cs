@@ -45,5 +45,10 @@ namespace Infrastructure.Persistence.Repositories
         {
             await Context.Messages.AddAsync(message, cancellationToken);
         }
+
+        public void Update(Message message)
+        {
+            Context.Messages.Update(message);
+        }
     }
 }

@@ -35,8 +35,69 @@ namespace Presentation.Api.Controllers
             _mediator = mediator;
         }
 
+        /// <summary>
+        /// Sends a message to one or multiple recipients
+        /// </summary>
+        ///
+        /// <remarks>
+        /// Creates a message and sends it to one or multiple users in the system depending on whether the target is a group chat or a private chat
+        /// </remarks>
+        /// 
+        /// <param name="body">
+        /// Specifies information about the message to be sent
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">
+        /// Notifies asynchronous operations to cancel ongoing work and release resources
+        /// </param>
+        /// 
+        /// <returns>
+        /// Created result with Location header that tells the consumer where to get the created resource
+        /// </returns>
+        ///
+        /// <response code="201">
+        /// Sending of message was successful
+        /// </response>
+        ///
+        /// <response code="400">
+        /// Model validation of request body has failed
+        /// </response>
+        ///
+        /// <response code="403">
+        /// <para>1.) User tried messaging himself</para>
+        /// <para>2.) User tried to answer a message from a foreign chat source</para>
+        /// </response>
+        ///
+        /// <response code="404">
+        /// <para>1.) Recipient with given ID does not exist</para>
+        /// <para>2.) Parent message with given ID does not exist</para>
+        /// </response>
+        ///
+        /// <response code="500">
+        /// An unexpected error occurred
+        /// </response>
         [HttpPost]
         [Authorize]
+
+        [SwaggerRequestExample(typeof(SendMessageBody), typeof(SendMessageBodyExample))]
+
+        [ProducesResponseType(StatusCodes.Status201Created)]
+
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(SendMessageBadRequestExample))]
+
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(SendMessageForbiddenExample))]
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(SendMessageForbiddenExample))]
+
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult> SendMessage([FromBody] SendMessageBody body, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
@@ -98,7 +159,7 @@ namespace Presentation.Api.Controllers
                     return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
                     {
                         StatusCode = StatusCodes.Status403Forbidden,
-                        Message = "You cannot answer messages from another chat"
+                        Message = "You cannot answer messages from a foreign chat"
                     });
                 }
             }
@@ -201,17 +262,146 @@ namespace Presentation.Api.Controllers
             return Ok(message);
         }
 
+        /// <summary>
+        /// Edits a message
+        /// </summary>
+        ///
+        /// <remarks>
+        /// Edits the HTML content of a message and marks a message as 'Edited'
+        /// </remarks>
+        /// 
+        /// <param name="messageId">
+        /// Unique ID of the message to edit
+        /// </param>
+        /// 
+        /// <param name="body">
+        /// Specifies the new HTML content to be applied
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">
+        /// Notifies asynchronous operations to cancel ongoing work and release resources
+        /// </param>
+        /// 
+        /// <returns>
+        /// No content
+        /// </returns>
+        ///
+        /// <response code="204">
+        /// Edit was successful
+        /// </response>
+        ///
+        /// <response code="400">
+        /// Request body has failed model validation
+        /// </response>
+        ///
+        /// <response code="403">
+        /// The user tried to edit a message that is not writtem by himself
+        /// </response>
+        ///
+        /// <response code="404">
+        /// A message with given ID does not exist
+        /// </response>
+        ///
+        /// <response code="500">
+        /// An unexpected error occurred
+        /// </response>
         [HttpPut("{messageId:int}")]
         [Authorize]
-        public async Task<ActionResult> EditMessage(CancellationToken cancellationToken = default)
+
+        [SwaggerRequestExample(typeof(EditMessageBody), typeof(EditMessageBodyExample))]
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(EditMessageBadRequestExample))]
+
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(EditMessageForbiddenExample))]
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(EditMessageNotFoundExample))]
+
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
+        public async Task<ActionResult> EditMessage([FromRoute] int messageId, [FromBody] EditMessageBody body, CancellationToken cancellationToken = default)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check if the message exists
+            MessageExistsQuery existsQuery = new MessageExistsQuery { MessageId = messageId };
+
+            bool exists = await _mediator.Send(existsQuery, cancellationToken);
+
+            if (!exists)
+            {
+                return NotFound(new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = $"Message with ID '{messageId}' does not exist"
+                });
+            }
+
+            // Check if the user is the author of the message and thus allowed to update it
+            IsAuthorOfMessageQuery isAuthorQuery = new IsAuthorOfMessageQuery { MessageId = messageId };
+
+            bool isAuthor = await _mediator.Send(isAuthorQuery, cancellationToken);
+
+            if (!isAuthor)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "Only the author of a message is allowed to update a message"
+                });
+            }
+
+            // Update the message
+            EditMessageCommand editCommand = new EditMessageCommand { MessageId = messageId, HtmlContent = body.HtmlContent };
+
+            await _mediator.Send(editCommand, cancellationToken);
+
             return NoContent();
         }
 
         [HttpDelete("{messageId:int}")]
         [Authorize]
-        public async Task<ActionResult> DeleteMessage(CancellationToken cancellationToken = default)
+        public async Task<ActionResult> DeleteMessage([FromRoute] int messageId, CancellationToken cancellationToken = default)
         {
+            // Check if the message exists
+            MessageExistsQuery existsQuery = new MessageExistsQuery { MessageId = messageId };
+
+            bool exists = await _mediator.Send(existsQuery, cancellationToken);
+
+            if (!exists)
+            {
+                return NotFound(new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = $"Message with ID '{messageId}' does not exist"
+                });
+            }
+
+            // Check if the user is the author of the message and thus allowed to update it
+            IsAuthorOfMessageQuery isAuthorQuery = new IsAuthorOfMessageQuery { MessageId = messageId };
+
+            bool isAuthor = await _mediator.Send(isAuthorQuery, cancellationToken);
+
+            if (!isAuthor)
+            {
+                return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+                {
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "Only the author of a message is allowed to delete a message"
+                });
+            }
+
             return NoContent();
         }
     }

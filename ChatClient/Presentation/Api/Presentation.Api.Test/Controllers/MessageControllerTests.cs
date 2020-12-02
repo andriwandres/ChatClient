@@ -320,5 +320,108 @@ namespace Presentation.Api.Test.Controllers
         }
 
         #endregion
+
+        #region EditMessage()
+
+        [Fact]
+        public async Task EditMessage_ShouldReturnBadRequestResult_WhenModelValidationFails()
+        {
+            // Arrange
+            MessageController controller = new MessageController(null, null);
+
+            controller.ModelState.AddModelError("", "");
+
+            // Act
+            ActionResult response = await controller.EditMessage(1, new EditMessageBody());
+
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(response);
+        }
+
+        [Fact]
+        public async Task EditMessage_ShouldReturnNotFoundResult_WhenMessageDoesNotExist()
+        {
+            // Arrange
+            const int messageId = 1;
+            EditMessageBody body = new EditMessageBody { HtmlContent = "<p>hello world</p>"};
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<MessageExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            MessageController controller = new MessageController(null, _mediatorMock.Object);
+
+            // Act
+            ActionResult response = await controller.EditMessage(messageId, body);
+
+            // Assert
+            NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.NotNull(error);
+            Assert.Equal(StatusCodes.Status404NotFound, error.StatusCode);
+        }
+
+        [Fact]
+        public async Task EditMessage_ShouldReturnForbiddenResult_WhenUserIsNotTheAuthorOfTheMessage()
+        {
+            // Arrange
+            const int messageId = 1;
+            EditMessageBody body = new EditMessageBody { HtmlContent = "<p>hello world</p>" };
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<MessageExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<IsAuthorOfMessageQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            MessageController controller = new MessageController(null, _mediatorMock.Object);
+
+            // Act
+            ActionResult response = await controller.EditMessage(messageId, body);
+
+            // Assert
+            ObjectResult result = Assert.IsType<ObjectResult>(response);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.NotNull(error);
+            Assert.Equal(StatusCodes.Status403Forbidden, error.StatusCode);
+        }
+
+        [Fact]
+        public async Task EditMessage_ShouldUpdateTheMessagesContent()
+        {
+            // Arrange
+            const int messageId = 1;
+            EditMessageBody body = new EditMessageBody { HtmlContent = "<p>hello world</p>" };
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<MessageExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<IsAuthorOfMessageQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<EditMessageCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(Unit.Value);
+
+            MessageController controller = new MessageController(null, _mediatorMock.Object);
+
+            // Act
+            ActionResult response = await controller.EditMessage(messageId, body);
+
+            // Assert
+            Assert.IsType<NoContentResult>(response);
+
+            _mediatorMock.Verify(m => m.Send(It.IsAny<EditMessageCommand>(), It.IsAny<CancellationToken>()), Times.AtLeastOnce);
+        }
+
+        #endregion
     }
 }

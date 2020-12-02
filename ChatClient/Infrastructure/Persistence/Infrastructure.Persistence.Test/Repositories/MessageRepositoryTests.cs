@@ -303,5 +303,26 @@ namespace Infrastructure.Persistence.Test.Repositories
         }
 
         #endregion
+
+        #region Update()
+
+        [Fact]
+        public void Update_ShouldUpdateMessage()
+        {
+            // Arrange
+            Message message = new Message();
+
+            _contextMock.Setup(m => m.Messages.Update(message));
+
+            MessageRepository repository = new MessageRepository(_contextMock.Object);
+
+            // Act
+            repository.Update(message);
+
+            // Assert
+            _contextMock.Verify(m => m.Messages.Update(message));
+        }
+
+        #endregion
     }
 }

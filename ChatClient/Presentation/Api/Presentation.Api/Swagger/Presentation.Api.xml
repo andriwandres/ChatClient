@@ -538,6 +538,49 @@
              An unexpected error occurred
              </response>
         </member>
+        <member name="M:Presentation.Api.Controllers.MessageController.SendMessage(Core.Domain.Dtos.Messages.SendMessageBody,System.Threading.CancellationToken)">
+             <summary>
+             Sends a message to one or multiple recipients
+             </summary>
+            
+             <remarks>
+             Creates a message and sends it to one or multiple users in the system depending on whether the target is a group chat or a private chat
+             </remarks>
+             
+             <param name="body">
+             Specifies information about the message to be sent
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             Created result with Location header that tells the consumer where to get the created resource
+             </returns>
+            
+             <response code="201">
+             Sending of message was successful
+             </response>
+            
+             <response code="400">
+             Model validation of request body has failed
+             </response>
+            
+             <response code="403">
+             <para>1.) User tried messaging himself</para>
+             <para>2.) User tried to answer a message from a foreign chat source</para>
+             </response>
+            
+             <response code="404">
+             <para>1.) Recipient with given ID does not exist</para>
+             <para>2.) Parent message with given ID does not exist</para>
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
         <member name="M:Presentation.Api.Controllers.MessageController.GetMessageById(System.Int32,System.Threading.CancellationToken)">
              <summary>
              Gets information about a message
@@ -569,6 +612,51 @@
             
              <response code="404">
              Message with given ID does not exist
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
+        <member name="M:Presentation.Api.Controllers.MessageController.EditMessage(System.Int32,Core.Domain.Dtos.Messages.EditMessageBody,System.Threading.CancellationToken)">
+             <summary>
+             Edits a message
+             </summary>
+            
+             <remarks>
+             Edits the HTML content of a message and marks a message as 'Edited'
+             </remarks>
+             
+             <param name="messageId">
+             Unique ID of the message to edit
+             </param>
+             
+             <param name="body">
+             Specifies the new HTML content to be applied
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             No content
+             </returns>
+            
+             <response code="204">
+             Edit was successful
+             </response>
+            
+             <response code="400">
+             Request body has failed model validation
+             </response>
+            
+             <response code="403">
+             The user tried to edit a message that is not writtem by himself
+             </response>
+            
+             <response code="404">
+             A message with given ID does not exist
              </response>
             
              <response code="500">
