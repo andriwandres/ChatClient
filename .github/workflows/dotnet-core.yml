@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-test:
-    
+    # build and test on 3 operating systems
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -16,16 +16,25 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
+      # install dotnet core version
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.100
+        
+      # restore dependencies
     - name: Install dependencies
       run: dotnet restore
       working-directory: ChatClient
+      
+      # build solution
     - name: Build
       run: dotnet build --configuration Release --no-restore
       working-directory: ChatClient
+   
+      # run tests
     - name: Test
       run: dotnet test --no-restore --verbosity minimal
-      working-directory: ChatClient
+      working-directory: ChatClient      
+
+       
