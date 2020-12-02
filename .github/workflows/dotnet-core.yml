@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-and-test:
-    
+    # build and test on 3 operating systems
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -16,16 +16,59 @@ jobs:
     
     steps:
     - uses: actions/checkout@v2
+      # install dotnet core version
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.100
+        
+      # restore dependencies
     - name: Install dependencies
       run: dotnet restore
       working-directory: ChatClient
+      
+      # build solution
     - name: Build
       run: dotnet build --configuration Release --no-restore
       working-directory: ChatClient
+      
+      # set pull request number
+    - name: Set PR number
+      id: PRNUMBER
+      if: ${{ github.event_name == 'pull_request' }}
+      uses: kkak10/pr-number-action@v1.3
+    
+      # set report file and title
+    - name: Set Test Title
+      run: |
+        if ${{ github.event_name == 'pull_request' }}
+        then
+          echo "::set-env name=title::Test Run for Pull Request #${{steps.PRNUMBER.outputs.pr}} (${{github.run_number}})"
+          echo "::set-env name=file_name::TestReport.${{steps.PRNUMBER.outputs.pr}}.${{github.run_number}}.md"
+        else
+          echo "::set-env name=title::Test Run ${{github.run_number}}"
+          echo "::set-env name=file_name::TestReport.${{github.run_number}}.md"
+        fi
+              
+      # run tests
     - name: Test
-      run: dotnet test --no-restore --verbosity minimal
-      working-directory: ChatClient
+      run: dotnet test --no-restore --verbosity minimal --configuration $config --logger:"liquid.md;LogFileName=${{github.workspace}}/${{env.file_name}};Title=${{env.title}};"
+      working-directory: ChatClient      
+      
+      # upload report as build artifact
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v2
+      if: ${{ always() }}
+      with:
+        name: 'Test Run'
+        path: ${{github.workspace}}/${{env.file_name}}
+        
+      # comment on pull request
+    - name: Comment Pull Request
+      uses: machine-learning-apps/pr-comment@master
+      if: ${{ github.event_name == 'pull_request' }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        path: ${{env.file_name}}
+       
