@@ -9,6 +9,13 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
 {
     public class MembershipCombinationExistsQueryTests
     {
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+        public MembershipCombinationExistsQueryTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+        }
+
         [Fact]
         public async Task MembershipCombinationExistsQueryHandler_ShouldReturnTrue_WhenCombinationExists()
         {
@@ -19,12 +26,11 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
                 GroupId = 1,
             };
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.GroupMemberships.CombinationExists(request.GroupId, request.UserId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            MembershipCombinationExistsQuery.Handler handler = new MembershipCombinationExistsQuery.Handler(unitOfWorkMock.Object);
+            MembershipCombinationExistsQuery.Handler handler = new MembershipCombinationExistsQuery.Handler(_unitOfWorkMock.Object);
 
             // Act
             bool exists = await handler.Handle(request);
@@ -43,12 +49,11 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
                 GroupId = 421,
             };
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.GroupMemberships.CombinationExists(request.GroupId, request.UserId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
-            MembershipCombinationExistsQuery.Handler handler = new MembershipCombinationExistsQuery.Handler(unitOfWorkMock.Object);
+            MembershipCombinationExistsQuery.Handler handler = new MembershipCombinationExistsQuery.Handler(_unitOfWorkMock.Object);
 
             // Act
             bool exists = await handler.Handle(request);

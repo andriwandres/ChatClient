@@ -15,9 +15,12 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
     public class GetMembershipByIdQueryTests
     {
         private readonly IMapper _mapperMock;
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
         public GetMembershipByIdQueryTests()
         {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
                 config.CreateMap<GroupMembership, GroupMembershipResource>();
@@ -38,12 +41,11 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
                 .BuildMock()
                 .Object;
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.GroupMemberships.GetById(request.GroupMembershipId))
                 .Returns(expectedMemberships);
 
-            GetMembershipByIdQuery.Handler handler = new GetMembershipByIdQuery.Handler(_mapperMock, unitOfWorkMock.Object);
+            GetMembershipByIdQuery.Handler handler = new GetMembershipByIdQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
 
             // Act
             GroupMembershipResource membership = await handler.Handle(request);
@@ -68,12 +70,11 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
                 .BuildMock()
                 .Object;
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.GroupMemberships.GetById(request.GroupMembershipId))
                 .Returns(queryableMock);
 
-            GetMembershipByIdQuery.Handler handler = new GetMembershipByIdQuery.Handler(_mapperMock, unitOfWorkMock.Object);
+            GetMembershipByIdQuery.Handler handler = new GetMembershipByIdQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
 
             // Act
             GroupMembershipResource membership = await handler.Handle(request);

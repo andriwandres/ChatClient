@@ -1,9 +1,8 @@
 ﻿using Core.Application.Database;
+using Core.Application.Services;
 using Core.Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -16,17 +15,17 @@ namespace Core.Application.Requests.GroupMemberships.Queries
         public class Handler : IRequestHandler<IsOwnMembershipQuery, bool>
         {
             private readonly IUnitOfWork _unitOfWork;
-            private readonly IHttpContextAccessor _httpContextAccessor;
+            private readonly IUserProvider _userProvider;
 
-            public Handler(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor)
+            public Handler(IUnitOfWork unitOfWork, IUserProvider userProvider)
             {
                 _unitOfWork = unitOfWork;
-                _httpContextAccessor = httpContextAccessor;
+                _userProvider = userProvider;
             }
 
             public async Task<bool> Handle(IsOwnMembershipQuery request, CancellationToken cancellationToken = default)
             {
-                int currentUserId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                int currentUserId = _userProvider.GetCurrentUserId();
 
                 GroupMembership membership = await _unitOfWork.GroupMemberships
                     .GetById(request.GroupMembershipId)

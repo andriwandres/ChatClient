@@ -1,8 +1,7 @@
 ﻿using Core.Application.Database;
 using Core.Application.Requests.GroupMemberships.Queries;
-using Microsoft.AspNetCore.Http;
+using Core.Application.Services;
 using Moq;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -11,6 +10,18 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
 {
     public class CanDeleteMembershipQueryTests
     {
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        private readonly Mock<IUserProvider> _userProviderMock;
+
+        public CanDeleteMembershipQueryTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+            _userProviderMock = new Mock<IUserProvider>();
+            _userProviderMock
+                .Setup(m => m.GetCurrentUserId())
+                .Returns(1);
+        }
+
         [Fact]
         public async Task CanDeleteMembershipQueryHandler_ShouldReturnTrue_WhenUserIsPermitted()
         {
@@ -20,19 +31,11 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
                 GroupMembershipIdToDelete = 1
             };
 
-            Claim expectedNameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, "1");
-
-            Mock<IHttpContextAccessor> httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-            httpContextAccessorMock
-                .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
-                .Returns(expectedNameIdentifierClaim);
-
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.GroupMemberships.CanDeleteMembership(1, request.GroupMembershipIdToDelete, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            CanDeleteMembershipQuery.Handler handler = new CanDeleteMembershipQuery.Handler(unitOfWorkMock.Object, httpContextAccessorMock.Object);
+            CanDeleteMembershipQuery.Handler handler = new CanDeleteMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             bool canDelete = await handler.Handle(request);
@@ -50,19 +53,11 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
                 GroupMembershipIdToDelete = 1
             };
 
-            Claim expectedNameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, "1");
-
-            Mock<IHttpContextAccessor> httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-            httpContextAccessorMock
-                .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
-                .Returns(expectedNameIdentifierClaim);
-
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.GroupMemberships.CanDeleteMembership(1, request.GroupMembershipIdToDelete, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
-            CanDeleteMembershipQuery.Handler handler = new CanDeleteMembershipQuery.Handler(unitOfWorkMock.Object, httpContextAccessorMock.Object);
+            CanDeleteMembershipQuery.Handler handler = new CanDeleteMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             bool canDelete = await handler.Handle(request);

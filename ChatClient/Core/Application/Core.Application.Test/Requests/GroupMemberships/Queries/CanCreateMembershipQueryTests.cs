@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using Core.Application.Database;
+﻿using Core.Application.Database;
 using Core.Application.Requests.GroupMemberships.Queries;
+using Core.Application.Services;
 using Core.Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using MockQueryable.Moq;
 using Moq;
+using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -14,13 +13,23 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
 {
     public class CanCreateMembershipQueryTests
     {
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        private readonly Mock<IUserProvider> _userProviderMock;
+
+        public CanCreateMembershipQueryTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+            _userProviderMock = new Mock<IUserProvider>();
+            _userProviderMock
+                .Setup(m => m.GetCurrentUserId())
+                .Returns(1);
+        }
+
         [Fact]
         public async Task CanCreateMembershipQueryHandler_ShouldReturnFalse_WhenUserIsNotPartOfGroup()
         {
             // Arrange
             CanCreateMembershipQuery request = new CanCreateMembershipQuery { GroupId = 1 };
-
-            Claim expectedNameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, "1");
 
             IQueryable<GroupMembership> expectedMemberships = Enumerable
                 .Empty<GroupMembership>()
@@ -28,17 +37,11 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
                 .BuildMock()
                 .Object;
 
-            Mock<IHttpContextAccessor> httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-            httpContextAccessorMock
-                .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
-                .Returns(expectedNameIdentifierClaim);
-
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.GroupMemberships.GetByCombination(request.GroupId, 1))
                 .Returns(expectedMemberships);
             
-            CanCreateMembershipQuery.Handler handler = new CanCreateMembershipQuery.Handler(unitOfWorkMock.Object, httpContextAccessorMock.Object);
+            CanCreateMembershipQuery.Handler handler = new CanCreateMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             bool canCreate = await handler.Handle(request);
@@ -53,8 +56,6 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
             // Arrange
             CanCreateMembershipQuery request = new CanCreateMembershipQuery { GroupId = 1 };
 
-            Claim expectedNameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, "1");
-
             IEnumerable<GroupMembership> expectedMemberships = new[]
             {
                 new GroupMembership {GroupMembershipId = 1, UserId = 1, IsAdmin = false}
@@ -65,17 +66,11 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
                 .BuildMock()
                 .Object;
 
-            Mock<IHttpContextAccessor> httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-            httpContextAccessorMock
-                .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
-                .Returns(expectedNameIdentifierClaim);
-
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.GroupMemberships.GetByCombination(request.GroupId, 1))
                 .Returns(queryableMock);
 
-            CanCreateMembershipQuery.Handler handler = new CanCreateMembershipQuery.Handler(unitOfWorkMock.Object, httpContextAccessorMock.Object);
+            CanCreateMembershipQuery.Handler handler = new CanCreateMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             bool canCreate = await handler.Handle(request);
@@ -90,8 +85,6 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
             // Arrange
             CanCreateMembershipQuery request = new CanCreateMembershipQuery { GroupId = 1 };
 
-            Claim expectedNameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, "1");
-
             IEnumerable<GroupMembership> expectedMemberships = new[]
             {
                 new GroupMembership {GroupMembershipId = 1, UserId = 1, IsAdmin = true}
@@ -102,17 +95,11 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
                 .BuildMock()
                 .Object;
 
-            Mock<IHttpContextAccessor> httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-            httpContextAccessorMock
-                .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
-                .Returns(expectedNameIdentifierClaim);
-
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.GroupMemberships.GetByCombination(request.GroupId, 1))
                 .Returns(queryableMock);
 
-            CanCreateMembershipQuery.Handler handler = new CanCreateMembershipQuery.Handler(unitOfWorkMock.Object, httpContextAccessorMock.Object);
+            CanCreateMembershipQuery.Handler handler = new CanCreateMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             bool canCreate = await handler.Handle(request);

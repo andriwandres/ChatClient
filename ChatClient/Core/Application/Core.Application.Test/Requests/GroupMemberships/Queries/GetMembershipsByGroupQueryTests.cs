@@ -14,6 +14,21 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
 {
     public class GetMembershipsByGroupQueryTests
     {
+        private readonly IMapper _mapperMock;
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+        public GetMembershipsByGroupQueryTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            {
+                config.CreateMap<GroupMembership, GroupMembershipResource>();
+            });
+
+            _mapperMock = mapperConfiguration.CreateMapper();
+        }
+
         [Fact]
         public async Task GetMembershipByGroupQueryHandler_ShouldMemberships()
         {
@@ -31,19 +46,11 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
                 .BuildMock()
                 .Object;
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.GroupMemberships.GetByGroup(request.GroupId))
                 .Returns(queryableMock);
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
-            {
-                config.CreateMap<GroupMembership, GroupMembershipResource>();
-            });
-
-            IMapper mapperMock = mapperConfiguration.CreateMapper();
-
-            GetMembershipsByGroupQuery.Handler handler = new GetMembershipsByGroupQuery.Handler(mapperMock, unitOfWorkMock.Object);
+            GetMembershipsByGroupQuery.Handler handler = new GetMembershipsByGroupQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
 
             // Act
             IEnumerable<GroupMembershipResource> actualMemberships = await handler.Handle(request);
