@@ -2,13 +2,11 @@
 using Core.Application.Requests.Messages.Commands;
 using Core.Application.Services;
 using Core.Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using MockQueryable.Moq;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -19,27 +17,25 @@ namespace Core.Application.Test.Requests.Messages.Commands
     {
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly Mock<IDateProvider> _dateProviderMock;
-        private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
+        private readonly Mock<IUserProvider> _userProviderMock;
 
         public SendMessageCommandTests()
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _dateProviderMock = new Mock<IDateProvider>();
-            _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+            _userProviderMock = new Mock<IUserProvider>();
 
             _dateProviderMock
                 .Setup(m => m.UtcNow())
                 .Returns(new DateTime(2020, 1, 1));
 
-            Claim nameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, 1.ToString());
-
-            _httpContextAccessorMock
-                .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
-                .Returns(nameIdentifierClaim);
+            _userProviderMock
+                .Setup(m => m.GetCurrentUserId())
+                .Returns(1);
         }
 
         [Fact]
-        public async Task Handle_ShouldAddMessage_IncludingOneRecipient_WhenMessageIsSentToPrivateChatUser()
+        public async Task SendMessageCommandHandler_ShouldAddMessage_IncludingOneRecipient_WhenMessageIsSentToPrivateChatUser()
         {
             // Arrange
             SendMessageCommand request = new SendMessageCommand
@@ -86,7 +82,7 @@ namespace Core.Application.Test.Requests.Messages.Commands
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            SendMessageCommand.Handler handler = new SendMessageCommand.Handler(_unitOfWorkMock.Object, _httpContextAccessorMock.Object, _dateProviderMock.Object);
+            SendMessageCommand.Handler handler = new SendMessageCommand.Handler(_unitOfWorkMock.Object, _dateProviderMock.Object, _userProviderMock.Object);
 
             // Act
             int messageId = await handler.Handle(request);
@@ -109,7 +105,7 @@ namespace Core.Application.Test.Requests.Messages.Commands
         }
 
         [Fact]
-        public async Task Handle_ShouldAddMessage_IncludingMultipleRecipients_WhenMessageIsSentToGroupChat()
+        public async Task SendMessageCommandHandler_ShouldAddMessage_IncludingMultipleRecipients_WhenMessageIsSentToGroupChat()
         {
             // Arrange
             SendMessageCommand request = new SendMessageCommand
@@ -174,7 +170,7 @@ namespace Core.Application.Test.Requests.Messages.Commands
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            SendMessageCommand.Handler handler = new SendMessageCommand.Handler(_unitOfWorkMock.Object, _httpContextAccessorMock.Object, _dateProviderMock.Object);
+            SendMessageCommand.Handler handler = new SendMessageCommand.Handler(_unitOfWorkMock.Object, _dateProviderMock.Object, _userProviderMock.Object);
 
             // Act
             int messageId = await handler.Handle(request);

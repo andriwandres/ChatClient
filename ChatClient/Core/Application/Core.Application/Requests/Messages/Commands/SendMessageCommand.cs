@@ -2,11 +2,9 @@
 using Core.Application.Services;
 using Core.Domain.Entities;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -22,18 +20,18 @@ namespace Core.Application.Requests.Messages.Commands
         {
             private readonly IUnitOfWork _unitOfWork;
             private readonly IDateProvider _dateProvider;
-            private readonly IHttpContextAccessor _httpContextAccessor;
+            private readonly IUserProvider _userProvider;
 
-            public Handler(IUnitOfWork unitOfWork, IHttpContextAccessor httpContextAccessor, IDateProvider dateProvider)
+            public Handler(IUnitOfWork unitOfWork, IDateProvider dateProvider, IUserProvider userProvider)
             {
                 _unitOfWork = unitOfWork;
-                _httpContextAccessor = httpContextAccessor;
                 _dateProvider = dateProvider;
+                _userProvider = userProvider;
             }
 
             public async Task<int> Handle(SendMessageCommand request, CancellationToken cancellationToken = default)
             {
-                int userId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                int userId = _userProvider.GetCurrentUserId();
 
                 Message message = new Message
                 {

@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using Core.Application.Database;
+﻿using Core.Application.Database;
 using Core.Application.Requests.Messages.Queries;
+using Core.Application.Services;
 using Core.Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using MockQueryable.Moq;
 using Moq;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Core.Application.Test.Requests.Messages.Queries
@@ -18,18 +13,15 @@ namespace Core.Application.Test.Requests.Messages.Queries
     public class IsAuthorOfMessageQueryTests
     {
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly Mock<IHttpContextAccessor> _httpContextAccessor;
+        private readonly Mock<IUserProvider> _userProviderMock;
 
         public IsAuthorOfMessageQueryTests()
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
-            _httpContextAccessor = new Mock<IHttpContextAccessor>();
-
-            Claim nameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, 1.ToString());
-
-            _httpContextAccessor
-                .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
-                .Returns(nameIdentifierClaim);
+            _userProviderMock = new Mock<IUserProvider>();
+            _userProviderMock
+                .Setup(m => m.GetCurrentUserId())
+                .Returns(1);
         }
 
         [Fact]
@@ -50,7 +42,7 @@ namespace Core.Application.Test.Requests.Messages.Queries
                 .Setup(m => m.Messages.GetById(request.MessageId))
                 .Returns(databaseMessage);
 
-            IsAuthorOfMessageQuery.Handler handler = new IsAuthorOfMessageQuery.Handler(_unitOfWorkMock.Object, _httpContextAccessor.Object);
+            IsAuthorOfMessageQuery.Handler handler = new IsAuthorOfMessageQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             bool isAuthor = await handler.Handle(request);
@@ -77,7 +69,7 @@ namespace Core.Application.Test.Requests.Messages.Queries
                 .Setup(m => m.Messages.GetById(request.MessageId))
                 .Returns(databaseMessage);
 
-            IsAuthorOfMessageQuery.Handler handler = new IsAuthorOfMessageQuery.Handler(_unitOfWorkMock.Object, _httpContextAccessor.Object);
+            IsAuthorOfMessageQuery.Handler handler = new IsAuthorOfMessageQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             bool isAuthor = await handler.Handle(request);

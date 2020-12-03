@@ -1,11 +1,10 @@
 ﻿using Core.Application.Database;
 using Core.Application.Requests.Recipients.Queries;
+using Core.Application.Services;
 using Core.Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using MockQueryable.Moq;
 using Moq;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -14,18 +13,15 @@ namespace Core.Application.Test.Requests.Recipients.Queries
     public class IsOwnRecipientQueryTests
     {
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
+        private readonly Mock<IUserProvider> _userProviderMock;
 
         public IsOwnRecipientQueryTests()
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
-            _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-
-            Claim nameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, 1.ToString());
-
-            _httpContextAccessorMock
-                .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
-                .Returns(nameIdentifierClaim);
+            _userProviderMock = new Mock<IUserProvider>();
+            _userProviderMock
+                .Setup(m => m.GetCurrentUserId())
+                .Returns(1);
         }
 
         [Fact]
@@ -46,7 +42,7 @@ namespace Core.Application.Test.Requests.Recipients.Queries
                 .Setup(m => m.Recipients.GetById(request.RecipientId))
                 .Returns(databaseRecipient);
 
-            IsOwnRecipientQuery.Handler handler = new IsOwnRecipientQuery.Handler(_unitOfWorkMock.Object, _httpContextAccessorMock.Object);
+            IsOwnRecipientQuery.Handler handler = new IsOwnRecipientQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             bool isOwnRecipient = await handler.Handle(request);
@@ -73,7 +69,7 @@ namespace Core.Application.Test.Requests.Recipients.Queries
                 .Setup(m => m.Recipients.GetById(request.RecipientId))
                 .Returns(databaseRecipient);
 
-            IsOwnRecipientQuery.Handler handler = new IsOwnRecipientQuery.Handler(_unitOfWorkMock.Object, _httpContextAccessorMock.Object);
+            IsOwnRecipientQuery.Handler handler = new IsOwnRecipientQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             bool isOwnRecipient = await handler.Handle(request);
@@ -100,7 +96,7 @@ namespace Core.Application.Test.Requests.Recipients.Queries
                 .Setup(m => m.Recipients.GetById(request.RecipientId))
                 .Returns(databaseRecipient);
 
-            IsOwnRecipientQuery.Handler handler = new IsOwnRecipientQuery.Handler(_unitOfWorkMock.Object, _httpContextAccessorMock.Object);
+            IsOwnRecipientQuery.Handler handler = new IsOwnRecipientQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             bool isOwnRecipient = await handler.Handle(request);

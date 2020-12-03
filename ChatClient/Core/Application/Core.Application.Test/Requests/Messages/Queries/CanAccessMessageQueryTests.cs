@@ -1,8 +1,7 @@
 ﻿using Core.Application.Database;
 using Core.Application.Requests.Messages.Queries;
-using Microsoft.AspNetCore.Http;
+using Core.Application.Services;
 using Moq;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -12,18 +11,16 @@ namespace Core.Application.Test.Requests.Messages.Queries
     public class CanAccessMessageQueryTests
     {
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
+        private readonly Mock<IUserProvider> _userProviderMock;
 
         public CanAccessMessageQueryTests()
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
+            _userProviderMock = new Mock<IUserProvider>();
 
-            Claim nameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, 1.ToString());
-
-            _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-            _httpContextAccessorMock
-                .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
-                .Returns(nameIdentifierClaim);
+            _userProviderMock
+                .Setup(m => m.GetCurrentUserId())
+                .Returns(1);
         }
 
         [Fact]
@@ -36,7 +33,7 @@ namespace Core.Application.Test.Requests.Messages.Queries
                 .Setup(m => m.Messages.CanAccess(request.MessageId, It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            CanAccessMessageQuery.Handler handler = new CanAccessMessageQuery.Handler(_unitOfWorkMock.Object, _httpContextAccessorMock.Object);
+            CanAccessMessageQuery.Handler handler = new CanAccessMessageQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             bool canAccess = await handler.Handle(request);
@@ -55,7 +52,7 @@ namespace Core.Application.Test.Requests.Messages.Queries
                 .Setup(m => m.Messages.CanAccess(request.MessageId, It.IsAny<int>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
-            CanAccessMessageQuery.Handler handler = new CanAccessMessageQuery.Handler(_unitOfWorkMock.Object, _httpContextAccessorMock.Object);
+            CanAccessMessageQuery.Handler handler = new CanAccessMessageQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             bool canAccess = await handler.Handle(request);
