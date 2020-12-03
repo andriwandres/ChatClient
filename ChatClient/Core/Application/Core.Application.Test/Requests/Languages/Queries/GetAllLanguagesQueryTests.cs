@@ -14,6 +14,21 @@ namespace Core.Application.Test.Requests.Languages.Queries
 {
     public class GetAllLanguagesQueryTests
     {
+        private readonly IMapper _mapperMock;
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+        public GetAllLanguagesQueryTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            {
+                config.CreateMap<Language, LanguageResource>();
+            });
+
+            _mapperMock = mapperConfiguration.CreateMapper();
+        }
+
         [Fact]
         public async Task GetAllLanguagesQueryHandler_ShouldReturnLanguages()
         {
@@ -28,20 +43,11 @@ namespace Core.Application.Test.Requests.Languages.Queries
                 .AsQueryable()
                 .BuildMock();
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Languages.GetAll())
                 .Returns(languageQueryableMock.Object);
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
-            {
-                config.CreateMap<Language, LanguageResource>();
-            });
-
-            IMapper mapperMock = mapperConfiguration.CreateMapper();
-
-            GetAllLanguagesQuery.GetAllLanguagesQueryHandler handler =
-                new GetAllLanguagesQuery.GetAllLanguagesQueryHandler(unitOfWorkMock.Object, mapperMock);
+            GetAllLanguagesQuery.GetAllLanguagesQueryHandler handler = new GetAllLanguagesQuery.GetAllLanguagesQueryHandler(_unitOfWorkMock.Object, _mapperMock);
 
             // Act
             IEnumerable<LanguageResource> languages = await handler.Handle(new GetAllLanguagesQuery());

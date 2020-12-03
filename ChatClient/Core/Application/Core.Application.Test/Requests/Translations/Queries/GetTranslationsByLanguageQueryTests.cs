@@ -1,17 +1,24 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Core.Application.Database;
+﻿using Core.Application.Database;
 using Core.Application.Requests.Translations.Queries;
 using Core.Domain.Entities;
 using MockQueryable.Moq;
 using Moq;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Core.Application.Test.Requests.Translations.Queries
 {
     public class GetTranslationsByLanguageQueryTests
     {
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+        public GetTranslationsByLanguageQueryTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+        }
+
         [Fact]
         public async Task GetTranslationsByLanguageQueryHandler_ShouldReturnEmptyDictionary_WhenLanguageDoesNotExist()
         {
@@ -23,13 +30,12 @@ namespace Core.Application.Test.Requests.Translations.Queries
                 .AsQueryable()
                 .BuildMock();
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Translations.GetByLanguage(It.IsAny<int>()))
                 .Returns(translationQueryableMock.Object);
 
             GetTranslationsByLanguageQuery.GetTranslationsByLanguageQueryHandler handler
-                = new GetTranslationsByLanguageQuery.GetTranslationsByLanguageQueryHandler(unitOfWorkMock.Object);
+                = new GetTranslationsByLanguageQuery.GetTranslationsByLanguageQueryHandler(_unitOfWorkMock.Object);
 
             // Act
             IDictionary<string, string> translations = await handler.Handle(request);
@@ -54,13 +60,12 @@ namespace Core.Application.Test.Requests.Translations.Queries
                 .AsQueryable()
                 .BuildMock();
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Translations.GetByLanguage(It.IsAny<int>()))
                 .Returns(translationQueryableMock.Object);
 
             GetTranslationsByLanguageQuery.GetTranslationsByLanguageQueryHandler handler
-                = new GetTranslationsByLanguageQuery.GetTranslationsByLanguageQueryHandler(unitOfWorkMock.Object);
+                = new GetTranslationsByLanguageQuery.GetTranslationsByLanguageQueryHandler(_unitOfWorkMock.Object);
 
             // Act
             IDictionary<string, string> translations = await handler.Handle(request);
@@ -89,13 +94,12 @@ namespace Core.Application.Test.Requests.Translations.Queries
                 .AsQueryable()
                 .BuildMock();
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Translations.GetByLanguage(It.IsAny<int>(), It.IsAny<string>()))
                 .Returns(translationQueryableMock.Object);
 
             GetTranslationsByLanguageQuery.GetTranslationsByLanguageQueryHandler handler
-                = new GetTranslationsByLanguageQuery.GetTranslationsByLanguageQueryHandler(unitOfWorkMock.Object);
+                = new GetTranslationsByLanguageQuery.GetTranslationsByLanguageQueryHandler(_unitOfWorkMock.Object);
 
             // Act
             IDictionary<string, string> translations = await handler.Handle(request);
