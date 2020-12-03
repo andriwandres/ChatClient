@@ -2,6 +2,8 @@
 using Core.Domain.Entities;
 using Core.Domain.Resources.Messages;
 using System.Linq;
+using Core.Application.Requests.Messages.Commands;
+using Core.Domain.Dtos.Messages;
 
 namespace Presentation.Api.Mapping
 {
@@ -39,6 +41,8 @@ namespace Presentation.Api.Mapping
                             .MessageRecipientId
                     );
                 });
+
+            CreateMap<SendMessageBody, SendMessageCommand>();
         }
     }
 }

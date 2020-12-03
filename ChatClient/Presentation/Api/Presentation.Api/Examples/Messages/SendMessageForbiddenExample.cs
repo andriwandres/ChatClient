@@ -24,7 +24,7 @@ namespace Presentation.Api.Examples.Messages
                 new SwaggerExample<ErrorResource>
                 {
                     Name = "ForeignMessage",
-                    Summary = "User tried answering message from a foreign",
+                    Summary = "User tried answering message from a foreign chat",
                     Value = new ErrorResource
                     {
                         StatusCode = StatusCodes.Status403Forbidden,

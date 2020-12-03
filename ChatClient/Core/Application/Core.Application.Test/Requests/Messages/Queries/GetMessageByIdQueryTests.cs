@@ -1,12 +1,14 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Application.Database;
 using Core.Application.Requests.Messages.Queries;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Messages;
+using Microsoft.AspNetCore.Http;
 using MockQueryable.Moq;
 using Moq;
+using System.Linq;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Core.Application.Test.Requests.Messages.Queries
@@ -15,6 +17,7 @@ namespace Core.Application.Test.Requests.Messages.Queries
     {
         private readonly IMapper _mapperMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
 
         public GetMessageByIdQueryTests()
         {
@@ -26,6 +29,14 @@ namespace Core.Application.Test.Requests.Messages.Queries
             });
 
             _mapperMock = mapperConfiguration.CreateMapper();
+
+            _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+
+            Claim nameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, 1.ToString());
+
+            _httpContextAccessorMock
+                .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
+                .Returns(nameIdentifierClaim);
         }
 
         [Fact]
@@ -44,7 +55,7 @@ namespace Core.Application.Test.Requests.Messages.Queries
                 .Setup(m => m.Messages.GetById(request.MessageId))
                 .Returns(expectedMessage);
 
-            GetMessageByIdQuery.Handler handler = new GetMessageByIdQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
+            GetMessageByIdQuery.Handler handler = new GetMessageByIdQuery.Handler(_mapperMock, _unitOfWorkMock.Object, _httpContextAccessorMock.Object);
 
             // Act
             MessageResource message = await handler.Handle(request);
@@ -71,7 +82,7 @@ namespace Core.Application.Test.Requests.Messages.Queries
                 .Setup(m => m.Messages.GetById(request.MessageId))
                 .Returns(expectedMessage);
 
-            GetMessageByIdQuery.Handler handler = new GetMessageByIdQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
+            GetMessageByIdQuery.Handler handler = new GetMessageByIdQuery.Handler(_mapperMock, _unitOfWorkMock.Object, _httpContextAccessorMock.Object);
 
             // Act
             MessageResource message = await handler.Handle(request);

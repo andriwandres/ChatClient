@@ -35,7 +35,7 @@ namespace Core.Application.Requests.Messages.Commands
             {
                 int userId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-                Message message = new Message()
+                Message message = new Message
                 {
                     AuthorId = userId,
                     ParentId = request.ParentId,
@@ -48,6 +48,7 @@ namespace Core.Application.Requests.Messages.Commands
 
                 Recipient recipient = await _unitOfWork.Recipients
                     .GetById(request.RecipientId)
+                    .AsTracking()
                     .Include(r => r.GroupMembership)
                     .ThenInclude(gm => gm.Group)
                     .ThenInclude(g => g.Memberships)

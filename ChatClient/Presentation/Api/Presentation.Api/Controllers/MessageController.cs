@@ -93,7 +93,7 @@ namespace Presentation.Api.Controllers
 
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
-        [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(SendMessageForbiddenExample))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(SendMessageNotFoundExample))]
 
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]

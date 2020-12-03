@@ -11,7 +11,6 @@ namespace Presentation.Api.Examples.Messages
         public IEnumerable<SwaggerExample<ValidationErrorResource>> GetExamples()
         {
             const string recipientIdName = nameof(SendMessageBody.RecipientId);
-            const string parentIdName = nameof(SendMessageBody.ParentId);
             const string htmlContentName = nameof(SendMessageBody.HtmlContent);
 
             return new[]
@@ -31,26 +30,6 @@ namespace Presentation.Api.Examples.Messages
                                 new []
                                 {
                                     $"'{recipientIdName}' must not be empty"
-                                }
-                            }
-                        }
-                    }
-                },
-                new SwaggerExample<ValidationErrorResource>
-                {
-                    Name = "ParentIdEmpty",
-                    Summary = $"{parentIdName} is left empty",
-                    Value = new ValidationErrorResource
-                    {
-                        StatusCode = StatusCodes.Status400BadRequest,
-                        Message = "One or multiple validation errors occurred",
-                        Errors = new Dictionary<string, IEnumerable<string>>
-                        {
-                            {
-                                parentIdName,
-                                new []
-                                {
-                                    $"'{parentIdName}' must not be empty"
                                 }
                             }
                         }
