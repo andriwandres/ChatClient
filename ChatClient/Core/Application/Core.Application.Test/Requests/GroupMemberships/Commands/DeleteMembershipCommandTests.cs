@@ -1,7 +1,7 @@
 ﻿using Core.Application.Database;
 using Core.Application.Requests.GroupMemberships.Commands;
+using Core.Application.Services;
 using Core.Domain.Entities;
-using Microsoft.AspNetCore.Http;
 using MockQueryable.Moq;
 using Moq;
 using System;
@@ -16,18 +16,16 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
     public class DeleteMembershipCommandTests
     {
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
+        private readonly Mock<IUserProvider> _userProviderMock;
 
         public DeleteMembershipCommandTests()
         {
-            Claim expectedNameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, 1.ToString());
-
             _unitOfWorkMock = new Mock<IUnitOfWork>();
 
-            _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-            _httpContextAccessorMock
-                .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
-                .Returns(expectedNameIdentifierClaim);
+            _userProviderMock = new Mock<IUserProvider>();
+            _userProviderMock
+                .Setup(m => m.GetCurrentUserId())
+                .Returns(1);
         }
 
         [Fact]
@@ -58,7 +56,7 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            DeleteMembershipCommand.Handler handler = new DeleteMembershipCommand.Handler(_unitOfWorkMock.Object, _httpContextAccessorMock.Object);
+            DeleteMembershipCommand.Handler handler = new DeleteMembershipCommand.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             await handler.Handle(request);
@@ -129,7 +127,7 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            DeleteMembershipCommand.Handler handler = new DeleteMembershipCommand.Handler(_unitOfWorkMock.Object, _httpContextAccessorMock.Object);
+            DeleteMembershipCommand.Handler handler = new DeleteMembershipCommand.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             await handler.Handle(request);
@@ -196,7 +194,7 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            DeleteMembershipCommand.Handler handler = new DeleteMembershipCommand.Handler(_unitOfWorkMock.Object, _httpContextAccessorMock.Object);
+            DeleteMembershipCommand.Handler handler = new DeleteMembershipCommand.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             await handler.Handle(request);

@@ -16,6 +16,23 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
 {
     public class CreateMembershipCommandTests
     {
+        private readonly IMapper _mapperMock;
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        private readonly Mock<IDateProvider> _dateProviderMock;
+
+        public CreateMembershipCommandTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+            _dateProviderMock = new Mock<IDateProvider>();
+
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            {
+                config.CreateMap<GroupMembership, GroupMembershipResource>();
+            });
+
+            _mapperMock = mapperConfiguration.CreateMapper();
+        }
+
         [Fact]
         public async Task CreateMembershipCommandHandler_ShouldCreateMembership_AndReturnCreatedMembership()
         {
@@ -41,34 +58,25 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
                 .BuildMock()
                 .Object;
 
-            IDateProvider dateProviderMock = Mock.Of<IDateProvider>();
-
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.GroupMemberships.Add(It.IsAny<GroupMembership>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Recipients.Add(It.IsAny<Recipient>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(2);
 
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Users.GetById(It.IsAny<int>()))
                 .Returns(queryableMock);
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
-            {
-                config.CreateMap<GroupMembership, GroupMembershipResource>();
-            });
+            
 
-            IMapper mapperMock = mapperConfiguration.CreateMapper();
-
-            CreateMembershipCommand.Handler handler =
-                new CreateMembershipCommand.Handler(dateProviderMock, unitOfWorkMock.Object, mapperMock);
+            CreateMembershipCommand.Handler handler = new CreateMembershipCommand.Handler(_dateProviderMock.Object, _unitOfWorkMock.Object, _mapperMock);
 
             // Act
             GroupMembershipResource membership = await handler.Handle(request);
@@ -76,13 +84,13 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
             // Assert
             Assert.NotNull(membership);
 
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Verify(m => m.GroupMemberships.Add(It.IsAny<GroupMembership>(), It.IsAny<CancellationToken>()), Times.AtLeastOnce);
 
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Verify(m => m.Recipients.Add(It.IsAny<Recipient>(), It.IsAny<CancellationToken>()), Times.AtLeastOnce);
 
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()), Times.AtLeastOnce);
         }
     }

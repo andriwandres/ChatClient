@@ -13,6 +13,13 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
 {
     public class UpdateGroupMembershipCommandTests
     {
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+        public UpdateGroupMembershipCommandTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+        }
+
         [Fact]
         public async Task UpdateMembershipCommandHandler_ShouldUpdateMembership()
         {
@@ -33,22 +40,21 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
                 .BuildMock()
                 .Object;
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.GroupMemberships.GetById(request.GroupMembershipId))
                 .Returns(queryableMock);
 
             GroupMembership passedMembership = null;
 
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.GroupMemberships.Update(It.IsAny<GroupMembership>()))
                 .Callback<GroupMembership>(gm => passedMembership = gm);
 
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            UpdateMembershipCommand.Handler handler = new UpdateMembershipCommand.Handler(unitOfWorkMock.Object);
+            UpdateMembershipCommand.Handler handler = new UpdateMembershipCommand.Handler(_unitOfWorkMock.Object);
 
             // Act
             await handler.Handle(request);
@@ -57,8 +63,8 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
             Assert.NotNull(passedMembership);
             Assert.Equal(request.IsAdmin, passedMembership.IsAdmin);
 
-            unitOfWorkMock.Verify(m => m.GroupMemberships.Update(It.IsAny<GroupMembership>()), Times.AtLeastOnce);
-            unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()), Times.AtLeastOnce);
+            _unitOfWorkMock.Verify(m => m.GroupMemberships.Update(It.IsAny<GroupMembership>()), Times.AtLeastOnce);
+            _unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()), Times.AtLeastOnce);
         }
     }
 }
