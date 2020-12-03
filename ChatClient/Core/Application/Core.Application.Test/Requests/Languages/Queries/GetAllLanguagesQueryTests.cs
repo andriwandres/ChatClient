@@ -47,7 +47,7 @@ namespace Core.Application.Test.Requests.Languages.Queries
                 .Setup(m => m.Languages.GetAll())
                 .Returns(languageQueryableMock.Object);
 
-            GetAllLanguagesQuery.GetAllLanguagesQueryHandler handler = new GetAllLanguagesQuery.GetAllLanguagesQueryHandler(_unitOfWorkMock.Object, _mapperMock);
+            GetAllLanguagesQuery.Handler handler = new GetAllLanguagesQuery.Handler(_unitOfWorkMock.Object, _mapperMock);
 
             // Act
             IEnumerable<LanguageResource> languages = await handler.Handle(new GetAllLanguagesQuery());

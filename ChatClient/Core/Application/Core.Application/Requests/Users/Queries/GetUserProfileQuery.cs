@@ -13,12 +13,12 @@ namespace Core.Application.Requests.Users.Queries
     {
         public int UserId { get; set; }
 
-        public class GetUserProfileQueryHandler : IRequestHandler<GetUserProfileQuery, UserProfileResource>
+        public class Handler : IRequestHandler<GetUserProfileQuery, UserProfileResource>
         {
             private readonly IMapper _mapper;
             private readonly IUnitOfWork _unitOfWork;
 
-            public GetUserProfileQueryHandler(IMapper mapper, IUnitOfWork unitOfWork)
+            public Handler(IMapper mapper, IUnitOfWork unitOfWork)
             {
                 _mapper = mapper;
                 _unitOfWork = unitOfWork;

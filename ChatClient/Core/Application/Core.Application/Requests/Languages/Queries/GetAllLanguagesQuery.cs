@@ -12,12 +12,12 @@ namespace Core.Application.Requests.Languages.Queries
 {
     public class GetAllLanguagesQuery : IRequest<IEnumerable<LanguageResource>>
     {
-        public class GetAllLanguagesQueryHandler : IRequestHandler<GetAllLanguagesQuery, IEnumerable<LanguageResource>>
+        public class Handler : IRequestHandler<GetAllLanguagesQuery, IEnumerable<LanguageResource>>
         {
             private readonly IMapper _mapper;
             private readonly IUnitOfWork _unitOfWork;
 
-            public GetAllLanguagesQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+            public Handler(IUnitOfWork unitOfWork, IMapper mapper)
             {
                 _mapper = mapper;
                 _unitOfWork = unitOfWork;

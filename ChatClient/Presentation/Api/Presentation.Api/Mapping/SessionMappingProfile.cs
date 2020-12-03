@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
-using Core.Application.Requests.Session.Queries;
+using Core.Application.Requests.Session.Commands;
 using Core.Domain.Dtos.Session;
 
 namespace Presentation.Api.Mapping
@@ -12,7 +12,7 @@ namespace Presentation.Api.Mapping
     {
         public SessionMappingProfile()
         {
-            CreateMap<LoginBody, LoginQuery>();
+            CreateMap<LoginBody, LoginCommand>();
         }
     }
 }

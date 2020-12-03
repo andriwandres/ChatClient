@@ -9,18 +9,24 @@ namespace Core.Application.Test.Requests.Users.Queries
 {
     public class EmailExistsQueryTests
     {
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+        public EmailExistsQueryTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+        }
+
         [Fact]
         public async Task EmailExistsQueryHandler_ShouldReturnTrue_WhenEmailExists()
         {
             // Arrange
             EmailExistsQuery query = new EmailExistsQuery { Email = "test@test.test"};
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Users.EmailExists(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            EmailExistsQuery.EmailExistsQueryHandler handler = new EmailExistsQuery.EmailExistsQueryHandler(unitOfWorkMock.Object);
+            EmailExistsQuery.Handler handler = new EmailExistsQuery.Handler(_unitOfWorkMock.Object);
 
             // Act
             bool exists = await handler.Handle(query);
@@ -35,12 +41,11 @@ namespace Core.Application.Test.Requests.Users.Queries
             // Arrange
             EmailExistsQuery query = new EmailExistsQuery { Email = "invalid@email.address" };
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Users.EmailExists(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
-            EmailExistsQuery.EmailExistsQueryHandler handler = new EmailExistsQuery.EmailExistsQueryHandler(unitOfWorkMock.Object);
+            EmailExistsQuery.Handler handler = new EmailExistsQuery.Handler(_unitOfWorkMock.Object);
 
             // Act
             bool exists = await handler.Handle(query);

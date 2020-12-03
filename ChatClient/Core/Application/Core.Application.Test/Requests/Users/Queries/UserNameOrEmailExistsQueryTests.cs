@@ -9,6 +9,13 @@ namespace Core.Application.Test.Requests.Users.Queries
 {
     public class UserNameOrEmailExistsQueryTests
     {
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+        public UserNameOrEmailExistsQueryTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+        }
+
         [Fact]
         public async Task GetUserNameOrEmailExistsQueryHandler_ShouldReturnTrue_WhenCredentialsExist()
         {
@@ -19,13 +26,12 @@ namespace Core.Application.Test.Requests.Users.Queries
             };
 
             // Arrange
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Users.UserNameOrEmailExists(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            UserNameOrEmailExistsQuery.UserNameOrEmailQueryHandler handler =
-                new UserNameOrEmailExistsQuery.UserNameOrEmailQueryHandler(unitOfWorkMock.Object);
+            UserNameOrEmailExistsQuery.Handler handler =
+                new UserNameOrEmailExistsQuery.Handler(_unitOfWorkMock.Object);
 
             // Act
             bool exists = await handler.Handle(request);
@@ -44,13 +50,12 @@ namespace Core.Application.Test.Requests.Users.Queries
             };
 
             // Arrange
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Users.UserNameOrEmailExists(It.IsAny<string>(), It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
-            UserNameOrEmailExistsQuery.UserNameOrEmailQueryHandler handler =
-                new UserNameOrEmailExistsQuery.UserNameOrEmailQueryHandler(unitOfWorkMock.Object);
+            UserNameOrEmailExistsQuery.Handler handler =
+                new UserNameOrEmailExistsQuery.Handler(_unitOfWorkMock.Object);
 
             // Act
             bool exists = await handler.Handle(request);

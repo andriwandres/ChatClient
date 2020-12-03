@@ -14,11 +14,11 @@ namespace Core.Application.Requests.Translations.Queries
         public int LanguageId { get; set; }
         public string Pattern { get; set; }
 
-        public class GetTranslationsByLanguageQueryHandler : IRequestHandler<GetTranslationsByLanguageQuery, IDictionary<string, string>>
+        public class Handler : IRequestHandler<GetTranslationsByLanguageQuery, IDictionary<string, string>>
         {
             private readonly IUnitOfWork _unitOfWork;
 
-            public GetTranslationsByLanguageQueryHandler(IUnitOfWork unitOfWork)
+            public Handler(IUnitOfWork unitOfWork)
             {
                 _unitOfWork = unitOfWork;
             }

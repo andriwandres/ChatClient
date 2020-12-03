@@ -14,6 +14,21 @@ namespace Core.Application.Test.Requests.Users.Queries
 {
     public class GetUserProfileQueryTests
     {
+        private readonly IMapper _mapperMock;
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+        public GetUserProfileQueryTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            {
+                config.CreateMap<User, UserProfileResource>();
+            });
+
+            _mapperMock = mapperConfiguration.CreateMapper();
+        }
+
         [Fact]
         public async Task GetUserProfileQueryHandler_ShouldReturnUserProfile_WhenIdIsValid()
         {
@@ -27,19 +42,11 @@ namespace Core.Application.Test.Requests.Users.Queries
 
             Mock<IQueryable<User>> userQueryableMock = expectedUser.AsQueryable().BuildMock();
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Users.GetById(request.UserId))
                 .Returns(userQueryableMock.Object);
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
-            {
-                config.CreateMap<User, UserProfileResource>();
-            });
-
-            IMapper mapperMock = mapperConfiguration.CreateMapper();
-
-            GetUserProfileQuery.GetUserProfileQueryHandler handler = new GetUserProfileQuery.GetUserProfileQueryHandler(mapperMock, unitOfWorkMock.Object);
+            GetUserProfileQuery.Handler handler = new GetUserProfileQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
 
             // Act
             UserProfileResource userProfile = await handler.Handle(request);
@@ -60,19 +67,11 @@ namespace Core.Application.Test.Requests.Users.Queries
                 .AsQueryable()
                 .BuildMock();
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Users.GetById(request.UserId))
                 .Returns(userQueryableMock.Object);
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
-            {
-                config.CreateMap<User, UserProfileResource>();
-            });
-
-            IMapper mapperMock = mapperConfiguration.CreateMapper();
-
-            GetUserProfileQuery.GetUserProfileQueryHandler handler = new GetUserProfileQuery.GetUserProfileQueryHandler(mapperMock, unitOfWorkMock.Object);
+            GetUserProfileQuery.Handler handler = new GetUserProfileQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
 
             // Act
             UserProfileResource userProfile = await handler.Handle(request);

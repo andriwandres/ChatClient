@@ -1,7 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
-using Core.Application.Requests.Session.Queries;
+using Core.Application.Requests.Session.Commands;
 using Core.Domain.Dtos.Session;
 using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Users;
@@ -45,12 +45,12 @@ namespace Presentation.Api.Test.Controllers
 
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
             mediatorMock
-                .Setup(m => m.Send(It.IsAny<LoginQuery>(), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.IsAny<LoginCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync((AuthenticatedUserResource)null);
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.CreateMap<LoginBody, LoginQuery>();
+                config.CreateMap<LoginBody, LoginCommand>();
             });
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();
@@ -82,12 +82,12 @@ namespace Presentation.Api.Test.Controllers
 
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
             mediatorMock
-                .Setup(m => m.Send(It.IsAny<LoginQuery>(), It.IsAny<CancellationToken>()))
+                .Setup(m => m.Send(It.IsAny<LoginCommand>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(expectedUser);
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.CreateMap<LoginBody, LoginQuery>();
+                config.CreateMap<LoginBody, LoginCommand>();
             });
 
             IMapper mapperMock = mapperConfiguration.CreateMapper();

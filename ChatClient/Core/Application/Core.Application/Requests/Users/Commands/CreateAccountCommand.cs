@@ -13,13 +13,13 @@ namespace Core.Application.Requests.Users.Commands
         public string UserName { get; set; }
         public string Password { get; set; }
 
-        public class RegisterUserCommandHandler : IRequestHandler<CreateAccountCommand, int>
+        public class Handler : IRequestHandler<CreateAccountCommand, int>
         {
             private readonly IUnitOfWork _unitOfWork;
             private readonly ICryptoService _cryptoService;
             private readonly IDateProvider _dateProvider;
 
-            public RegisterUserCommandHandler(ICryptoService cryptoService, IUnitOfWork unitOfWork, IDateProvider dateProvider)
+            public Handler(ICryptoService cryptoService, IUnitOfWork unitOfWork, IDateProvider dateProvider)
             {
                 _unitOfWork = unitOfWork;
                 _dateProvider = dateProvider;

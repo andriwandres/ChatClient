@@ -34,8 +34,8 @@ namespace Core.Application.Test.Requests.Translations.Queries
                 .Setup(m => m.Translations.GetByLanguage(It.IsAny<int>()))
                 .Returns(translationQueryableMock.Object);
 
-            GetTranslationsByLanguageQuery.GetTranslationsByLanguageQueryHandler handler
-                = new GetTranslationsByLanguageQuery.GetTranslationsByLanguageQueryHandler(_unitOfWorkMock.Object);
+            GetTranslationsByLanguageQuery.Handler handler
+                = new GetTranslationsByLanguageQuery.Handler(_unitOfWorkMock.Object);
 
             // Act
             IDictionary<string, string> translations = await handler.Handle(request);
@@ -64,8 +64,8 @@ namespace Core.Application.Test.Requests.Translations.Queries
                 .Setup(m => m.Translations.GetByLanguage(It.IsAny<int>()))
                 .Returns(translationQueryableMock.Object);
 
-            GetTranslationsByLanguageQuery.GetTranslationsByLanguageQueryHandler handler
-                = new GetTranslationsByLanguageQuery.GetTranslationsByLanguageQueryHandler(_unitOfWorkMock.Object);
+            GetTranslationsByLanguageQuery.Handler handler
+                = new GetTranslationsByLanguageQuery.Handler(_unitOfWorkMock.Object);
 
             // Act
             IDictionary<string, string> translations = await handler.Handle(request);
@@ -98,8 +98,8 @@ namespace Core.Application.Test.Requests.Translations.Queries
                 .Setup(m => m.Translations.GetByLanguage(It.IsAny<int>(), It.IsAny<string>()))
                 .Returns(translationQueryableMock.Object);
 
-            GetTranslationsByLanguageQuery.GetTranslationsByLanguageQueryHandler handler
-                = new GetTranslationsByLanguageQuery.GetTranslationsByLanguageQueryHandler(_unitOfWorkMock.Object);
+            GetTranslationsByLanguageQuery.Handler handler
+                = new GetTranslationsByLanguageQuery.Handler(_unitOfWorkMock.Object);
 
             // Act
             IDictionary<string, string> translations = await handler.Handle(request);

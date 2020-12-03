@@ -4,7 +4,6 @@ using Core.Application.Services;
 using Core.Domain.Entities;
 using Moq;
 using System;
-using System.Net.Mail;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -13,6 +12,20 @@ namespace Core.Application.Test.Requests.Users.Commands
 {
     public class CreateAccountCommandTests
     {
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        private readonly Mock<ICryptoService> _cryptoServiceMock;
+        private readonly Mock<IDateProvider> _dateProviderMock;
+
+        public CreateAccountCommandTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+            _cryptoServiceMock = new Mock<ICryptoService>();
+            _dateProviderMock = new Mock<IDateProvider>();
+            _dateProviderMock
+                .Setup(m => m.UtcNow())
+                .Returns(new DateTime(2020, 1, 1));
+        }
+
         [Fact]
         public async Task CreateAccountCommandHandler_ShouldReturnGeneratedUserId()
         {
@@ -26,42 +39,33 @@ namespace Core.Application.Test.Requests.Users.Commands
 
             byte[] expectedSalt = new byte[16];
             byte[] expectedHash = new byte[16];
-            DateTime expectedDate = new DateTime(2020, 1, 1, 0, 0, 0);
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Users.Add(It.IsAny<User>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Recipients.Add(It.IsAny<Recipient>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
-            Mock<ICryptoService> cryptoServiceMock = new Mock<ICryptoService>();
-            cryptoServiceMock
+            _cryptoServiceMock
                 .Setup(m => m.GenerateSalt())
                 .Returns(expectedSalt);
-            
-            cryptoServiceMock
+
+            _cryptoServiceMock
                 .Setup(m => m.HashPassword(request.Password, expectedSalt))
                 .Returns(expectedHash);
 
-            Mock<IDateProvider> dateProviderMock = new Mock<IDateProvider>();
-            dateProviderMock
-                .Setup(m => m.UtcNow())
-                .Returns(expectedDate);
-
-            CreateAccountCommand.RegisterUserCommandHandler handler = 
-                new CreateAccountCommand.RegisterUserCommandHandler(cryptoServiceMock.Object, unitOfWorkMock.Object, dateProviderMock.Object);
+            CreateAccountCommand.Handler handler = 
+                new CreateAccountCommand.Handler(_cryptoServiceMock.Object, _unitOfWorkMock.Object, _dateProviderMock.Object);
 
             // Act
             await handler.Handle(request);
 
             // Assert
-            unitOfWorkMock.Verify(m => m.Users.Add(It.IsAny<User>(), It.IsAny<CancellationToken>()));
-            unitOfWorkMock.Verify(m => m.Recipients.Add(It.IsAny<Recipient>(), It.IsAny<CancellationToken>()));
-            unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()));
+            _unitOfWorkMock.Verify(m => m.Users.Add(It.IsAny<User>(), It.IsAny<CancellationToken>()));
+            _unitOfWorkMock.Verify(m => m.Recipients.Add(It.IsAny<Recipient>(), It.IsAny<CancellationToken>()));
+            _unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()));
         }
     }
 }

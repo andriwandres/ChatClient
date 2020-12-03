@@ -13,14 +13,14 @@ namespace Core.Application.Requests.Friendships.Commands
     {
         public int AddresseeId { get; set; }
 
-        public class RequestFriendshipCommandHandler : IRequestHandler<RequestFriendshipCommand, FriendshipResource>
+        public class Handler : IRequestHandler<RequestFriendshipCommand, FriendshipResource>
         {
             private readonly IMapper _mapper;
             private readonly IUnitOfWork _unitOfWork;
             private readonly IDateProvider _dateProvider;
             private readonly IUserProvider _userProvider;
 
-            public RequestFriendshipCommandHandler(IUserProvider userProvider, IUnitOfWork unitOfWork, IDateProvider dateProvider, IMapper mapper)
+            public Handler(IUserProvider userProvider, IUnitOfWork unitOfWork, IDateProvider dateProvider, IMapper mapper)
             {
                 _mapper = mapper;
                 _unitOfWork = unitOfWork;

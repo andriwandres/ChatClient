@@ -1,27 +1,44 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Application.Database;
-using Core.Application.Requests.Session.Queries;
+using Core.Application.Requests.Session.Commands;
 using Core.Application.Services;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Users;
 using MockQueryable.Moq;
 using Moq;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.Session.Queries
+namespace Core.Application.Test.Requests.Session.Commands
 {
-    public class LoginQueryTests
+    public class LoginCommandTests
     {
+        private readonly IMapper _mapperMock;
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        private readonly Mock<ICryptoService> _cryptoServiceMock;
+
+        public LoginCommandTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+            _cryptoServiceMock = new Mock<ICryptoService>();
+
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            {
+                config.CreateMap<User, AuthenticatedUserResource>();
+            });
+
+            _mapperMock = mapperConfiguration.CreateMapper();
+        }
+
         [Fact]
-        public async Task LoginQueryHandler_ShouldReturnNull_WhenUserNameOrEmailAreInvalid()
+        public async Task LoginCommandHandler_ShouldReturnNull_WhenUserNameOrEmailAreInvalid()
         {
             // Arrange
             IEnumerable<User> expectedUser = new User[] { };
 
-            LoginQuery request = new LoginQuery
+            LoginCommand request = new LoginCommand
             {
                 UserNameOrEmail = "invalid.username@or.email"
             };
@@ -30,12 +47,11 @@ namespace Core.Application.Test.Requests.Session.Queries
                 .AsQueryable()
                 .BuildMock();
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Users.GetByUserNameOrEmail(It.IsAny<string>()))
                 .Returns(userQueryableMock.Object);
 
-            LoginQuery.LoginUserQueryHandler handler = new LoginQuery.LoginUserQueryHandler(unitOfWorkMock.Object, null, null);
+            LoginCommand.Handler handler = new LoginCommand.Handler(_unitOfWorkMock.Object, null, null);
 
             // Act
             AuthenticatedUserResource user = await handler.Handle(request);
@@ -45,32 +61,31 @@ namespace Core.Application.Test.Requests.Session.Queries
         }
 
         [Fact]
-        public async Task LoginQueryHandler_ShouldReturnNull_WhenPasswordIsInvalid()
+        public async Task LoginCommandHandler_ShouldReturnNull_WhenPasswordIsInvalid()
         {
             // Arrange
             IEnumerable<User> expectedUser = new [] { new User() };
 
-            LoginQuery request = new LoginQuery
+            LoginCommand request = new LoginCommand
             {
                 UserNameOrEmail = "my@email.com",
                 Password = "wrongpassword"
             };
 
-            Mock<IQueryable<User>> userQueryableMock = expectedUser
+            IQueryable<User> userQueryableMock = expectedUser
                 .AsQueryable()
-                .BuildMock();
+                .BuildMock()
+                .Object;
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Users.GetByUserNameOrEmail(It.IsAny<string>()))
-                .Returns(userQueryableMock.Object);
+                .Returns(userQueryableMock);
 
-            Mock<ICryptoService> cryptoServiceMock = new Mock<ICryptoService>();
-            cryptoServiceMock
+            _cryptoServiceMock
                 .Setup(m => m.VerifyPassword(It.IsAny<byte[]>(), It.IsAny<byte[]>(), It.IsAny<string>()))
                 .Returns(false);
 
-            LoginQuery.LoginUserQueryHandler handler = new LoginQuery.LoginUserQueryHandler(unitOfWorkMock.Object, null, cryptoServiceMock.Object);
+            LoginCommand.Handler handler = new LoginCommand.Handler(_unitOfWorkMock.Object, null, _cryptoServiceMock.Object);
 
             // Act
             AuthenticatedUserResource user = await handler.Handle(request);
@@ -80,7 +95,7 @@ namespace Core.Application.Test.Requests.Session.Queries
         }
 
         [Fact]
-        public async Task LoginQueryHandler_ShouldReturnUser_WhenCredentialsAreCorrect()
+        public async Task LoginCommandHandler_ShouldReturnUser_WhenCredentialsAreCorrect()
         {
             // Arrange
             const string expectedToken = "some.access.token";
@@ -90,38 +105,30 @@ namespace Core.Application.Test.Requests.Session.Queries
                 new User { UserId = 1 }
             };
 
-            LoginQuery request = new LoginQuery
+            LoginCommand request = new LoginCommand
             {
                 UserNameOrEmail = "my@email.com",
                 Password = "correctpassword"
             };
 
-            Mock<IQueryable<User>> userQueryableMock = expectedUser
+            IQueryable<User> userQueryableMock = expectedUser
                 .AsQueryable()
-                .BuildMock();
+                .BuildMock()
+                .Object;
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Users.GetByUserNameOrEmail(It.IsAny<string>()))
-                .Returns(userQueryableMock.Object);
+                .Returns(userQueryableMock);
 
-            Mock<ICryptoService> cryptoServiceMock = new Mock<ICryptoService>();
-            cryptoServiceMock
+            _cryptoServiceMock
                 .Setup(m => m.VerifyPassword(It.IsAny<byte[]>(), It.IsAny<byte[]>(), It.IsAny<string>()))
                 .Returns(true);
 
-            cryptoServiceMock
+            _cryptoServiceMock
                 .Setup(m => m.GenerateToken(It.IsAny<User>()))
                 .Returns(expectedToken);
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
-            {
-                config.CreateMap<User, AuthenticatedUserResource>();
-            });
-
-            IMapper mapperMock = mapperConfiguration.CreateMapper();
-
-            LoginQuery.LoginUserQueryHandler handler = new LoginQuery.LoginUserQueryHandler(unitOfWorkMock.Object, mapperMock, cryptoServiceMock.Object);
+            LoginCommand.Handler handler = new LoginCommand.Handler(_unitOfWorkMock.Object, _mapperMock, _cryptoServiceMock.Object);
 
             // Act
             AuthenticatedUserResource user = await handler.Handle(request);

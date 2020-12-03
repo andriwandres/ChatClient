@@ -9,11 +9,11 @@ namespace Core.Application.Requests.Users.Queries
     {
         public string UserName { get; set; }
 
-        public class UserNameExistsQueryHandler : IRequestHandler<UserNameExistsQuery, bool>
+        public class Handler : IRequestHandler<UserNameExistsQuery, bool>
         {
             private readonly IUnitOfWork _unitOfWork;
 
-            public UserNameExistsQueryHandler(IUnitOfWork unitOfWork)
+            public Handler(IUnitOfWork unitOfWork)
             {
                 _unitOfWork = unitOfWork;
             }

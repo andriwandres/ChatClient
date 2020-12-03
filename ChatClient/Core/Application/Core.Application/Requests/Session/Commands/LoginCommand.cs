@@ -8,27 +8,27 @@ using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.Session.Queries
+namespace Core.Application.Requests.Session.Commands
 {
-    public class LoginQuery : IRequest<AuthenticatedUserResource>
+    public class LoginCommand : IRequest<AuthenticatedUserResource>
     {
         public string UserNameOrEmail { get; set; }
         public string Password { get; set; }
 
-        public class LoginUserQueryHandler : IRequestHandler<LoginQuery, AuthenticatedUserResource>
+        public class Handler : IRequestHandler<LoginCommand, AuthenticatedUserResource>
         {
             private readonly IMapper _mapper;
             private readonly IUnitOfWork _unitOfWork;
             private readonly ICryptoService _cryptoService;
 
-            public LoginUserQueryHandler(IUnitOfWork unitOfWork, IMapper mapper, ICryptoService cryptoService)
+            public Handler(IUnitOfWork unitOfWork, IMapper mapper, ICryptoService cryptoService)
             {
                 _mapper = mapper;
                 _unitOfWork = unitOfWork;
                 _cryptoService = cryptoService;
             }
 
-            public async Task<AuthenticatedUserResource> Handle(LoginQuery request, CancellationToken cancellationToken = default)
+            public async Task<AuthenticatedUserResource> Handle(LoginCommand request, CancellationToken cancellationToken = default)
             {
                 User user = await _unitOfWork.Users
                     .GetByUserNameOrEmail(request.UserNameOrEmail)

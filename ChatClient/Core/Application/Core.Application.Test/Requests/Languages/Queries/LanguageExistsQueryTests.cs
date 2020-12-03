@@ -26,8 +26,8 @@ namespace Core.Application.Test.Requests.Languages.Queries
                 .Setup(m => m.Languages.Exists(1, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            LanguageExistsQuery.LanguageExistsQueryHandler handler =
-                new LanguageExistsQuery.LanguageExistsQueryHandler(_unitOfWorkMock.Object);
+            LanguageExistsQuery.Handler handler =
+                new LanguageExistsQuery.Handler(_unitOfWorkMock.Object);
 
             // Act
             bool exists = await handler.Handle(request);
@@ -46,8 +46,8 @@ namespace Core.Application.Test.Requests.Languages.Queries
                 .Setup(m => m.Languages.Exists(request.LanguageId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
-            LanguageExistsQuery.LanguageExistsQueryHandler handler =
-                new LanguageExistsQuery.LanguageExistsQueryHandler(_unitOfWorkMock.Object);
+            LanguageExistsQuery.Handler handler =
+                new LanguageExistsQuery.Handler(_unitOfWorkMock.Object);
 
             // Act
             bool exists = await handler.Handle(request);

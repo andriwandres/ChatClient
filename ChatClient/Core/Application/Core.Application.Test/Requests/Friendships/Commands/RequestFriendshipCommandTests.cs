@@ -56,7 +56,7 @@ namespace Core.Application.Test.Requests.Friendships.Commands
                 .Returns(Task.CompletedTask)
                 .Callback<Friendship, CancellationToken>((f, _) => f.FriendshipId = 1);
 
-            RequestFriendshipCommand.RequestFriendshipCommandHandler handler = new RequestFriendshipCommand.RequestFriendshipCommandHandler(_userProviderMock.Object, _unitOfWorkMock.Object, _dateProviderMock.Object, _mapperMock);
+            RequestFriendshipCommand.Handler handler = new RequestFriendshipCommand.Handler(_userProviderMock.Object, _unitOfWorkMock.Object, _dateProviderMock.Object, _mapperMock);
 
             // Act
             FriendshipResource friendship = await handler.Handle(request);

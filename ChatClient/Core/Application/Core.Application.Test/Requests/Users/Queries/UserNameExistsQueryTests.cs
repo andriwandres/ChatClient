@@ -9,18 +9,24 @@ namespace Core.Application.Test.Requests.Users.Queries
 {
     public class UserNameExistsQueryTests
     {
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+        public UserNameExistsQueryTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+        }
+
         [Fact]
         public async Task UserNameExistsQueryHandler_ShouldReturnTrue_WhenUserNameExists()
         {
             // Arrange
             UserNameExistsQuery query = new UserNameExistsQuery { UserName = "username1" };
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Users.UserNameExists(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            UserNameExistsQuery.UserNameExistsQueryHandler handler = new UserNameExistsQuery.UserNameExistsQueryHandler(unitOfWorkMock.Object);
+            UserNameExistsQuery.Handler handler = new UserNameExistsQuery.Handler(_unitOfWorkMock.Object);
 
             // Act
             bool exists = await handler.Handle(query);
@@ -35,12 +41,11 @@ namespace Core.Application.Test.Requests.Users.Queries
             // Arrange
             UserNameExistsQuery query = new UserNameExistsQuery { UserName = "invalidusername1" };
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Users.UserNameExists(It.IsAny<string>(), It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
-            UserNameExistsQuery.UserNameExistsQueryHandler handler = new UserNameExistsQuery.UserNameExistsQueryHandler(unitOfWorkMock.Object);
+            UserNameExistsQuery.Handler handler = new UserNameExistsQuery.Handler(_unitOfWorkMock.Object);
 
             // Act
             bool exists = await handler.Handle(query);

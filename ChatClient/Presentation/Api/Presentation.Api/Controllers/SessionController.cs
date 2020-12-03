@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Core.Application.Requests.Session.Queries;
 using Core.Domain.Dtos.Session;
 using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Users;
@@ -14,6 +13,7 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Application.Requests.Session.Commands;
 
 namespace Presentation.Api.Controllers
 {
@@ -94,9 +94,9 @@ namespace Presentation.Api.Controllers
                 return BadRequest(ModelState);
             }
 
-            LoginQuery query = _mapper.Map<LoginBody, LoginQuery>(credentials);
+            LoginCommand command = _mapper.Map<LoginBody, LoginCommand>(credentials);
 
-            AuthenticatedUserResource user = await _mediator.Send(query, cancellationToken);
+            AuthenticatedUserResource user = await _mediator.Send(command, cancellationToken);
 
             if (user == null)
             {

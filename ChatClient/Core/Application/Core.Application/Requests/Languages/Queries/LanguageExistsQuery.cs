@@ -9,11 +9,11 @@ namespace Core.Application.Requests.Languages.Queries
     {
         public int LanguageId { get; set; }
 
-        public class LanguageExistsQueryHandler : IRequestHandler<LanguageExistsQuery, bool>
+        public class Handler : IRequestHandler<LanguageExistsQuery, bool>
         {
             private readonly IUnitOfWork _unitOfWork;
 
-            public LanguageExistsQueryHandler(IUnitOfWork unitOfWork)
+            public Handler(IUnitOfWork unitOfWork)
             {
                 _unitOfWork = unitOfWork;
             }
