@@ -663,6 +663,43 @@
              An unexpected error occurred
              </response>
         </member>
+        <member name="M:Presentation.Api.Controllers.MessageController.DeleteMessage(System.Int32,System.Threading.CancellationToken)">
+             <summary>
+             Deletes a message
+             </summary>
+            
+             <remarks>
+             Deletes an existing message with the possibility to re-activate it again later
+             </remarks>
+             
+             <param name="messageId">
+             The ID of the message to delete
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+            
+             <returns>
+             No content
+             </returns>
+            
+             <response code="204">
+             Deletion was successful
+             </response>
+            
+             <response code="403">
+             The user is not the author of the message
+             </response>
+            
+             <response code="404">
+             The message with given ID does not exist
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
         <member name="M:Presentation.Api.Controllers.SessionController.Login(Core.Domain.Dtos.Session.LoginBody,System.Threading.CancellationToken)">
              <summary>
              Signs the user in to a new session

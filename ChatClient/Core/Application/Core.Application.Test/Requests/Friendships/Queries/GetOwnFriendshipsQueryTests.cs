@@ -1,14 +1,13 @@
 ﻿using AutoMapper;
 using Core.Application.Database;
 using Core.Application.Requests.Friendships.Queries;
+using Core.Application.Services;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Friendships;
-using Microsoft.AspNetCore.Http;
 using MockQueryable.Moq;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -16,41 +15,46 @@ namespace Core.Application.Test.Requests.Friendships.Queries
 {
     public class GetOwnFriendshipsQueryTests
     {
-        [Fact]
-        public async Task GetOwnFriendshipsQueryHandler_ShouldReturnOwnFriendships()
+        private readonly IMapper _mapperMock;
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        private readonly Mock<IUserProvider> _userProviderMock;
+
+        public GetOwnFriendshipsQueryTests()
         {
-            // Arrange
-            Claim expectedNameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, "1");
-            
-            IEnumerable<Friendship> expectedFriendships = new []
-            {
-                new Friendship { FriendshipId = 1, RequesterId = 1, AddresseeId = 2 },
-                new Friendship { FriendshipId = 2, RequesterId = 3, AddresseeId = 1 },
-            };
-
-            Mock<IQueryable<Friendship>> friendshipQueryableMock = expectedFriendships
-                .AsQueryable()
-                .BuildMock();
-
-            Mock<IHttpContextAccessor> httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-            httpContextAccessorMock
-                .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
-                .Returns(expectedNameIdentifierClaim);
-
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
-                .Setup(m => m.Friendships.GetByUser(1))
-                .Returns(friendshipQueryableMock.Object);
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+            _userProviderMock = new Mock<IUserProvider>();
+            _userProviderMock
+                .Setup(m => m.GetCurrentUserId())
+                .Returns(1);
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
                 config.CreateMap<Friendship, FriendshipResource>();
             });
 
-            IMapper mapperMock = mapperConfiguration.CreateMapper();
+            _mapperMock = mapperConfiguration.CreateMapper();
+        }
 
-            GetOwnFriendshipsQuery.GetOwnFriendshipsQueryHandler handler =
-                new GetOwnFriendshipsQuery.GetOwnFriendshipsQueryHandler(unitOfWorkMock.Object, httpContextAccessorMock.Object, mapperMock);
+        [Fact]
+        public async Task GetOwnFriendshipsQueryHandler_ShouldReturnOwnFriendships()
+        {
+            // Arrange
+            IEnumerable<Friendship> expectedFriendships = new[]
+            {
+                new Friendship { FriendshipId = 1, RequesterId = 1, AddresseeId = 2 },
+                new Friendship { FriendshipId = 2, RequesterId = 3, AddresseeId = 1 },
+            };
+
+            IQueryable<Friendship> friendshipQueryableMock = expectedFriendships
+                .AsQueryable()
+                .BuildMock()
+                .Object;
+
+            _unitOfWorkMock
+                .Setup(m => m.Friendships.GetByUser(1))
+                .Returns(friendshipQueryableMock);
+
+            GetOwnFriendshipsQuery.Handler handler = new GetOwnFriendshipsQuery.Handler(_unitOfWorkMock.Object, _mapperMock, _userProviderMock.Object);
 
             // Act
             IEnumerable<FriendshipResource> friendships = await handler.Handle(new GetOwnFriendshipsQuery());

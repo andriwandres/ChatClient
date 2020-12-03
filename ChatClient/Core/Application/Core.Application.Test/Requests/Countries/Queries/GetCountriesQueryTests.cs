@@ -14,6 +14,20 @@ namespace Core.Application.Test.Requests.Countries.Queries
 {
     public class GetCountriesQueryTests
     {
+        private readonly IMapper _mapperMock;
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+        public GetCountriesQueryTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            {
+                config.CreateMap<Country, CountryResource>();
+            });
+
+            _mapperMock = mapperConfiguration.CreateMapper();
+        }
+
         [Fact]
         public async Task GetCountriesQueryHandler_ReturnsCountries()
         {
@@ -26,23 +40,16 @@ namespace Core.Application.Test.Requests.Countries.Queries
                 new Country { CountryId = 2 },
             };
 
-            Mock<IQueryable<Country>> queryableMock = expectedCountries
+            IQueryable<Country> queryableMock = expectedCountries
                 .AsQueryable()
-                .BuildMock();
+                .BuildMock()
+                .Object;
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Countries.GetAll())
-                .Returns(queryableMock.Object);
+                .Returns(queryableMock);
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
-            {
-                config.CreateMap<Country, CountryResource>();
-            });
-
-            IMapper mapperMock = mapperConfiguration.CreateMapper();
-
-            GetCountriesQuery.Handler handler = new GetCountriesQuery.Handler(mapperMock, unitOfWorkMock.Object);
+            GetCountriesQuery.Handler handler = new GetCountriesQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
 
             // Act
             IEnumerable<CountryResource> actualCountries = await handler.Handle(request);

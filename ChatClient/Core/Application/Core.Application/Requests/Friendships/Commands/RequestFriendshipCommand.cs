@@ -4,8 +4,6 @@ using Core.Application.Services;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Friendships;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -20,19 +18,19 @@ namespace Core.Application.Requests.Friendships.Commands
             private readonly IMapper _mapper;
             private readonly IUnitOfWork _unitOfWork;
             private readonly IDateProvider _dateProvider;
-            private readonly IHttpContextAccessor _httpContextAccessor;
+            private readonly IUserProvider _userProvider;
 
-            public RequestFriendshipCommandHandler(IHttpContextAccessor httpContextAccessor, IUnitOfWork unitOfWork, IDateProvider dateProvider, IMapper mapper)
+            public RequestFriendshipCommandHandler(IUserProvider userProvider, IUnitOfWork unitOfWork, IDateProvider dateProvider, IMapper mapper)
             {
                 _mapper = mapper;
                 _unitOfWork = unitOfWork;
                 _dateProvider = dateProvider;
-                _httpContextAccessor = httpContextAccessor;
+                _userProvider = userProvider;
             }
 
             public async Task<FriendshipResource> Handle(RequestFriendshipCommand request, CancellationToken cancellationToken = default)
             {
-                int userId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                int userId = _userProvider.GetCurrentUserId();
 
                 Friendship friendship = new Friendship
                 {

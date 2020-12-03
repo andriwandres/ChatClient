@@ -1,6 +1,4 @@
-﻿using System.Text;
-using System.Threading.Tasks;
-using Core.Application.Services;
+﻿using Core.Application.Services;
 using Core.Domain.Options;
 using Infrastructure.Shared.Services;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -9,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Shared.Extensions
 {
@@ -19,6 +19,7 @@ namespace Infrastructure.Shared.Extensions
             // Add infrastructure services
             services.AddTransient<ICryptoService, CryptoService>();
             services.AddTransient<IDateProvider, DateProvider>();
+            services.AddTransient<IUserProvider, UserProvider>();
 
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

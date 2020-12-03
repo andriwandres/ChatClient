@@ -1,17 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Core.Application.Database;
+﻿using Core.Application.Database;
 using Core.Application.Requests.Friendships.Queries;
 using Moq;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Core.Application.Test.Requests.Friendships.Queries
 {
     public class FriendshipCombinationExistsQueryTests
     {
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+        public FriendshipCombinationExistsQueryTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+        }
+
         [Fact]
         public async Task FriendshipCombinationExistsQueryHandler_ShouldReturnTrue_WhenCombinationExists()
         {
@@ -22,14 +26,11 @@ namespace Core.Application.Test.Requests.Friendships.Queries
                 AddresseeId = 2
             };
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
-                .Setup(m => m.Friendships.CombinationExists(request.RequesterId, request.AddresseeId,
-                    It.IsAny<CancellationToken>()))
+            _unitOfWorkMock
+                .Setup(m => m.Friendships.CombinationExists(request.RequesterId, request.AddresseeId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            FriendshipCombinationExistsQuery.Handler handler =
-                new FriendshipCombinationExistsQuery.Handler(unitOfWorkMock.Object);
+            FriendshipCombinationExistsQuery.Handler handler = new FriendshipCombinationExistsQuery.Handler(_unitOfWorkMock.Object);
 
             // Act
             bool combinationExists = await handler.Handle(request);
@@ -48,14 +49,11 @@ namespace Core.Application.Test.Requests.Friendships.Queries
                 AddresseeId = 242
             };
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
-                .Setup(m => m.Friendships.CombinationExists(request.RequesterId, request.AddresseeId,
-                    It.IsAny<CancellationToken>()))
+            _unitOfWorkMock
+                .Setup(m => m.Friendships.CombinationExists(request.RequesterId, request.AddresseeId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
-            FriendshipCombinationExistsQuery.Handler handler =
-                new FriendshipCombinationExistsQuery.Handler(unitOfWorkMock.Object);
+            FriendshipCombinationExistsQuery.Handler handler = new FriendshipCombinationExistsQuery.Handler(_unitOfWorkMock.Object);
 
             // Act
             bool combinationExists = await handler.Handle(request);

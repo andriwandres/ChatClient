@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Application.Database;
 using Core.Application.Requests.Friendships.Queries;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Friendships;
 using MockQueryable.Moq;
 using Moq;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -14,6 +14,21 @@ namespace Core.Application.Test.Requests.Friendships.Queries
 {
     public class GetFriendshipByIdQueryTests
     {
+        private readonly IMapper _mapperMock;
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+        public GetFriendshipByIdQueryTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+
+            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            {
+                config.CreateMap<Friendship, FriendshipResource>();
+            });
+
+            _mapperMock = mapperConfiguration.CreateMapper();
+        }
+
         [Fact]
         public async Task GetFriendshipByIdQueryHandler_ShouldReturnNull_WhenFriendshipIsNotFound()
         {
@@ -25,20 +40,11 @@ namespace Core.Application.Test.Requests.Friendships.Queries
                 .AsQueryable()
                 .BuildMock();
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Friendships.GetById(request.FriendshipId))
                 .Returns(expectedFriendships.Object);
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
-            {
-                config.CreateMap<Friendship, FriendshipResource>();
-            });
-
-            IMapper mapperMock = mapperConfiguration.CreateMapper();
-
-            GetFriendshipByIdQuery.GetFriendshipByIdQueryHandler handler =
-                new GetFriendshipByIdQuery.GetFriendshipByIdQueryHandler(unitOfWorkMock.Object, mapperMock);
+            GetFriendshipByIdQuery.Handler handler = new GetFriendshipByIdQuery.Handler(_unitOfWorkMock.Object, _mapperMock);
 
             // Act
             FriendshipResource friendship = await handler.Handle(request);
@@ -62,20 +68,11 @@ namespace Core.Application.Test.Requests.Friendships.Queries
                 .AsQueryable()
                 .BuildMock();
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Friendships.GetById(request.FriendshipId))
                 .Returns(friendshipQueryableMock.Object);
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
-            {
-                config.CreateMap<Friendship, FriendshipResource>();
-            });
-
-            IMapper mapperMock = mapperConfiguration.CreateMapper();
-
-            GetFriendshipByIdQuery.GetFriendshipByIdQueryHandler handler =
-                new GetFriendshipByIdQuery.GetFriendshipByIdQueryHandler(unitOfWorkMock.Object, mapperMock);
+            GetFriendshipByIdQuery.Handler handler = new GetFriendshipByIdQuery.Handler(_unitOfWorkMock.Object, _mapperMock);
 
             // Act
             FriendshipResource friendship = await handler.Handle(request);

@@ -4,10 +4,8 @@ using Core.Application.Requests.Friendships.Commands;
 using Core.Application.Services;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Friendships;
-using Microsoft.AspNetCore.Http;
 using Moq;
 using System;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -16,43 +14,49 @@ namespace Core.Application.Test.Requests.Friendships.Commands
 {
     public class RequestFriendshipCommandTests
     {
-        [Fact]
-        public async Task RequestFriendshipCommandHandler_ShouldReturnCreatedFriendship()
+        private readonly IMapper _mapperMock;
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        private readonly Mock<IDateProvider> _dateProviderMock;
+        private readonly Mock<IUserProvider> _userProviderMock;
+
+        public RequestFriendshipCommandTests()
         {
-            // Arrange
-            RequestFriendshipCommand request = new RequestFriendshipCommand { AddresseeId = 2 };
-            DateTime expectedDate = new DateTime(2020, 1, 1, 0, 0, 0);
-            Claim expectedClaim = new Claim(ClaimTypes.NameIdentifier, "1");
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+            _dateProviderMock = new Mock<IDateProvider>();
 
-            Mock<IDateProvider> dateProviderMock = new Mock<IDateProvider>();
-            dateProviderMock
+            _dateProviderMock
                 .Setup(m => m.UtcNow())
-                .Returns(expectedDate);
+                .Returns(new DateTime(2020, 1, 1));
 
-            Mock<IHttpContextAccessor> httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-            httpContextAccessorMock
-                .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
-                .Returns(expectedClaim);
-
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
-                .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
-                .ReturnsAsync(1);
-
-            unitOfWorkMock
-                .Setup(m => m.Friendships.Add(It.IsAny<Friendship>(), It.IsAny<CancellationToken>()))
-                .Returns(Task.CompletedTask)
-                .Callback<Friendship, CancellationToken>((f, _) => f.FriendshipId = 1);
+            _userProviderMock = new Mock<IUserProvider>();
+            _userProviderMock
+                .Setup(m => m.GetCurrentUserId())
+                .Returns(1);
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
                 config.CreateMap<Friendship, FriendshipResource>();
             });
 
-            IMapper mapperMock = mapperConfiguration.CreateMapper();
+            _mapperMock = mapperConfiguration.CreateMapper();
+        }
 
-            RequestFriendshipCommand.RequestFriendshipCommandHandler handler =
-                new RequestFriendshipCommand.RequestFriendshipCommandHandler(httpContextAccessorMock.Object, unitOfWorkMock.Object, dateProviderMock.Object, mapperMock);
+        [Fact]
+        public async Task RequestFriendshipCommandHandler_ShouldReturnCreatedFriendship()
+        {
+            // Arrange
+            RequestFriendshipCommand request = new RequestFriendshipCommand { AddresseeId = 2 };
+
+            _unitOfWorkMock
+                .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
+                .ReturnsAsync(1);
+
+            _unitOfWorkMock
+                .Setup(m => m.Friendships.Add(It.IsAny<Friendship>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask)
+                .Callback<Friendship, CancellationToken>((f, _) => f.FriendshipId = 1);
+
+            RequestFriendshipCommand.RequestFriendshipCommandHandler handler = new RequestFriendshipCommand.RequestFriendshipCommandHandler(_userProviderMock.Object, _unitOfWorkMock.Object, _dateProviderMock.Object, _mapperMock);
 
             // Act
             FriendshipResource friendship = await handler.Handle(request);

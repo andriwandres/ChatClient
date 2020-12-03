@@ -13,12 +13,12 @@ namespace Core.Application.Requests.Friendships.Queries
     {
         public int FriendshipId { get; set; }
 
-        public class GetFriendshipByIdQueryHandler : IRequestHandler<GetFriendshipByIdQuery, FriendshipResource>
+        public class Handler : IRequestHandler<GetFriendshipByIdQuery, FriendshipResource>
         {
             private readonly IMapper _mapper;
             private readonly IUnitOfWork _unitOfWork;
 
-            public GetFriendshipByIdQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
+            public Handler(IUnitOfWork unitOfWork, IMapper mapper)
             {
                 _mapper = mapper;
                 _unitOfWork = unitOfWork;

@@ -1,19 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using Core.Application.Database;
+﻿using Core.Application.Database;
 using Core.Application.Requests.Friendships.Commands;
 using Core.Application.Services;
 using Core.Domain.Entities;
 using Moq;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Core.Application.Test.Requests.Friendships.Commands
 {
     public class UpdateFriendshipStatusCommandTests
     {
+        private readonly Mock<IDateProvider> _dateProviderMock;
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+        public UpdateFriendshipStatusCommandTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+            _dateProviderMock = new Mock<IDateProvider>();
+            _dateProviderMock
+                .Setup(m => m.UtcNow())
+                .Returns(new DateTime(2020, 1, 1));
+        }
+
         [Fact]
         public async Task UpdateFriendshipStatusCommandHandler_ShouldAddNewFriendshipChange()
         {
@@ -24,28 +34,22 @@ namespace Core.Application.Test.Requests.Friendships.Commands
                 FriendshipStatusId = FriendshipStatusId.Accepted
             };
 
-            Mock<IDateProvider> dateProviderMock = new Mock<IDateProvider>();
-            dateProviderMock
-                .Setup(m => m.UtcNow())
-                .Returns(new DateTime(2020, 1, 1, 0, 0, 0));
-
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.FriendshipChanges.Add(It.IsAny<FriendshipChange>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            UpdateFriendshipStatusCommand.Handler handler = new UpdateFriendshipStatusCommand.Handler(unitOfWorkMock.Object, dateProviderMock.Object);
+            UpdateFriendshipStatusCommand.Handler handler = new UpdateFriendshipStatusCommand.Handler(_unitOfWorkMock.Object, _dateProviderMock.Object);
 
             // Act
             await handler.Handle(request);
 
             // Assert
-            unitOfWorkMock.Verify(m => m.FriendshipChanges.Add(It.IsAny<FriendshipChange>(), It.IsAny<CancellationToken>()));
-            unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()));
+            _unitOfWorkMock.Verify(m => m.FriendshipChanges.Add(It.IsAny<FriendshipChange>(), It.IsAny<CancellationToken>()));
+            _unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()));
         }
     }
 }
