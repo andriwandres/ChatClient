@@ -10,6 +10,7 @@ namespace Core.Domain.Entities
         public int? ParentId { get; set; }
         public string HtmlContent { get; set; }
         public bool IsEdited { get; set; }
+        public bool IsDeleted { get; set; }
         public DateTime Created { get; set; }
 
         public User Author { get; set; }

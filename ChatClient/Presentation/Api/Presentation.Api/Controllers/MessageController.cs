@@ -370,8 +370,57 @@ namespace Presentation.Api.Controllers
             return NoContent();
         }
 
+        /// <summary>
+        /// Deletes a message
+        /// </summary>
+        ///
+        /// <remarks>
+        /// Deletes an existing message with the possibility to re-activate it again later
+        /// </remarks>
+        /// 
+        /// <param name="messageId">
+        /// The ID of the message to delete
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">
+        /// Notifies asynchronous operations to cancel ongoing work and release resources
+        /// </param>
+        ///
+        /// <returns>
+        /// No content
+        /// </returns>
+        ///
+        /// <response code="204">
+        /// Deletion was successful
+        /// </response>
+        ///
+        /// <response code="403">
+        /// The user is not the author of the message
+        /// </response>
+        ///
+        /// <response code="404">
+        /// The message with given ID does not exist
+        /// </response>
+        ///
+        /// <response code="500">
+        /// An unexpected error occurred
+        /// </response>
         [HttpDelete("{messageId:int}")]
         [Authorize]
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+
+        [ProducesResponseType(StatusCodes.Status403Forbidden)]
+        [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(DeleteMessageForbiddenExample))]
+
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(DeleteMessageNotFoundExample))]
+
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
         public async Task<ActionResult> DeleteMessage([FromRoute] int messageId, CancellationToken cancellationToken = default)
         {
             // Check if the message exists
@@ -401,6 +450,11 @@ namespace Presentation.Api.Controllers
                     Message = "Only the author of a message is allowed to delete a message"
                 });
             }
+
+            // Delete the message
+            DeleteMessageCommand deleteCommand = new DeleteMessageCommand { MessageId = messageId };
+
+            await _mediator.Send(deleteCommand, cancellationToken);
 
             return NoContent();
         }

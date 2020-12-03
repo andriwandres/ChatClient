@@ -23,6 +23,10 @@ namespace Infrastructure.Persistence.Configurations
                 .IsRequired()
                 .HasDefaultValue(false);
 
+            builder.Property(message => message.IsDeleted)
+                .IsRequired()
+                .HasDefaultValue(false);
+
             builder.Property(message => message.Created)
                 .IsRequired();
 

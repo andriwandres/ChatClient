@@ -423,5 +423,90 @@ namespace Presentation.Api.Test.Controllers
         }
 
         #endregion
+
+        #region DeleteMessage()
+
+        [Fact]
+        public async Task DeleteMessage_ShouldReturnNotFoundResult_WhenMessageDoesNotExist()
+        {
+            // Arrange
+            const int messageId = 641;
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<MessageExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            MessageController controller = new MessageController(null, _mediatorMock.Object);
+
+            // Act
+            ActionResult response = await controller.DeleteMessage(messageId);
+
+            // Assert
+            NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.NotNull(error);
+            Assert.Equal(StatusCodes.Status404NotFound, error.StatusCode);
+        }
+
+        [Fact]
+        public async Task DeleteMessage_ShouldReturnForbiddenResult_WhenTheUserIsNotTheAuthorOfTheMessage()
+        {
+            // Arrange
+            const int messageId = 1;
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<MessageExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<IsAuthorOfMessageQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            MessageController controller = new MessageController(null, _mediatorMock.Object);
+
+            // Act
+            ActionResult response = await controller.DeleteMessage(messageId);
+
+            // Assert
+            ObjectResult result = Assert.IsType<ObjectResult>(response);
+
+            ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+
+            Assert.NotNull(error);
+            Assert.Equal(StatusCodes.Status403Forbidden, error.StatusCode);
+        }
+
+        [Fact]
+        public async Task DeleteMessage_ShouldDeleteMessage_AndreturnNoContentResult_WhenTheUserIsTheAuthorOfTheMessage()
+        {
+            // Arrange
+            const int messageId = 1;
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<MessageExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<IsAuthorOfMessageQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<DeleteMessageCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(Unit.Value);
+
+            MessageController controller = new MessageController(null, _mediatorMock.Object);
+
+            // Act
+            ActionResult response = await controller.DeleteMessage(messageId);
+
+            // Assert
+            Assert.IsType<NoContentResult>(response);
+
+            _mediatorMock.Verify(m => m.Send(It.IsAny<DeleteMessageCommand>(), It.IsAny<CancellationToken>()), Times.Once);
+        }
+
+        #endregion
     }
 }
