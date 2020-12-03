@@ -9,18 +9,24 @@ namespace Core.Application.Test.Requests.Groups.Queries
 {
     public class GroupExistsQueryTests
     {
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+        public GroupExistsQueryTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+        }
+
         [Fact]
         public async Task GroupExistsQueryHandler_ShouldReturnTrue_WhenGroupExists()
         {
             // Arrange
             GroupExistsQuery request = new GroupExistsQuery { GroupId = 1 };
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Groups.Exists(request.GroupId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(true);
 
-            GroupExistsQuery.Handler handler = new GroupExistsQuery.Handler(unitOfWorkMock.Object);
+            GroupExistsQuery.Handler handler = new GroupExistsQuery.Handler(_unitOfWorkMock.Object);
 
             // Act
             bool exists = await handler.Handle(request);
@@ -35,12 +41,11 @@ namespace Core.Application.Test.Requests.Groups.Queries
             // Arrange
             GroupExistsQuery request = new GroupExistsQuery { GroupId = 1 };
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Groups.Exists(request.GroupId, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(false);
 
-            GroupExistsQuery.Handler handler = new GroupExistsQuery.Handler(unitOfWorkMock.Object);
+            GroupExistsQuery.Handler handler = new GroupExistsQuery.Handler(_unitOfWorkMock.Object);
 
             // Act
             bool exists = await handler.Handle(request);

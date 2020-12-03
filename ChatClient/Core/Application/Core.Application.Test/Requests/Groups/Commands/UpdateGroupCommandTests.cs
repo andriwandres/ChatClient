@@ -13,6 +13,13 @@ namespace Core.Application.Test.Requests.Groups.Commands
 {
     public class UpdateGroupCommandTests
     {
+        private readonly Mock<IUnitOfWork> _unitOfWork;
+
+        public UpdateGroupCommandTests()
+        {
+            _unitOfWork = new Mock<IUnitOfWork>();
+        }
+
         [Fact]
         public async Task UpdateGroupCommandHandler_ShouldUpdateGroup()
         {
@@ -34,19 +41,18 @@ namespace Core.Application.Test.Requests.Groups.Commands
                 .BuildMock()
                 .Object;
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWork
                 .Setup(m => m.Groups.GetById(request.GroupId))
                 .Returns(queryableMock);
 
-            UpdateGroupCommand.Handler handler = new UpdateGroupCommand.Handler(unitOfWorkMock.Object);
+            UpdateGroupCommand.Handler handler = new UpdateGroupCommand.Handler(_unitOfWork.Object);
 
             // Act
             await handler.Handle(request);
 
             // Assert
-            unitOfWorkMock.Verify(m => m.Groups.Update(It.IsAny<Group>()), Times.Once);
-            unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
+            _unitOfWork.Verify(m => m.Groups.Update(It.IsAny<Group>()), Times.Once);
+            _unitOfWork.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
         }
     }
 }

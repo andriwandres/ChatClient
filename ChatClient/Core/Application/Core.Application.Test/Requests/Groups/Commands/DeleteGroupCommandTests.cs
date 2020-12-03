@@ -13,6 +13,13 @@ namespace Core.Application.Test.Requests.Groups.Commands
 {
     public class DeleteGroupCommandTests
     {
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+        public DeleteGroupCommandTests()
+        {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+        }
+
         [Fact]
         public async Task DeleteGroupCommandHandler_ShouldSetDeleteFlagOnGroup()
         {
@@ -29,18 +36,17 @@ namespace Core.Application.Test.Requests.Groups.Commands
                 .BuildMock()
                 .Object;
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Groups.GetById(request.GroupId))
                 .Returns(queryableMock);
 
             Group passedGroup = null;
 
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Groups.Update(It.IsAny<Group>()))
                 .Callback<Group>(g => passedGroup = g);
 
-            DeleteGroupCommand.Handler handler = new DeleteGroupCommand.Handler(unitOfWorkMock.Object);
+            DeleteGroupCommand.Handler handler = new DeleteGroupCommand.Handler(_unitOfWorkMock.Object);
 
             // Act
             await handler.Handle(request);
@@ -50,7 +56,7 @@ namespace Core.Application.Test.Requests.Groups.Commands
             Assert.Equal(request.GroupId, passedGroup.GroupId);
             Assert.True(passedGroup.IsDeleted);
 
-            unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()), Times.AtLeastOnce);
+            _unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()), Times.AtLeastOnce);
         }
     }
 }

@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
-using AutoMapper;
+﻿using AutoMapper;
 using Core.Application.Database;
 using Core.Application.Requests.Groups.Queries;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Groups;
 using MockQueryable.Moq;
 using Moq;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
@@ -15,9 +15,12 @@ namespace Core.Application.Test.Requests.Groups.Queries
     public class GetGroupByIdQueryTests
     {
         private readonly IMapper _mapperMock;
+        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
 
         public GetGroupByIdQueryTests()
         {
+            _unitOfWorkMock = new Mock<IUnitOfWork>();
+
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
                 config.CreateMap<Group, GroupResource>();
@@ -38,12 +41,11 @@ namespace Core.Application.Test.Requests.Groups.Queries
                 .BuildMock()
                 .Object;
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Groups.GetById(request.GroupId))
                 .Returns(emptyQueryable);
 
-            GetGroupByIdQuery.Handler handler = new GetGroupByIdQuery.Handler(_mapperMock, unitOfWorkMock.Object);
+            GetGroupByIdQuery.Handler handler = new GetGroupByIdQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
 
             // Act
             GroupResource group = await handler.Handle(request);
@@ -68,12 +70,11 @@ namespace Core.Application.Test.Requests.Groups.Queries
                 .BuildMock()
                 .Object;
 
-            Mock<IUnitOfWork> unitOfWorkMock = new Mock<IUnitOfWork>();
-            unitOfWorkMock
+            _unitOfWorkMock
                 .Setup(m => m.Groups.GetById(request.GroupId))
                 .Returns(queryableMock);
 
-            GetGroupByIdQuery.Handler handler = new GetGroupByIdQuery.Handler(_mapperMock, unitOfWorkMock.Object);
+            GetGroupByIdQuery.Handler handler = new GetGroupByIdQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
 
             // Act
             GroupResource group = await handler.Handle(request);

@@ -4,8 +4,6 @@ using Core.Application.Services;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Groups;
 using MediatR;
-using Microsoft.AspNetCore.Http;
-using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -21,19 +19,19 @@ namespace Core.Application.Requests.Groups.Commands
             private readonly IMapper _mapper;
             private readonly IUnitOfWork _unitOfWork;
             private readonly IDateProvider _dateProvider;
-            private readonly IHttpContextAccessor _httpContextAccessor;
+            private readonly IUserProvider _userProvider;
 
-            public Handler(IMapper mapper, IUnitOfWork unitOfWork, IDateProvider dateProvider, IHttpContextAccessor httpContextAccessor)
+            public Handler(IMapper mapper, IUnitOfWork unitOfWork, IDateProvider dateProvider, IUserProvider userProvider)
             {
                 _mapper = mapper;
                 _unitOfWork = unitOfWork;
                 _dateProvider = dateProvider;
-                _httpContextAccessor = httpContextAccessor;
+                _userProvider = userProvider;
             }
 
             public async Task<GroupResource> Handle(CreateGroupCommand request, CancellationToken cancellationToken = default)
             {
-                int userId = int.Parse(_httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
+                int userId = _userProvider.GetCurrentUserId();
 
                 Group group = new Group
                 {
