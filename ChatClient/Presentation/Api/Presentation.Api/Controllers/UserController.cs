@@ -388,5 +388,12 @@ namespace Presentation.Api.Controllers
 
             return Ok(friendships);
         }
+
+        [HttpGet("me/recipients")]
+        [Authorize]
+        public async Task<ActionResult> GetRelevantRecipients()
+        {
+            return NoContent();
+        }
     }
 }
