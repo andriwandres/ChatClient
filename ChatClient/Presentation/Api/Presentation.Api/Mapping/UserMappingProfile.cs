@@ -15,7 +15,11 @@ namespace Presentation.Api.Mapping
                 .ForMember(destination => destination.Token, 
                     config => config.Ignore());
 
-            CreateMap<User, UserProfileResource>();
+            CreateMap<User, UserProfileResource>()
+                .ForMember(destination => destination.AvailabilityStatusId, config =>
+                {
+                    config.MapFrom(source => source.Availability.StatusId);
+                });
 
             CreateMap<UserNameExistsQueryParams, UserNameExistsQuery>();
             CreateMap<EmailExistsQueryParams, EmailExistsQuery>();

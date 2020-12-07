@@ -37,13 +37,17 @@ namespace Core.Application.Test.Requests.Users.Queries
 
             IEnumerable<User> expectedUser = new[]
             {
-                new User {UserId = 1}
+                new User
+                {
+                    UserId = 1,
+                    Availability = new Availability { StatusId = AvailabilityStatusId.Online }
+                }
             };
 
             Mock<IQueryable<User>> userQueryableMock = expectedUser.AsQueryable().BuildMock();
 
             _unitOfWorkMock
-                .Setup(m => m.Users.GetById(request.UserId))
+                .Setup(m => m.Users.GetById(It.IsAny<int>()))
                 .Returns(userQueryableMock.Object);
 
             GetUserProfileQuery.Handler handler = new GetUserProfileQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
