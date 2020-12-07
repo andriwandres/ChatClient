@@ -39,7 +39,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure.Shared.Test"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation.Api", "Presentation\Api\Presentation.Api\Presentation.Api.csproj", "{3759A717-BF46-44A4-B3DA-9BB4D8868DAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation.Api.Test", "Presentation\Api\Presentation.Api.Test\Presentation.Api.Test.csproj", "{1340CD44-D32D-4327-A69F-6268188B2484}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation.Api.Test", "Presentation\Api\Presentation.Api.Test\Presentation.Api.Test.csproj", "{1340CD44-D32D-4327-A69F-6268188B2484}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

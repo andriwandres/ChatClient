@@ -6,6 +6,7 @@ using MockQueryable.Moq;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -86,6 +87,29 @@ namespace Infrastructure.Persistence.Test.Repositories
 
             // Assert
             Assert.NotNull(availability);
+        }
+
+        #endregion
+
+        #region Add()
+
+        [Fact]
+        public async Task Add_ShouldAddNewAvailability()
+        {
+            // Arrange
+            Availability availability = new Availability();
+
+            _contextMock
+                .Setup(m => m.Availabilities.AddAsync(availability, It.IsAny<CancellationToken>()))
+                .Verifiable();
+
+            AvailabilityRepository repository = new AvailabilityRepository(_contextMock.Object);
+
+            // Act
+            await repository.Add(availability);
+
+            // Assert
+            _contextMock.Verify();
         }
 
         #endregion
