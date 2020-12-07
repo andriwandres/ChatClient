@@ -24,11 +24,17 @@
   },
   "projects": {
     "ui": {
-      "tags": []
+      "tags": ["type:application"]
     },
     "ui-e2e": {
       "tags": [],
       "implicitDependencies": ["ui"]
+    },
+    "auth": {
+      "tags": ["scope:auth"]
+    },
+    "shared-models": {
+      "tags": ["type:utility"]
     }
   }
 }

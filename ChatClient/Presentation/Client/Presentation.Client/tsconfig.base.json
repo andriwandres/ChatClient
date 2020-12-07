@@ -15,7 +15,10 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@chat-client/auth": ["libs/auth/src/index.ts"],
+      "@chat-client/shared/models": ["libs/shared/models/src/index.ts"]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }
