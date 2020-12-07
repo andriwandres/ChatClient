@@ -19,7 +19,13 @@
     "lib": [
       "es2018",
       "dom"
-    ]
+    ],
+    "paths": {
+      "@core": ["src/app/core"],
+      "@core/models": ["src/app/core/models"],
+
+      "@shared": ["src/app/shared"]
+    }
   },
   "angularCompilerOptions": {
     "strictInjectionParameters": true,
