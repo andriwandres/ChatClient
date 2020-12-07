@@ -4,6 +4,31 @@
         <name>Presentation.Api</name>
     </assembly>
     <members>
+        <member name="M:Presentation.Api.Controllers.AvailabilityStatusController.GetAllAvailabilityStatuses(System.Threading.CancellationToken)">
+             <summary>
+             Gets a list of availability statuses
+             </summary>
+            
+             <remarks>
+             Returns a list of availability statuses that describe the users current availability in the application
+             </remarks>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             List of availability statuses
+             </returns>
+            
+             <response code="200">
+             Contains a list of availability statuses
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
         <member name="M:Presentation.Api.Controllers.CountryController.GetCountries(System.Threading.CancellationToken)">
              <summary>
              Gets a list of countries

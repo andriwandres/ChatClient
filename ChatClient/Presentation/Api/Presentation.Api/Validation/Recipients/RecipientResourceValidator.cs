@@ -15,6 +15,9 @@ namespace Presentation.Api.Validation.Recipients
                 .NotEmpty()
                 .GreaterThanOrEqualTo(0);
 
+            RuleFor(recipient => recipient.IsPinned)
+                .NotNull();
+
             RuleFor(recipient => recipient.LatestMessage)
                 .NotEmpty();
         }
