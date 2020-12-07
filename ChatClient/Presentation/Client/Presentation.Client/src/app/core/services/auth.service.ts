@@ -9,13 +9,13 @@ import { environment } from 'src/environments/environment';
 export class AuthService {
   constructor(private readonly httpClient: HttpClient) { }
 
-  authenticateUser(): Observable<AuthenticatedUser> {
+  authenticate(): Observable<AuthenticatedUser> {
     const url = `${environment.api.users}/me`;
 
     return this.httpClient.get<AuthenticatedUser>(url);
   }
 
-  loginUser(credentials: LoginCredentials): Observable<AuthenticatedUser> {
+  login(credentials: LoginCredentials): Observable<AuthenticatedUser> {
     const url = `${environment.api.session}`;
 
     return this.httpClient.put<AuthenticatedUser>(url, credentials);

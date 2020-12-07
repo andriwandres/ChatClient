@@ -23,6 +23,7 @@
     "paths": {
       "@core": ["src/app/core"],
       "@core/models": ["src/app/core/models"],
+      "@core/services": ["src/app/core/services"],
 
       "@shared": ["src/app/shared"]
     }
