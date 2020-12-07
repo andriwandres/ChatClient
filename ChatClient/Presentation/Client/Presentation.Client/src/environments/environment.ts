@@ -5,7 +5,8 @@
 export const environment = {
   production: false,
   api: {
-    user: 'http://localhost:44385/api/users'
+    users: 'http://localhost:44385/api/users',
+    session: 'http://localhost:44385/api/session',
   }
 };
 
