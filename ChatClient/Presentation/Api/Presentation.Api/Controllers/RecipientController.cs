@@ -47,8 +47,6 @@ namespace Presentation.Api.Controllers
                 });
             }
             
-            
-            
             return NoContent();
         }
     }

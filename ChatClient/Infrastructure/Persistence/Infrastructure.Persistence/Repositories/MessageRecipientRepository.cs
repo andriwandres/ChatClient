@@ -23,7 +23,11 @@ namespace Infrastructure.Persistence.Repositories
             IQueryable<MessageRecipient> latestMessages = Context.MessageRecipients
                 .AsNoTracking()
                 .Where(mr =>
+                    mr.Message.AuthorId == userId &&
+                    mr.Recipient.GroupMembershipId == null ||
+
                     mr.Recipient.UserId == userId ||
+
                     mr.Recipient.UserId == null &&
                     mr.Recipient.GroupMembership.UserId == userId
                 )

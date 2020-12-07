@@ -936,5 +936,30 @@
              An unexpected error occurred
              </response>
         </member>
+        <member name="M:Presentation.Api.Controllers.UserController.GetOwnRecipients(System.Threading.CancellationToken)">
+             <summary>
+             Gets a list of the user's relevant recipients
+             </summary>
+            
+             <remarks>
+             Returns a list of recipients, where there is a message that is sent to or from the current user. Each recipient contains information about the latest message sent or received to it.
+             </remarks>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             List of relevant recipients to a users
+             </returns>
+            
+             <response code="200">
+             Contains list of relevant recipients to the current user
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
     </members>
 </doc>

@@ -19,6 +19,9 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Application.Requests.Recipients.Queries;
+using Core.Domain.Resources.Recipients;
+using Presentation.Api.Examples.Recipients;
 
 namespace Presentation.Api.Controllers
 {
@@ -389,11 +392,45 @@ namespace Presentation.Api.Controllers
             return Ok(friendships);
         }
 
+        /// <summary>
+        /// Gets a list of the user's relevant recipients
+        /// </summary>
+        ///
+        /// <remarks>
+        /// Returns a list of recipients, where there is a message that is sent to or from the current user. Each recipient contains information about the latest message sent or received to it.
+        /// </remarks>
+        /// 
+        /// <param name="cancellationToken">
+        /// Notifies asynchronous operations to cancel ongoing work and release resources
+        /// </param>
+        /// 
+        /// <returns>
+        /// List of relevant recipients to a users
+        /// </returns>
+        ///
+        /// <response code="200">
+        /// Contains list of relevant recipients to the current user
+        /// </response>
+        ///
+        /// <response code="500">
+        /// An unexpected error occurred
+        /// </response>
         [HttpGet("me/recipients")]
         [Authorize]
-        public async Task<ActionResult> GetRelevantRecipients()
+        
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetOwnRecipientsOkExample))]
+        
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
+        public async Task<ActionResult<IEnumerable<RecipientResource>>> GetOwnRecipients(CancellationToken cancellationToken = default)
         {
-            return NoContent();
+            GetOwnRecipientsQuery query = new GetOwnRecipientsQuery();
+
+            IEnumerable<RecipientResource> relevantRecipients = await _mediator.Send(query, cancellationToken);
+
+            return Ok(relevantRecipients);
         }
     }
 }
