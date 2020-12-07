@@ -1,9 +1,15 @@
 ﻿using AutoMapper;
+using Core.Application.Requests.Availabilities.Commands;
+using Core.Application.Requests.Friendships.Queries;
+using Core.Application.Requests.Recipients.Queries;
 using Core.Application.Requests.Users.Commands;
 using Core.Application.Requests.Users.Queries;
+using Core.Domain.Dtos.Availability;
 using Core.Domain.Dtos.Users;
+using Core.Domain.Entities;
 using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Friendships;
+using Core.Domain.Resources.Recipients;
 using Core.Domain.Resources.Users;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -13,10 +19,6 @@ using Presentation.Api.Controllers;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Application.Database;
-using Core.Application.Requests.Friendships.Queries;
-using Core.Application.Requests.Recipients.Queries;
-using Core.Domain.Resources.Recipients;
 using Xunit;
 
 namespace Presentation.Api.Test.Controllers
@@ -366,7 +368,47 @@ namespace Presentation.Api.Test.Controllers
             // Assert
             Assert.IsType<OkObjectResult>(response.Result);
         }
-        
+
+        #endregion
+
+        #region UpdateAvailability()
+
+        [Fact]
+        public async Task UpdateAvailability_ShouldReturnBadRequestResult_WhenModelValidationFails()
+        {
+            // Arrange
+            UserController controller = new UserController(null, null);
+
+            controller.ModelState.AddModelError("", "");
+
+            // Act
+            ActionResult response = await controller.UpdateAvailability(new UpdateAvailabilityBody());
+
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(response);
+        }
+
+        [Fact]
+        public async Task UpdateAvailability_ShouldUpdateTheUsersAvailabilityStatus()
+        {
+            UpdateAvailabilityBody body = new UpdateAvailabilityBody {AvailabilityStatusId = AvailabilityStatusId.Busy};
+
+            // Arrange
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<UpdateAvailabilityCommand>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(Unit.Value);
+
+            UserController controller = new UserController(_mediatorMock.Object, null);
+
+            // Act
+            ActionResult response = await controller.UpdateAvailability(body);
+
+            // Assert
+            Assert.IsType<NoContentResult>(response);
+
+            _mediatorMock.Verify(m => m.Send(It.IsAny<UpdateAvailabilityCommand>(), It.IsAny<CancellationToken>()));
+        }
+
         #endregion
     }
 }

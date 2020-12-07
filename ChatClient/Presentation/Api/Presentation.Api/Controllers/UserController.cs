@@ -1,17 +1,23 @@
 ﻿using AutoMapper;
+using Core.Application.Requests.Availabilities.Commands;
 using Core.Application.Requests.Friendships.Queries;
+using Core.Application.Requests.Recipients.Queries;
 using Core.Application.Requests.Users.Commands;
 using Core.Application.Requests.Users.Queries;
+using Core.Domain.Dtos.Availability;
 using Core.Domain.Dtos.Users;
 using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Friendships;
+using Core.Domain.Resources.Recipients;
 using Core.Domain.Resources.Users;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Presentation.Api.Examples;
+using Presentation.Api.Examples.Availability;
 using Presentation.Api.Examples.Friendships;
+using Presentation.Api.Examples.Recipients;
 using Presentation.Api.Examples.Users;
 using Swashbuckle.AspNetCore.Annotations;
 using Swashbuckle.AspNetCore.Filters;
@@ -19,9 +25,6 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Application.Requests.Recipients.Queries;
-using Core.Domain.Resources.Recipients;
-using Presentation.Api.Examples.Recipients;
 
 namespace Presentation.Api.Controllers
 {
@@ -431,6 +434,64 @@ namespace Presentation.Api.Controllers
             IEnumerable<RecipientResource> relevantRecipients = await _mediator.Send(query, cancellationToken);
 
             return Ok(relevantRecipients);
+        }
+
+        /// <summary>
+        /// Updates the user's availability status
+        /// </summary>
+        ///
+        /// <remarks>
+        /// Manually updates the user's availability status
+        /// </remarks>
+        ///
+        /// <param name="body">
+        /// Specifies the updated availability status value
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">
+        /// Notifies asynchronous operations to cancel ongoing work and release resources
+        /// </param>
+        /// 
+        /// <returns>
+        /// No content
+        /// </returns>
+        ///
+        /// <response code="204">
+        /// Update was successful
+        /// </response>
+        ///
+        /// <response code="400">
+        /// The request body has failed model validation
+        /// </response>
+        /// 
+        /// <response code="500">
+        /// An unexpected error occurred
+        /// </response>
+        [HttpPut("me/availability")]
+        [Authorize]
+
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(UpdateAvailabilityBadRequestExample))]
+
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
+        public async Task<ActionResult> UpdateAvailability([FromBody] UpdateAvailabilityBody body, CancellationToken cancellationToken = default)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Update availability status
+            UpdateAvailabilityCommand updateCommand = new UpdateAvailabilityCommand { AvailabilityStatusId = body.AvailabilityStatusId };
+
+            await _mediator.Send(updateCommand, cancellationToken);
+            
+            return NoContent();
         }
     }
 }

@@ -1019,5 +1019,38 @@
              An unexpected error occurred
              </response>
         </member>
+        <member name="M:Presentation.Api.Controllers.UserController.UpdateAvailability(Core.Domain.Dtos.Availability.UpdateAvailabilityBody,System.Threading.CancellationToken)">
+             <summary>
+             Updates the user's availability status
+             </summary>
+            
+             <remarks>
+             Manually updates the user's availability status
+             </remarks>
+            
+             <param name="body">
+             Specifies the updated availability status value
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             No content
+             </returns>
+            
+             <response code="204">
+             Update was successful
+             </response>
+            
+             <response code="400">
+             The request body has failed model validation
+             </response>
+             
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
     </members>
 </doc>
