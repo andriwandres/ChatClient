@@ -27,6 +27,10 @@
 
       "@chat-client/shared": ["src/app/shared"],
 
+      "@chat-client/home": ["src/app/home"],
+
+      "@chat-client/messenger": ["src/app/messenger"],
+
       "@chat-client/auth": ["src/app/auth"],
       "@chat-client/auth/store": ["src/app/auth/store"],
     }

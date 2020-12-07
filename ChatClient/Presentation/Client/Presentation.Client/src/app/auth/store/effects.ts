@@ -26,7 +26,7 @@ export class AuthEffects {
 
   readonly login$ = createEffect(() => this.actions$.pipe(
     ofType(authActions.logIn),
-    mergeMap(({ credentials }) => this.authService.login(credentials).pipe(
+    mergeMap(({ credentials }) => this.authService.logIn(credentials).pipe(
       map(user => authActions.logInSuccess({ user })),
       catchError((error: ApiError) => of(authActions.logInFailure({ error })))
     ))

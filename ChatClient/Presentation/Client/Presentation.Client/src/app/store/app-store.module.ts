@@ -14,4 +14,4 @@ import { environment } from 'src/environments/environment';
     })
   ]
 })
-export class AuthStoreModule { }
+export class AppStoreModule { }

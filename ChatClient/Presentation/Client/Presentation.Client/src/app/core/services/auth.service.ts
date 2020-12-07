@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApiError, AuthenticatedUser, CreateAccountCredentials, LoginCredentials } from '@chat-client/core/models';
 import { Observable, of, throwError } from 'rxjs';
@@ -15,7 +15,7 @@ export class AuthService {
     return this.httpClient.get<AuthenticatedUser>(url);
   }
 
-  login(credentials: LoginCredentials): Observable<AuthenticatedUser> {
+  logIn(credentials: LoginCredentials): Observable<AuthenticatedUser> {
     const url = `${environment.api.session}`;
 
     return this.httpClient.put<AuthenticatedUser>(url, credentials);
@@ -37,8 +37,8 @@ export class AuthService {
     // Map status code '200' => true and '404' => false
     return this.httpClient.head(url, options).pipe(
       map(() => true),
-      catchError((error: ApiError) => {
-        return error.statusCode === 404 ? of(false) : throwError(error);
+      catchError((error: HttpErrorResponse) => {
+        return error.error.statusCode === 404 ? of(false) : throwError(error.error);
       })
     );
   }
@@ -53,8 +53,8 @@ export class AuthService {
     // Map status code '200' => true and '404' => false
     return this.httpClient.head(url, options).pipe(
       map(() => true),
-      catchError((error: ApiError) => {
-        return error.statusCode === 404 ? of(false) : throwError(error);
+      catchError((error: HttpErrorResponse) => {
+        return error.error.statusCode === 404 ? of(false) : throwError(error.error);
       })
     );
   }
