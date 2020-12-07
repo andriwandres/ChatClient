@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
+using Core.Application.Requests.Messages.Commands;
+using Core.Domain.Dtos.Messages;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Messages;
 using System.Linq;
-using Core.Application.Requests.Messages.Commands;
-using Core.Domain.Dtos.Messages;
 
 namespace Presentation.Api.Mapping
 {
@@ -11,7 +11,9 @@ namespace Presentation.Api.Mapping
     {
         public MessageMappingProfile()
         {
+            // Define parameters
             int userId = default;
+
             CreateMap<Message, MessageResource>()
                 .ForMember(destination => destination.AuthorName, config =>
                 {
@@ -40,6 +42,24 @@ namespace Presentation.Api.Mapping
                             .First(mr => (mr.Recipient.UserId ?? mr.Recipient.GroupMembership.UserId) == userId)
                             .MessageRecipientId
                     );
+                });
+
+            CreateMap<MessageRecipient, ChatMessageResource>()
+                .ForMember(destination => destination.AuthorName, config =>
+                {
+                    config.MapFrom(source => source.Message.Author.UserName);
+                })
+                .ForMember(destination => destination.HtmlContent, config =>
+                {
+                    config.MapFrom(source => source.Message.HtmlContent);
+                })
+                .ForMember(destination => destination.Created, config =>
+                {
+                    config.MapFrom(source => source.Message.Created);
+                })
+                .ForMember(destination => destination.IsOwnMessage, config =>
+                {
+                    config.MapFrom(source => source.Message.AuthorId == userId);
                 });
 
             CreateMap<SendMessageBody, SendMessageCommand>();

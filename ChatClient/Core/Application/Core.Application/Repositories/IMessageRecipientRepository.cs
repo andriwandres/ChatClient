@@ -8,6 +8,7 @@ namespace Core.Application.Repositories
 {
     public interface IMessageRecipientRepository
     {
+        IQueryable<MessageRecipient> GetMessagesWithRecipient(int userId, int recipientId);
         IQueryable<MessageRecipient> GetLatestGroupedByRecipients(int userId);
         Task Add(MessageRecipient messageRecipient, CancellationToken cancellationToken = default);
         Task AddRange(IEnumerable<MessageRecipient> messageRecipients, CancellationToken cancellationToken = default);

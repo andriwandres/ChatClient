@@ -41,6 +41,8 @@ namespace Infrastructure.Persistence.Repositories
                 );
         }
 
+        
+
         public async Task Add(Message message, CancellationToken cancellationToken = default)
         {
             await Context.Messages.AddAsync(message, cancellationToken);

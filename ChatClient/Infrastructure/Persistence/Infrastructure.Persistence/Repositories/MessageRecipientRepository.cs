@@ -18,6 +18,18 @@ namespace Infrastructure.Persistence.Repositories
 
         }
 
+        public IQueryable<MessageRecipient> GetMessagesWithRecipient(int userId, int recipientId)
+        {
+            return Context.MessageRecipients
+                .AsNoTracking()
+                .Where(mr =>
+                    mr.RecipientId == recipientId && mr.Message.AuthorId == userId ||
+                    mr.Recipient.GroupMembership.Recipient.RecipientId == recipientId ||
+                    mr.Recipient.UserId == userId && mr.Message.Author.Recipient.RecipientId == recipientId
+                )
+                .OrderBy(mr => mr.Message.Created);
+        }
+
         public IQueryable<MessageRecipient> GetLatestGroupedByRecipients(int userId)
         {
             IQueryable<MessageRecipient> latestMessages = Context.MessageRecipients
