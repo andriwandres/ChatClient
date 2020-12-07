@@ -16,11 +16,13 @@ namespace Core.Application.Requests.Availabilities.Commands
         {
             private readonly IUnitOfWork _unitOfWork;
             private readonly IUserProvider _userProvider;
+            private readonly IDateProvider _dateProvider;
 
-            public Handler(IUnitOfWork unitOfWork, IUserProvider userProvider)
+            public Handler(IUnitOfWork unitOfWork, IUserProvider userProvider, IDateProvider dateProvider)
             {
                 _unitOfWork = unitOfWork;
                 _userProvider = userProvider;
+                _dateProvider = dateProvider;
             }
 
             public async Task<Unit> Handle(UpdateAvailabilityCommand request, CancellationToken cancellationToken = default)
@@ -32,6 +34,8 @@ namespace Core.Application.Requests.Availabilities.Commands
                     .SingleOrDefaultAsync(cancellationToken);
 
                 availability.StatusId = request.AvailabilityStatusId;
+                availability.Modified = _dateProvider.UtcNow();
+                availability.ModifiedManually = true;
 
                 _unitOfWork.Availabilities.Update(availability);
                 await _unitOfWork.CommitAsync(cancellationToken);

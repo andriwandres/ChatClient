@@ -36,6 +36,14 @@ namespace Core.Application.Requests.Users.Commands
 
                 Recipient recipient = new Recipient { User = user };
 
+                Availability availability = new Availability
+                {
+                    User = user,
+                    StatusId = AvailabilityStatusId.Offline,
+                    Modified = _dateProvider.UtcNow(),
+                    ModifiedManually = false,
+                };
+
                 // Generate salt + password hash
                 byte[] salt = _cryptoService.GenerateSalt();
                 byte[] hash = _cryptoService.HashPassword(request.Password, salt);
@@ -47,6 +55,7 @@ namespace Core.Application.Requests.Users.Commands
                 // Add entites
                 await _unitOfWork.Users.Add(user, cancellationToken);
                 await _unitOfWork.Recipients.Add(recipient, cancellationToken);
+                await _unitOfWork.Availabilities.Add(availability, cancellationToken);
 
                 await _unitOfWork.CommitAsync(cancellationToken);
 

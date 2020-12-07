@@ -48,6 +48,10 @@ namespace Core.Application.Test.Requests.Users.Commands
                 .Setup(m => m.Recipients.Add(It.IsAny<Recipient>(), It.IsAny<CancellationToken>()))
                 .Returns(Task.CompletedTask);
 
+            _unitOfWorkMock
+                .Setup(m => m.Availabilities.Add(It.IsAny<Availability>(), It.IsAny<CancellationToken>()))
+                .Returns(Task.CompletedTask);
+
             _cryptoServiceMock
                 .Setup(m => m.GenerateSalt())
                 .Returns(expectedSalt);
@@ -56,8 +60,7 @@ namespace Core.Application.Test.Requests.Users.Commands
                 .Setup(m => m.HashPassword(request.Password, expectedSalt))
                 .Returns(expectedHash);
 
-            CreateAccountCommand.Handler handler = 
-                new CreateAccountCommand.Handler(_cryptoServiceMock.Object, _unitOfWorkMock.Object, _dateProviderMock.Object);
+            CreateAccountCommand.Handler handler = new CreateAccountCommand.Handler(_cryptoServiceMock.Object, _unitOfWorkMock.Object, _dateProviderMock.Object);
 
             // Act
             await handler.Handle(request);
@@ -65,6 +68,7 @@ namespace Core.Application.Test.Requests.Users.Commands
             // Assert
             _unitOfWorkMock.Verify(m => m.Users.Add(It.IsAny<User>(), It.IsAny<CancellationToken>()));
             _unitOfWorkMock.Verify(m => m.Recipients.Add(It.IsAny<Recipient>(), It.IsAny<CancellationToken>()));
+            _unitOfWorkMock.Verify(m => m.Availabilities.Add(It.IsAny<Availability>(), It.IsAny<CancellationToken>()));
             _unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()));
         }
     }

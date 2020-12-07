@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Core.Domain.Entities;
 using Core.Domain.Resources.Groups;
 using Core.Domain.Resources.Messages;
 using Core.Domain.Resources.Recipients;
 using Core.Domain.Resources.Users;
 using Swashbuckle.AspNetCore.Filters;
+using System;
+using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.Recipients
 {
@@ -18,6 +19,7 @@ namespace Presentation.Api.Examples.Recipients
                 {
                     RecipientId = 2,
                     UnreadMessagesCount = 2,
+                    AvailabilityStatusId = AvailabilityStatusId.Online,
                     TargetUser = new TargetUserResource
                     {
                         UserId = 2,
@@ -41,6 +43,7 @@ namespace Presentation.Api.Examples.Recipients
                     RecipientId = 3,
                     UnreadMessagesCount = 0,
                     TargetUser = null,
+                    AvailabilityStatusId = 0,
                     TargetGroup = new TargetGroupResource
                     {
                         GroupId = 1,

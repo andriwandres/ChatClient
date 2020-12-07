@@ -20,6 +20,8 @@ namespace Presentation.Api.Validation.Recipients
 
             RuleFor(recipient => recipient.LatestMessage)
                 .NotEmpty();
+
+            RuleFor(recipient => recipient.AvailabilityStatusId);
         }
     }
 }

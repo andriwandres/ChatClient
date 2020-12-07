@@ -4,6 +4,7 @@ using Core.Application.Services;
 using Core.Domain.Entities;
 using MockQueryable.Moq;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -16,14 +17,21 @@ namespace Core.Application.Test.Requests.Availabilities.Commands
     {
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly Mock<IUserProvider> _userProviderMock;
+        private readonly Mock<IDateProvider> _dateProviderMock;
 
         public UpdateAvailabilityCommandTests()
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
+
             _userProviderMock = new Mock<IUserProvider>();
             _userProviderMock
                 .Setup(m => m.GetCurrentUserId())
                 .Returns(1);
+
+            _dateProviderMock = new Mock<IDateProvider>();
+            _dateProviderMock
+                .Setup(m => m.UtcNow())
+                .Returns(new DateTime(2020, 1, 1));
         }
 
         [Fact]
@@ -56,7 +64,7 @@ namespace Core.Application.Test.Requests.Availabilities.Commands
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            UpdateAvailabilityCommand.Handler handler = new UpdateAvailabilityCommand.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+            UpdateAvailabilityCommand.Handler handler = new UpdateAvailabilityCommand.Handler(_unitOfWorkMock.Object, _userProviderMock.Object, _dateProviderMock.Object);
 
             // Act
             await handler.Handle(request);
