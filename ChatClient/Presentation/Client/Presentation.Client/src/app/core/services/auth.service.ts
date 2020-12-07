@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ApiError, AuthenticatedUser, CreateAccountCredentials, LoginCredentials } from '@core/models';
+import { ApiError, AuthenticatedUser, CreateAccountCredentials, LoginCredentials } from '@chat-client/core/models';
 import { Observable, of, throwError } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';

@@ -21,11 +21,14 @@
       "dom"
     ],
     "paths": {
-      "@core": ["src/app/core"],
-      "@core/models": ["src/app/core/models"],
-      "@core/services": ["src/app/core/services"],
+      "@chat-client/core": ["src/app/core"],
+      "@chat-client/core/models": ["src/app/core/models"],
+      "@chat-client/core/services": ["src/app/core/services"],
 
-      "@shared": ["src/app/shared"]
+      "@chat-client/shared": ["src/app/shared"],
+
+      "@chat-client/auth": ["src/app/auth"],
+      "@chat-client/auth/store": ["src/app/auth/store"],
     }
   },
   "angularCompilerOptions": {

@@ -1,4 +1,4 @@
-import { ApiError } from '@core/models';
+import { ApiError } from '@chat-client/core/models';
 import { User } from 'src/app/core/models/user';
 
 export const AUTH_FEATURE_KEY = 'auth';

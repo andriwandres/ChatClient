@@ -31,27 +31,27 @@ const reducer = createReducer(
   })),
 
   // Log in to a new session
-  on(authActions.login, (state) => ({
+  on(authActions.logIn, (state) => ({
     ...state,
     isLoading: true,
     error: null
   })),
 
-  on(authActions.loginSuccess, (state, { user }) => ({
+  on(authActions.logInSuccess, (state, { user }) => ({
     ...state,
     isLoading: false,
     token: user.token,
     user,
   })),
 
-  on(authActions.loginFailure, (state, { error }) => ({
+  on(authActions.logInFailure, (state, { error }) => ({
     ...state,
     isLoading: false,
     error
   })),
 
   // Log out from the current session
-  on(authActions.logout, (state) => ({
+  on(authActions.logOut, (state) => ({
     ...state,
     token: null,
     user: null,

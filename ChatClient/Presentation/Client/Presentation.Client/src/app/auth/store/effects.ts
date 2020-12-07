@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ApiError } from '@core/models';
-import { AuthService } from '@core/services';
+import { ApiError } from '@chat-client/core/models';
+import { AuthService } from '@chat-client/core/services';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
@@ -25,10 +25,10 @@ export class AuthEffects {
   ));
 
   readonly login$ = createEffect(() => this.actions$.pipe(
-    ofType(authActions.login),
+    ofType(authActions.logIn),
     mergeMap(({ credentials }) => this.authService.login(credentials).pipe(
-      map(user => authActions.loginSuccess({ user })),
-      catchError((error: ApiError) => of(authActions.loginFailure({ error })))
+      map(user => authActions.logInSuccess({ user })),
+      catchError((error: ApiError) => of(authActions.logInFailure({ error })))
     ))
   ));
 

@@ -1,4 +1,4 @@
-import { ApiError, AuthenticatedUser, CreateAccountCredentials, LoginCredentials } from '@core/models';
+import { ApiError, AuthenticatedUser, CreateAccountCredentials, LoginCredentials } from '@chat-client/core/models';
 import { createAction, props, union } from '@ngrx/store';
 
 // Action identifiers
@@ -34,12 +34,12 @@ export const authenticateSuccess = createAction(ActionTypes.AUTHENTICATE_SUCCESS
 export const authenticateFailure = createAction(ActionTypes.AUTHENTICATE_FAILURE, props<{ error: ApiError }>());
 
 // Log in to a new session
-export const login = createAction(ActionTypes.LOGIN, props<{ credentials: LoginCredentials }>());
-export const loginSuccess = createAction(ActionTypes.LOGIN_SUCCESS, props<{ user: AuthenticatedUser }>());
-export const loginFailure = createAction(ActionTypes.LOGIN_FAILURE, props<{ error: ApiError }>());
+export const logIn = createAction(ActionTypes.LOGIN, props<{ credentials: LoginCredentials }>());
+export const logInSuccess = createAction(ActionTypes.LOGIN_SUCCESS, props<{ user: AuthenticatedUser }>());
+export const logInFailure = createAction(ActionTypes.LOGIN_FAILURE, props<{ error: ApiError }>());
 
 // Log out from the current session
-export const logout = createAction(ActionTypes.LOGOUT);
+export const logOut = createAction(ActionTypes.LOGOUT);
 
 // Create a new user account
 export const createAccount = createAction(ActionTypes.CREATE_ACCOUNT, props<{ credentials: CreateAccountCredentials }>());
@@ -65,11 +65,11 @@ const allActions = union({
   authenticateSuccess,
   authenticateFailure,
 
-  loginAccount: login,
-  loginAccountSuccess: loginSuccess,
-  loginAccountFailure: loginFailure,
+  loginAccount: logIn,
+  loginAccountSuccess: logInSuccess,
+  loginAccountFailure: logInFailure,
 
-  logout,
+  logout: logOut,
 
   createAccount,
   createAccountSuccess,
