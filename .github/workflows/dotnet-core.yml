@@ -34,7 +34,7 @@ jobs:
    
       # run tests
     - name: Test
-      run: dotnet test --no-restore --verbosity minimal
+      run: dotnet test --no-restore --verbosity normal
       working-directory: ChatClient      
 
        
