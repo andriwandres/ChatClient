@@ -40,12 +40,12 @@ jobs:
       
       # Run build
     - name: Build
-      run: npm run build -- --prod
+      run: npm run build --prod
       working-directory: ChatClient/Presentation/Client/Presentation.Client
       
       # Run unit tests
     - name: Test
-      run: npm test -- --configuration=ci
+      run: npm test --configuration=ci
       working-directory: ChatClient/Presentation/Client/Presentation.Client
       
       # Run End-To-End tests
