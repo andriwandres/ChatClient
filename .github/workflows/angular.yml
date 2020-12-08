@@ -1,4 +1,4 @@
-name: Front-End Build + Test
+name: Angular
 
 on:
   push:

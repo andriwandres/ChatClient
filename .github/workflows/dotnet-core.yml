@@ -1,4 +1,4 @@
-name: Back-End Build + Test
+name: .NET Core
 
 on:
   push:
