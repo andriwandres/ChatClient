@@ -22,7 +22,7 @@ describe('AuthService', () => {
   afterEach(() => httpMock.verify());
 
   describe('#authenticate()', () => {
-    it('should return the authenticated user', () => {
+    it('should return the authenticated user when the token is valid', () => {
       // Arrange
       const userMock: AuthenticatedUser = {
         userId: 1,
@@ -42,6 +42,30 @@ describe('AuthService', () => {
       expect(request.request.method).toBe('GET');
 
       request.flush(userMock);
+    });
+
+    it('should throw an error when the token is expired or invalid', () => {
+      // Arrange
+      const expectedError: ApiError = {
+        statusCode: 404,
+        message: 'Unauthorized',
+      };
+
+      // Act
+      service.authenticate().subscribe({
+        error: (response: HttpErrorResponse) => {
+          expect(response.error).toEqual(expectedError);
+        }
+      });
+
+      // Assert
+      const request = httpMock.expectOne(`${environment.api.users}/me`);
+      expect(request.request.method).toBe('GET');
+
+      request.flush(expectedError, {
+        status: 404,
+        statusText: 'Unauthorized'
+      });
     });
 
     it('should throw an error when the server runs into an unexpected error', () => {
@@ -190,7 +214,102 @@ describe('AuthService', () => {
   });
 
   describe('#createAccount()', () => {
-    it('should send a request to create an account', () => {
+    it('should throw an error when credentials have failed server-side validation', () => {
+      // Arrange
+      const credentials: CreateAccountCredentials = {
+        email: '',
+        userName: '',
+        password: ''
+      };
+
+      const expectedError: ApiValidationError = {
+        statusCode: 400,
+        message: 'An unexpected error occurred',
+        errors: {
+          email: [`'Email' must not be empty`],
+          userName: [`'UserName' must not be empty`],
+          password: [`'Password' must not be empty`],
+        }
+      };
+
+      // Act
+      service.createAccount(credentials).subscribe({
+        error: (response: HttpErrorResponse) => {
+          expect(response.error).toEqual(expectedError);
+        }
+      });
+
+      // Assert
+      const request = httpMock.expectOne(`${environment.api.users}`);
+      expect(request.request.method).toBe('POST');
+
+      request.flush(expectedError, {
+        status: 400,
+        statusText: 'Bad Request'
+      });
+    });
+
+    it('should throw an error when credentials partially match with existing user', () => {
+      // Arrange
+      const credentials: CreateAccountCredentials = {
+        email: 'alfred.miller@gmail.com',
+        userName: 'alfred_miller',
+        password: 'p4ssw0rd'
+      };
+
+      const expectedError: ApiError = {
+        statusCode: 403,
+        message: 'A user with the same user name or email already exists. Please use different credentials for creating an account'
+      };
+
+      // Act
+      service.createAccount(credentials).subscribe({
+        error: (response: HttpErrorResponse) => {
+          expect(response.error).toEqual(expectedError);
+        }
+      });
+
+      // Assert
+      const request = httpMock.expectOne(`${environment.api.users}`);
+      expect(request.request.method).toBe('POST');
+
+      request.flush(expectedError, {
+        status: 403,
+        statusText: 'Forbidden'
+      });
+    });
+
+    it('should throw an error when the server runs into an unexpected error', () => {
+      // Arrange
+      const credentials: CreateAccountCredentials = {
+        email: 'alfred.miller@gmail.com',
+        userName: 'alfred_miller',
+        password: 'p4ssw0rd'
+      };
+
+      const expectedError: ApiError = {
+        statusCode: 500,
+        message: 'An unexpected error occurred'
+      };
+
+      // Act
+      service.createAccount(credentials).subscribe({
+        error: (response: HttpErrorResponse) => {
+          expect(response.error).toEqual(expectedError);
+        }
+      });
+
+      // Assert
+      const request = httpMock.expectOne(`${environment.api.users}`);
+      expect(request.request.method).toBe('POST');
+
+      request.flush(expectedError, {
+        status: 500,
+        statusText: 'Internal Server Error'
+      });
+    });
+
+    it('should create a new account when passed valid credentials', () => {
       // Arrange
       const credentials: CreateAccountCredentials = {
         email: 'alfred.miller@gmail.com',
@@ -205,7 +324,152 @@ describe('AuthService', () => {
       const request = httpMock.expectOne(`${environment.api.users}`);
       expect(request.request.method).toBe('POST');
 
-      request.flush({});
+      request.flush(null, {
+        status: 201,
+        statusText: 'No Content'
+      });
+    });
+  });
+
+  describe('#emailExists()', () => {
+    it('should map OK response to true', () => {
+      // Arrange
+      const email = 'alfred.miller@gmail.com';
+
+      // Act
+      service.emailExists(email).subscribe(result => {
+
+        // Assert
+        expect(result).toBeTrue();
+      });
+
+      // Assert
+      const request = httpMock.expectOne({
+        method: 'HEAD',
+        url: `${environment.api.users}/email?email=${email}`
+      });
+
+      request.flush(null, {
+        status: 200,
+        statusText: 'OK'
+      });
+    });
+
+    it('should map NotFound response to false', () => {
+      // Arrange
+      const email = 'alfred.miller@gmail.com';
+
+      // Act
+      service.emailExists(email).subscribe(result => {
+
+        // Assert
+        expect(result).toBeFalse();
+      });
+
+      // Assert
+      const request = httpMock.expectOne({
+        method: 'HEAD',
+        url: `${environment.api.users}/email?email=${email}`
+      });
+
+      request.flush({}, {
+        status: 404,
+        statusText: 'NotFound'
+      });
+    });
+
+    it('should throw an error when the server runs into an unexpected error', () => {
+      // Arrange
+      const email = 'alfred.miller@gmail.com';
+
+      // Act
+      service.emailExists(email).subscribe({
+        error: (error: HttpErrorResponse) => {
+          expect(error.status).toBe(500);
+        }
+      });
+
+      // Assert
+      const request = httpMock.expectOne({
+        method: 'HEAD',
+        url: `${environment.api.users}/email?email=${email}`
+      });
+
+      request.flush({}, {
+        status: 500,
+        statusText: 'Internal Server Error'
+      });
+    });
+  });
+
+  describe('#userNameExists()', () => {
+    it('should map OK response to true', () => {
+      // Arrange
+      const userName = 'alfred_miller';
+
+      // Act
+      service.userNameExists(userName).subscribe(result => {
+
+        // Assert
+        expect(result).toBeTrue();
+      });
+
+      // Assert
+      const request = httpMock.expectOne({
+        method: 'HEAD',
+        url: `${environment.api.users}/name?userName=${userName}`
+      });
+
+      request.flush(null, {
+        status: 200,
+        statusText: 'OK'
+      });
+    });
+
+    it('should map NotFound response to false', () => {
+      // Arrange
+      const userName = 'alfred_miller';
+
+      // Act
+      service.userNameExists(userName).subscribe(result => {
+
+        // Assert
+        expect(result).toBeFalse();
+      });
+
+      // Assert
+      const request = httpMock.expectOne({
+        method: 'HEAD',
+        url: `${environment.api.users}/name?userName=${userName}`
+      });
+
+      request.flush({}, {
+        status: 404,
+        statusText: 'NotFound'
+      });
+    });
+
+    it('should throw an error when the server runs into an unexpected error', () => {
+      // Arrange
+      const userName = 'alfred_miller';
+
+      // Act
+      service.userNameExists(userName).subscribe({
+        error: (error: HttpErrorResponse) => {
+          expect(error.status).toBe(500);
+        }
+      });
+
+      // Assert
+      const request = httpMock.expectOne({
+        method: 'HEAD',
+        url: `${environment.api.users}/name?userName=${userName}`
+      });
+
+      request.flush({}, {
+        status: 500,
+        statusText: 'Internal Server Error'
+      });
     });
   });
 });

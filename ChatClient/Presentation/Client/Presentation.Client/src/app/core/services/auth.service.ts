@@ -37,9 +37,8 @@ export class AuthService {
     // Map status code '200' => true and '404' => false
     return this.httpClient.head(url, options).pipe(
       map(() => true),
-      catchError((error: HttpErrorResponse) => {
-        const apiError: ApiError = error.error;
-        return apiError.statusCode === 404 ? of(false) : throwError(apiError);
+      catchError((response: HttpErrorResponse) => {
+        return response.status === 404 ? of(false) : throwError(response);
       })
     );
   }
@@ -54,9 +53,8 @@ export class AuthService {
     // Map status code '200' => true and '404' => false
     return this.httpClient.head(url, options).pipe(
       map(() => true),
-      catchError((error: HttpErrorResponse) => {
-        const apiError: ApiError = error.error;
-        return apiError.statusCode === 404 ? of(false) : throwError(apiError);
+      catchError((response: HttpErrorResponse) => {
+        return response.status === 404 ? of(false) : throwError(response);
       })
     );
   }
