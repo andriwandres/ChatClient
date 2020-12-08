@@ -45,7 +45,7 @@ jobs:
       
       # Run unit tests
     - name: Test
-      run: npm test --configuration=ci
+      run: npm run test --browsers ChromeHeadless --watch=false
       working-directory: ChatClient/Presentation/Client/Presentation.Client
       
       # Run End-To-End tests
