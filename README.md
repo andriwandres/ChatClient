@@ -1,7 +1,8 @@
 # ⚡ ChatClient 💬
 
 <!-- Badges -->
-![.NET Core](https://github.com/AndriWandres/ChatClient/workflows/.NET%20Core/badge.svg?branch=master)
+![Back-End](https://github.com/AndriWandres/ChatClient/workflows/.NET%20Core/badge.svg?branch=master)
+![Front-End](https://github.com/AndriWandres/ChatClient/workflows/Angular/badge.svg?branch=master)
 
 Instant-Messenger Chat Client that is built ontop of ASP.NET Core 3.1 and Angular 10. It leverages design patterns such as CQRS and Domain-Driven-Design.
 
