@@ -117,7 +117,7 @@ namespace Infrastructure.Persistence.Test.Repositories
         #region Update()
 
         [Fact]
-        public async Task Update_ShouldUpdateAvailability()
+        public void Update_ShouldUpdateAvailability()
         {
             // Arrange
             Availability availability = new Availability();

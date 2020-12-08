@@ -38,7 +38,8 @@ export class AuthService {
     return this.httpClient.head(url, options).pipe(
       map(() => true),
       catchError((error: HttpErrorResponse) => {
-        return error.error.statusCode === 404 ? of(false) : throwError(error.error);
+        const apiError: ApiError = error.error;
+        return apiError.statusCode === 404 ? of(false) : throwError(apiError);
       })
     );
   }
@@ -54,7 +55,8 @@ export class AuthService {
     return this.httpClient.head(url, options).pipe(
       map(() => true),
       catchError((error: HttpErrorResponse) => {
-        return error.error.statusCode === 404 ? of(false) : throwError(error.error);
+        const apiError: ApiError = error.error;
+        return apiError.statusCode === 404 ? of(false) : throwError(apiError);
       })
     );
   }

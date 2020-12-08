@@ -5,7 +5,7 @@ export interface ApiError {
 }
 
 export interface ApiValidationError extends ApiError {
-  errors: ValidationErrorCollection[];
+  errors: ValidationErrorCollection;
 }
 
 export interface ValidationErrorCollection {
