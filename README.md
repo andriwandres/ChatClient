@@ -9,33 +9,58 @@ Instant-Messenger Chat Client that is built ontop of ASP.NET Core 3.1 and Angula
 
 <!-- Table of contents -->
 ## 📜 Table of Contents
-* [🎯 Getting started](https://github.com/AndriWandres/ChatClient#-getting-started)
-  * [✅ Prerequisites](https://github.com/AndriWandres/ChatClient#-prerequisites)
-  * [⚙ Installation](https://github.com/AndriWandres/ChatClient#-installation)
-  * [🧪 Testing](https://github.com/AndriWandres/ChatClient#-testing)
-  * [🔄 Continuous Integration](https://github.com/AndriWandres/ChatClient#-continuous-integration)
-* [⚙ Technologies](https://github.com/AndriWandres/ChatClient#-technologies)
-  * [💥 Back-End](https://github.com/AndriWandres/ChatClient#-back-end)
-  * [💥 Front-End](https://github.com/AndriWandres/ChatClient#-front-end)
+* [Getting started](https://github.com/AndriWandres/ChatClient#-getting-started)
+  * [Prerequisites](https://github.com/AndriWandres/ChatClient#-prerequisites)
+    * [Angular](https://github.com/AndriWandres/ChatClient#angular)
+    * [ASP.NET Core](https://github.com/AndriWandres/ChatClient#asp.net-core)
+  * [Running the application](https://github.com/AndriWandres/ChatClient#-running-the-application)
+  * [Testing](https://github.com/AndriWandres/ChatClient#-testing)
+* [Technologies](https://github.com/AndriWandres/ChatClient#-technologies)
+  * [Back-End](https://github.com/AndriWandres/ChatClient#-back-end)
+  * [Front-End](https://github.com/AndriWandres/ChatClient#-front-end)
 
 <br/>
 
 <!-- How to setup application -->
 ## 🎯 Getting started
-Content will follow soon...
+Here's how you get this application running on your system.
 
 ### ✅ Prerequisites
+Before launching the application, make sure that the below listed criterias are met.
 
-### ⚙ Installation
+#### Angular
+For running the Angular application, you need a [Node.js](https://nodejs.org/en/) version of at least 12.11.x or higher.
+Also, make sure you have the latest version of the Angular CLI installed (11.0.3 or higher).
+
+```shell
+npm install -g @angular/cli
+```
+
+After installing the Angular CLI, you can also install the remaining dependencies required for this project.
+
+```shell
+# Navigate to the angular app's root directory
+cd ChatClient/Presentation/Client/Presentation.Client
+
+# Install dependencies
+npm install
+```
+
+#### ASP.NET Core
+For running the ASP.NET Core application that serves the back-end, a [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core) of Version 3.1.100 or higher is required. Alternatively, you can install [Visual Studio 2019](https://visualstudio.microsoft.com/de/downloads), which already ships with the required SDKs and lets you run the application seemlessly.
+
+### 🛠 Running the application
+Content will follow soon...
 
 ### 🧪 Testing
-
-### 🔄 Continuous Integration
+Content will follow soon...
 
 <br/>
 
 <!-- Technology listing -->
 ## ⚙ Technologies
+The following section lists the major technologies, frameworks and libraries used inside of this repository.
+
 ### 💥 Back-End
 <code><img height="50" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/csharp/csharp.png"></code>
 <code><img height="50" src="https://raw.githubusercontent.com/github/explore/80688e429a7d4ef2fca1e82350fe8e3517d3494d/topics/dotnet/dotnet.png"></code>
@@ -57,10 +82,7 @@ The back-end is built ontop of the .NET Core ecosystem and serves as a web API w
 <code><img height="50" src="https://raw.githubusercontent.com/github/explore/96943574ba0c0340ba6ea1e6f768e9abe43e34e1/topics/sass/sass.png"></code>
 
 The front-end is built as a Single-Page-Application using the Angular Framework from Google. It uses a state management solution similar to Redux for persisting local state. The design pattern follows mostly Google's material design, with a few exceptions here and there.
-* [Angular](https://angular.io) 10 (SPA Framework)
+* [Angular](https://angular.io) 11 (SPA Framework)
 * [JavaScript/TypeScript](https://www.typescriptlang.org)
 * [NGRX](https://ngrx.io) (State Management)
 * [Jasmine](https://jasmine.github.io/) (Testing)
-
-
-
