@@ -12,7 +12,7 @@ Instant-Messenger Chat Client that is built ontop of ASP.NET Core 3.1 and Angula
 * [Getting started](https://github.com/AndriWandres/ChatClient#-getting-started)
   * [Prerequisites](https://github.com/AndriWandres/ChatClient#-prerequisites)
     * [Angular](https://github.com/AndriWandres/ChatClient#angular)
-    * [ASP.NET Core](https://github.com/AndriWandres/ChatClient#asp.net-core)
+    * [ASP.NET Core](https://github.com/AndriWandres/ChatClient#net-core)
   * [Running the application](https://github.com/AndriWandres/ChatClient#-running-the-application)
   * [Testing](https://github.com/AndriWandres/ChatClient#-testing)
 * [Technologies](https://github.com/AndriWandres/ChatClient#-technologies)
@@ -46,11 +46,32 @@ cd ChatClient/Presentation/Client/Presentation.Client
 npm install
 ```
 
-#### ASP.NET Core
+#### .NET Core
 For running the ASP.NET Core application that serves the back-end, a [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core) of Version 3.1.100 or higher is required. Alternatively, you can install [Visual Studio 2019](https://visualstudio.microsoft.com/de/downloads), which already ships with the required SDKs and lets you run the application seemlessly.
 
-### 🛠 Running the application
-Content will follow soon...
+### 🔨 Running the application
+You can open the solution file in Visual Studio 2019 and Run the startup project `Presentation.Api` in order to start the back-end application.
+
+If you prefer using the `dotnet CLI` for running the application. Use the following commands in your command-line:
+```shell
+# Navigate to the startup project
+cd ChatClient/Presentation/Api/Presentation.Api
+
+# Start up the application
+dotnet run
+```
+This should result in a new browser window displaying the Swagger documentation for the REST API. Also it should create a new SQL Server database on your personal LOCALDB server instance with all the necessary tables. If you cannot work with SQL Server, switch to another database provider like PostgreSQL or MySQL and run the application again.
+
+
+After the back-end is up and running, you can open your command line and execute following commands to bootstrap the Angular front-end:
+```
+# Navigate to the Angular app's root folder
+cd ChatClient/Presentation/Client/Presentation.Client
+
+# Run the application
+ng serve --hmr --open
+```
+This will open a new browser window on `localhost:4200` with the served Angular application.
 
 ### 🧪 Testing
 Content will follow soon...
