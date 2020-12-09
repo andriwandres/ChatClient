@@ -4,15 +4,13 @@ on:
   push:
     branches: [ master ]
     paths:
-      - ChatClient
-    paths-ignore: 
-      - ChatClient/Presentation/Client/Presentation.Client
+      - 'ChatClient'
+      - '!ChatClient/Presentation/Client/Presentation.Client'
   pull_request:
     branches: [ master ]
     paths:
-      - ChatClient
-    paths-ignore: 
-      - ChatClient/Presentation/Client/Presentation.Client
+      - 'ChatClient'
+      - '!ChatClient/Presentation/Client/Presentation.Client'
           
 jobs:
   build-and-test:
