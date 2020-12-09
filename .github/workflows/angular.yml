@@ -3,8 +3,13 @@ name: Angular
 on:
   push:
     branches: [ master ]
+    paths:
+      - 'ChatClient/Presentation/Client/Presentation.Client'
+    
   pull_request:
     branches: [ master ]
+    paths:
+      - 'ChatClient/Presentation/Client/Presentation.Client'
 
   workflow_dispatch:
 
