@@ -3,9 +3,17 @@ name: .NET Core
 on:
   push:
     branches: [ master ]
+    paths:
+      - ChatClient
+    paths-ignore: 
+      - ChatClient/Presentation/Client/Presentation.Client
   pull_request:
     branches: [ master ]
-
+    paths:
+      - ChatClient
+    paths-ignore: 
+      - ChatClient/Presentation/Client/Presentation.Client
+          
 jobs:
   build-and-test:
     # build and test on 3 operating systems
