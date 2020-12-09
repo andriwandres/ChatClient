@@ -1,6 +1,7 @@
 using Core.Application.Extensions;
 using Core.Domain.Options;
 using Core.Domain.Resources.Errors;
+using Infrastructure.Persistence.Database;
 using Infrastructure.Persistence.Extensions;
 using Infrastructure.Shared.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -54,20 +56,25 @@ namespace Presentation.Api
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseStatusCodePages(async context =>
+            app.UseStatusCodePages(async statusCodeContext =>
             {
-                context.HttpContext.Response.ContentType = MediaTypeNames.Application.Json;
+                statusCodeContext.HttpContext.Response.ContentType = MediaTypeNames.Application.Json;
 
                 ErrorResource details = new ErrorResource
                 {
-                    StatusCode = context.HttpContext.Response.StatusCode,
-                    Message = ReasonPhrases.GetReasonPhrase(context.HttpContext.Response.StatusCode),
+                    StatusCode = statusCodeContext.HttpContext.Response.StatusCode,
+                    Message = ReasonPhrases.GetReasonPhrase(statusCodeContext.HttpContext.Response.StatusCode),
                 };
 
                 string json = JsonSerializer.Serialize(details);
 
-                await context.HttpContext.Response.WriteAsync(json);
+                await statusCodeContext.HttpContext.Response.WriteAsync(json);
             });
+
+            // Perform database migration
+            using IServiceScope serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
+            using ChatContext dbContext = serviceScope.ServiceProvider.GetRequiredService<ChatContext>();
+            dbContext.Database.Migrate();
 
             // Use swagger UI
             app.UseSwagger();
