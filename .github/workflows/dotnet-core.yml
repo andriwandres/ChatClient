@@ -4,14 +4,16 @@ on:
   push:
     branches: [ master ]
     paths:
-      - 'ChatClient'
-      - '!ChatClient/Presentation/Client/Presentation.Client'
+      - 'ChatClient/**'
+      - '!ChatClient/Presentation/Client/Presentation.Client/**'
   pull_request:
     branches: [ master ]
     paths:
-      - 'ChatClient'
-      - '!ChatClient/Presentation/Client/Presentation.Client'
-          
+      - 'ChatClient/**'
+      - '!ChatClient/Presentation/Client/Presentation.Client/**'
+  
+  workflow_dispatch:
+  
 jobs:
   build-and-test:
     # build and test on 3 operating systems
