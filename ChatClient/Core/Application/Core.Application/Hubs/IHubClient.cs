@@ -4,6 +4,6 @@ namespace Core.Application.Hubs
 {
     public interface IHubClient
     {
-        Task ReceiveMessage(string message);
+        Task ReceiveMessage(string payload);
     }
 }

@@ -3,16 +3,18 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AppStoreModule } from './store/app-store.module';
+import { RootStoreModule } from './store/root-store.module';
 import { RootStoreFacade } from './store/facade';
+import { CommonModule } from '@angular/common';
 
 @NgModule({
   declarations: [
     AppComponent
   ],
   imports: [
-    AppStoreModule,
+    CommonModule,
     AppRoutingModule,
+    RootStoreModule,
     BrowserModule,
     HttpClientModule
   ],

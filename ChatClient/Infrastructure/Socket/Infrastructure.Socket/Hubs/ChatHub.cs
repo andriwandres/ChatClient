@@ -22,6 +22,7 @@ namespace Infrastructure.Socket.Hubs
 
         public override Task OnConnectedAsync()
         {
+            Clients.Caller.ReceiveMessage("my payload");
             return base.OnConnectedAsync();
         }
 

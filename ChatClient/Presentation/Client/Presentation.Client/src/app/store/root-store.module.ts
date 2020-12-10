@@ -18,4 +18,4 @@ import { RootStoreFacade } from './facade';
   ],
   providers: [RootStoreFacade]
 })
-export class AppStoreModule { }
+export class RootStoreModule { }

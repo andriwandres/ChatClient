@@ -4,11 +4,11 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
   // {
   //   path: '',
-  //   loadChildren: () => import('@chat-client/home').then(m => m.HomeModule)
+  //   loadChildren: () => import('@chat-client/messenger').then(m => m.MessengerModule)
   // },
   // {
-  //   path: 'app',
-  //   loadChildren: () => import('@chat-client/messenger').then(m => m.MessengerModule)
+  //   path: 'home',
+  //   loadChildren: () => import('@chat-client/home').then(m => m.HomeModule)
   // },
   // {
   //   path: 'auth',

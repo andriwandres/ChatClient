@@ -1,20 +1,22 @@
 import { Injectable } from '@angular/core';
-import { AuthActions, AuthFacade } from '@chat-client/auth/store';
+import { AuthActions } from '@chat-client/auth/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { ActionCreator } from '@ngrx/store';
+import { TypedAction } from '@ngrx/store/src/models';
 import { mergeMapHubToAction, SIGNALR_HUB_UNSTARTED, startSignalRHub } from 'ngrx-signalr-core';
 import { merge, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 interface ActionEventMapping {
   eventName: string;
-  action: ActionCreator;
+  actionFactory: (payload?: any) => TypedAction<string>;
 }
 
 const actionMappings: ActionEventMapping[] = [
   {
-    eventName: 'receiveMessage',
-    action: AuthActions.resetAvailabilityChecks
+    eventName: 'ReceiveMessage',
+    actionFactory: (message: string) => {
+      return AuthActions.resetAvailabilityChecks();
+    }
   }
 ];
 
@@ -24,7 +26,7 @@ export class RootStoreEffects {
     ofType(SIGNALR_HUB_UNSTARTED),
     mergeMapHubToAction(({ hub }) => {
       const events = actionMappings.map(mapping => hub.on(mapping.eventName).pipe(
-        map((props) => mapping.action))
+        map((payload) => mapping.actionFactory(payload)))
       );
 
       return merge(
