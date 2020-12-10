@@ -1,3 +1,10 @@
 export const environment = {
-  production: true
+  production: true,
+  api: {
+    users: '',
+    session: '',
+  },
+  socket: {
+    hub: ''
+  }
 };

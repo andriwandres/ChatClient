@@ -1,9 +1,7 @@
-module.exports = {
-  packages: {
-    'ngrx-signalr-core': {
-      ignorableDeepImportMatchers: [
-        /@ngrx\//,
-      ]
-    },
+export const packages = {
+  'ngrx-signalr-core': {
+    ignorableDeepImportMatchers: [
+      /@ngrx\//,
+    ]
   },
 };
