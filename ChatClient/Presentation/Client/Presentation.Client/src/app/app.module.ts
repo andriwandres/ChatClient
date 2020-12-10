@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AppStoreModule } from './store/app-store.module';
+import { RootStoreFacade } from './store/facade';
 
 @NgModule({
   declarations: [
@@ -15,7 +16,7 @@ import { AppStoreModule } from './store/app-store.module';
     BrowserModule,
     HttpClientModule
   ],
-  providers: [],
+  providers: [RootStoreFacade],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

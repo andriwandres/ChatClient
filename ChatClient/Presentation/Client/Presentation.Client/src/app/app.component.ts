@@ -15,17 +15,5 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.storeFacade.createHub();
-    // const connection = new HubConnectionBuilder()
-    //   .configureLogging(LogLevel.Debug)
-    //   .withUrl(environment.socket.hub, {
-    //     skipNegotiation: true,
-    //     transport: HttpTransportType.WebSockets
-    //   })
-    //   .build();
-
-    // connection.start().then(() => {
-    //   console.log('signalr connected');
-
-    // });
   }
 }
