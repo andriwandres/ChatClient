@@ -128,4 +128,29 @@ describe('AuthFacade', () => {
       expect(error$).toBeObservable(expected);
     });
   });
+
+  describe('#authenticate()', () => {
+    it('should dispatch authenticate action', () => {
+      spyOn(store, 'dispatch');
+
+      facade.authenticate();
+
+      expect(store.dispatch).toHaveBeenCalledOnceWith(authActions.authenticate());
+    });
+  });
+
+  describe('#logIn()', () => {
+    it('should dispatch authenticate action', () => {
+      const credentials: LoginCredentials = {
+        userNameOrEmail: 'alfred_miller',
+        password: 'p4ssw0rd'
+      };
+
+      spyOn(store, 'dispatch');
+
+      facade.logIn(credentials);
+
+      expect(store.dispatch).toHaveBeenCalledOnceWith(authActions.logIn({ credentials }));
+    });
+  });
 });

@@ -19,6 +19,8 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Mime;
+using Infrastructure.Socket.Extensions;
+using Infrastructure.Socket.Hubs;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Presentation.Api
@@ -43,6 +45,9 @@ namespace Presentation.Api
 
             // Add shared infrastructure logic
             services.AddSharedInfrastructureServices(Configuration);
+
+            // Add web socket logic
+            services.AddSocketInfrastructureServices();
 
             // Add business logic related services
             services.AddApplicationServices();
@@ -117,6 +122,7 @@ namespace Presentation.Api
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<ChatHub>("/chat");
             });
         }
     }

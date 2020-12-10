@@ -41,4 +41,8 @@ export class AuthFacade {
   checkUserNameExists(userName: string): void {
     this.store.dispatch(authActions.userNameExists({ userName }));
   }
+
+  resetAvailabilityChecks(): void {
+    this.store.dispatch(authActions.resetAvailabilityChecks());
+  }
 }

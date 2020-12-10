@@ -38,5 +38,6 @@
     <ProjectReference Include="..\..\..\Core\Domain\Core.Domain\Core.Domain.csproj" />
     <ProjectReference Include="..\..\..\Infrastructure\Persistence\Infrastructure.Persistence\Infrastructure.Persistence.csproj" />
     <ProjectReference Include="..\..\..\Infrastructure\Shared\Infrastructure.Shared\Infrastructure.Shared.csproj" />
+    <ProjectReference Include="..\..\..\Infrastructure\Socket\Infrastructure.Socket\Infrastructure.Socket.csproj" />
   </ItemGroup>
 </Project>

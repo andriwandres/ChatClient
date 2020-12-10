@@ -65,11 +65,11 @@ const allActions = union({
   authenticateSuccess,
   authenticateFailure,
 
-  loginAccount: logIn,
-  loginAccountSuccess: logInSuccess,
-  loginAccountFailure: logInFailure,
+  logIn,
+  logInSuccess,
+  logInFailure,
 
-  logout: logOut,
+  logOut,
 
   createAccount,
   createAccountSuccess,

@@ -41,6 +41,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation.Api", "Present
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Presentation.Api.Test", "Presentation\Api\Presentation.Api.Test\Presentation.Api.Test.csproj", "{1340CD44-D32D-4327-A69F-6268188B2484}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Socket", "Socket", "{5C290025-E0EE-479E-81C5-9F823E5110F3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Socket", "Infrastructure\Socket\Infrastructure.Socket\Infrastructure.Socket.csproj", "{11F25C9A-DF10-4E76-BF30-9B0D126E2558}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -87,6 +91,10 @@ Global
 		{1340CD44-D32D-4327-A69F-6268188B2484}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1340CD44-D32D-4327-A69F-6268188B2484}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1340CD44-D32D-4327-A69F-6268188B2484}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11F25C9A-DF10-4E76-BF30-9B0D126E2558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11F25C9A-DF10-4E76-BF30-9B0D126E2558}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11F25C9A-DF10-4E76-BF30-9B0D126E2558}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11F25C9A-DF10-4E76-BF30-9B0D126E2558}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,6 +116,8 @@ Global
 		{DC167D08-AF59-453B-BD90-DDFE509CBE58} = {250A05BC-D830-4F9E-8148-417F6975BB8F}
 		{3759A717-BF46-44A4-B3DA-9BB4D8868DAF} = {61F34F63-54A8-4F55-9808-7F7CF631A0B5}
 		{1340CD44-D32D-4327-A69F-6268188B2484} = {61F34F63-54A8-4F55-9808-7F7CF631A0B5}
+		{5C290025-E0EE-479E-81C5-9F823E5110F3} = {386EEBDC-4068-4D9D-A7C2-2B5666C0DA47}
+		{11F25C9A-DF10-4E76-BF30-9B0D126E2558} = {5C290025-E0EE-479E-81C5-9F823E5110F3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B3271910-6BBF-4A8F-A1FC-1D3F58BC0460}
