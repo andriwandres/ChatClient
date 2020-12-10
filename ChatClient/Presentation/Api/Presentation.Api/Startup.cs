@@ -21,6 +21,7 @@ using System.Globalization;
 using System.Net.Mime;
 using Infrastructure.Socket.Extensions;
 using Infrastructure.Socket.Hubs;
+using Microsoft.AspNetCore.Http.Connections;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Presentation.Api
@@ -104,6 +105,7 @@ namespace Presentation.Api
                 builder.WithOrigins(cors.Value.AllowedOrigins);
                 builder.WithMethods(cors.Value.AllowedMethods);
                 builder.WithHeaders(cors.Value.AllowedHeaders);
+                builder.AllowCredentials();
             });
 
             app.UseAuthentication();
@@ -121,8 +123,8 @@ namespace Presentation.Api
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
                 endpoints.MapHub<ChatHub>("/chat");
+                endpoints.MapControllers();
             });
         }
     }

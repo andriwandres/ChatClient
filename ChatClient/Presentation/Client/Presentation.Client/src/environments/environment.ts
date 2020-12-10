@@ -5,8 +5,11 @@
 export const environment = {
   production: false,
   api: {
-    users: 'http://localhost:44385/api/users',
-    session: 'http://localhost:44385/api/session',
+    users: 'http://localhost:5000/api/users',
+    session: 'http://localhost:5000/api/session',
+  },
+  socket: {
+    hub: 'http://localhost:5000/chat'
   }
 };
 

@@ -6,7 +6,7 @@ using MediatR;
 
 namespace Infrastructure.Socket.Hubs
 {
-    public class ChatHub : Hub<IChatHub>
+    public class ChatHub : Hub<IHubClient>
     {
         private readonly IMediator _mediator;
 
@@ -15,9 +15,13 @@ namespace Infrastructure.Socket.Hubs
             _mediator = mediator;
         }
 
+        public async Task SendMessage(string message)
+        {
+
+        }
+
         public override Task OnConnectedAsync()
         {
-            Console.WriteLine(Clients.Caller);
             return base.OnConnectedAsync();
         }
 

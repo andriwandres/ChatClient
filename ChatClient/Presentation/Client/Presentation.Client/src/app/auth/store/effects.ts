@@ -6,7 +6,7 @@ import { of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
 import * as authActions from './actions';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class AuthEffects {
   readonly authenticate$ = createEffect(() => this.actions$.pipe(
     ofType(authActions.authenticate),

@@ -54,7 +54,7 @@ namespace Infrastructure.Shared.Extensions
                         PathString path = context.HttpContext.Request.Path;
                         string token = context.Request.Query["access_token"];
 
-                        if (!string.IsNullOrWhiteSpace(token) && path.StartsWithSegments("/hubs"))
+                        if (!string.IsNullOrWhiteSpace(token) && path.StartsWithSegments("/chat"))
                         {
                             context.Token = token;
                         }

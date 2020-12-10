@@ -1,5 +1,7 @@
 import { AuthStoreModule } from './auth-store.module';
 import { AuthFacade } from './facade';
 
-export { AuthStoreModule, AuthFacade };
+import * as AuthActions from './actions';
+
+export { AuthStoreModule, AuthFacade, AuthActions };
 
