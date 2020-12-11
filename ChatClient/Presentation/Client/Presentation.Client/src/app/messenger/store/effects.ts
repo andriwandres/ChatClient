@@ -21,8 +21,8 @@ const actionMappings: ActionEventMapping[] = [
 ];
 
 @Injectable()
-export class RootStoreEffects {
-  readonly mapActions$ = createEffect(() => this.actions$.pipe(
+export class MessengerEffects {
+  readonly mapEventsToActions$ = createEffect(() => this.actions$.pipe(
     ofType(SIGNALR_HUB_UNSTARTED),
     mergeMapHubToAction(({ hub }) => {
       const events = actionMappings.map(mapping => hub.on(mapping.eventName).pipe(
@@ -36,7 +36,5 @@ export class RootStoreEffects {
     })
   ));
 
-  constructor(
-    private readonly actions$: Actions,
-  ) {}
+  constructor(private readonly actions$: Actions) {}
 }

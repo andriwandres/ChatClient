@@ -30,6 +30,7 @@
       "@chat-client/home": ["src/app/home"],
 
       "@chat-client/messenger": ["src/app/messenger"],
+      "@chat-client/messenger/store": ["src/app/messenger/store"],
 
       "@chat-client/auth": ["src/app/auth"],
       "@chat-client/auth/store": ["src/app/auth/store"],

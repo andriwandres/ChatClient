@@ -15,14 +15,8 @@ namespace Infrastructure.Socket.Hubs
             _mediator = mediator;
         }
 
-        public async Task SendMessage(string message)
-        {
-
-        }
-
         public override Task OnConnectedAsync()
         {
-            Clients.Caller.ReceiveMessage("my payload");
             return base.OnConnectedAsync();
         }
 
