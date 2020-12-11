@@ -4,7 +4,7 @@ import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { AuthModule } from './auth';
+import { AuthModule } from '@chat-client/auth';
 import { RootStoreModule } from './store/root-store.module';
 
 @NgModule({
