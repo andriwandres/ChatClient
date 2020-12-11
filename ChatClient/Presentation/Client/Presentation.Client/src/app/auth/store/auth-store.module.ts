@@ -9,7 +9,7 @@ import { AUTH_FEATURE_KEY } from './state';
   declarations: [],
   imports: [
     StoreModule.forFeature(AUTH_FEATURE_KEY, authReducer),
-    EffectsModule.forFeature([AuthEffects])
+    EffectsModule.forFeature([AuthEffects]),
   ],
   providers: [AuthEffects]
 })

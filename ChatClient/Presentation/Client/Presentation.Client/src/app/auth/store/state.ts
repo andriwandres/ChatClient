@@ -7,16 +7,16 @@ export interface State {
   token: string | null;
   user: User | null;
   error: ApiError | null;
-  isLoading: boolean;
   emailExists: boolean | null;
   userNameExists: boolean | null;
+  isAuthenticating: boolean;
 }
 
 export const initialState: State = {
   user: null,
-  token: null,
+  token: localStorage.getItem('access_token'),
   error: null,
-  isLoading: false,
+  isAuthenticating: false,
   emailExists: null,
   userNameExists: null
 };

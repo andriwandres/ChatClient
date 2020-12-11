@@ -1,0 +1,18 @@
+
+:host {
+  position: fixed;
+  width: 100vw;
+  height: 100vh;
+  z-index: 99;
+  background: linear-gradient(45deg, #222428, #444856);
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#title {
+  font-size: 30px;
+  font-weight: 600;
+}

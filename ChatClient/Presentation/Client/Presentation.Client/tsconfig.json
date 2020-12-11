@@ -24,8 +24,9 @@
       "@chat-client/core": ["src/app/core"],
       "@chat-client/core/models": ["src/app/core/models"],
       "@chat-client/core/services": ["src/app/core/services"],
+      "@chat-client/core/interceptors": ["src/app/core/interceptors"],
 
-      "@chat-client/shared": ["src/app/shared"],
+
 
       "@chat-client/home": ["src/app/home"],
 
@@ -34,6 +35,9 @@
 
       "@chat-client/auth": ["src/app/auth"],
       "@chat-client/auth/store": ["src/app/auth/store"],
+
+      "@chat-client/shared": ["src/app/shared"],
+      "@chat-client/shared/splash-screen": ["src/app/shared/splash-screen"],
     }
   },
   "angularCompilerOptions": {

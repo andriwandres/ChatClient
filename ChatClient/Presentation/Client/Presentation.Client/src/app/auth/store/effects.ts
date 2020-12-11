@@ -1,20 +1,35 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { ApiError } from '@chat-client/core/models';
 import { AuthService } from '@chat-client/core/services';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
-import { catchError, map, mergeMap, switchMap } from 'rxjs/operators';
+import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import * as authActions from './actions';
 
 @Injectable()
 export class AuthEffects {
   readonly authenticate$ = createEffect(() => this.actions$.pipe(
     ofType(authActions.authenticate),
-    switchMap(() => this.authService.authenticate().pipe(
-      map(user => authActions.authenticateSuccess({ user })),
-      catchError((error: ApiError) => of(authActions.authenticateFailure({ error })))
-    ))
+    switchMap(() => {
+      // Cancel authentication, when there is no access token
+      if (!localStorage.getItem('access_token')) {
+        return of(authActions.authenticateFailure({}));
+      }
+
+      return this.authService.authenticate().pipe(
+        map(user => authActions.authenticateSuccess({ user })),
+        catchError((error: ApiError) => of(authActions.authenticateFailure({ error })))
+      );
+    })
   ));
+
+  readonly navigateToMessenger$ = createEffect(() => this.actions$.pipe(
+    ofType(authActions.authenticateSuccess),
+    tap(() => {
+      this.router.navigateByUrl('');
+    })
+  ), { dispatch: false });
 
   readonly createAccount$ = createEffect(() => this.actions$.pipe(
     ofType(authActions.createAccount),
@@ -49,6 +64,7 @@ export class AuthEffects {
   ));
 
   constructor(
+    private readonly router: Router,
     private readonly authService: AuthService,
     private readonly actions$: Actions<authActions.AuthActionUnion>
   ) {}

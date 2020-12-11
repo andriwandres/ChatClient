@@ -10,6 +10,6 @@ export class MessengerComponent implements OnInit {
   constructor(private readonly messengerFacade: MessengerFacade) { }
 
   ngOnInit(): void {
-    this.messengerFacade.connectWebSocket();
+    // this.messengerFacade.connectWebSocket();
   }
 }

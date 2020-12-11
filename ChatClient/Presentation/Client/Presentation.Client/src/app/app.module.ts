@@ -6,6 +6,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthModule } from '@chat-client/auth';
 import { RootStoreModule } from './store/root-store.module';
+import { SplashScreenModule } from './shared/splash-screen/splash-screen.module';
 
 @NgModule({
   declarations: [
@@ -18,8 +19,8 @@ import { RootStoreModule } from './store/root-store.module';
     BrowserModule,
     HttpClientModule,
     AuthModule,
+    SplashScreenModule
   ],
-  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

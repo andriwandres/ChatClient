@@ -31,7 +31,7 @@ export enum ActionTypes {
 // Authenticate the current user in this session
 export const authenticate = createAction(ActionTypes.AUTHENTICATE);
 export const authenticateSuccess = createAction(ActionTypes.AUTHENTICATE_SUCCESS, props<{ user: AuthenticatedUser }>());
-export const authenticateFailure = createAction(ActionTypes.AUTHENTICATE_FAILURE, props<{ error: ApiError }>());
+export const authenticateFailure = createAction(ActionTypes.AUTHENTICATE_FAILURE, props<{ error?: ApiError }>());
 
 // Log in to a new session
 export const logIn = createAction(ActionTypes.LOGIN, props<{ credentials: LoginCredentials }>());

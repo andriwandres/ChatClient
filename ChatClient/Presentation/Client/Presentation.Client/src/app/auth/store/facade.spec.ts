@@ -93,19 +93,19 @@ describe('AuthFacade', () => {
     });
   });
 
-  describe('#isLoading$', () => {
-    it('should return the states indicator, whether a request is still ongoing/loading', () => {
+  describe('#isAuthenticating$', () => {
+    it('should return the states indicator, whether the request for authenticating is still ongoing', () => {
       // Arrange
       const expectedResult = true;
-      store.overrideSelector(authSelectors.selectLoading, expectedResult);
+      store.overrideSelector(authSelectors.selectIsAuthenticating, expectedResult);
 
       const expected = cold('(a)', { a: expectedResult });
 
       // Act
-      const isLoading$ = facade.isLoading$;
+      const isAuthenticating = facade.isAuthenticating$;
 
       // Assert
-      expect(isLoading$).toBeObservable(expected);
+      expect(isAuthenticating).toBeObservable(expected);
     });
   });
 

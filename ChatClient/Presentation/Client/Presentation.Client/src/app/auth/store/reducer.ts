@@ -13,40 +13,43 @@ const reducer = createReducer(
   // Authenticate the current user in this session
   on(authActions.authenticate, (state) => ({
     ...state,
-    isLoading: true,
+    isAuthenticating: true,
     error: null,
   })),
 
-  on(authActions.authenticateSuccess, (state, { user }) => ({
-    ...state,
-    isLoading: false,
-    token: user.token,
-    user,
-  })),
+  on(authActions.authenticateSuccess, (state, { user }) => {
+    localStorage.setItem('access_token', user.token);
+    return {
+      ...state,
+      isAuthenticating: false,
+      token: user.token,
+      user,
+    };
+  }),
 
-  on(authActions.authenticateFailure, (state, { error }) => ({
+  on(authActions.authenticateFailure, (state, payload) => ({
     ...state,
-    isLoading: false,
-    error
+    isAuthenticating: false,
+    error: payload.error || null
   })),
 
   // Log in to a new session
   on(authActions.logIn, (state) => ({
     ...state,
-    isLoading: true,
     error: null
   })),
 
-  on(authActions.logInSuccess, (state, { user }) => ({
-    ...state,
-    isLoading: false,
-    token: user.token,
-    user,
-  })),
+  on(authActions.logInSuccess, (state, { user }) => {
+    localStorage.setItem('access_token', user.token);
+    return {
+      ...state,
+      token: user.token,
+      user,
+    };
+  }),
 
   on(authActions.logInFailure, (state, { error }) => ({
     ...state,
-    isLoading: false,
     error
   })),
 
@@ -60,54 +63,45 @@ const reducer = createReducer(
   // Create a new user account
   on(authActions.createAccount, (state) => ({
     ...state,
-    isLoading: true,
     error: null
   })),
 
   on(authActions.createAccountSuccess, (state) => ({
     ...state,
-    isLoading: false,
   })),
 
   on(authActions.createAccountFailure, (state, { error }) => ({
     ...state,
-    isLoading: false,
     error
   })),
 
   // Check whether a given email address already exists
   on(authActions.emailExists, (state) => ({
     ...state,
-    isLoading: true
   })),
 
   on(authActions.emailExistsSuccess, (state, { result }) => ({
     ...state,
-    isLoading: false,
     emailExists: result
   })),
 
   on(authActions.emailExistsFailure, (state, { error }) => ({
     ...state,
-    isLoading: false,
     error,
   })),
 
   // Check whether a given user name already exists
   on(authActions.userNameExists, (state) => ({
     ...state,
-    isLoading: true
   })),
 
   on(authActions.userNameExistsSuccess, (state, { result }) => ({
     ...state,
-    isLoading: false,
     userNameExists: result
   })),
 
   on(authActions.userNameExistsFailure, (state, { error }) => ({
     ...state,
-    isLoading: false,
     error,
   })),
 
