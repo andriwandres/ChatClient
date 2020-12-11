@@ -14,6 +14,6 @@ import { MessengerFacade } from './facade';
     StoreModule.forFeature(MESSENGER_FEATURE_KEY, { signalR: signalrReducer }),
     EffectsModule.forFeature([SignalREffects, MessengerEffects])
   ],
-  providers: [MessengerFacade]
+  providers: []
 })
 export class MessengerStoreModule { }

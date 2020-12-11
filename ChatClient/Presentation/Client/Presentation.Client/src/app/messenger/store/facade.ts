@@ -6,7 +6,7 @@ import { createSignalRHub, ISignalRHub } from 'ngrx-signalr-core';
 import { take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class MessengerFacade {
   constructor(
     private readonly authFacade: AuthFacade,
