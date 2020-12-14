@@ -109,6 +109,22 @@ describe('AuthFacade', () => {
     });
   });
 
+  describe('#authenticationSuccessful$', () => {
+    it('should return the states indicator, whether the authentication attempt has been completed', () => {
+      // Arrange
+      const expectedResult = true;
+      store.overrideSelector(authSelectors.selectAuthenticationSuccessful, expectedResult);
+
+      const expected = cold('(a)', { a: expectedResult });
+
+      // Act
+      const authSuccess = facade.authenticationSuccessful$;
+
+      // Assert
+      expect(authSuccess).toBeObservable(expected);
+    });
+  });
+
   describe('#error$', () => {
     it('should return the states current error instance', () => {
       // Arrange

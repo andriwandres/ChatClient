@@ -1,8 +1,7 @@
+<!-- App content, when authentication has been attempted -->
 <router-outlet *ngIf="authenticationAttempted$ | async; else splashScreen"></router-outlet>
 
+<!-- Splash screen -->
 <ng-template #splashScreen>
   <app-splash-screen></app-splash-screen>
 </ng-template>
-
-
-
