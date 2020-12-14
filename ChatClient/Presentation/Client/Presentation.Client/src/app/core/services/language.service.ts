@@ -9,7 +9,7 @@ export class LanguageService {
   constructor(private readonly httpClient: HttpClient) {}
 
   getLanguages(): Observable<Language[]> {
-    const url = environment.api.language;
+    const url = environment.api.languages;
 
     return this.httpClient.get<Language[]>(url);
   }

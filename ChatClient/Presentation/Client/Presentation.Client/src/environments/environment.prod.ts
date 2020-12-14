@@ -3,6 +3,7 @@ export const environment = {
   api: {
     users: '',
     session: '',
+    languages: ''
   },
   socket: {
     hub: ''
