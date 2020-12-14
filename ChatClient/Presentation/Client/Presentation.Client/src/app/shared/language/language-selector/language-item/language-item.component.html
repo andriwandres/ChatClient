@@ -1,5 +1,8 @@
 
-<div id="item-container" (click)="selectLanguage.emit()">
+<!-- Language item -->
+<div id="item-container" (click)="selectLanguage.emit()" [class.selected]="isSelected">
   <span id="language-name">{{ language.name }}</span>
+
+  <!-- Flag image -->
   <img id="flag" [src]="language.countryFlagImage" height="20px" width="auto"/>
 </div>

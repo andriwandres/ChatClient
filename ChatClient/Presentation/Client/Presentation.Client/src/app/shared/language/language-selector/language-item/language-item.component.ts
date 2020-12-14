@@ -8,5 +8,7 @@ import { Language } from '@chat-client/core/models';
 })
 export class LanguageItemComponent {
   @Input() language!: Language;
+  @Input() isSelected!: boolean;
+
   @Output() selectLanguage = new EventEmitter<void>();
 }

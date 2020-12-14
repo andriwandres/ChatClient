@@ -26,8 +26,8 @@ export class MessengerEffects {
     ofType(SIGNALR_HUB_UNSTARTED),
     mergeMapHubToAction(({ hub }) => {
       const events = actionMappings.map(mapping => hub.on(mapping.eventName).pipe(
-        map((payload) => mapping.actionFactory(payload)))
-      );
+        map((payload) => mapping.actionFactory(payload))
+      ));
 
       return merge(
         merge(...events),

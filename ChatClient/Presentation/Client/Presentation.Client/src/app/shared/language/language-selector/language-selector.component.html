@@ -6,11 +6,13 @@
   <mat-icon>expand_more</mat-icon>
 </div>
 
+<!-- Menu listing available languages -->
 <mat-menu #menu id="menu" [overlapTrigger]="true" (click)="$event.stopPropagation()">
   <app-language-item
     class="language-item"
     *ngFor="let language of languages$ | async"
     [language]="language"
+    [isSelected]="language.languageId === (selectedLanguageId$ | async)"
     (selectLanguage)="selectLanguage(language.languageId)">
   </app-language-item>
 </mat-menu>

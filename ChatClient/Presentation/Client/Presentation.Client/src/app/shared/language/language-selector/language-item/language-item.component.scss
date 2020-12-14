@@ -1,5 +1,5 @@
 :host {
-  width: 100%;
+  width: 150px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -17,4 +17,8 @@
   &:hover {
     background-color: #525F8E;
   }
+}
+
+.selected {
+  background-color: #525F8E;
 }

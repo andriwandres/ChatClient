@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatMenu } from '@angular/material/menu';
+import { Component, OnInit } from '@angular/core';
 import { LanguageFacade } from '@chat-client/shared/language/store';
 
 @Component({
@@ -10,6 +9,7 @@ import { LanguageFacade } from '@chat-client/shared/language/store';
 export class LanguageSelectorComponent implements OnInit {
   readonly languages$ = this.languageFacade.languages$;
   readonly selectedLanguage$ = this.languageFacade.selectedLanguage$;
+  readonly selectedLanguageId$ = this.languageFacade.selectedLanguageId$;
 
   constructor(private readonly languageFacade: LanguageFacade) { }
 
