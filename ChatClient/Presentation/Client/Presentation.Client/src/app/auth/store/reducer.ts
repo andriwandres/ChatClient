@@ -13,7 +13,6 @@ const reducer = createReducer(
   // Authenticate the current user in this session
   on(authActions.authenticate, (state) => ({
     ...state,
-    isAuthenticating: true,
     error: null,
   })),
 
@@ -21,7 +20,7 @@ const reducer = createReducer(
     localStorage.setItem('access_token', user.token);
     return {
       ...state,
-      isAuthenticating: false,
+      authenticationAttempted: true,
       token: user.token,
       user,
     };
@@ -29,7 +28,7 @@ const reducer = createReducer(
 
   on(authActions.authenticateFailure, (state, payload) => ({
     ...state,
-    isAuthenticating: false,
+    authenticationAttempted: true,
     error: payload.error || null
   })),
 

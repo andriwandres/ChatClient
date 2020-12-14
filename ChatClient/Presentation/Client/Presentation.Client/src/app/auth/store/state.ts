@@ -9,14 +9,14 @@ export interface State {
   error: ApiError | null;
   emailExists: boolean | null;
   userNameExists: boolean | null;
-  isAuthenticating: boolean;
+  authenticationAttempted: boolean;
 }
 
 export const initialState: State = {
   user: null,
   token: localStorage.getItem('access_token'),
   error: null,
-  isAuthenticating: false,
+  authenticationAttempted: false,
   emailExists: null,
   userNameExists: null
 };

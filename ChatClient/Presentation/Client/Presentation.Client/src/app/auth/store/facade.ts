@@ -13,7 +13,9 @@ export class AuthFacade {
   readonly emailExists$ = this.store.select(authSelectors.selectEmailExists);
   readonly userNameExists$ = this.store.select(authSelectors.selectUserNameExists);
 
-  readonly isAuthenticating$ = this.store.select(authSelectors.selectIsAuthenticating);
+  readonly authenticationAttempted$ = this.store.select(authSelectors.selectAuthenticationAttempted);
+  readonly authenticationSuccessful$ = this.store.select(authSelectors.selectAuthenticationSuccessful);
+
   readonly error$ = this.store.select(authSelectors.selectError);
 
   constructor(private readonly store: Store<PartialState>) {}

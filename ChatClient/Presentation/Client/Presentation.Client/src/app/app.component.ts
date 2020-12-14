@@ -4,10 +4,10 @@ import { AuthFacade } from '@chat-client/auth/store';
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-  readonly isAuthenticating$ = this.authFacade.isAuthenticating$;
+  readonly authenticationAttempted$ = this.authFacade.authenticationAttempted$;
 
   constructor(private readonly authFacade: AuthFacade) {}
 

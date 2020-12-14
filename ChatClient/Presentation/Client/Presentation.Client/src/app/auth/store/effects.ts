@@ -24,13 +24,6 @@ export class AuthEffects {
     })
   ));
 
-  readonly navigateToMessenger$ = createEffect(() => this.actions$.pipe(
-    ofType(authActions.authenticateSuccess),
-    tap(() => {
-      this.router.navigateByUrl('');
-    })
-  ), { dispatch: false });
-
   readonly createAccount$ = createEffect(() => this.actions$.pipe(
     ofType(authActions.createAccount),
     mergeMap(({ credentials }) => this.authService.createAccount(credentials).pipe(

@@ -22,11 +22,10 @@
     ],
     "paths": {
       "@chat-client/core": ["src/app/core"],
+      "@chat-client/core/guards": ["src/app/core/guards"],
+      "@chat-client/core/interceptors": ["src/app/core/interceptors"],
       "@chat-client/core/models": ["src/app/core/models"],
       "@chat-client/core/services": ["src/app/core/services"],
-      "@chat-client/core/interceptors": ["src/app/core/interceptors"],
-
-
 
       "@chat-client/home": ["src/app/home"],
 

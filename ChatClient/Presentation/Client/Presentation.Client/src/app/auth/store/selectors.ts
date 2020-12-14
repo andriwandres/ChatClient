@@ -4,9 +4,9 @@ import * as authState from './state';
 // Feature selector
 export const selectAuthFeature = createFeatureSelector<authState.PartialState, authState.State>(authState.AUTH_FEATURE_KEY);
 
-export const selectIsAuthenticating = createSelector(
+export const selectAuthenticationAttempted = createSelector(
   selectAuthFeature,
-  state => state.isAuthenticating
+  state => state.authenticationAttempted
 );
 
 export const selectError = createSelector(
@@ -17,6 +17,11 @@ export const selectError = createSelector(
 export const selectUser = createSelector(
   selectAuthFeature,
   state => state.user
+);
+
+export const selectAuthenticationSuccessful = createSelector(
+  selectAuthFeature,
+  state => !!state.user
 );
 
 export const selectToken = createSelector(
