@@ -4,6 +4,7 @@ import * as authState from './state';
 // Feature selector
 export const selectAuthFeature = createFeatureSelector<authState.PartialState, authState.State>(authState.AUTH_FEATURE_KEY);
 
+// State selectors
 export const selectAuthenticationAttempted = createSelector(
   selectAuthFeature,
   state => state.authenticationAttempted

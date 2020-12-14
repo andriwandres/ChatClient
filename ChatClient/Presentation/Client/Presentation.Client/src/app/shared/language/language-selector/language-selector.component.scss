@@ -1,0 +1,14 @@
+
+#menu-trigger {
+  display: flex;
+  align-items: center;
+  padding: 10px;
+}
+
+::ng-deep .mat-menu-panel {
+  background-color: #343B56;
+}
+
+.language-item {
+  cursor: pointer;
+}

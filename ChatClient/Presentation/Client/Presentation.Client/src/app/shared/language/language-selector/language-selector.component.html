@@ -1,0 +1,15 @@
+
+<div id="menu-trigger" [matMenuTriggerFor]="menu" *ngIf="selectedLanguage$ | async as language">
+  <span id="language-name">{{ language.name }}</span>
+  <span [class]="'flag-icon flag-icon-' + language.code"></span>
+  <mat-icon>expand_more</mat-icon>
+</div>
+
+<mat-menu #menu id="menu" [overlapTrigger]="true" (click)="$event.stopPropagation()">
+  <app-language-item
+    class="language-item"
+    *ngFor="let language of languages$ | async"
+    [language]="language"
+    (selectLanguage)="selectLanguage(language.languageId)">
+  </app-language-item>
+</mat-menu>

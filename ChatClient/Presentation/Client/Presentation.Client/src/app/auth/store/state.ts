@@ -14,11 +14,11 @@ export interface State {
 
 export const initialState: State = {
   user: null,
-  token: localStorage.getItem('access_token'),
   error: null,
   authenticationAttempted: false,
   emailExists: null,
-  userNameExists: null
+  userNameExists: null,
+  token: localStorage.getItem('access_token'),
 };
 
 export interface PartialState {

@@ -16,15 +16,13 @@ const reducer = createReducer(
     error: null,
   })),
 
-  on(authActions.authenticateSuccess, (state, { user }) => {
-    localStorage.setItem('access_token', user.token);
-    return {
+  on(authActions.authenticateSuccess, (state, { user }) => ({
       ...state,
       authenticationAttempted: true,
       token: user.token,
       user,
-    };
-  }),
+    })
+  ),
 
   on(authActions.authenticateFailure, (state, payload) => ({
     ...state,
@@ -38,14 +36,12 @@ const reducer = createReducer(
     error: null
   })),
 
-  on(authActions.logInSuccess, (state, { user }) => {
-    localStorage.setItem('access_token', user.token);
-    return {
+  on(authActions.logInSuccess, (state, { user }) => ({
       ...state,
       token: user.token,
       user,
-    };
-  }),
+    })
+  ),
 
   on(authActions.logInFailure, (state, { error }) => ({
     ...state,

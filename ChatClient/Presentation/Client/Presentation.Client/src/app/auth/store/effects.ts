@@ -24,6 +24,13 @@ export class AuthEffects {
     })
   ));
 
+  readonly authenticateSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(authActions.authenticateSuccess),
+    tap(({ user }) => localStorage.setItem('access_token', user.token))
+  ), {
+    dispatch: false
+  });
+
   readonly createAccount$ = createEffect(() => this.actions$.pipe(
     ofType(authActions.createAccount),
     mergeMap(({ credentials }) => this.authService.createAccount(credentials).pipe(
@@ -40,6 +47,13 @@ export class AuthEffects {
     ))
   ));
 
+  readonly logInSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(authActions.logInSuccess),
+    tap(({ user }) => localStorage.setItem('access_token', user.token))
+  ), {
+    dispatch: false
+  });
+
   readonly emailExists$ = createEffect(() => this.actions$.pipe(
     ofType(authActions.emailExists),
     switchMap(({ email }) => this.authService.emailExists(email).pipe(
@@ -55,6 +69,13 @@ export class AuthEffects {
       catchError((error: ApiError) => of(authActions.userNameExistsFailure({ error })))
     ))
   ));
+
+  readonly logOut$ = createEffect(() => this.actions$.pipe(
+    ofType(authActions.logOut),
+    tap(() => localStorage.removeItem('access_token'))
+  ), {
+    dispatch: false
+  });
 
   constructor(
     private readonly router: Router,

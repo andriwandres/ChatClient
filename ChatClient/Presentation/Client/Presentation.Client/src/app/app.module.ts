@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { AuthModule } from '@chat-client/auth';
 import { RootStoreModule } from './store/root-store.module';
 import { SplashScreenModule } from './shared/splash-screen/splash-screen.module';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -19,7 +20,8 @@ import { SplashScreenModule } from './shared/splash-screen/splash-screen.module'
     BrowserModule,
     HttpClientModule,
     AuthModule,
-    SplashScreenModule
+    SplashScreenModule,
+    BrowserAnimationsModule
   ],
   bootstrap: [AppComponent]
 })

@@ -1,0 +1,36 @@
+:host {
+  display: flex;
+  align-items: center;
+  background-color: #202435;
+  color: white;
+  width: 100%;
+  padding: 20px 0;
+}
+
+#title {
+  margin: 0 20px;
+  font-size: 30px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  #application-name {
+    color: #C440E4;
+    margin: 0 10px;
+  }
+}
+
+#horizontal-spacer {
+  flex: 1 auto;
+}
+
+.navigation-items {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+
+  * {
+    margin: 0 50px;
+  }
+}

@@ -9,12 +9,8 @@ export class HomeGuard implements CanLoad {
   constructor(private readonly authFacade: AuthFacade) {}
 
   canLoad(route: Route, segments: UrlSegment[]): Observable<boolean> {
-
     return this.authFacade.authenticationAttempted$.pipe(
       skipWhile(result => !result),
-      tap((result) => {
-
-      })
     );
   }
 }
