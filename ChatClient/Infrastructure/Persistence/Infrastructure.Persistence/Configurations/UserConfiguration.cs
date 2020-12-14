@@ -19,8 +19,6 @@ namespace Infrastructure.Persistence.Configurations
                 .IsUnique();
 
             // Properties
-            builder.Property(user => user.CountryId);
-
             builder.Property(user => user.ProfileImageId);
 
             builder.Property(user => user.UserName)
@@ -55,10 +53,6 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.HasOne(user => user.Availability)
                 .WithOne(availability => availability.User);
-
-            builder.HasOne(user => user.Country)
-                .WithMany(country => country.Users)
-                .HasForeignKey(user => user.CountryId);
 
             builder.HasMany(user => user.AddressedFriendships)
                 .WithOne(friendship => friendship.Addressee);

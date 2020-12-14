@@ -26,6 +26,10 @@ namespace Infrastructure.Persistence.Configurations
             // Relationships
             builder.HasMany(language => language.Translations)
                 .WithOne(translation => translation.Language);
+
+            builder.HasOne(language => language.Country)
+                .WithOne(country => country.Language)
+                .HasForeignKey<Language>(language => language.CountryId);
         }
     }
 }

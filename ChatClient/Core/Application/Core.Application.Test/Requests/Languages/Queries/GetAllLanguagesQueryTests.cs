@@ -23,7 +23,8 @@ namespace Core.Application.Test.Requests.Languages.Queries
 
             MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
             {
-                config.CreateMap<Language, LanguageResource>();
+                config.CreateMap<Language, LanguageResource>()
+                    .ForMember(d => d.CountryFlagImage, c => c.Ignore());
             });
 
             _mapperMock = mapperConfiguration.CreateMapper();

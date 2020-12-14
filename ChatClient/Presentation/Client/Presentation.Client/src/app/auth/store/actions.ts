@@ -31,12 +31,12 @@ export enum ActionTypes {
 // Authenticate the current user in this session
 export const authenticate = createAction(ActionTypes.AUTHENTICATE);
 export const authenticateSuccess = createAction(ActionTypes.AUTHENTICATE_SUCCESS, props<{ user: AuthenticatedUser }>());
-export const authenticateFailure = createAction(ActionTypes.AUTHENTICATE_FAILURE, props<{ error?: ApiError }>());
+export const authenticateFailure = createAction(ActionTypes.AUTHENTICATE_FAILURE, props<{ error: ApiError | null }>());
 
 // Log in to a new session
 export const logIn = createAction(ActionTypes.LOGIN, props<{ credentials: LoginCredentials }>());
 export const logInSuccess = createAction(ActionTypes.LOGIN_SUCCESS, props<{ user: AuthenticatedUser }>());
-export const logInFailure = createAction(ActionTypes.LOGIN_FAILURE, props<{ error: ApiError }>());
+export const logInFailure = createAction(ActionTypes.LOGIN_FAILURE, props<{ error: ApiError | null }>());
 
 // Log out from the current session
 export const logOut = createAction(ActionTypes.LOGOUT);
@@ -44,17 +44,17 @@ export const logOut = createAction(ActionTypes.LOGOUT);
 // Create a new user account
 export const createAccount = createAction(ActionTypes.CREATE_ACCOUNT, props<{ credentials: CreateAccountCredentials }>());
 export const createAccountSuccess = createAction(ActionTypes.CREATE_ACCOUNT_SUCCESS);
-export const createAccountFailure = createAction(ActionTypes.CREATE_ACCOUNT_FAILURE, props<{ error: ApiError }>());
+export const createAccountFailure = createAction(ActionTypes.CREATE_ACCOUNT_FAILURE, props<{ error: ApiError | null }>());
 
 // Check whether a given email address already exists
 export const emailExists = createAction(ActionTypes.EMAIL_EXISTS, props<{ email: string }>());
 export const emailExistsSuccess = createAction(ActionTypes.EMAIL_EXISTS_SUCCESS, props<{ result: boolean }>());
-export const emailExistsFailure = createAction(ActionTypes.EMAIL_EXISTS_FAILURE, props<{ error: ApiError }>());
+export const emailExistsFailure = createAction(ActionTypes.EMAIL_EXISTS_FAILURE, props<{ error: ApiError | null }>());
 
 // Check whether a given user name already exists
 export const userNameExists = createAction(ActionTypes.USERNAME_EXISTS, props<{ userName: string }>());
 export const userNameExistsSuccess = createAction(ActionTypes.USERNAME_EXISTS_SUCCESS, props<{ result: boolean }>());
-export const userNameExistsFailure = createAction(ActionTypes.USERNAME_EXISTS_FAILURE, props<{ error: ApiError }>());
+export const userNameExistsFailure = createAction(ActionTypes.USERNAME_EXISTS_FAILURE, props<{ error: ApiError | null }>());
 
 // Reset Availability Checks when navigating away from the Registration page
 export const resetAvailabilityChecks = createAction(ActionTypes.RESET_AVAILABILITY_CHECKS);

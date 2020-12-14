@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Infrastructure.Persistence.Migrations
 {
-    [ExcludeFromCodeCoverage]
     public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -30,7 +28,8 @@ namespace Infrastructure.Persistence.Migrations
                     CountryId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Code = table.Column<string>(maxLength: 2, nullable: false),
-                    Name = table.Column<string>(nullable: false)
+                    Name = table.Column<string>(nullable: false),
+                    FlagImage = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -78,20 +77,6 @@ namespace Infrastructure.Persistence.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Languages",
-                columns: table => new
-                {
-                    LanguageId = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    Code = table.Column<string>(maxLength: 2, nullable: false),
-                    Name = table.Column<string>(nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Languages", x => x.LanguageId);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "RedeemTokenTypes",
                 columns: table => new
                 {
@@ -101,6 +86,27 @@ namespace Infrastructure.Persistence.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_RedeemTokenTypes", x => x.RedeemTokenTypeId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Languages",
+                columns: table => new
+                {
+                    LanguageId = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    CountryId = table.Column<int>(nullable: false),
+                    Code = table.Column<string>(maxLength: 2, nullable: false),
+                    Name = table.Column<string>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Languages", x => x.LanguageId);
+                    table.ForeignKey(
+                        name: "FK_Languages_Countries_CountryId",
+                        column: x => x.CountryId,
+                        principalTable: "Countries",
+                        principalColumn: "CountryId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -132,14 +138,14 @@ namespace Infrastructure.Persistence.Migrations
                 {
                     UserId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    CountryId = table.Column<int>(nullable: true),
                     ProfileImageId = table.Column<int>(nullable: true),
                     UserName = table.Column<string>(nullable: false),
                     Email = table.Column<string>(nullable: false),
                     PasswordHash = table.Column<byte[]>(nullable: false),
                     PasswordSalt = table.Column<byte[]>(nullable: false),
                     Created = table.Column<DateTime>(nullable: false),
-                    IsEmailConfirmed = table.Column<bool>(nullable: false, defaultValue: false)
+                    IsEmailConfirmed = table.Column<bool>(nullable: false, defaultValue: false),
+                    CountryId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -267,9 +273,10 @@ namespace Infrastructure.Persistence.Migrations
                     MessageId = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     AuthorId = table.Column<int>(nullable: false),
-                    ParentId = table.Column<int>(nullable: false),
+                    ParentId = table.Column<int>(nullable: true),
                     HtmlContent = table.Column<string>(nullable: false),
                     IsEdited = table.Column<bool>(nullable: false, defaultValue: false),
+                    IsDeleted = table.Column<bool>(nullable: false, defaultValue: false),
                     Created = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -483,7 +490,7 @@ namespace Infrastructure.Persistence.Migrations
                     MessageId = table.Column<int>(nullable: false),
                     IsForwarded = table.Column<bool>(nullable: false, defaultValue: false),
                     IsRead = table.Column<bool>(nullable: false, defaultValue: false),
-                    ReadDate = table.Column<DateTime>(nullable: false)
+                    ReadDate = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -622,6 +629,12 @@ namespace Infrastructure.Persistence.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_Languages_CountryId",
+                table: "Languages",
+                column: "CountryId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_MessageReactions_EmojiId",
                 table: "MessageReactions",
                 column: "EmojiId");
@@ -657,7 +670,8 @@ namespace Infrastructure.Persistence.Migrations
                 name: "IX_Messages_ParentId",
                 table: "Messages",
                 column: "ParentId",
-                unique: true);
+                unique: true,
+                filter: "[ParentId] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_NicknameAssignments_AddresseeId",

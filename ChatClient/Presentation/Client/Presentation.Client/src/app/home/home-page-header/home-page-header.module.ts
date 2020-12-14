@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { RouterModule } from '@angular/router';
 import { LanguageModule } from '@chat-client/shared/language';
 import { HomePageHeaderComponent } from './home-page-header.component';
 
@@ -8,7 +9,8 @@ import { HomePageHeaderComponent } from './home-page-header.component';
   imports: [
     CommonModule,
     LanguageModule,
-    MatIconModule
+    MatIconModule,
+    RouterModule
   ],
   declarations: [HomePageHeaderComponent],
   exports: [HomePageHeaderComponent]

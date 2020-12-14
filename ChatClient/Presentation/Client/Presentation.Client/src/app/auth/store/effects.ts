@@ -14,11 +14,11 @@ export class AuthEffects {
     switchMap(() => {
       // Cancel authentication, when there is no access token
       if (!localStorage.getItem('access_token')) {
-        return of(authActions.authenticateFailure({}));
+        return of(authActions.authenticateFailure({ error: null }));
       }
 
       return this.authService.authenticate().pipe(
-        map(user => authActions.authenticateSuccess({ user })),
+        map(user => !!user ? authActions.authenticateSuccess({ user }) : authActions.authenticateFailure({ error: null })),
         catchError((error: ApiError) => of(authActions.authenticateFailure({ error })))
       );
     })
@@ -26,7 +26,7 @@ export class AuthEffects {
 
   readonly authenticateSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(authActions.authenticateSuccess),
-    tap(({ user }) => localStorage.setItem('access_token', user.token))
+    tap(({ user }) => user && localStorage.setItem('access_token', user.token))
   ), {
     dispatch: false
   });
@@ -42,7 +42,7 @@ export class AuthEffects {
   readonly login$ = createEffect(() => this.actions$.pipe(
     ofType(authActions.logIn),
     mergeMap(({ credentials }) => this.authService.logIn(credentials).pipe(
-      map(user => authActions.logInSuccess({ user })),
+      map(user => !!user ? authActions.logInSuccess({ user }) : authActions.logInFailure({ error: null })),
       catchError((error: ApiError) => of(authActions.logInFailure({ error })))
     ))
   ));

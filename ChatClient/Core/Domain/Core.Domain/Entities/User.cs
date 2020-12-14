@@ -6,8 +6,6 @@ namespace Core.Domain.Entities
     public class User
     {
         public int UserId { get; set; }
-
-        public int? CountryId { get; set; }
         public int? ProfileImageId { get; set; }
 
 
@@ -18,7 +16,6 @@ namespace Core.Domain.Entities
         public DateTime Created { get; set; }
         public bool IsEmailConfirmed { get; set; }
 
-        public Country Country { get; set; }
         public Recipient Recipient { get; set; }
         public Availability Availability { get; set; }
         public DisplayImage ProfileImage { get; set; }

@@ -7,7 +7,9 @@ namespace Core.Domain.Entities
         public int CountryId { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
+        public string FlagImage { get; set; }
 
+        public Language Language { get; set; }
         public ICollection<User> Users { get; set; }
 
         public Country()

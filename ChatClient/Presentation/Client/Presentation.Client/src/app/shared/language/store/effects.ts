@@ -11,7 +11,11 @@ export class LanguageEffects {
   readonly getLanguages$ = createEffect(() => this.actions$.pipe(
     ofType(languageActions.getLanguages),
     switchMap(() => this.languageService.getLanguages().pipe(
-      tap(languages => localStorage.setItem('languageId', languages[0].languageId.toString())),
+      tap(languages => {
+        if (!localStorage.getItem('languageId')) {
+          localStorage.setItem('languageId', languages[0].languageId.toString());
+        }
+      }),
       map(languages => languageActions.getLanguagesSuccess({ languages })),
       catchError((error: ApiError) => of(languageActions.getLanguagesFailure({ error })))
     ))

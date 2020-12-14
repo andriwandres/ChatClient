@@ -8,7 +8,11 @@ namespace Presentation.Api.Mapping
     {
         public LanguageMappingProfile()
         {
-            CreateMap<Language, LanguageResource>();
+            CreateMap<Language, LanguageResource>()
+                .ForMember(destination => destination.CountryFlagImage, config =>
+                {
+                    config.MapFrom(source => source.Country.FlagImage);
+                });
         }
     }
 }

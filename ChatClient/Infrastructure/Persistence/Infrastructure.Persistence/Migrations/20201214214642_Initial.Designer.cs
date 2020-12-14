@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ChatContext))]
-    [Migration("20201203070521_NullableFields")]
-    partial class NullableFields
+    [Migration("20201214214642_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -107,6 +107,9 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(2)")
                         .HasMaxLength(2);
+
+                    b.Property<string>("FlagImage")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -320,6 +323,9 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(2)")
                         .HasMaxLength(2);
 
+                    b.Property<int>("CountryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -327,6 +333,9 @@ namespace Infrastructure.Persistence.Migrations
                     b.HasKey("LanguageId");
 
                     b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.HasIndex("CountryId")
                         .IsUnique();
 
                     b.ToTable("Languages");
@@ -348,6 +357,11 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<string>("HtmlContent")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<bool>("IsEdited")
                         .ValueGeneratedOnAdd()
@@ -763,6 +777,15 @@ namespace Infrastructure.Persistence.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Core.Domain.Entities.Language", b =>
+                {
+                    b.HasOne("Core.Domain.Entities.Country", "Country")
+                        .WithOne("Language")
+                        .HasForeignKey("Core.Domain.Entities.Language", "CountryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Core.Domain.Entities.Message", b =>
                 {
                     b.HasOne("Core.Domain.Entities.User", "Author")
@@ -890,7 +913,7 @@ namespace Infrastructure.Persistence.Migrations
 
             modelBuilder.Entity("Core.Domain.Entities.User", b =>
                 {
-                    b.HasOne("Core.Domain.Entities.Country", "Country")
+                    b.HasOne("Core.Domain.Entities.Country", null)
                         .WithMany("Users")
                         .HasForeignKey("CountryId");
 

@@ -1,5 +1,5 @@
 
 <div id="item-container" (click)="selectLanguage.emit()">
   <span id="language-name">{{ language.name }}</span>
-  <span [class]="'flag-icon flag-icon-' + language.code.toLowerCase()"></span>
+  <img id="flag" [src]="language.countryFlagImage" height="20px" width="auto"/>
 </div>

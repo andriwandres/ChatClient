@@ -3,10 +3,18 @@
   display: flex;
   align-items: center;
   padding: 10px;
+
+  #flag {
+    margin-left: 10px;
+  }
 }
 
 ::ng-deep .mat-menu-panel {
   background-color: #343B56;
+}
+
+::ng-deep.mat-menu-panel {
+  max-width: 800px !important;
 }
 
 .language-item {
