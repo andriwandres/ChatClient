@@ -5,7 +5,7 @@
 ![Front-End](https://github.com/AndriWandres/ChatClient/workflows/Angular/badge.svg?branch=master)
 
 <!-- Intro section -->
-Instant-Messenger Chat Client that is built ontop of ASP.NET Core 3.1 and Angular 10. It leverages design patterns such as CQRS and Domain-Driven-Design.
+Instant-Messenger Chat Client that is built ontop of ASP.NET Core 3.1 and Angular 11. It leverages design patterns such as CQRS and Domain-Driven-Design.
 
 <!-- Table of contents -->
 ## 📜 Table of Contents
@@ -104,6 +104,6 @@ The back-end is built ontop of the .NET Core ecosystem and serves as a web API w
 
 The front-end is built as a Single-Page-Application using the Angular Framework from Google. It uses a state management solution similar to Redux for persisting local state. The design pattern follows mostly Google's material design, with a few exceptions here and there.
 * [Angular](https://angular.io) 11 (SPA Framework)
-* [JavaScript/TypeScript](https://www.typescriptlang.org)
+* [JavaScript/TypeScript](https://www.typescriptlang.org) (Interpreter/Transpiler)
 * [NGRX](https://ngrx.io) (State Management)
 * [Jasmine](https://jasmine.github.io/) (Testing)
