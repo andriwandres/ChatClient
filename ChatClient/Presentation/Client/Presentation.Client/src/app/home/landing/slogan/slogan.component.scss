@@ -1,0 +1,22 @@
+#slogan {
+  font-size: 55px;
+  font-weight: 600;
+  line-height: 55px;
+  text-shadow: -10px 10px 4px rgba(0, 0, 0, 0.3);
+  margin-bottom: 100px;
+
+  .highlighted {
+    color: #C440E4;
+  }
+}
+
+#call-to-action {
+  width: 250px;
+  font-size: 25px;
+  font-weight: 700;
+  color: white;
+  padding: 20px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(180deg, #BE1FD3 25%, #EA6BA8 100%);
+}
