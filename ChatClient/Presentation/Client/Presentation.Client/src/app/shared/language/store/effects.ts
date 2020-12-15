@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ApiError } from '@chat-client/core/models';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { TranslateService } from '@ngx-translate/core';
 import { of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { LanguageService } from 'src/app/core/services/language.service';
@@ -23,7 +24,10 @@ export class LanguageEffects {
 
   readonly selectLanguage$ = createEffect(() => this.actions$.pipe(
     ofType(languageActions.selectLanguage),
-    tap(({ languageId }) => localStorage.setItem('languageId', languageId.toString()))
+    tap(({ languageId }) => {
+      localStorage.setItem('languageId', languageId.toString());
+      this.translateService.use(`${languageId}`);
+    })
   ), {
     dispatch: false
   });
@@ -31,5 +35,6 @@ export class LanguageEffects {
   constructor(
     private readonly actions$: Actions,
     private readonly languageService: LanguageService,
+    private readonly translateService: TranslateService,
   ) {}
 }

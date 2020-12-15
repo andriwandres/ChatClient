@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LanguageFacade } from '@chat-client/shared/language/store';
+import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'app-language-selector',

@@ -14,7 +14,7 @@
   align-items: center;
   justify-content: space-between;
 
-  &:hover {
+  &:hover, &:focus {
     background-color: #525F8E;
   }
 }

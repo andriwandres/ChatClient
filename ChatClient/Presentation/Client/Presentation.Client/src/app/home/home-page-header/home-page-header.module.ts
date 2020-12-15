@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { LanguageModule } from '@chat-client/shared/language';
+import { TranslateModule } from '@ngx-translate/core';
 import { HomePageHeaderComponent } from './home-page-header.component';
 
 @NgModule({
@@ -10,7 +11,8 @@ import { HomePageHeaderComponent } from './home-page-header.component';
     CommonModule,
     LanguageModule,
     MatIconModule,
-    RouterModule
+    RouterModule,
+    TranslateModule.forChild({ extend: true })
   ],
   declarations: [HomePageHeaderComponent],
   exports: [HomePageHeaderComponent]

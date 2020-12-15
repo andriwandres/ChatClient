@@ -1,14 +1,14 @@
 <!-- Application name -->
 <span id="title" routerLink="">
   <mat-icon>insert_comment</mat-icon>
-  <span id="application-name">ng-messenger</span>
+  <span id="application-name">{{ 'Application.Title' | translate }}</span>
   <mat-icon>textsms</mat-icon>
 </span>
 
 <!-- Navigational Links (left side) -->
 <nav class="navigation-items">
-  <span routerLink="features" routerLinkActive="active">Features</span>
-  <span routerLink="about" routerLinkActive="active">About</span>
+  <span routerLink="features" routerLinkActive="active">{{ 'Home.Navigation.Features' | translate }}</span>
+  <span routerLink="about" routerLinkActive="active">{{ 'Home.Navigation.About' | translate }}</span>
 </nav>
 
 <span id="horizontal-spacer"></span>

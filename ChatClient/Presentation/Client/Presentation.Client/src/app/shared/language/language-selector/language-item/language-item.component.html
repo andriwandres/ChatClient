@@ -1,7 +1,7 @@
 
 <!-- Language item -->
-<div id="item-container" (click)="selectLanguage.emit()" [class.selected]="isSelected">
-  <span id="language-name">{{ language.name }}</span>
+<div tabindex="0" id="item-container" (click)="selectLanguage.emit()" [class.selected]="isSelected">
+  <span id="language-name">{{ language.name | translate }}</span>
 
   <!-- Flag image -->
   <img id="flag" [src]="language.countryFlagImage" height="20px" width="auto"/>

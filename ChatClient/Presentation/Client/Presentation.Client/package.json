@@ -29,6 +29,8 @@
     "@ngrx/entity": "^10.1.0",
     "@ngrx/store": "^10.1.0",
     "@ngrx/store-devtools": "^10.1.0",
+    "@ngx-translate/core": "^13.0.0",
+    "@ngx-translate/http-loader": "^6.0.0",
     "ngrx-signalr-core": "^8.4.0",
     "rxjs": "~6.6.0",
     "tslib": "^2.0.0",
