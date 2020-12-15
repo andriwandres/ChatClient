@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanLoad, Route, UrlSegment } from '@angular/router';
-import { AuthFacade } from '@chat-client/auth/store';
+import { AuthFacade } from '@chat-client/shared/auth/store';
 import { Observable } from 'rxjs';
 import { skipWhile, tap } from 'rxjs/operators';
 

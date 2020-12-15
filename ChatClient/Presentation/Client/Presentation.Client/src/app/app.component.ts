@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthFacade } from '@chat-client/auth/store';
+import { AuthFacade } from '@chat-client/shared/auth/store';
 import { TranslateService } from '@ngx-translate/core';
 import { take } from 'rxjs/operators';
 import { LanguageFacade } from './shared/language/store';

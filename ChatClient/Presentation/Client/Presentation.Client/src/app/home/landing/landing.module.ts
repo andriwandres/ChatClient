@@ -4,8 +4,7 @@ import { CommonModule } from '@angular/common';
 import { LandingRoutingModule } from './landing-routing.module';
 import { LandingComponent } from './landing.component';
 import { SloganModule } from './slogan/slogan.module';
-import { IllustrationModule } from './illustration/illustration.module';
-
+import { LandingIllustrationModule } from './illustration/illustration.module';
 
 @NgModule({
   declarations: [LandingComponent],
@@ -13,7 +12,7 @@ import { IllustrationModule } from './illustration/illustration.module';
     CommonModule,
     LandingRoutingModule,
     SloganModule,
-    IllustrationModule
+    LandingIllustrationModule
   ]
 })
 export class LandingModule { }

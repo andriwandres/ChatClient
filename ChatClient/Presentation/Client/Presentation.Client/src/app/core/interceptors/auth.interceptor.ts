@@ -1,6 +1,6 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthFacade } from '@chat-client/auth/store';
+import { AuthFacade } from '@chat-client/shared/auth/store';
 import { Observable } from 'rxjs';
 import { mergeMap, take } from 'rxjs/operators';
 

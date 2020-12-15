@@ -35,16 +35,21 @@
       "@chat-client/messenger": ["src/app/messenger"],
       "@chat-client/messenger/store": ["src/app/messenger/store"],
 
-      "@chat-client/auth": ["src/app/auth"],
-      "@chat-client/auth/store": ["src/app/auth/store"],
-
       "@chat-client/shared": ["src/app/shared"],
+
+      "@chat-client/shared/auth": ["src/app/shared/auth"],
+      "@chat-client/shared/auth/store": ["src/app/shared/auth/store"],
 
       "@chat-client/shared/language": ["src/app/shared/language"],
       "@chat-client/shared/language/store": ["src/app/shared/language/store"],
       "@chat-client/shared/language/language-selector": ["src/app/shared/language/language-selector"],
 
+      "@chat-client/shared/translation": ["src/app/shared/translation"],
+      "@chat-client/shared/translation/store": ["src/app/shared/translation/store"],
+
       "@chat-client/shared/splash-screen": ["src/app/shared/splash-screen"],
+
+      "@chat-client/shared/illustration-builder": ["src/app/shared/illustration-builder"],
     }
   },
   "angularCompilerOptions": {

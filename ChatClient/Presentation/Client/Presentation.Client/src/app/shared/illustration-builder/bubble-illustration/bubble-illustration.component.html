@@ -2,7 +2,7 @@
 <!-- Illustration of chat bubbles -->
 <div id="container" [class]="side" [style.flexDirection]="side === 'left' ? 'row' : 'row-reverse'">
   <!-- Avatar image -->
-  <div id="avatar" [style.display]="avatar ? 'initial' : 'hidden'" [style.backgroundImage]="'url(' + avatar + ')'"></div>
+  <div id="avatar" [style.display]="avatar ? 'initial' : 'hidden'" [style.backgroundImage]="avatar ? 'url(' + avatar + ')' : ''"></div>
 
   <!-- Chat bubble -->
   <div id="bubble" >

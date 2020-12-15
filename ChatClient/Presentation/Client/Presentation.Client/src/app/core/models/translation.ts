@@ -1,6 +1,4 @@
 
-export interface Translation {
-  key: string;
-  value: string;
-  languageId: number;
+export interface TranslationDictionary {
+  [key: string]: string;
 }

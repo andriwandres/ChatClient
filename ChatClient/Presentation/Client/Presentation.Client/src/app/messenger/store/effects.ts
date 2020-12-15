@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthActions } from '@chat-client/auth/store';
+import { AuthActions } from '@chat-client/shared/auth/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { TypedAction } from '@ngrx/store/src/models';
 import { mergeMapHubToAction, SIGNALR_HUB_UNSTARTED, startSignalRHub } from 'ngrx-signalr-core';

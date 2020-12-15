@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthFacade } from '@chat-client/auth/store';
+import { AuthFacade } from '@chat-client/shared/auth/store';
 import { HttpTransportType } from '@microsoft/signalr';
 import { Store } from '@ngrx/store';
 import { createSignalRHub, ISignalRHub } from 'ngrx-signalr-core';
