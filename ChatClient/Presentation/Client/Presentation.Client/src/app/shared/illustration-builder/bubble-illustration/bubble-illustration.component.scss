@@ -1,0 +1,76 @@
+#container {
+  display: flex;
+}
+
+#avatar {
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  background-position: center;
+  background-size: cover
+}
+
+#bubble {
+  height: 50px;
+  width: 250px;
+  background-color: #0BB4EA;
+  border-radius: 50px;
+  position: relative;
+}
+
+#anchor {
+  position: absolute;
+  width: 40px;
+  height: 25px;
+  bottom: 0;
+}
+
+#reaction {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 2;
+  height: 20px;
+  border-radius: 40px;
+  padding: 5px;
+  background-color: #6F6F79;
+}
+
+.left {
+  #bubble {
+    background-color: #0BB4EA;
+    transform: translateY(-70%) translateX(5px);
+  }
+
+  #anchor {
+    background-color: #0BB4EA;
+    right: unset;
+    left: 0;
+  }
+
+  #reaction {
+    right: 0;
+    left: unset;
+    transform: translateY(-50%) translateX(50%);
+  }
+}
+
+.right {
+  #bubble {
+    background-color: #0DD852;
+    transform: translateY(-70%) translateX(-5px);
+  }
+
+  #anchor {
+    background-color: #0DD852;
+    right: 0;
+    left: unset;
+  }
+
+  #reaction {
+    right: unset;
+    left: 0;
+    transform: translateY(-50%) translateX(-50%);
+  }
+}
+
