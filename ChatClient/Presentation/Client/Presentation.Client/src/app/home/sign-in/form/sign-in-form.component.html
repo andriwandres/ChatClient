@@ -1,1 +1,31 @@
-<p>sign-in-form works!</p>
+<h1 id="heading">Sign In</h1>
+
+<a id="register-redirect" routerLink="../create-account">Have no account yet?</a>
+
+<form [formGroup]="form" id="form">
+  <!-- UserName/Email field -->
+  <div class="field-row">
+    <mat-icon class="icon">person</mat-icon>
+    <mat-form-field class="field">
+      <input matInput formControlName="userNameOrEmail"/>
+      <mat-placeholder class="placeholder">User name or E-Mail address</mat-placeholder>
+    </mat-form-field>
+  </div>
+
+  <!-- Password field -->
+  <div class="field-row">
+    <mat-icon class="icon">vpn_key</mat-icon>
+    <mat-form-field class="field">
+      <input matInput formControlName="userNameOrEmail"/>
+      <mat-placeholder class="placeholder">Password</mat-placeholder>
+      <mat-hint [align]="'end'" class="hint">
+        <a href="#" id="forgot-password-redirect">Forgot your password?</a>
+      </mat-hint>
+    </mat-form-field>
+  </div>
+</form>
+
+<!-- Submit button -->
+<button id="submit-button" type="button">
+  Get Started
+</button>

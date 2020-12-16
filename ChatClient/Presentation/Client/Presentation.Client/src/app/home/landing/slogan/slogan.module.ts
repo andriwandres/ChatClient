@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { SloganComponent } from './slogan.component';
@@ -9,6 +10,7 @@ import { SloganComponent } from './slogan.component';
   imports: [
     CommonModule,
     RouterModule,
+    MatIconModule,
     TranslateModule.forChild({ extend: true })
   ],
   exports: [SloganComponent]

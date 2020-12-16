@@ -12,13 +12,19 @@
 }
 
 #call-to-action {
-  width: 275px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 25px;
   font-weight: 700;
   color: white;
-  padding: 20px;
+  padding: 20px 50px;
   border: none;
   border-radius: 50px;
   background: linear-gradient(180deg, #BE1FD3 25%, #EA6BA8 100%);
   cursor: pointer;
+
+  mat-icon {
+    margin-right: 10px;
+  }
 }
