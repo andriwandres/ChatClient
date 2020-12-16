@@ -1,16 +1,16 @@
 import { Injectable } from '@angular/core';
-import { CanLoad, Route, UrlSegment } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanLoad, Route, RouterStateSnapshot, UrlSegment } from '@angular/router';
 import { AuthFacade } from '@chat-client/shared/auth/store';
-import { Observable } from 'rxjs';
-import { skipWhile, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class HomeGuard implements CanLoad {
+export class HomeGuard implements CanLoad, CanActivate {
   constructor(private readonly authFacade: AuthFacade) {}
 
-  canLoad(route: Route, segments: UrlSegment[]): Observable<boolean> {
-    return this.authFacade.authenticationAttempted$.pipe(
-      skipWhile(result => !result),
-    );
+  canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean  {
+    return true;
+  }
+
+  canLoad(route: Route, segments: UrlSegment[]): boolean {
+    return true;
   }
 }

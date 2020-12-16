@@ -6,14 +6,13 @@ const routes: Routes = [
   {
     path: '',
     pathMatch: 'full',
-    loadChildren: () => import('@chat-client/messenger').then(m => m.MessengerModule),
     canLoad: [MessengerGuard],
-    canActivate: [MessengerGuard]
+    canActivate: [MessengerGuard],
+    loadChildren: () => import('@chat-client/messenger').then(m => m.MessengerModule),
   },
   {
     path: 'home',
     loadChildren: () => import('@chat-client/home').then(m => m.HomeModule),
-    canLoad: [HomeGuard]
   },
 ];
 

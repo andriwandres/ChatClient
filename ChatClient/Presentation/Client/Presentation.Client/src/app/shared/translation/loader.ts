@@ -3,7 +3,7 @@ import { TranslationService } from '@chat-client/core/services';
 import { TranslateLoader } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 
-export class TranslationLoader implements TranslateLoader {
+export class ChatClientTranslationLoader implements TranslateLoader {
   constructor(private readonly translationFacade: TranslationService) {}
 
   getTranslation(lang: string): Observable<TranslationDictionary> {

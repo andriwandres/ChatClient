@@ -31,6 +31,8 @@
       "@chat-client/home/landing": ["src/app/home/landing"],
       "@chat-client/home/features": ["src/app/home/features"],
       "@chat-client/home/about": ["src/app/home/about"],
+      "@chat-client/home/sign-in": ["src/app/home/sign-in"],
+      "@chat-client/home/create-account": ["src/app/home/create-account"],
 
       "@chat-client/messenger": ["src/app/messenger"],
       "@chat-client/messenger/store": ["src/app/messenger/store"],

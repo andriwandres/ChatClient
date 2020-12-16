@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { SignInGuard } from '../core/guards/sign-in.guard';
 import { HomeComponent } from './home.component';
 
 const routes: Routes = [
@@ -14,14 +15,22 @@ const routes: Routes = [
       },
       {
         path: 'about',
-        pathMatch: 'full',
         loadChildren: () => import('@chat-client/home/about').then(m => m.AboutModule),
       },
       {
         path: 'features',
-        pathMatch: 'full',
         loadChildren: () => import('@chat-client/home/features').then(m => m.FeaturesModule),
       },
+      {
+        path: 'sign-in',
+        canLoad: [SignInGuard],
+        canActivate: [SignInGuard],
+        loadChildren: () => import('@chat-client/home/sign-in').then(m => m.SignInModule),
+      },
+      {
+        path: 'create-account',
+        loadChildren: () => import('@chat-client/home/create-account').then(m => m.CreateAccountModule)
+      }
     ]
   }
 ];

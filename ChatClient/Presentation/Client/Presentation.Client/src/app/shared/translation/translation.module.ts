@@ -1,23 +1,23 @@
 import { NgModule } from '@angular/core';
 import { TranslationService } from '@chat-client/core/services';
 import { MissingTranslationHandler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { TranslationLoader } from './translation.loader';
+import { ChatClientTranslationLoader } from './loader';
+import { ChatClientMissingTranslationHandler } from './missing-translation-handler';
 
 @NgModule({
   imports: [
     TranslateModule.forRoot({
       loader: {
         provide: TranslateLoader,
-        useClass: TranslationLoader,
+        useClass: ChatClientTranslationLoader,
         deps: [TranslationService]
       },
+      missingTranslationHandler: {
+        provide: MissingTranslationHandler,
+        useClass: ChatClientMissingTranslationHandler,
+        deps: []
+      }
     })
-  ],
-  providers: [
-    {
-      provide: MissingTranslationHandler,
-      useValue: () => ''
-    }
   ],
 })
 export class TranslationModule {}
