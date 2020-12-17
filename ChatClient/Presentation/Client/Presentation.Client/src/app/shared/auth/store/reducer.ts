@@ -13,7 +13,7 @@ const reducer = createReducer(
   // Authenticate the current user in this session
   on(authActions.authenticate, (state) => ({
     ...state,
-    error: null,
+    authenticationError: null
   })),
 
   on(authActions.authenticateSuccess, (state, { user }) => ({
@@ -24,16 +24,16 @@ const reducer = createReducer(
     })
   ),
 
-  on(authActions.authenticateFailure, (state, payload) => ({
+  on(authActions.authenticateFailure, (state, { error }) => ({
     ...state,
     authenticationAttempted: true,
-    error: payload.error || null
+    authenticationError: error
   })),
 
   // Log in to a new session
   on(authActions.logIn, (state) => ({
     ...state,
-    error: null
+    loginError: null
   })),
 
   on(authActions.logInSuccess, (state, { user }) => ({
@@ -45,7 +45,7 @@ const reducer = createReducer(
 
   on(authActions.logInFailure, (state, { error }) => ({
     ...state,
-    error
+    loginError: error
   })),
 
   // Log out from the current session
@@ -58,7 +58,7 @@ const reducer = createReducer(
   // Create a new user account
   on(authActions.createAccount, (state) => ({
     ...state,
-    error: null
+    createAccountError: null
   })),
 
   on(authActions.createAccountSuccess, (state) => ({
@@ -67,7 +67,7 @@ const reducer = createReducer(
 
   on(authActions.createAccountFailure, (state, { error }) => ({
     ...state,
-    error
+    createAccountError: error
   })),
 
   // Check whether a given email address already exists
@@ -82,7 +82,6 @@ const reducer = createReducer(
 
   on(authActions.emailExistsFailure, (state, { error }) => ({
     ...state,
-    error,
   })),
 
   // Check whether a given user name already exists
@@ -97,7 +96,6 @@ const reducer = createReducer(
 
   on(authActions.userNameExistsFailure, (state, { error }) => ({
     ...state,
-    error,
   })),
 
   // Reset Availability Checks when navigating away from the Registration page

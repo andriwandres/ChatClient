@@ -16,7 +16,7 @@ export class AuthFacade {
   readonly authenticationAttempted$ = this.store.select(authSelectors.selectAuthenticationAttempted);
   readonly authenticationSuccessful$ = this.store.select(authSelectors.selectAuthenticationSuccessful);
 
-  readonly error$ = this.store.select(authSelectors.selectError);
+  readonly loginError$ = this.store.select(authSelectors.selectLoginError);
 
   constructor(private readonly store: Store<PartialState>) {}
 

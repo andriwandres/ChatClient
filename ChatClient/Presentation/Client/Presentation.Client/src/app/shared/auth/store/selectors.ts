@@ -10,9 +10,9 @@ export const selectAuthenticationAttempted = createSelector(
   state => state.authenticationAttempted
 );
 
-export const selectError = createSelector(
+export const selectLoginError = createSelector(
   selectAuthFeature,
-  state => state.error
+  state => state.loginError
 );
 
 export const selectUser = createSelector(

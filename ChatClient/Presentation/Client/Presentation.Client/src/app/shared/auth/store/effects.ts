@@ -1,3 +1,4 @@
+import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ApiError } from '@chat-client/core/models';
@@ -19,7 +20,9 @@ export class AuthEffects {
 
       return this.authService.authenticate().pipe(
         map(user => !!user ? authActions.authenticateSuccess({ user }) : authActions.authenticateFailure({ error: null })),
-        catchError((error: ApiError) => of(authActions.authenticateFailure({ error })))
+        catchError((response: HttpErrorResponse) => {
+          return of(authActions.authenticateFailure({ error: response.error as ApiError }));
+        })
       );
     })
   ));
@@ -35,7 +38,9 @@ export class AuthEffects {
     ofType(authActions.createAccount),
     mergeMap(({ credentials }) => this.authService.createAccount(credentials).pipe(
       map(() => authActions.createAccountSuccess()),
-      catchError((error: ApiError) => of(authActions.createAccountFailure({ error })))
+      catchError((response: HttpErrorResponse) => {
+        return of(authActions.createAccountFailure({ error: response.error as ApiError }));
+      })
     ))
   ));
 
@@ -43,13 +48,18 @@ export class AuthEffects {
     ofType(authActions.logIn),
     mergeMap(({ credentials }) => this.authService.logIn(credentials).pipe(
       map(user => !!user ? authActions.logInSuccess({ user }) : authActions.logInFailure({ error: null })),
-      catchError((error: ApiError) => of(authActions.logInFailure({ error })))
+      catchError((response: HttpErrorResponse) => {
+        return of(authActions.logInFailure({ error: response.error as ApiError }));
+      })
     ))
   ));
 
   readonly logInSuccess$ = createEffect(() => this.actions$.pipe(
     ofType(authActions.logInSuccess),
-    tap(({ user }) => localStorage.setItem('access_token', user.token))
+    tap(({ user }) => {
+      localStorage.setItem('access_token', user.token);
+      this.router.navigate(['']);
+    })
   ), {
     dispatch: false
   });
@@ -58,7 +68,9 @@ export class AuthEffects {
     ofType(authActions.emailExists),
     switchMap(({ email }) => this.authService.emailExists(email).pipe(
       map(result => authActions.emailExistsSuccess({ result })),
-      catchError((error: ApiError) => of(authActions.emailExistsFailure({ error })))
+      catchError((response: HttpErrorResponse) => {
+        return of(authActions.emailExistsFailure({ error: response.error as ApiError }));
+      })
     ))
   ));
 
@@ -66,7 +78,9 @@ export class AuthEffects {
     ofType(authActions.userNameExists),
     switchMap(({ userName }) => this.authService.userNameExists(userName).pipe(
       map(result => authActions.userNameExistsSuccess({ result })),
-      catchError((error: ApiError) => of(authActions.userNameExistsFailure({ error })))
+      catchError((response: HttpErrorResponse) => {
+        return of(authActions.userNameExistsFailure({ error: response.error as ApiError }));
+      })
     ))
   ));
 

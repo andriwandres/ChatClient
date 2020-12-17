@@ -133,12 +133,12 @@ describe('AuthFacade', () => {
         message: 'some message'
       };
 
-      store.overrideSelector(authSelectors.selectError, expectedError);
+      store.overrideSelector(authSelectors.selectLoginError, expectedError);
 
       const expected = cold('(a)', { a: expectedError });
 
       // Act
-      const error$ = facade.error$;
+      const error$ = facade.loginError$;
 
       // Assert
       expect(error$).toBeObservable(expected);

@@ -7,7 +7,7 @@
   <div class="field-row">
     <mat-icon class="icon">person</mat-icon>
     <mat-form-field class="field">
-      <input matInput formControlName="userNameOrEmail"/>
+      <input matInput formControlName="userNameOrEmail" autocomplete="off" spellcheck="false"/>
       <mat-placeholder class="placeholder">User name or E-Mail address</mat-placeholder>
     </mat-form-field>
   </div>
@@ -16,8 +16,14 @@
   <div class="field-row">
     <mat-icon class="icon">vpn_key</mat-icon>
     <mat-form-field class="field">
-      <input matInput formControlName="userNameOrEmail"/>
+      <input matInput type="password" formControlName="password" autocomplete="off" spellcheck="false"/>
       <mat-placeholder class="placeholder">Password</mat-placeholder>
+
+      <!-- Error message -->
+      <mat-error *ngIf="password.hasError('credentialsIncorrect')">
+        User name, email or password are incorrect
+      </mat-error>
+
       <mat-hint [align]="'end'" class="hint">
         <a href="#" id="forgot-password-redirect">Forgot your password?</a>
       </mat-hint>
@@ -26,6 +32,6 @@
 </form>
 
 <!-- Submit button -->
-<button id="submit-button" type="button">
+<button id="submit-button" type="button" (click)="submit()" [disabled]="form.invalid" [class.disabled]="form.invalid">
   Get Started
 </button>

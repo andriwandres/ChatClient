@@ -59,8 +59,13 @@
   border-radius: 50px;
   background: linear-gradient(180deg, #BE1FD3 25%, #EA6BA8 100%);
   cursor: pointer;
+
+  &.disabled {
+    background: linear-gradient(180deg, #6b6b6b 25%, #424242 100%);
+    cursor: default;
+  }
 }
 
-::ng-deep .mat-form-field-underline {
-  background-color: #888 !important;
+::ng-deep .mat-form-field .mat-form-field-underline {
+  background-color: #888;
 }
