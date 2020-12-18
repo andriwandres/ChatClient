@@ -1,6 +1,8 @@
-<h1 id="heading">Sign In</h1>
+<h1 id="heading">{{ 'Home.SignIn.Heading' | translate }}</h1>
 
-<a id="register-redirect" routerLink="../create-account">Have no account yet?</a>
+<a id="register-redirect" routerLink="../create-account">
+  {{ 'Home.SignIn.RegistrationRedirect' | translate }}
+</a>
 
 <form [formGroup]="form" id="form">
   <!-- UserName/Email field -->
@@ -8,7 +10,9 @@
     <mat-icon class="icon">person</mat-icon>
     <mat-form-field class="field">
       <input matInput formControlName="userNameOrEmail" autocomplete="off" spellcheck="false"/>
-      <mat-placeholder class="placeholder">User name or E-Mail address</mat-placeholder>
+      <mat-placeholder class="placeholder">
+        {{ 'Home.SignIn.UserNameOrEmail.Placeholder' | translate }}
+      </mat-placeholder>
     </mat-form-field>
   </div>
 
@@ -17,15 +21,19 @@
     <mat-icon class="icon">vpn_key</mat-icon>
     <mat-form-field class="field">
       <input matInput type="password" formControlName="password" autocomplete="off" spellcheck="false"/>
-      <mat-placeholder class="placeholder">Password</mat-placeholder>
+      <mat-placeholder class="placeholder">
+        {{ 'Home.SignIn.Password.Placeholder' | translate }}
+      </mat-placeholder>
 
       <!-- Error message -->
       <mat-error *ngIf="password.hasError('credentialsIncorrect')">
-        User name, email or password are incorrect
+        {{ 'Home.SignIn.Error.Login' | translate }}
       </mat-error>
 
       <mat-hint [align]="'end'" class="hint">
-        <a href="#" id="forgot-password-redirect">Forgot your password?</a>
+        <a href="#" id="forgot-password-redirect">
+          {{ 'Home.SignIn.ForgotPasswordRedirect' | translate }}
+        </a>
       </mat-hint>
     </mat-form-field>
   </div>
@@ -33,5 +41,5 @@
 
 <!-- Submit button -->
 <button id="submit-button" type="button" (click)="submit()" [disabled]="form.invalid" [class.disabled]="form.invalid">
-  Get Started
+  {{ 'Home.SignIn.Submit' | translate }}
 </button>

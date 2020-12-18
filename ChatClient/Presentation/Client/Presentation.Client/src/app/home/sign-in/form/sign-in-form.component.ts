@@ -3,7 +3,7 @@ import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/fo
 import { LoginCredentials } from '@chat-client/core/models';
 import { AuthFacade } from '@chat-client/shared/auth/store';
 import { Subject } from 'rxjs';
-import { filter, takeUntil } from 'rxjs/operators';
+import { filter, map, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sign-in-form',
@@ -31,7 +31,7 @@ export class SignInFormComponent implements OnInit, OnDestroy {
   private readonly destroy$ = new Subject();
 
   private readonly update$ = this.form.valueChanges.pipe(
-    filter(value => !!value),
+    map(value => value as LoginCredentials),
     takeUntil(this.destroy$)
   );
 
@@ -44,7 +44,7 @@ export class SignInFormComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     // Remove errors, when value is being updated
     this.update$.subscribe(value => {
-      if (value) {
+      if (value.password) {
         this.password.setErrors(null);
       }
     });
