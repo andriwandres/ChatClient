@@ -5,12 +5,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { RouterModule } from '@angular/router';
-import { FormBuilderModule } from 'src/app/shared/form-builder/form-builder.module';
-import { CreateAccountFormComponent } from './create-account-form.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FormFieldComponent } from './form-field.component';
 
 @NgModule({
-  declarations: [CreateAccountFormComponent],
+  declarations: [FormFieldComponent],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -18,9 +17,8 @@ import { CreateAccountFormComponent } from './create-account-form.component';
     MatInputModule,
     MatIconModule,
     MatButtonModule,
-    RouterModule,
-    FormBuilderModule,
+    MatTooltipModule
   ],
-  exports: [CreateAccountFormComponent]
+  exports: [FormFieldComponent]
 })
-export class CreateAccountFormModule { }
+export class FormFieldModule { }

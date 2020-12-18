@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
 import { map, skipWhile, switchMapTo, tap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
-export class SignInGuard implements CanLoad, CanActivate {
+export class CreateAccountGuard implements CanLoad, CanActivate {
   constructor(
     private readonly router: Router,
     private readonly authFacade: AuthFacade

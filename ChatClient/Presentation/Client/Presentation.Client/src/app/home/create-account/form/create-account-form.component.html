@@ -1,1 +1,44 @@
-<p>create-account-form works!</p>
+<h1 id="heading">Create Account</h1>
+
+<a routerLink="../sign-in" id="login-redirect">Already have an account?</a>
+
+<form [formGroup]="form" id="form">
+  <!-- UserName field -->
+  <app-form-field
+    prefixIcon="person"
+    placeholder="UserName"
+    [control]="userName"
+  ></app-form-field>
+
+  <!-- Email field -->
+  <app-form-field
+    prefixIcon="alternate_email"
+    placeholder="E-mail"
+    [control]="email"
+  ></app-form-field>
+
+  <!-- Password field -->
+  <app-form-field
+    prefixIcon="vpn_key"
+    placeholder="Password"
+    [control]="password"
+    [suffixIcon]="passwordsHidden ? 'visibility' : 'visibility_off'"
+    [type]="passwordsHidden ? 'password' : 'text'"
+    (suffixClick)="passwordsHidden = !passwordsHidden"
+  ></app-form-field>
+
+  <!-- Password confirm field -->
+  <app-form-field
+    prefixIcon="vpn_key"
+    placeholder="Confirm password"
+    [control]="passwordConfirm"
+    [suffixIcon]="passwordsHidden ? 'visibility' : 'visibility_off'"
+    [type]="passwordsHidden ? 'password' : 'text'"
+    (suffixClick)="passwordsHidden = !passwordsHidden"
+  ></app-form-field>
+</form>
+
+<!-- Submit button -->
+<button id="submit-button" type="button" [disabled]="form.invalid" [class.disabled]="form.invalid">
+  Continue
+</button>

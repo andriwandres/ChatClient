@@ -1,0 +1,64 @@
+:host {
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 30%;
+  font-size: 1.5em;
+}
+
+#heading {
+  color: #6E91EC;
+  font-size: 35px;
+}
+
+#login-redirect {
+  color: #FEFEFE;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+#form {
+  display: flex;
+  flex-direction: column;
+  margin: 40px 0;
+  width: 100%;
+
+  .field-row {
+    display: flex;
+    align-items: center;
+
+    mat-icon {
+      margin-right: 15px;
+    }
+
+    mat-form-field {
+      width: 100%;
+
+      mat-placeholder {
+        color: white;
+        font-weight: 300;
+      }
+    }
+  }
+}
+
+#submit-button {
+  width: 225px;
+  font-size: 18px;
+  color: white;
+  padding: 18px;
+  border: none;
+  border-radius: 50px;
+  background: linear-gradient(180deg, #BE1FD3 25%, #EA6BA8 100%);
+  cursor: pointer;
+
+  &.disabled {
+    background: linear-gradient(180deg, #6b6b6b 25%, #424242 100%);
+    cursor: default;
+  }
+}
+
+::ng-deep .mat-form-field .mat-form-field-underline {
+  background-color: #888;
+}

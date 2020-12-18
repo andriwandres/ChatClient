@@ -1,0 +1,18 @@
+<!-- Prefix icon -->
+<mat-icon *ngIf="prefixIcon" id="prefix-icon" >
+  {{ prefixIcon }}
+</mat-icon>
+
+<!-- Form field -->
+<mat-form-field id="field">
+  <input matInput [formControl]="control" [type]="type"/>
+
+  <mat-placeholder>{{ placeholder }}</mat-placeholder>
+
+  <mat-hint *ngIf="hint">{{ hint }}</mat-hint>
+
+  <!-- Suffix Button -->
+  <button *ngIf="suffixIcon && control.value" type="button" tabindex="-1" mat-icon-button matSuffix (click)="suffixClick.emit()">
+    <mat-icon>{{ suffixIcon }}</mat-icon>
+  </button>
+</mat-form-field>

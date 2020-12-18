@@ -1,0 +1,29 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+#prefix-icon {
+  margin-right: 15px;
+}
+
+#field {
+  width: 100%;
+
+  mat-hint {
+    color: #86C5E8;
+  }
+
+  mat-placeholder {
+    color: white;
+  }
+
+  mat-hint, mat-placeholder {
+    font-weight: 300;
+  }
+}
+
+::ng-deep .mat-form-field .mat-form-field-underline {
+  background-color: #888;
+}

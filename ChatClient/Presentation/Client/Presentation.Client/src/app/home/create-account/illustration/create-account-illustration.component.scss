@@ -1,0 +1,21 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+}
+
+.bubble-illustration {
+  align-self: flex-start;
+
+  &:not(:first-of-type) {
+    margin-top: 40px;
+  }
+
+  &:not(.anchor) {
+    margin-top: 15px;
+  }
+
+  &[side=right] {
+    align-self: flex-end;
+  }
+}
