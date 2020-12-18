@@ -1,11 +1,9 @@
 <!-- Prefix icon -->
-<mat-icon *ngIf="prefixIcon" id="prefix-icon" >
-  {{ prefixIcon }}
-</mat-icon>
+<mat-icon *ngIf="prefixIcon" id="prefix-icon" >{{ prefixIcon }}</mat-icon>
 
 <!-- Form field -->
 <mat-form-field id="field">
-  <input matInput [formControl]="control" [type]="type"/>
+  <input matInput autocomplete="off" spellcheck="false" [formControl]="control" [type]="type" appValidationTooltip/>
 
   <mat-placeholder>{{ placeholder }}</mat-placeholder>
 

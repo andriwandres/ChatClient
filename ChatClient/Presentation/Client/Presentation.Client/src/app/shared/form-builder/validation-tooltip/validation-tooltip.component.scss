@@ -1,0 +1,20 @@
+:host {
+  background-color: #525F8E;
+  color: white;
+  padding: 20px;
+  border-radius: 5px;
+
+  &::before  {
+    content: '';
+    position: absolute;
+    display: block;
+    width: 0;
+    z-index: 1;
+    border-style: solid;
+    border-color: transparent #525F8E;
+    border-width: 10px 10px 10px 0;
+    top: 50%;
+    left: -10px;
+    margin-top: -10px;
+  }
+}

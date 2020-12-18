@@ -10,20 +10,20 @@ import { MustMatch } from './password-match.validator';
 export class CreateAccountFormComponent implements OnInit {
   passwordsHidden = true;
 
-  get userName(): AbstractControl {
-    return this.form.get('userName') as AbstractControl;
+  get userName(): FormControl {
+    return this.form.get('userName') as FormControl;
   }
 
-  get email(): AbstractControl {
-    return this.form.get('email') as AbstractControl;
+  get email(): FormControl {
+    return this.form.get('email') as FormControl;
   }
 
-  get password(): AbstractControl {
-    return this.form.get('password') as AbstractControl;
+  get password(): FormControl {
+    return this.form.get('password') as FormControl;
   }
 
-  get passwordConfirm(): AbstractControl {
-    return this.form.get('passwordConfirm') as AbstractControl;
+  get passwordConfirm(): FormControl {
+    return this.form.get('passwordConfirm') as FormControl;
   }
 
   readonly form = new FormGroup({
@@ -50,6 +50,6 @@ export class CreateAccountFormComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-  }
 
+  }
 }

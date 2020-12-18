@@ -6,6 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { ValidationTooltipModule } from '../validation-tooltip/validation-tooltip.module';
 import { FormFieldComponent } from './form-field.component';
 
 @NgModule({
@@ -17,7 +18,8 @@ import { FormFieldComponent } from './form-field.component';
     MatInputModule,
     MatIconModule,
     MatButtonModule,
-    MatTooltipModule
+    MatTooltipModule,
+    ValidationTooltipModule
   ],
   exports: [FormFieldComponent]
 })

@@ -1,4 +1,4 @@
-import { AbstractControl, FormGroup, ValidatorFn } from '@angular/forms';
+import { FormGroup, ValidatorFn } from '@angular/forms';
 
 /**
  * Validates two controls in a form group to have matching values
@@ -14,13 +14,13 @@ export function MustMatch(controlName: string, matchingControlName: string): Val
     const matchingControl = formGroup.controls[matchingControlName];
 
     // return if another validator has already found an error on the matchingControl
-    if (matchingControl.errors && !matchingControl.errors.mustMatch) {
+    if (matchingControl.errors && !matchingControl.errors.misMatch) {
       return;
     }
 
     // set error on matchingControl if validation fails
     if (control.value !== matchingControl.value) {
-      matchingControl.setErrors({ mustMatch: true });
+      matchingControl.setErrors({ misMatch: true });
     } else {
       matchingControl.setErrors(null);
     }
