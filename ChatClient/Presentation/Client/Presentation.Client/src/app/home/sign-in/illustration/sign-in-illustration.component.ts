@@ -1,15 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 @Component({
   selector: 'app-sign-in-illustration',
   templateUrl: './sign-in-illustration.component.html',
-  styleUrls: ['./sign-in-illustration.component.scss']
+  styleUrls: ['./sign-in-illustration.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class SignInIllustrationComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
-}
+export class SignInIllustrationComponent {}

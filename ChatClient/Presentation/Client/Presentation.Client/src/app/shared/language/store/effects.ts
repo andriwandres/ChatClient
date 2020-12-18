@@ -14,7 +14,12 @@ export class LanguageEffects {
     switchMap(() => this.languageService.getLanguages().pipe(
       tap(languages => {
         if (!localStorage.getItem('languageId')) {
-          localStorage.setItem('languageId', languages[0].languageId.toString());
+          const languageId = languages[0].languageId.toString();
+
+          this.translateService.use(languageId);
+          localStorage.setItem('languageId', languageId);
+        } else {
+          this.translateService.use(localStorage.getItem('languageId') || '');
         }
       }),
       map(languages => languageActions.getLanguagesSuccess({ languages })),

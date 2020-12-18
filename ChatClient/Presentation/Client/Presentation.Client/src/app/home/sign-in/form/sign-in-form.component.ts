@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AbstractControl, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ApiError, LoginCredentials } from '@chat-client/core/models';
+import { LoginCredentials } from '@chat-client/core/models';
 import { AuthFacade } from '@chat-client/shared/auth/store';
-import { merge, Subject } from 'rxjs';
-import { filter, skip, takeUntil, tap } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'app-sign-in-form',
