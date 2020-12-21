@@ -1,4 +1,9 @@
 
 export interface RuleMappings {
-  [key: string]: string;
+  [key: string]: Rule;
+}
+
+export interface Rule {
+  order: number;
+  description: string;
 }

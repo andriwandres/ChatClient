@@ -1,7 +1,7 @@
 <!-- List of validation rules and their status -->
-<div class="rule" *ngFor="let mapping of ruleMappings | keyvalue">
+<div class="rule" *ngFor="let mapping of ruleMappings | keyvalue | ruleOrder">
   <mat-icon class="status-icon" [class.error]="errors[mapping.key]">
     {{ errors[mapping.key] ? 'close' : 'check' }}
   </mat-icon>
-  <span class="message">{{ mapping.value }}</span>
+  <span class="message">{{ mapping.value.description }}</span>
 </div>
