@@ -1,19 +1,32 @@
 import { Overlay, OverlayPositionBuilder, OverlayRef } from '@angular/cdk/overlay';
 import { ComponentPortal } from '@angular/cdk/portal';
-import { Directive, ElementRef, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { ComponentRef, Directive, ElementRef, HostListener, Input, OnChanges, OnDestroy, OnInit } from '@angular/core';
+import { ValidationErrors } from '@angular/forms';
+import { RuleMappings } from './mapping';
 import { ValidationTooltipComponent } from './validation-tooltip.component';
 
 @Directive({
   selector: '[appValidationTooltip]'
 })
-export class ValidationTooltipDirective implements OnInit, OnDestroy {
+export class ValidationTooltipDirective implements OnInit, OnChanges, OnDestroy {
+  @Input() validationErrors!: ValidationErrors | null;
+  @Input() validationRuleMappings!: RuleMappings;
+
   private overlayRef!: OverlayRef;
+  private componentRef!: ComponentRef<ValidationTooltipComponent>;
 
   constructor(
     private readonly overlay: Overlay,
     private readonly positionBuilder: OverlayPositionBuilder,
     private readonly elementRef: ElementRef
   ) { }
+
+  ngOnChanges(): void {
+    if (this.componentRef) {
+      this.componentRef.instance.errors = this.validationErrors || {};
+      this.componentRef.instance.ruleMappings = this.validationRuleMappings;
+    }
+  }
 
   ngOnInit(): void {
     const positionStrategy = this.positionBuilder.
@@ -29,11 +42,8 @@ export class ValidationTooltipDirective implements OnInit, OnDestroy {
     this.overlayRef = this.overlay.create({ positionStrategy });
   }
 
-  @HostListener('focus')
-  onFocus(): void {
-    if (this.overlayRef && !this.overlayRef.hasAttached()) {
-      this.overlayRef.attach(new ComponentPortal(ValidationTooltipComponent));
-    }
+  ngOnDestroy(): void {
+    this.closeTooltip();
   }
 
   @HostListener('blur')
@@ -41,8 +51,13 @@ export class ValidationTooltipDirective implements OnInit, OnDestroy {
     this.closeTooltip();
   }
 
-  ngOnDestroy(): void {
-    this.closeTooltip();
+  @HostListener('focus')
+  onFocus(): void {
+    if (this.overlayRef && !this.overlayRef.hasAttached()) {
+      this.componentRef = this.overlayRef.attach(new ComponentPortal(ValidationTooltipComponent));
+
+      this.ngOnChanges();
+    }
   }
 
   private closeTooltip(): void {

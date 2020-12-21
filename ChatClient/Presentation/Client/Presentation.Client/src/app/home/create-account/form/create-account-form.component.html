@@ -8,6 +8,7 @@
     prefixIcon="person"
     placeholder="UserName"
     [control]="userName"
+    [ruleMappings]="userNameMappings"
   ></app-form-field>
 
   <!-- Email field -->
@@ -15,6 +16,7 @@
     prefixIcon="alternate_email"
     placeholder="E-mail"
     [control]="email"
+    [ruleMappings]="emailMappings"
   ></app-form-field>
 
   <!-- Password field -->
@@ -24,6 +26,7 @@
     [control]="password"
     [suffixIcon]="passwordsHidden ? 'visibility' : 'visibility_off'"
     [type]="passwordsHidden ? 'password' : 'text'"
+    [ruleMappings]="passwordMappings"
     (suffixClick)="passwordsHidden = !passwordsHidden"
   ></app-form-field>
 
@@ -34,6 +37,7 @@
     [control]="passwordConfirm"
     [suffixIcon]="passwordsHidden ? 'visibility' : 'visibility_off'"
     [type]="passwordsHidden ? 'password' : 'text'"
+    [ruleMappings]="passwordConfirmMappings"
     (suffixClick)="passwordsHidden = !passwordsHidden"
   ></app-form-field>
 </form>

@@ -1,7 +1,7 @@
 :host {
   background-color: #525F8E;
   color: white;
-  padding: 20px;
+  padding: 10px 15px;
   border-radius: 5px;
 
   &::before  {
@@ -16,5 +16,18 @@
     top: 50%;
     left: -10px;
     margin-top: -10px;
+  }
+}
+
+.rule {
+  display: flex;
+  align-items: center;
+
+  mat-icon {
+    color: green;
+
+    &.error {
+      color: red;
+    }
   }
 }

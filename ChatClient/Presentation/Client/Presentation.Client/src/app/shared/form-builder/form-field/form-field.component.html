@@ -3,7 +3,16 @@
 
 <!-- Form field -->
 <mat-form-field id="field">
-  <input matInput autocomplete="off" spellcheck="false" [formControl]="control" [type]="type" appValidationTooltip/>
+  <input
+    matInput
+    spellcheck="false"
+    autocomplete="off"
+    [type]="type"
+    [formControl]="control"
+    appValidationTooltip
+    [validationErrors]="control.errors"
+    [validationRuleMappings]="ruleMappings || {}"
+  />
 
   <mat-placeholder>{{ placeholder }}</mat-placeholder>
 

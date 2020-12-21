@@ -1,1 +1,7 @@
-<p>validation-tooltip works!</p>
+<!-- List of validation rules and their status -->
+<div class="rule" *ngFor="let mapping of ruleMappings | keyvalue">
+  <mat-icon class="status-icon" [class.error]="errors[mapping.key]">
+    {{ errors[mapping.key] ? 'close' : 'check' }}
+  </mat-icon>
+  <span class="message">{{ mapping.value }}</span>
+</div>

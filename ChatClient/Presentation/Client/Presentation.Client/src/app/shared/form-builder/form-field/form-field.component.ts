@@ -1,12 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl } from '@angular/forms';
+import { RuleMappings } from '../validation-tooltip/mapping';
 
 @Component({
   selector: 'app-form-field',
   templateUrl: './form-field.component.html',
   styleUrls: ['./form-field.component.scss']
 })
-export class FormFieldComponent implements OnInit {
+export class FormFieldComponent {
   @Input() control!: FormControl;
   @Input() placeholder!: string;
 
@@ -15,11 +16,7 @@ export class FormFieldComponent implements OnInit {
   @Input() prefixIcon?: string;
   @Input() suffixIcon?: string;
 
+  @Input() ruleMappings?: RuleMappings;
+
   @Output() suffixClick = new EventEmitter();
-
-  constructor() { }
-
-  ngOnInit(): void {
-
-  }
 }
