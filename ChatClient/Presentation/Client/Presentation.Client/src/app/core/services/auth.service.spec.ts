@@ -346,7 +346,7 @@ describe('AuthService', () => {
       // Assert
       const request = httpMock.expectOne({
         method: 'HEAD',
-        url: `${environment.api.users}/email?email=${email}`
+        url: `${environment.api.users}?email=${email}`
       });
 
       request.flush(null, {
@@ -369,7 +369,7 @@ describe('AuthService', () => {
       // Assert
       const request = httpMock.expectOne({
         method: 'HEAD',
-        url: `${environment.api.users}/email?email=${email}`
+        url: `${environment.api.users}?email=${email}`
       });
 
       request.flush({}, {
@@ -392,7 +392,7 @@ describe('AuthService', () => {
       // Assert
       const request = httpMock.expectOne({
         method: 'HEAD',
-        url: `${environment.api.users}/email?email=${email}`
+        url: `${environment.api.users}?email=${email}`
       });
 
       request.flush({}, {
@@ -417,7 +417,7 @@ describe('AuthService', () => {
       // Assert
       const request = httpMock.expectOne({
         method: 'HEAD',
-        url: `${environment.api.users}/name?userName=${userName}`
+        url: `${environment.api.users}?userName=${userName}`
       });
 
       request.flush(null, {
@@ -440,7 +440,7 @@ describe('AuthService', () => {
       // Assert
       const request = httpMock.expectOne({
         method: 'HEAD',
-        url: `${environment.api.users}/name?userName=${userName}`
+        url: `${environment.api.users}?userName=${userName}`
       });
 
       request.flush({}, {
@@ -463,7 +463,7 @@ describe('AuthService', () => {
       // Assert
       const request = httpMock.expectOne({
         method: 'HEAD',
-        url: `${environment.api.users}/name?userName=${userName}`
+        url: `${environment.api.users}?userName=${userName}`
       });
 
       request.flush({}, {
