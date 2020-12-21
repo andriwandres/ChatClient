@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { TranslateModule } from '@ngx-translate/core';
 import { RuleOrderPipe } from './rule-order.pipe';
 import { ValidationTooltipComponent } from './validation-tooltip.component';
 import { ValidationTooltipDirective } from './validation-tooltip.directive';
@@ -13,7 +14,8 @@ import { ValidationTooltipDirective } from './validation-tooltip.directive';
   ],
   imports: [
     CommonModule,
-    MatIconModule
+    MatIconModule,
+    TranslateModule.forChild({ extend: true })
   ],
   exports: [ValidationTooltipDirective]
 })

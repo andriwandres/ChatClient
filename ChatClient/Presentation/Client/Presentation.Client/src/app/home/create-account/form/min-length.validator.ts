@@ -1,14 +1,11 @@
-import { ValidatorFn, Validators } from '@angular/forms';
+import { ValidatorFn } from '@angular/forms';
 
 export function minLengthValidator(minLength: number): ValidatorFn  {
   return ((control) => {
-    if (!control.value) {
-      return {
-        ...control.errors,
-        minlength: true,
-      };
-    }
+    const value = control.value as string;
 
-    return Validators.minLength(minLength)(control);
+    return !value || value.length < minLength
+      ? { minlength: true }
+      : null;
   });
 }

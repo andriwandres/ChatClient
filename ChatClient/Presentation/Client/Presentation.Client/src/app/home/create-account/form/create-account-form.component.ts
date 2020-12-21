@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ValidatorFn, Validators } from '@angular/forms';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthFacade } from '@chat-client/shared/auth/store';
 import { CreateAccountCredentials } from 'src/app/core/models/user';
 import { emailValidator } from './email.validator';
@@ -39,15 +39,16 @@ export class CreateAccountFormComponent {
   readonly passwordConfirmMappings = ruleMappings.passwordConfirmMappings;
 
   readonly form = new FormGroup({
-    userName: new FormControl('', Validators.compose([
+    userName: new FormControl('', [
       Validators.required,
       Validators.pattern(/^[a-zA-Z_]\w*$/),
       minLengthValidator(2),
-    ])),
-    email: new FormControl('', Validators.compose([
+    ]),
+    email: new FormControl('', [
       Validators.required,
+      Validators.email,
       emailValidator
-    ])),
+    ]),
     password: new FormControl('', [
       Validators.required,
       Validators.pattern(/^\S+$/),
@@ -56,7 +57,7 @@ export class CreateAccountFormComponent {
     passwordConfirm: new FormControl('', [
       Validators.required,
       Validators.pattern(/^\S+$/),
-      minLengthValidator(8)
+      minLengthValidator(8),
     ])
   }, {
     validators: [mustMatch('password', 'passwordConfirm')]

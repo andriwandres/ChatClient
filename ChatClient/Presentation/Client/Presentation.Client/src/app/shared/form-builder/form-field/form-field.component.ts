@@ -1,11 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { AbstractControl, FormControl, ValidationErrors } from '@angular/forms';
 import { RuleMappings } from '../validation-tooltip/mapping';
 
 @Component({
   selector: 'app-form-field',
   templateUrl: './form-field.component.html',
-  styleUrls: ['./form-field.component.scss']
+  styleUrls: ['./form-field.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FormFieldComponent {
   @Input() control!: FormControl;

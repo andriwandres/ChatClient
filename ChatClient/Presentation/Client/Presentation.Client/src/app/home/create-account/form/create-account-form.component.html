@@ -1,12 +1,12 @@
-<h1 id="heading">Create Account</h1>
+<h1 id="heading">{{ 'Home.CreateAccount.Heading' | translate }}</h1>
 
-<a routerLink="../sign-in" id="login-redirect">Already have an account?</a>
+<a routerLink="../sign-in" id="login-redirect">{{ 'Home.CreateAccount.LoginRedirect' | translate }}</a>
 
 <form [formGroup]="form" id="form">
   <!-- UserName field -->
   <app-form-field
     prefixIcon="person"
-    placeholder="UserName"
+    [placeholder]="'Home.CreateAccount.UserName.Placeholder' | translate"
     [control]="userName"
     [ruleMappings]="userNameMappings"
   ></app-form-field>
@@ -14,7 +14,7 @@
   <!-- Email field -->
   <app-form-field
     prefixIcon="alternate_email"
-    placeholder="E-mail"
+    [placeholder]="'Home.CreateAccount.Email.Placeholder' | translate"
     [control]="email"
     [ruleMappings]="emailMappings"
   ></app-form-field>
@@ -22,7 +22,7 @@
   <!-- Password field -->
   <app-form-field
     prefixIcon="vpn_key"
-    placeholder="Password"
+    [placeholder]="'Home.CreateAccount.Password.Placeholder' | translate"
     [control]="password"
     [suffixIcon]="passwordsHidden ? 'visibility' : 'visibility_off'"
     [type]="passwordsHidden ? 'password' : 'text'"
@@ -33,7 +33,7 @@
   <!-- Password confirm field -->
   <app-form-field
     prefixIcon="vpn_key"
-    placeholder="Confirm password"
+    [placeholder]="'Home.CreateAccount.PasswordConfirm.Placeholder' | translate"
     [control]="passwordConfirm"
     [suffixIcon]="passwordsHidden ? 'visibility' : 'visibility_off'"
     [type]="passwordsHidden ? 'password' : 'text'"
@@ -44,5 +44,5 @@
 
 <!-- Submit button -->
 <button id="submit-button" type="button" [disabled]="form.invalid" [class.disabled]="form.invalid">
-  Continue
+  {{ 'Home.CreateAccount.Continue' | translate }}
 </button>

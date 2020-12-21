@@ -1,4 +1,4 @@
-import { FormGroup, ValidatorFn } from '@angular/forms';
+import { AbstractControl, FormGroup, ValidatorFn } from '@angular/forms';
 
 /**
  * Validates two controls in a form group to have matching values
@@ -9,18 +9,28 @@ import { FormGroup, ValidatorFn } from '@angular/forms';
  * @returns Validator function used for validation
  */
 export function mustMatch(controlName: string, matchingControlName: string): ValidatorFn  {
-  return ((formGroup: FormGroup) => {
+  return ((group: AbstractControl) => {
+    const formGroup = group as FormGroup;
+
     const control = formGroup.controls[controlName];
     const matchingControl = formGroup.controls[matchingControlName];
 
-    // set error on matchingControl if validation fails
     if (control.value !== matchingControl.value) {
+      const remainingErrors = matchingControl.errors || [];
+
       matchingControl.setErrors({
-        ...matchingControl.errors,
+        ...remainingErrors,
         misMatch: true
       });
-    } else {
-      matchingControl.setErrors(null);
+    } else if (matchingControl.errors) {
+      const count = Object.keys(matchingControl.errors).length;
+      const exists = !!matchingControl.errors.misMatch;
+
+      if (exists && count > 1) {
+        delete matchingControl.errors.misMatch;
+      } else if (exists && count === 1) {
+        matchingControl.setErrors(null);
+      }
     }
   }) as ValidatorFn;
 }

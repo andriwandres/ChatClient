@@ -3,17 +3,17 @@ import { RuleMappings } from 'src/app/shared/form-builder';
 export const userNameMappings: RuleMappings = {
   required: {
     order: 1,
-    description: 'User name is required',
+    description: 'Home.CreateAccount.UserName.ValidationRule.Required',
     showInitially: true
   },
   minlength: {
     order: 2,
-    description: 'User name must be at least 2 characters long',
+    description: 'Home.CreateAccount.UserName.ValidationRule.MinLength',
     showInitially: true
   },
   pattern: {
     order: 3,
-    description: 'User name must not contain any spaces',
+    description: 'Home.CreateAccount.UserName.ValidationRule.Pattern',
     showInitially: false
   }
 };
@@ -21,12 +21,12 @@ export const userNameMappings: RuleMappings = {
 export const emailMappings: RuleMappings = {
   required: {
     order: 1,
-    description: 'E-Mail address is required',
+    description: 'Home.CreateAccount.Email.ValidationRule.Required',
     showInitially: true
   },
   email: {
     order: 2,
-    description: 'Has to be a valid e-mail address',
+    description: 'Home.CreateAccount.Email.ValidationRule.Email',
     showInitially: true
   },
 };
@@ -34,40 +34,46 @@ export const emailMappings: RuleMappings = {
 export const passwordMappings: RuleMappings = {
   required: {
     order: 1,
-    description: 'Password is required',
+    description: 'Home.CreateAccount.Password.ValidationRule.Required',
     showInitially: true
   },
   minlength: {
     order: 2,
-    description: 'Password must be at least 8 characters long',
+    description: 'Home.CreateAccount.Password.ValidationRule.MinLength',
     showInitially: true
   },
   pattern: {
     order: 3,
-    description: 'Password must not contain any spaces',
+    description: 'Home.CreateAccount.Password.ValidationRule.Pattern',
     showInitially: false,
-  }
+  },
+  // TODO: Translate description
+  misMatch: {
+    order: 4,
+    description: 'Home.CreateAccount.PasswordConfirm.ValidationRule.MisMatch',
+    showInitially: false
+  },
 };
 
 export const passwordConfirmMappings: RuleMappings = {
   required: {
     order: 1,
-    description: 'Password is required',
+    description: 'Home.CreateAccount.PasswordConfirm.ValidationRule.Required',
     showInitially: true
   },
   minlength: {
     order: 2,
-    description: 'Password must be at least 8 characters long',
+    description: 'Home.CreateAccount.PasswordConfirm.ValidationRule.MinLength',
     showInitially: true
   },
   pattern: {
     order: 3,
-    description: 'Password must not contain any spaces',
+    description: 'Home.CreateAccount.PasswordConfirm.ValidationRule.Pattern',
     showInitially: false,
   },
   misMatch: {
     order: 4,
-    description: 'Both passwords must be equal',
+    description: 'Home.CreateAccount.PasswordConfirm.ValidationRule.MisMatch',
     showInitially: false
   },
 };
