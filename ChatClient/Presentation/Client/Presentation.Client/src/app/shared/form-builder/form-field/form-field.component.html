@@ -11,7 +11,7 @@
     [formControl]="control"
     appValidationTooltip
     [validationErrors]="control.errors"
-    [validationRuleMappings]="ruleMappings"
+    [validationRuleMappings]="ruleMappings || {}"
   />
 
   <mat-placeholder>{{ placeholder }}</mat-placeholder>
