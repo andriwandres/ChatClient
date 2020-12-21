@@ -6,4 +6,5 @@ export interface RuleMappings {
 export interface Rule {
   order: number;
   description: string;
+  showInitially: boolean;
 }

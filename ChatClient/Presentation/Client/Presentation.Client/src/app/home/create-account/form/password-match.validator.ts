@@ -8,25 +8,22 @@ import { FormGroup, ValidatorFn } from '@angular/forms';
  *
  * @returns Validator function used for validation
  */
-export function MustMatch(controlName: string, matchingControlName: string): ValidatorFn  {
+export function mustMatch(controlName: string, matchingControlName: string): ValidatorFn  {
   return ((formGroup: FormGroup) => {
     const control = formGroup.controls[controlName];
     const matchingControl = formGroup.controls[matchingControlName];
 
-    const error = { misMatch: true };
-
-    // if (!matchingControl.value) {
-    //   matchingControl.setErrors(error);
-    // }
-
-    // // return if another validator has already found an error on the matchingControl
+    // return if another validator has already found an error on the matchingControl
     if (matchingControl.errors && !matchingControl.errors.misMatch) {
       return;
     }
 
     // set error on matchingControl if validation fails
-    if (!matchingControl.value || control.value !== matchingControl.value) {
-      matchingControl.setErrors(error);
+    if (control.value !== matchingControl.value) {
+      matchingControl.setErrors({
+        ...matchingControl.errors,
+        misMatch: true
+      });
     } else {
       matchingControl.setErrors(null);
     }

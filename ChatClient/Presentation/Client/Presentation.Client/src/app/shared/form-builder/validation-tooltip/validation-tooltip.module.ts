@@ -6,8 +6,15 @@ import { ValidationTooltipComponent } from './validation-tooltip.component';
 import { ValidationTooltipDirective } from './validation-tooltip.directive';
 
 @NgModule({
-  declarations: [ValidationTooltipDirective, ValidationTooltipComponent, RuleOrderPipe],
-  imports: [CommonModule, MatIconModule],
+  declarations: [
+    ValidationTooltipDirective,
+    ValidationTooltipComponent,
+    RuleOrderPipe
+  ],
+  imports: [
+    CommonModule,
+    MatIconModule
+  ],
   exports: [ValidationTooltipDirective]
 })
 export class ValidationTooltipModule { }

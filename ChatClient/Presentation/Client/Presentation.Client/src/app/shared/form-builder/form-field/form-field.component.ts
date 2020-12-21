@@ -15,8 +15,13 @@ export class FormFieldComponent {
   @Input() hint?: string;
   @Input() prefixIcon?: string;
   @Input() suffixIcon?: string;
-
   @Input() ruleMappings?: RuleMappings;
 
   @Output() suffixClick = new EventEmitter();
+
+  onSuffixClick(event: MouseEvent): void {
+    event.stopPropagation();
+
+    this.suffixClick.emit();
+  }
 }

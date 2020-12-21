@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { emailValidator } from './email.validator';
-import { MustMatch } from './password-match.validator';
+import { minLengthValidator } from './min-length.validator';
+import { mustMatch } from './password-match.validator';
 import * as ruleMappings from './rule-mappings';
 
 @Component({
@@ -12,11 +13,24 @@ import * as ruleMappings from './rule-mappings';
 export class CreateAccountFormComponent {
   passwordsHidden = true;
 
-  get userName(): FormControl { return this.form.get('userName') as FormControl; }
-  get email(): FormControl { return this.form.get('email') as FormControl; }
-  get password(): FormControl { return this.form.get('password') as FormControl; }
-  get passwordConfirm(): FormControl { return this.form.get('passwordConfirm') as FormControl; }
+  // Getters for form controls
+  get userName(): FormControl {
+    return this.form.get('userName') as FormControl;
+  }
 
+  get email(): FormControl {
+    return this.form.get('email') as FormControl;
+  }
+
+  get password(): FormControl {
+    return this.form.get('password') as FormControl;
+  }
+
+  get passwordConfirm(): FormControl {
+    return this.form.get('passwordConfirm') as FormControl;
+  }
+
+  // Validation rule mappings
   readonly emailMappings = ruleMappings.emailMappings;
   readonly userNameMappings = ruleMappings.userNameMappings;
   readonly passwordMappings = ruleMappings.passwordMappings;
@@ -25,8 +39,8 @@ export class CreateAccountFormComponent {
   readonly form = new FormGroup({
     userName: new FormControl('', [
       Validators.required,
-      Validators.minLength(2),
-      Validators.pattern(/^[a-zA-Z_]\w*$/)
+      Validators.pattern(/^[a-zA-Z_]\w*$/),
+      minLengthValidator(2),
     ]),
     email: new FormControl('', [
       Validators.required,
@@ -34,16 +48,13 @@ export class CreateAccountFormComponent {
     ]),
     password: new FormControl('', [
       Validators.required,
-      Validators.minLength(8),
+      minLengthValidator(8),
     ]),
     passwordConfirm: new FormControl('', [
       Validators.required,
+      minLengthValidator(8)
     ])
   }, {
-    validators: [MustMatch('password', 'passwordConfirm')]
+    validators: [mustMatch('password', 'passwordConfirm')]
   });
-
-  constructor() {
-
-  }
 }

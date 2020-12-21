@@ -11,7 +11,7 @@
     [formControl]="control"
     appValidationTooltip
     [validationErrors]="control.errors"
-    [validationRuleMappings]="ruleMappings || {}"
+    [validationRuleMappings]="ruleMappings"
   />
 
   <mat-placeholder>{{ placeholder }}</mat-placeholder>
@@ -19,7 +19,7 @@
   <mat-hint *ngIf="hint">{{ hint }}</mat-hint>
 
   <!-- Suffix Button -->
-  <button *ngIf="suffixIcon && control.value" type="button" tabindex="-1" mat-icon-button matSuffix (click)="suffixClick.emit()">
+  <button *ngIf="suffixIcon && control.value" type="button" tabindex="-1" mat-icon-button matSuffix (click)="onSuffixClick($event)">
     <mat-icon>{{ suffixIcon }}</mat-icon>
   </button>
 </mat-form-field>

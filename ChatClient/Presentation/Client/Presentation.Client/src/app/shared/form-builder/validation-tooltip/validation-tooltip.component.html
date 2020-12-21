@@ -1,7 +1,9 @@
 <!-- List of validation rules and their status -->
-<div class="rule" *ngFor="let mapping of ruleMappings | keyvalue | ruleOrder">
-  <mat-icon class="status-icon" [class.error]="errors[mapping.key]">
-    {{ errors[mapping.key] ? 'close' : 'check' }}
-  </mat-icon>
-  <span class="message">{{ mapping.value.description }}</span>
-</div>
+<ng-container *ngFor="let mapping of ruleMappings | keyvalue | ruleOrder; trackBy: trackByKey">
+  <div class="rule" *ngIf="mapping.value.showInitially || errors[mapping.key]">
+    <mat-icon class="status-icon" [class.error]="errors[mapping.key]">
+      {{ errors[mapping.key] ? 'close' : 'check' }}
+    </mat-icon>
+    <span class="message">{{ mapping.value.description }}</span>
+  </div>
+</ng-container>
