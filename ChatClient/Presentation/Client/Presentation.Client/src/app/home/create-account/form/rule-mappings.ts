@@ -13,7 +13,7 @@ export const userNameMappings: RuleMappings = {
   },
   pattern: {
     order: 3,
-    description: 'User name must not contain spaces',
+    description: 'User name must not contain any spaces',
     showInitially: false
   }
 };
@@ -42,6 +42,11 @@ export const passwordMappings: RuleMappings = {
     description: 'Password must be at least 8 characters long',
     showInitially: true
   },
+  pattern: {
+    order: 3,
+    description: 'Password must not contain any spaces',
+    showInitially: false,
+  }
 };
 
 export const passwordConfirmMappings: RuleMappings = {
@@ -55,9 +60,14 @@ export const passwordConfirmMappings: RuleMappings = {
     description: 'Password must be at least 8 characters long',
     showInitially: true
   },
-  misMatch: {
+  pattern: {
     order: 3,
+    description: 'Password must not contain any spaces',
+    showInitially: false,
+  },
+  misMatch: {
+    order: 4,
     description: 'Both passwords must be equal',
     showInitially: false
-  }
+  },
 };
