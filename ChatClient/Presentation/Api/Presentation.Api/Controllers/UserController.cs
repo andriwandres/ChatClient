@@ -124,6 +124,69 @@ namespace Presentation.Api.Controllers
         }
 
         /// <summary>
+        /// Checks whether a user already exists
+        /// </summary>
+        ///
+        /// <remarks>
+        /// Checks whether or not a given e-mail address or user name already exists in the database.
+        /// A successful response (200 OK) means that the user with given information already exists, whereas an unsuccessful
+        /// response (404 Not Found) means that the user with given information does not yet exist in the system.
+        /// </remarks>
+        /// 
+        /// <param name="queryParams">
+        /// Contains information on the user to query for existence
+        /// </param>
+        /// 
+        /// <param name="cancellationToken">
+        /// Notifies asynchronous operations to cancel ongoing work and release resources
+        /// </param>
+        /// 
+        /// <returns>
+        /// No content, since HEAD requests carry no response body
+        /// </returns>
+        ///
+        /// <response code="200">
+        /// The user with given information already exists in the database
+        /// </response>
+        ///
+        /// <response code="400">
+        /// No valid information was passed to the query parameters
+        /// </response>
+        ///
+        /// <response code="404">
+        /// A user with given information does not yet exists in the database
+        /// </response>
+        ///
+        /// <response code="500">
+        /// An unexpected error occurred
+        /// </response>
+        [AllowAnonymous]
+        [HttpHead]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<ActionResult> UserExists([FromQuery] UserExistsQueryParams queryParams, CancellationToken cancellationToken = default)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            // Check whether user name or e-mail exists
+            UserNameOrEmailExistsQuery existsQuery = _mapper.Map<UserExistsQueryParams, UserNameOrEmailExistsQuery>(queryParams);
+
+            bool exists = await _mediator.Send(existsQuery, cancellationToken);
+
+            if (exists)
+            {
+                return Ok();
+            }
+
+            return NotFound();
+        }
+
+        /// <summary>
         /// Gets a users profile information
         /// </summary>
         ///
@@ -187,130 +250,6 @@ namespace Presentation.Api.Controllers
             }
 
             return Ok(userProfile);
-        }
-
-        /// <summary>
-        /// Checks email availability
-        /// </summary>
-        ///
-        /// <remarks>
-        /// Checks whether or not a given email address already exists in the database.
-        /// A successful response (200 OK) means that the email address already exists, whereas an unsuccessful
-        /// response (404 Not Found) means that the email address is available and free to use in this system
-        /// </remarks>
-        /// 
-        /// <param name="model">
-        /// Specifies the email address to query by
-        /// </param>
-        /// 
-        /// <param name="cancellationToken">
-        /// Notifies asynchronous operations to cancel ongoing work and release resources
-        /// </param>
-        /// 
-        /// <returns>
-        /// No content, since HEAD requests carry no response body
-        /// </returns>
-        ///
-        /// <response code="200">
-        /// Given email address exists in the database
-        /// </response>
-        ///
-        /// <response code="400">
-        /// Given email address is in an invalid format
-        /// </response>
-        ///
-        /// <response code="404">
-        /// Given email address does not exist in the database
-        /// </response>
-        ///
-        /// <response code="500">
-        /// An unexpected error occurred on the server
-        /// </response>
-        [HttpHead("email")]
-        [AllowAnonymous]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> EmailExists([FromQuery] EmailExistsQueryParams model, CancellationToken cancellationToken = default)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            EmailExistsQuery query = _mapper.Map<EmailExistsQueryParams, EmailExistsQuery>(model);
-
-            bool exists = await _mediator.Send(query, cancellationToken);
-
-            if (exists)
-            {
-                return Ok();
-            }
-
-            return NotFound();
-        }
-
-        /// <summary>
-        /// Checks user name availability
-        /// </summary>
-        ///
-        /// <remarks>
-        /// Checks whether or not a given user name already exists in the database.
-        /// A successful response (200 OK) means that the user name already exists, whereas an unsuccessful
-        /// response (404 Not Found) means that the user name is available and free to use in this system
-        /// </remarks>
-        /// 
-        /// <param name="model">
-        /// Specifies the user name to query by
-        /// </param>
-        /// 
-        /// <param name="cancellationToken">
-        /// Notifies asynchronous operations to cancel ongoing work and release resources
-        /// </param>
-        /// 
-        /// <returns>
-        /// No content, since HEAD requests carry no response body
-        /// </returns>
-        ///
-        /// <response code="200">
-        /// Given user name exists in the database
-        /// </response>
-        ///
-        /// <response code="400">
-        /// Given user name is in an invalid format
-        /// </response>
-        ///
-        /// <response code="404">
-        /// Given user name does not exist in the database
-        /// </response>
-        ///
-        /// <response code="500">
-        /// An unexpected error occurred on the server
-        /// </response>
-        [HttpHead("name")]
-        [AllowAnonymous]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult> UserNameExists([FromQuery] UserNameExistsQueryParams model, CancellationToken cancellationToken = default)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            UserNameExistsQuery query = _mapper.Map<UserNameExistsQueryParams, UserNameExistsQuery>(model);
-
-            bool exists = await _mediator.Send(query, cancellationToken);
-
-            if (exists)
-            {
-                return Ok();
-            }
-
-            return NotFound();
         }
 
         /// <summary>

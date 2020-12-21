@@ -28,7 +28,7 @@ export class AuthService {
   }
 
   emailExists(email: string): Observable<boolean> {
-    const url = `${environment.api.users}/email`;
+    const url = `${environment.api.users}`;
 
     const options = {
       params: new HttpParams().set('email', email)
@@ -44,7 +44,7 @@ export class AuthService {
   }
 
   userNameExists(userName: string): Observable<boolean> {
-    const url = `${environment.api.users}/name`;
+    const url = `${environment.api.users}`;
 
     const options = {
       params: new HttpParams().set('userName', userName)

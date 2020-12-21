@@ -36,8 +36,7 @@ namespace Presentation.Api.Test.Controllers
             {
                 config.CreateMap<CreateAccountBody, CreateAccountCommand>();
                 config.CreateMap<CreateAccountBody, UserNameOrEmailExistsQuery>();
-                config.CreateMap<EmailExistsQueryParams, EmailExistsQuery>();
-                config.CreateMap<UserNameExistsQueryParams, UserNameExistsQuery>();
+                config.CreateMap<UserExistsQueryParams, UserNameOrEmailExistsQuery>();
             });
 
             _mapperMock = mapperConfiguration.CreateMapper();
@@ -117,9 +116,74 @@ namespace Presentation.Api.Test.Controllers
         }
 
         #endregion
-        
+
+        #region UserExists()
+
+        [Fact]
+        public async Task UserExists_ShouldReturnBadRequestResult_WhenModelValidationFails()
+        {
+            // Arrange
+            UserController controller = new UserController(null, null);
+
+            controller.ModelState.AddModelError("", "");
+
+            // Act
+            ActionResult response = await controller.UserExists(null);
+
+            // Assert
+            Assert.IsType<BadRequestObjectResult>(response);
+        }
+
+        [Fact]
+        public async Task UserExists_ShouldReturnOkResult_WhenUserExists()
+        {
+            // Arrange
+            UserExistsQueryParams queryParams = new UserExistsQueryParams
+            {
+                UserName = "username",
+                Email = "email@email.email"
+            };
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<UserNameOrEmailExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(true);
+
+            UserController controller = new UserController(_mediatorMock.Object, _mapperMock);
+
+            // Act
+            ActionResult response = await controller.UserExists(queryParams);
+
+            // Assert
+            Assert.IsType<OkResult>(response);
+        }
+
+        [Fact]
+        public async Task UserExists_ShouldReturnNotFoundResult_WhenUserDoesNotExist()
+        {
+            // Arrange
+            UserExistsQueryParams queryParams = new UserExistsQueryParams
+            {
+                UserName = "username",
+                Email = "email@email.email"
+            };
+
+            _mediatorMock
+                .Setup(m => m.Send(It.IsAny<UserNameOrEmailExistsQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(false);
+
+            UserController controller = new UserController(_mediatorMock.Object, _mapperMock);
+
+            // Act
+            ActionResult response = await controller.UserExists(queryParams);
+
+            // Assert
+            Assert.IsType<NotFoundResult>(response);
+        }
+
+        #endregion
+
         #region GetUserProfile()
-        
+
         [Fact]
         public async Task GetUserProfile_ShouldReturnNotFound_WhenUserDoesNotExist()
         {
@@ -169,121 +233,7 @@ namespace Presentation.Api.Test.Controllers
         }
 
         #endregion
-        
-        #region EmailExists()
-        
-        [Fact]
-        public async Task EmailExists_ShouldReturnBadRequestResult_WhenEmailIsInvalid()
-        {
-            // Arrange
-            UserController controller = new UserController(null, null);
 
-            controller.ModelState.AddModelError("Email", "Required");
-
-            // Act
-            ActionResult response = await controller.EmailExists(null);
-
-            // Assert
-            Assert.IsType<BadRequestObjectResult>(response);
-        }
-
-        [Fact]
-        public async Task EmailExists_ShouldReturnOkResult_WhenEmailExists()
-        {
-            // Arrange
-            EmailExistsQueryParams queryParams = new EmailExistsQueryParams { Email = "test@test.test" };
-
-            _mediatorMock
-                .Setup(m => m.Send(It.IsAny<EmailExistsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
-
-            UserController controller = new UserController(_mediatorMock.Object, _mapperMock);
-
-            // Act
-            ActionResult response = await controller.EmailExists(queryParams);
-
-            // Assert
-            Assert.IsType<OkResult>(response);
-        }
-
-        [Fact]
-        public async Task EmailExists_ShouldReturnNotFoundResult_WhenEmailDoesNotExists()
-        {
-            // Arrange
-            EmailExistsQueryParams queryParams = new EmailExistsQueryParams { Email = "not@existing.email" };
-
-            _mediatorMock
-                .Setup(m => m.Send(It.IsAny<EmailExistsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
-
-            UserController controller = new UserController(_mediatorMock.Object, _mapperMock);
-
-            // Act
-            ActionResult response = await controller.EmailExists(queryParams);
-
-            // Assert
-            Assert.IsType<NotFoundResult>(response);
-        }
-
-        #endregion
-        
-        #region UserNameExists()
-        
-        [Fact]
-        public async Task UserNameExists_ShouldReturnBadRequestResult_WhenUserNameIsInvalid()
-        {
-            // Arrange
-            UserController controller = new UserController(null, null);
-
-            controller.ModelState.AddModelError("UserName", "Required");
-
-            // Act
-            ActionResult response = await controller.UserNameExists(null);
-
-            // Assert
-            Assert.IsType<BadRequestObjectResult>(response);
-        }
-
-        [Fact]
-        public async Task UserNameExists_ShouldReturnOkResult_WhenUserNameExists()
-        {
-            // Arrange
-            UserNameExistsQueryParams queryParams = new UserNameExistsQueryParams { UserName = "myUserName" };
-
-            _mediatorMock
-                .Setup(m => m.Send(It.IsAny<UserNameExistsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
-
-            UserController controller = new UserController(_mediatorMock.Object, _mapperMock);
-
-            // Act
-            ActionResult response = await controller.UserNameExists(queryParams);
-
-            // Assert
-            Assert.IsType<OkResult>(response);
-        }
-
-        [Fact]
-        public async Task UserNameExists_ShouldReturnNotFoundResult_WhenUserNameDoesNotExists()
-        {
-            // Arrange
-            UserNameExistsQueryParams queryParams = new UserNameExistsQueryParams { UserName = "myUserName" };
-
-            _mediatorMock
-                .Setup(m => m.Send(It.IsAny<UserNameExistsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
-
-            UserController controller = new UserController(_mediatorMock.Object, _mapperMock);
-
-            // Act
-            ActionResult response = await controller.UserNameExists(queryParams);
-
-            // Assert
-            Assert.IsType<NotFoundResult>(response);
-        }
-
-        #endregion
-        
         #region Authenticate()
         
         [Fact]

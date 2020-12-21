@@ -832,6 +832,45 @@
              An unexpected error occurred on the server
              </response>
         </member>
+        <member name="M:Presentation.Api.Controllers.UserController.UserExists(Core.Domain.Dtos.Users.UserExistsQueryParams,System.Threading.CancellationToken)">
+             <summary>
+             Checks whether a user already exists
+             </summary>
+            
+             <remarks>
+             Checks whether or not a given e-mail address or user name already exists in the database.
+             A successful response (200 OK) means that the user with given information already exists, whereas an unsuccessful
+             response (404 Not Found) means that the user with given information does not yet exist in the system.
+             </remarks>
+             
+             <param name="queryParams">
+             Contains information on the user to query for existence
+             </param>
+             
+             <param name="cancellationToken">
+             Notifies asynchronous operations to cancel ongoing work and release resources
+             </param>
+             
+             <returns>
+             No content, since HEAD requests carry no response body
+             </returns>
+            
+             <response code="200">
+             The user with given information already exists in the database
+             </response>
+            
+             <response code="400">
+             No valid information was passed to the query parameters
+             </response>
+            
+             <response code="404">
+             A user with given information does not yet exists in the database
+             </response>
+            
+             <response code="500">
+             An unexpected error occurred
+             </response>
+        </member>
         <member name="M:Presentation.Api.Controllers.UserController.GetUserProfile(System.Int32,System.Threading.CancellationToken)">
              <summary>
              Gets a users profile information
@@ -862,84 +901,6 @@
              The user with the given ID could not be found
              </response>
              
-             <response code="500">
-             An unexpected error occurred on the server
-             </response>
-        </member>
-        <member name="M:Presentation.Api.Controllers.UserController.EmailExists(Core.Domain.Dtos.Users.EmailExistsQueryParams,System.Threading.CancellationToken)">
-             <summary>
-             Checks email availability
-             </summary>
-            
-             <remarks>
-             Checks whether or not a given email address already exists in the database.
-             A successful response (200 OK) means that the email address already exists, whereas an unsuccessful
-             response (404 Not Found) means that the email address is available and free to use in this system
-             </remarks>
-             
-             <param name="model">
-             Specifies the email address to query by
-             </param>
-             
-             <param name="cancellationToken">
-             Notifies asynchronous operations to cancel ongoing work and release resources
-             </param>
-             
-             <returns>
-             No content, since HEAD requests carry no response body
-             </returns>
-            
-             <response code="200">
-             Given email address exists in the database
-             </response>
-            
-             <response code="400">
-             Given email address is in an invalid format
-             </response>
-            
-             <response code="404">
-             Given email address does not exist in the database
-             </response>
-            
-             <response code="500">
-             An unexpected error occurred on the server
-             </response>
-        </member>
-        <member name="M:Presentation.Api.Controllers.UserController.UserNameExists(Core.Domain.Dtos.Users.UserNameExistsQueryParams,System.Threading.CancellationToken)">
-             <summary>
-             Checks user name availability
-             </summary>
-            
-             <remarks>
-             Checks whether or not a given user name already exists in the database.
-             A successful response (200 OK) means that the user name already exists, whereas an unsuccessful
-             response (404 Not Found) means that the user name is available and free to use in this system
-             </remarks>
-             
-             <param name="model">
-             Specifies the user name to query by
-             </param>
-             
-             <param name="cancellationToken">
-             Notifies asynchronous operations to cancel ongoing work and release resources
-             </param>
-             
-             <returns>
-             No content, since HEAD requests carry no response body
-             </returns>
-            
-             <response code="200">
-             Given user name exists in the database
-             </response>
-            
-             <response code="400">
-             Given user name is in an invalid format
-             </response>
-            
-             <response code="404">
-             Given user name does not exist in the database
-             </response>
-            
              <response code="500">
              An unexpected error occurred on the server
              </response>

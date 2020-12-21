@@ -38,28 +38,10 @@ namespace Infrastructure.Persistence.Repositories
                 .AnyAsync(user => user.UserId == userId, cancellationToken);
         }
 
-        public async Task<bool> EmailExists(string email, CancellationToken cancellationToken = default)
-        {
-            email = email.ToLower();
-
-            return await Context.Users
-                .AsNoTracking()
-                .AnyAsync(user => user.Email.ToLower() == email, cancellationToken);
-        }
-
-        public async Task<bool> UserNameExists(string userName, CancellationToken cancellationToken = default)
-        {
-            userName = userName.ToLower();
-
-            return await Context.Users
-                .AsNoTracking()
-                .AnyAsync(user => user.UserName.ToLower() == userName, cancellationToken);
-        }
-
         public async Task<bool> UserNameOrEmailExists(string userName, string email, CancellationToken cancellationToken = default)
         {
-            email = email.ToLower();
-            userName = userName.ToLower();
+            email = email?.ToLower();
+            userName = userName?.ToLower();
 
             return await Context.Users
                 .AsNoTracking()

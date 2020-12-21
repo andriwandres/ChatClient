@@ -21,11 +21,10 @@ namespace Presentation.Api.Mapping
                     config.MapFrom(source => source.Availability.StatusId);
                 });
 
-            CreateMap<UserNameExistsQueryParams, UserNameExistsQuery>();
-            CreateMap<EmailExistsQueryParams, EmailExistsQuery>();
-
             CreateMap<CreateAccountBody, CreateAccountCommand>();
             CreateMap<CreateAccountBody, UserNameOrEmailExistsQuery>();
+
+            CreateMap<UserExistsQueryParams, UserNameOrEmailExistsQuery>();
         }
     }
 }

@@ -15,13 +15,22 @@ namespace Infrastructure.Persistence.Test.Repositories
 {
     public class UserRepositoryTests
     {
+        private readonly Mock<IChatContext> _contextMock;
+
+        public UserRepositoryTests()
+        {
+            _contextMock = new Mock<IChatContext>();
+        }
+
+        #region GetById()
+
         [Fact]
         public void GetById_ShouldReturnUser_WhenUserIdMatches()
         {
             // Arrange
             const int expectedUserId = 1;
 
-            IEnumerable<User> users = new []
+            IEnumerable<User> users = new[]
             {
                 new User { UserId = 1 },
                 new User { UserId = 2 },
@@ -31,12 +40,11 @@ namespace Infrastructure.Persistence.Test.Repositories
                 .AsQueryable()
                 .BuildMockDbSet();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
+            _contextMock
                 .Setup(m => m.Users)
                 .Returns(userDbSetMock.Object);
 
-            IUserRepository userRepository = new UserRepository(contextMock.Object);
+            IUserRepository userRepository = new UserRepository(_contextMock.Object);
 
             // Act
             IQueryable<User> userQueryable = userRepository.GetById(expectedUserId);
@@ -65,12 +73,11 @@ namespace Infrastructure.Persistence.Test.Repositories
                 .AsQueryable()
                 .BuildMockDbSet();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
+            _contextMock
                 .Setup(m => m.Users)
                 .Returns(userDbSetMock.Object);
 
-            IUserRepository userRepository = new UserRepository(contextMock.Object);
+            IUserRepository userRepository = new UserRepository(_contextMock.Object);
 
             // Act
             IQueryable<User> userQueryable = userRepository.GetById(3);
@@ -79,6 +86,10 @@ namespace Infrastructure.Persistence.Test.Repositories
             Assert.NotNull(userQueryable);
             Assert.Empty(userQueryable);
         }
+
+        #endregion
+        
+        #region GetByUserNameOrEmail()
 
         [Fact]
         public void GetByUserNameOrEmail_ShouldReturnUser_WhenEmailMatches()
@@ -96,12 +107,11 @@ namespace Infrastructure.Persistence.Test.Repositories
                 .AsQueryable()
                 .BuildMockDbSet();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
+            _contextMock
                 .Setup(m => m.Users)
                 .Returns(userDbSetMock.Object);
 
-            IUserRepository userRepository = new UserRepository(contextMock.Object);
+            IUserRepository userRepository = new UserRepository(_contextMock.Object);
 
             // Act
             IQueryable<User> userQueryable = userRepository.GetByUserNameOrEmail(email);
@@ -132,12 +142,11 @@ namespace Infrastructure.Persistence.Test.Repositories
                 .AsQueryable()
                 .BuildMockDbSet();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
+            _contextMock
                 .Setup(m => m.Users)
                 .Returns(userDbSetMock.Object);
 
-            IUserRepository userRepository = new UserRepository(contextMock.Object);
+            IUserRepository userRepository = new UserRepository(_contextMock.Object);
 
             // Act
             IQueryable<User> userQueryable = userRepository.GetByUserNameOrEmail(email);
@@ -168,12 +177,11 @@ namespace Infrastructure.Persistence.Test.Repositories
                 .AsQueryable()
                 .BuildMockDbSet();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
+            _contextMock
                 .Setup(m => m.Users)
                 .Returns(userDbSetMock.Object);
 
-            IUserRepository userRepository = new UserRepository(contextMock.Object);
+            IUserRepository userRepository = new UserRepository(_contextMock.Object);
 
             // Act
             IQueryable<User> userQueryable = userRepository.GetByUserNameOrEmail(userName);
@@ -204,12 +212,11 @@ namespace Infrastructure.Persistence.Test.Repositories
                 .AsQueryable()
                 .BuildMockDbSet();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
+            _contextMock
                 .Setup(m => m.Users)
                 .Returns(userDbSetMock.Object);
 
-            IUserRepository userRepository = new UserRepository(contextMock.Object);
+            IUserRepository userRepository = new UserRepository(_contextMock.Object);
 
             // Act
             IQueryable<User> userQueryable = userRepository.GetByUserNameOrEmail(userName);
@@ -240,12 +247,11 @@ namespace Infrastructure.Persistence.Test.Repositories
                 .AsQueryable()
                 .BuildMockDbSet();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
+            _contextMock
                 .Setup(m => m.Users)
                 .Returns(userDbSetMock.Object);
 
-            IUserRepository userRepository = new UserRepository(contextMock.Object);
+            IUserRepository userRepository = new UserRepository(_contextMock.Object);
 
             // Act
             IQueryable<User> userQueryable = userRepository.GetByUserNameOrEmail(input);
@@ -255,125 +261,9 @@ namespace Infrastructure.Persistence.Test.Repositories
             Assert.Empty(userQueryable);
         }
 
-        [Fact]
-        public async Task EmailExists_ShouldReturnTrue_WhenEmailExists()
-        {
-            // Arrange
-            const string email = "test@test.test";
+        #endregion
 
-            IEnumerable<User> users = new []
-            {
-                new User { UserId = 1, Email = "a@b.c" },
-                new User { UserId = 2, Email = "test@test.test" },
-            };
-
-            Mock<DbSet<User>> userDbSetMock = users
-                .AsQueryable()
-                .BuildMockDbSet();
-
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Users)
-                .Returns(userDbSetMock.Object);
-
-            IUserRepository userRepository = new UserRepository(contextMock.Object);
-
-            // Act
-            bool exists = await userRepository.EmailExists(email);
-
-            // Assert
-            Assert.True(exists);
-        }
-
-        [Fact]
-        public async Task EmailExists_ShouldReturnFalse_WhenEmailDoesNotExist()
-        {
-            // Arrange
-            const string email = "invalid@email.address";
-
-            IEnumerable<User> users = new[]
-            {
-                new User { UserId = 1, Email = "a@b.c" },
-                new User { UserId = 2, Email = "test@test.test" },
-            };
-
-            Mock<DbSet<User>> userDbSetMock = users
-                .AsQueryable()
-                .BuildMockDbSet();
-
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Users)
-                .Returns(userDbSetMock.Object);
-
-            IUserRepository userRepository = new UserRepository(contextMock.Object);
-
-            // Act
-            bool exists = await userRepository.EmailExists(email);
-
-            // Assert
-            Assert.False(exists);
-        }
-
-        [Fact]
-        public async Task UserNameExists_ShouldReturnTrue_WhenUserNameExists()
-        {
-            // Arrange
-            const string userName = "myUserName";
-
-            IEnumerable<User> users = new[]
-            {
-                new User { UserId = 1, UserName = "otherUserName" },
-                new User { UserId = 2, UserName = "myUserName" },
-            };
-
-            Mock<DbSet<User>> userDbSetMock = users
-                .AsQueryable()
-                .BuildMockDbSet();
-
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Users)
-                .Returns(userDbSetMock.Object);
-
-            IUserRepository userRepository = new UserRepository(contextMock.Object);
-
-            // Act
-            bool exists = await userRepository.UserNameExists(userName);
-
-            // Assert
-            Assert.True(exists);
-        }
-
-        [Fact]
-        public async Task UserNameExists_ShouldReturnFalse_WhenUserNameDoesNotExist()
-        {
-            // Arrange
-            const string userName = "notExistingUserName";
-
-            IEnumerable<User> users = new[]
-            {
-                new User { UserId = 1, UserName = "otherUserName" },
-                new User { UserId = 2, UserName = "myUserName" },
-            };
-
-            Mock<DbSet<User>> userDbSetMock = users
-                .AsQueryable()
-                .BuildMockDbSet();
-
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Users)
-                .Returns(userDbSetMock.Object);
-
-            IUserRepository userRepository = new UserRepository(contextMock.Object);
-
-            // Act
-            bool exists = await userRepository.UserNameExists(userName);
-
-            // Assert
-            Assert.False(exists);
-        }
+        #region Add()
 
         [Fact]
         public async Task Add_ShouldAddUser()
@@ -390,19 +280,22 @@ namespace Infrastructure.Persistence.Test.Repositories
                 .AsQueryable()
                 .BuildMockDbSet();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
+            _contextMock
                 .Setup(m => m.Users)
                 .Returns(userDbSetMock.Object);
 
-            IUserRepository userRepository = new UserRepository(contextMock.Object);
+            IUserRepository userRepository = new UserRepository(_contextMock.Object);
 
             // Act
             await userRepository.Add(user);
 
             // Assert
-            contextMock.Verify(m => m.Users.AddAsync(user, It.IsAny<CancellationToken>()));
+            _contextMock.Verify(m => m.Users.AddAsync(user, It.IsAny<CancellationToken>()));
         }
+
+        #endregion
+
+        #region UserNameOrEmailExists()
 
         [Fact]
         public async Task UserNameOrEmailExists_ShouldReturnFalse_WhenNeitherUserNameNorEmailMatch()
@@ -421,12 +314,11 @@ namespace Infrastructure.Persistence.Test.Repositories
                 .AsQueryable()
                 .BuildMockDbSet();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
+            _contextMock
                 .Setup(m => m.Users)
                 .Returns(userDbSetMock.Object);
 
-            UserRepository repository = new UserRepository(contextMock.Object);
+            UserRepository repository = new UserRepository(_contextMock.Object);
 
             // Act
             bool exists = await repository.UserNameOrEmailExists(userName, email);
@@ -452,12 +344,11 @@ namespace Infrastructure.Persistence.Test.Repositories
                 .AsQueryable()
                 .BuildMockDbSet();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
+            _contextMock
                 .Setup(m => m.Users)
                 .Returns(userDbSetMock.Object);
 
-            UserRepository repository = new UserRepository(contextMock.Object);
+            UserRepository repository = new UserRepository(_contextMock.Object);
 
             // Act
             bool exists = await repository.UserNameOrEmailExists(userName, email);
@@ -483,12 +374,11 @@ namespace Infrastructure.Persistence.Test.Repositories
                 .AsQueryable()
                 .BuildMockDbSet();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
+            _contextMock
                 .Setup(m => m.Users)
                 .Returns(userDbSetMock.Object);
 
-            UserRepository repository = new UserRepository(contextMock.Object);
+            UserRepository repository = new UserRepository(_contextMock.Object);
 
             // Act
             bool exists = await repository.UserNameOrEmailExists(userName, email);
@@ -514,12 +404,11 @@ namespace Infrastructure.Persistence.Test.Repositories
                 .AsQueryable()
                 .BuildMockDbSet();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
+            _contextMock
                 .Setup(m => m.Users)
                 .Returns(userDbSetMock.Object);
 
-            UserRepository repository = new UserRepository(contextMock.Object);
+            UserRepository repository = new UserRepository(_contextMock.Object);
 
             // Act
             bool exists = await repository.UserNameOrEmailExists(userName, email);
@@ -545,12 +434,11 @@ namespace Infrastructure.Persistence.Test.Repositories
                 .AsQueryable()
                 .BuildMockDbSet();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
+            _contextMock
                 .Setup(m => m.Users)
                 .Returns(userDbSetMock.Object);
 
-            UserRepository repository = new UserRepository(contextMock.Object);
+            UserRepository repository = new UserRepository(_contextMock.Object);
 
             // Act
             bool exists = await repository.UserNameOrEmailExists(userName, email);
@@ -558,6 +446,160 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Assert
             Assert.True(exists);
         }
+
+        [Fact]
+        public async Task UserNameOrEmailExists_ShouldReturnTrue_WhenEmailIsNull_AndUserNameMatches()
+        {
+            // Arrange
+            const string email = null;
+            const string userName = "myUserName";
+
+            IEnumerable<User> users = new[]
+            {
+                new User {Email = "Something@else.com", UserName = "myUserNAME"},
+                new User {Email = "my@EMAIL.address", UserName = "Somethingelse"},
+            };
+
+            Mock<DbSet<User>> userDbSetMock = users
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            _contextMock
+                .Setup(m => m.Users)
+                .Returns(userDbSetMock.Object);
+
+            UserRepository repository = new UserRepository(_contextMock.Object);
+
+            // Act
+            bool exists = await repository.UserNameOrEmailExists(userName, email);
+
+            // Assert
+            Assert.True(exists);
+        }
+
+        [Fact]
+        public async Task UserNameOrEmailExists_ShouldReturnTrue_WhenUserNameIsNull_AndEmailMatches()
+        {
+            // Arrange
+            const string email = "my@email.address";
+            const string userName = null;
+
+            IEnumerable<User> users = new[]
+            {
+                new User {Email = "Something@else.com", UserName = "myUserNAME"},
+                new User {Email = "my@EMAIL.address", UserName = "Somethingelse"},
+            };
+
+            Mock<DbSet<User>> userDbSetMock = users
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            _contextMock
+                .Setup(m => m.Users)
+                .Returns(userDbSetMock.Object);
+
+            UserRepository repository = new UserRepository(_contextMock.Object);
+
+            // Act
+            bool exists = await repository.UserNameOrEmailExists(userName, email);
+
+            // Assert
+            Assert.True(exists);
+        }
+
+        [Fact]
+        public async Task UserNameOrEmailExists_ShouldReturnFalse_WhenUserNameIsNull_AndEmailDoesNotMatch()
+        {
+            // Arrange
+            const string email = "someones@other-email.address";
+            const string userName = null;
+
+            IEnumerable<User> users = new[]
+            {
+                new User {Email = "Something@else.com", UserName = "myUserNAME"},
+                new User {Email = "my@EMAIL.address", UserName = "Somethingelse"},
+            };
+
+            Mock<DbSet<User>> userDbSetMock = users
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            _contextMock
+                .Setup(m => m.Users)
+                .Returns(userDbSetMock.Object);
+
+            UserRepository repository = new UserRepository(_contextMock.Object);
+
+            // Act
+            bool exists = await repository.UserNameOrEmailExists(userName, email);
+
+            // Assert
+            Assert.False(exists);
+        }
+
+        [Fact]
+        public async Task UserNameOrEmailExists_ShouldReturnFalse_WhenEmailIsNull_AndUserNameDoesNotMatch()
+        {
+            // Arrange
+            const string email = null;
+            const string userName = "thisuserdoesnotexist";
+
+            IEnumerable<User> users = new[]
+            {
+                new User {Email = "Something@else.com", UserName = "myUserNAME"},
+                new User {Email = "my@EMAIL.address", UserName = "Somethingelse"},
+            };
+
+            Mock<DbSet<User>> userDbSetMock = users
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            _contextMock
+                .Setup(m => m.Users)
+                .Returns(userDbSetMock.Object);
+
+            UserRepository repository = new UserRepository(_contextMock.Object);
+
+            // Act
+            bool exists = await repository.UserNameOrEmailExists(userName, email);
+
+            // Assert
+            Assert.False(exists);
+        }
+
+        [Fact]
+        public async Task UserNameOrEmailExists_ShouldReturnFalse_WhenBothEmailAndUserNameAreNull()
+        {
+            // Arrange
+            const string email = null;
+            const string userName = null;
+
+            IEnumerable<User> users = new[]
+            {
+                new User {Email = "Something@else.com", UserName = "myUserNAME"},
+                new User {Email = "my@EMAIL.address", UserName = "Somethingelse"},
+            };
+
+            Mock<DbSet<User>> userDbSetMock = users
+                .AsQueryable()
+                .BuildMockDbSet();
+
+            _contextMock
+                .Setup(m => m.Users)
+                .Returns(userDbSetMock.Object);
+
+            UserRepository repository = new UserRepository(_contextMock.Object);
+
+            // Act
+            bool exists = await repository.UserNameOrEmailExists(userName, email);
+
+            // Assert
+            Assert.False(exists);
+        }
+
+        #endregion
+
+        #region Exists()
 
         [Fact]
         public async Task Exists_ShouldReturnTrue_WhenIdMatches()
@@ -576,12 +618,11 @@ namespace Infrastructure.Persistence.Test.Repositories
                 .AsQueryable()
                 .BuildMockDbSet();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
+            _contextMock
                 .Setup(m => m.Users)
                 .Returns(userDbSetMock.Object);
 
-            UserRepository repository = new UserRepository(contextMock.Object);
+            UserRepository repository = new UserRepository(_contextMock.Object);
 
             // Act
             bool exists = await repository.Exists(userId);
@@ -607,12 +648,11 @@ namespace Infrastructure.Persistence.Test.Repositories
                 .AsQueryable()
                 .BuildMockDbSet();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
+            _contextMock
                 .Setup(m => m.Users)
                 .Returns(userDbSetMock.Object);
 
-            UserRepository repository = new UserRepository(contextMock.Object);
+            UserRepository repository = new UserRepository(_contextMock.Object);
 
             // Act
             bool exists = await repository.Exists(userId);
@@ -620,5 +660,7 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Assert
             Assert.False(exists);
         }
+
+        #endregion
     }
 }
