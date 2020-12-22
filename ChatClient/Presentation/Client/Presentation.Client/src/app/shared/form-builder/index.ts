@@ -1,4 +1,4 @@
 import { FormBuilderModule } from './form-builder.module';
-import { RuleMappings } from './validation-tooltip/mapping';
+import { ErrorMapping } from './form-field/error-mapping';
 
-export { FormBuilderModule, RuleMappings };
+export { FormBuilderModule, ErrorMapping };

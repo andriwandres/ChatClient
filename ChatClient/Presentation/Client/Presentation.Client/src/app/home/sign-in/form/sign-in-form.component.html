@@ -6,37 +6,22 @@
 
 <form [formGroup]="form" id="form">
   <!-- UserName/Email field -->
-  <div class="field-row">
-    <mat-icon class="icon">person</mat-icon>
-    <mat-form-field class="field">
-      <input matInput formControlName="userNameOrEmail" autocomplete="off" spellcheck="false"/>
-      <mat-placeholder class="placeholder">
-        {{ 'Home.SignIn.UserNameOrEmail.Placeholder' | translate }}
-      </mat-placeholder>
-    </mat-form-field>
-  </div>
+  <app-form-field
+    prefixIcon="person"
+    [control]="userNameOrEmail"
+    [placeholder]="'Home.SignIn.UserNameOrEmail.Placeholder' | translate"
+    [errorMappings]="userNameOrEmailMappings"
+  ></app-form-field>
 
   <!-- Password field -->
-  <div class="field-row">
-    <mat-icon class="icon">vpn_key</mat-icon>
-    <mat-form-field class="field">
-      <input matInput type="password" formControlName="password" autocomplete="off" spellcheck="false"/>
-      <mat-placeholder class="placeholder">
-        {{ 'Home.SignIn.Password.Placeholder' | translate }}
-      </mat-placeholder>
-
-      <!-- Error message -->
-      <mat-error *ngIf="password.hasError('credentialsIncorrect')">
-        {{ 'Home.SignIn.Error.Login' | translate }}
-      </mat-error>
-
-      <mat-hint [align]="'end'" class="hint">
-        <a href="#" id="forgot-password-redirect">
-          {{ 'Home.SignIn.ForgotPasswordRedirect' | translate }}
-        </a>
-      </mat-hint>
-    </mat-form-field>
-  </div>
+  <app-form-field
+    type="password"
+    prefixIcon="vpn_key"
+    [control]="password"
+    [hint]="'Home.SignIn.ForgotPasswordRedirect' | translate"
+    [placeholder]="'Home.SignIn.Password.Placeholder' | translate"
+    [errorMappings]="passwordMappings"
+  ></app-form-field>
 </form>
 
 <!-- Submit button -->

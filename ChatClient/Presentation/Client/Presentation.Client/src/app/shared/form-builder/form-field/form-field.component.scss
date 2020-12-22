@@ -19,7 +19,11 @@
     color: white;
   }
 
-  mat-hint, mat-placeholder {
+  mat-error {
+    font-size: 16px;
+  }
+
+  mat-error, mat-hint, mat-placeholder {
     font-weight: 300;
   }
 }

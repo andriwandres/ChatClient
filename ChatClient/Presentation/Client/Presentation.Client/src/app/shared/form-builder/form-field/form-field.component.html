@@ -9,14 +9,20 @@
     autocomplete="off"
     [type]="type"
     [formControl]="control"
-    appValidationTooltip
-    [validationErrors]="control.errors"
-    [validationRuleMappings]="ruleMappings || {}"
   />
 
   <mat-placeholder>{{ placeholder }}</mat-placeholder>
 
-  <mat-hint *ngIf="hint">{{ hint }}</mat-hint>
+  <mat-hint *ngIf="hint" [align]="'end'">
+    {{ hint }}
+  </mat-hint>
+
+  <!-- Error messages -->
+  <mat-error *ngFor="let mapping of errorMappings | keyvalue | errorOrder">
+    <span *ngIf="control.hasError(mapping.key)">
+      {{ mapping.value.message | translate}}
+    </span>
+  </mat-error>
 
   <!-- Suffix Button -->
   <button *ngIf="suffixIcon && control.value" type="button" tabindex="-1" mat-icon-button matSuffix (click)="onSuffixClick($event)">

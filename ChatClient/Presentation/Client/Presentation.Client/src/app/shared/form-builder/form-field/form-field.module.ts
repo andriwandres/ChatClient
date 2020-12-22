@@ -6,11 +6,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ValidationTooltipModule } from '../validation-tooltip/validation-tooltip.module';
+import { TranslateModule } from '@ngx-translate/core';
+import { RuleOrderPipe } from './error-order.pipe';
 import { FormFieldComponent } from './form-field.component';
 
 @NgModule({
-  declarations: [FormFieldComponent],
+  declarations: [FormFieldComponent, RuleOrderPipe],
   imports: [
     CommonModule,
     ReactiveFormsModule,
@@ -19,7 +20,7 @@ import { FormFieldComponent } from './form-field.component';
     MatIconModule,
     MatButtonModule,
     MatTooltipModule,
-    ValidationTooltipModule
+    TranslateModule.forChild({ extend: true })
   ],
   exports: [FormFieldComponent]
 })

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
-import { AbstractControl, FormControl, ValidationErrors } from '@angular/forms';
-import { RuleMappings } from '../validation-tooltip/mapping';
+import { FormControl } from '@angular/forms';
+import { ErrorMapping } from './error-mapping';
 
 @Component({
   selector: 'app-form-field',
@@ -16,7 +16,7 @@ export class FormFieldComponent {
   @Input() hint?: string;
   @Input() prefixIcon?: string;
   @Input() suffixIcon?: string;
-  @Input() ruleMappings?: RuleMappings;
+  @Input() errorMappings: ErrorMapping = {};
 
   @Output() suffixClick = new EventEmitter();
 

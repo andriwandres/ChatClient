@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { AuthFacade } from '@chat-client/shared/auth/store';
-import { CreateAccountCredentials } from 'src/app/core/models/user';
 import { emailValidator } from './email.validator';
+import * as errorMappings from './error-mappings';
 import { minLengthValidator } from './min-length.validator';
 import { mustMatch } from './password-match.validator';
-import * as ruleMappings from './rule-mappings';
 
 @Component({
   selector: 'app-create-account-form',
@@ -33,10 +32,10 @@ export class CreateAccountFormComponent {
   }
 
   // Validation rule mappings
-  readonly emailMappings = ruleMappings.emailMappings;
-  readonly userNameMappings = ruleMappings.userNameMappings;
-  readonly passwordMappings = ruleMappings.passwordMappings;
-  readonly passwordConfirmMappings = ruleMappings.passwordConfirmMappings;
+  readonly emailMappings = errorMappings.emailMappings;
+  readonly userNameMappings = errorMappings.userNameMappings;
+  readonly passwordMappings = errorMappings.passwordMappings;
+  readonly passwordConfirmMappings = errorMappings.passwordConfirmMappings;
 
   readonly form = new FormGroup({
     userName: new FormControl('', [
@@ -66,10 +65,10 @@ export class CreateAccountFormComponent {
   constructor(private readonly authFacade: AuthFacade) {}
 
   submit(): void {
-    if (this.form.valid) {
-      const credentials = this.form.value as CreateAccountCredentials;
+    // if (this.form.valid) {
+    //   const credentials = this.form.value as CreateAccountCredentials;
 
-      this.authFacade.createAccount(credentials);
-    }
+    //   this.authFacade.createAccount(credentials);
+    // }
   }
 }

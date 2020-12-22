@@ -8,7 +8,7 @@
     prefixIcon="person"
     [placeholder]="'Home.CreateAccount.UserName.Placeholder' | translate"
     [control]="userName"
-    [ruleMappings]="userNameMappings"
+    [errorMappings]="userNameMappings"
   ></app-form-field>
 
   <!-- Email field -->
@@ -16,7 +16,7 @@
     prefixIcon="alternate_email"
     [placeholder]="'Home.CreateAccount.Email.Placeholder' | translate"
     [control]="email"
-    [ruleMappings]="emailMappings"
+    [errorMappings]="emailMappings"
   ></app-form-field>
 
   <!-- Password field -->
@@ -26,7 +26,7 @@
     [control]="password"
     [suffixIcon]="passwordsHidden ? 'visibility' : 'visibility_off'"
     [type]="passwordsHidden ? 'password' : 'text'"
-    [ruleMappings]="passwordMappings"
+    [errorMappings]="passwordMappings"
     (suffixClick)="passwordsHidden = !passwordsHidden"
   ></app-form-field>
 
@@ -37,7 +37,7 @@
     [control]="passwordConfirm"
     [suffixIcon]="passwordsHidden ? 'visibility' : 'visibility_off'"
     [type]="passwordsHidden ? 'password' : 'text'"
-    [ruleMappings]="passwordConfirmMappings"
+    [errorMappings]="passwordConfirmMappings"
     (suffixClick)="passwordsHidden = !passwordsHidden"
   ></app-form-field>
 </form>

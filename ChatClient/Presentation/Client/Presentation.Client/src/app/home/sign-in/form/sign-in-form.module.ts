@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { FormBuilderModule } from 'src/app/shared/form-builder';
 import { SignInFormComponent } from './sign-in-form.component';
 
 @NgModule({
@@ -17,6 +18,7 @@ import { SignInFormComponent } from './sign-in-form.component';
     MatFormFieldModule,
     MatIconModule,
     ReactiveFormsModule,
+    FormBuilderModule,
     TranslateModule.forChild({ extend: true })
   ],
   exports: [SignInFormComponent]
