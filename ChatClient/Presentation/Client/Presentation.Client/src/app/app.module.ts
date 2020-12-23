@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthModule } from '@chat-client/shared/auth';
@@ -25,7 +26,8 @@ import { RootStoreModule } from './store/root-store.module';
     SplashScreenModule,
     BrowserAnimationsModule,
     LanguageModule,
-    TranslationModule
+    TranslationModule,
+    MatSnackBarModule,
   ],
   bootstrap: [AppComponent]
 })

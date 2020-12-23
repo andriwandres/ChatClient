@@ -7,6 +7,8 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
 import * as authActions from './actions';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { SnackBarService } from 'src/app/core/services/snackbar.service';
 
 @Injectable()
 export class AuthEffects {
@@ -43,6 +45,21 @@ export class AuthEffects {
       })
     ))
   ));
+
+  readonly createAccountSuccess$ = createEffect(() => this.actions$.pipe(
+    ofType(authActions.createAccountSuccess),
+    tap(() => {
+      this.snackbarService.openSnackBar('Home.CreateAccount.SuccessSnackbar', '', {
+        duration: 5000,
+        horizontalPosition: 'center',
+        verticalPosition: 'bottom',
+      });
+
+      this.router.navigateByUrl('home/sign-in');
+    })
+  ), {
+    dispatch: false
+  });
 
   readonly login$ = createEffect(() => this.actions$.pipe(
     ofType(authActions.logIn),
@@ -94,6 +111,7 @@ export class AuthEffects {
   constructor(
     private readonly router: Router,
     private readonly authService: AuthService,
+    private readonly snackbarService: SnackBarService,
     private readonly actions$: Actions<authActions.AuthActionUnion>
   ) {}
 }
