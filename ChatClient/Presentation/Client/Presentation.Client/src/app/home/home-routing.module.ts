@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { CreateAccountGuard } from '../core/guards/create-account.guard';
 import { SignInGuard } from '../core/guards/sign-in.guard';
 import { HomeComponent } from './home.component';
 
@@ -29,6 +30,8 @@ const routes: Routes = [
       },
       {
         path: 'create-account',
+        canLoad: [CreateAccountGuard],
+        canActivate: [CreateAccountGuard],
         loadChildren: () => import('@chat-client/home/create-account').then(m => m.CreateAccountModule)
       }
     ]
