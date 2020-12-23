@@ -7,7 +7,7 @@
   <app-form-field
     *ngrxLet="userNameExists$ as exists"
     prefixIcon="person"
-    [suffixIcon]="exists === null ? null : exists === true ? 'close' : 'check'"
+    [suffixIcon]="exists === null ? undefined : exists === true ? 'close' : 'check'"
     [suffixColor]="exists ? 'red' : 'green'"
     [placeholder]="'Home.CreateAccount.UserName.Placeholder' | translate"
     [control]="userName"
@@ -18,7 +18,7 @@
   <app-form-field
     *ngrxLet="emailExists$ as exists"
     prefixIcon="alternate_email"
-    [suffixIcon]="exists === null ? null : exists === true ? 'close' : 'check'"
+    [suffixIcon]="exists === null ? undefined : exists === true ? 'close' : 'check'"
     [suffixColor]="exists ? 'red' : 'green'"
     [placeholder]="'Home.CreateAccount.Email.Placeholder' | translate"
     [control]="email"
