@@ -14,7 +14,7 @@
   <mat-placeholder>{{ placeholder }}</mat-placeholder>
 
   <mat-hint *ngIf="hint" [align]="'end'">
-    {{ hint }}
+    <a [routerLink]="routerLink">{{ hint }}</a>
   </mat-hint>
 
   <!-- Error messages -->
@@ -25,7 +25,15 @@
   </mat-error>
 
   <!-- Suffix Button -->
-  <button *ngIf="suffixIcon && control.value" type="button" tabindex="-1" mat-icon-button matSuffix (click)="onSuffixClick($event)">
+  <button
+    matSuffix
+    mat-icon-button
+    type="button"
+    tabindex="-1"
+    *ngIf="suffixIcon && control.value"
+    [disabled]="!isSuffixClickable"
+    [style.color]="suffixColor"
+    (click)="onSuffixClick($event)">
     <mat-icon>{{ suffixIcon }}</mat-icon>
   </button>
 </mat-form-field>

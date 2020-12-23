@@ -5,7 +5,10 @@
 <form [formGroup]="form" id="form">
   <!-- UserName field -->
   <app-form-field
+    *ngrxLet="userNameExists$ as exists"
     prefixIcon="person"
+    [suffixIcon]="exists === null ? null : exists === true ? 'close' : 'check'"
+    [suffixColor]="exists ? 'red' : 'green'"
     [placeholder]="'Home.CreateAccount.UserName.Placeholder' | translate"
     [control]="userName"
     [errorMappings]="userNameMappings"
@@ -13,7 +16,10 @@
 
   <!-- Email field -->
   <app-form-field
+    *ngrxLet="emailExists$ as exists"
     prefixIcon="alternate_email"
+    [suffixIcon]="exists === null ? null : exists === true ? 'close' : 'check'"
+    [suffixColor]="exists ? 'red' : 'green'"
     [placeholder]="'Home.CreateAccount.Email.Placeholder' | translate"
     [control]="email"
     [errorMappings]="emailMappings"
@@ -25,6 +31,7 @@
     [placeholder]="'Home.CreateAccount.Password.Placeholder' | translate"
     [control]="password"
     [suffixIcon]="passwordsHidden ? 'visibility' : 'visibility_off'"
+    [isSuffixClickable]="true"
     [type]="passwordsHidden ? 'password' : 'text'"
     [errorMappings]="passwordMappings"
     (suffixClick)="passwordsHidden = !passwordsHidden"
@@ -36,6 +43,7 @@
     [placeholder]="'Home.CreateAccount.PasswordConfirm.Placeholder' | translate"
     [control]="passwordConfirm"
     [suffixIcon]="passwordsHidden ? 'visibility' : 'visibility_off'"
+    [isSuffixClickable]="true"
     [type]="passwordsHidden ? 'password' : 'text'"
     [errorMappings]="passwordConfirmMappings"
     (suffixClick)="passwordsHidden = !passwordsHidden"
@@ -43,6 +51,6 @@
 </form>
 
 <!-- Submit button -->
-<button id="submit-button" type="button" [disabled]="form.invalid" [class.disabled]="form.invalid">
-  {{ 'Home.CreateAccount.Continue' | translate }}
+<button id="submit-button" type="button" [disabled]="form.invalid" [class.disabled]="form.invalid" (click)="submit()">
+  {{ 'Home.CreateAccount.CallToAction' | translate }}
 </button>

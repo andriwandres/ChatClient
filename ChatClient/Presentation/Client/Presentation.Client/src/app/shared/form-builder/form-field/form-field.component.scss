@@ -11,7 +11,7 @@
 #field {
   width: 100%;
 
-  mat-hint {
+  mat-hint a {
     color: #86C5E8;
   }
 
@@ -26,8 +26,4 @@
   mat-error, mat-hint, mat-placeholder {
     font-weight: 300;
   }
-}
-
-::ng-deep .mat-form-field .mat-form-field-underline {
-  background-color: #888;
 }
