@@ -1,9 +1,15 @@
 <mat-sidenav-container>
 
-  <mat-sidenav [opened]="true" mode="side">
-    <app-sidenav-header></app-sidenav-header>
+  <!-- Sidenav Content -->
+  <mat-sidenav #sidenav [opened]="true" mode="side">
+
+    <!-- Sidenav Header -->
+    <app-sidenav-header
+      (hamburgerMenuClick)="sidenav.toggle()"
+    ></app-sidenav-header>
   </mat-sidenav>
 
+  <!-- Main Content -->
   <mat-sidenav-content>
     <ng-content></ng-content>
   </mat-sidenav-content>
