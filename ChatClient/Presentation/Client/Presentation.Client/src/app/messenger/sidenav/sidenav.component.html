@@ -1,1 +1,11 @@
-<p>sidenav works!</p>
+<mat-sidenav-container>
+
+  <mat-sidenav [opened]="true" mode="side">
+    <app-sidenav-header></app-sidenav-header>
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <ng-content></ng-content>
+  </mat-sidenav-content>
+
+</mat-sidenav-container>
