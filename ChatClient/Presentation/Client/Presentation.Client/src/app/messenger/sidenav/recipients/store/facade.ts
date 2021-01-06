@@ -1,8 +1,10 @@
+import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import * as recipientActions from './actions';
 import * as recipientSelectors from './selectors';
 import { PartialState } from './state';
 
+@Injectable({ providedIn: 'root' })
 export class RecipientFacade {
   readonly recipients$ = this.store.select(recipientSelectors.selectAll);
   readonly isLoadingRecipients$ = this.store.select(recipientSelectors.selectIsLoadingRecipients);

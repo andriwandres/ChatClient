@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { SidenavHeaderModule } from './header/sidenav-header.module';
+import { RecipientsModule } from './recipients/recipients.module';
 import { SidenavComponent } from './sidenav.component';
 
 @NgModule({
@@ -9,8 +10,9 @@ import { SidenavComponent } from './sidenav.component';
   imports: [
     CommonModule,
     MatSidenavModule,
-    SidenavHeaderModule
+    SidenavHeaderModule,
+    RecipientsModule,
   ],
-  exports: [SidenavComponent]
+  exports: [SidenavComponent],
 })
-export class SidenavModule { }
+export class SidenavModule {}
