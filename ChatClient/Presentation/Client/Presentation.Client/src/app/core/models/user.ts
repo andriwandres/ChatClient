@@ -20,3 +20,8 @@ export interface CreateAccountCredentials {
   userName: string;
   password: string;
 }
+
+export interface TargetUser {
+  userId: number;
+  userName: string;
+}
