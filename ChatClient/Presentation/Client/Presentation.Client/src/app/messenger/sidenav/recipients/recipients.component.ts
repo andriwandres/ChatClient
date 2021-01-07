@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Recipient } from '@chat-client/core/models';
 import { RecipientFacade } from './store';
 
 @Component({
@@ -13,5 +14,9 @@ export class RecipientsComponent implements OnInit {
 
   ngOnInit(): void {
     this.recipientFacade.loadRecipients();
+  }
+
+  selectRecipient(recipient: Recipient): void {
+    this.recipientFacade.selectRecipient(recipient);
   }
 }

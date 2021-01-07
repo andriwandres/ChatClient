@@ -25,4 +25,10 @@ export const reducer = createReducer(
     ...state,
     isLoadingRecipients: false
   })),
+
+  // Select a recipient
+  on(recipientActions.selectRecipient, (state, { recipient }) => ({
+    ...state,
+    selectedRecipientId: recipient.recipientId
+  }))
 );

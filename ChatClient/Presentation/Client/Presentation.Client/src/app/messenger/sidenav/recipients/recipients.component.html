@@ -1,4 +1,5 @@
 
 <app-recipient *ngFor="let recipient of recipients$ | async"
   [recipient]="recipient"
+  (click)="selectRecipient(recipient)"
 ></app-recipient>

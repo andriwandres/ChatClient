@@ -1,3 +1,5 @@
 <app-sidenav>
-  <app-chat></app-chat>
+  <ng-container *ngIf="selectedRecipient$ | async as recipient">
+    <app-chat [recipient]="recipient"></app-chat>
+  </ng-container>
 </app-sidenav>

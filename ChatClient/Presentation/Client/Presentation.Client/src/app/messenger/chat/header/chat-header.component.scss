@@ -30,8 +30,23 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  #recipient-name {
+    font-size: 17px;
+    font-weight: 500;
+  }
+
+  #availability-text {
+    color: #878787;
+  }
 }
 
 #spacer {
   flex-grow: 1;
+}
+
+#menu-button {
+  mat-icon {
+    font-size: 30px;
+  }
 }

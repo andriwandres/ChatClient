@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { RecipientFacade } from './sidenav/recipients/store';
 import { MessengerFacade } from './store';
 
 @Component({
@@ -7,9 +8,14 @@ import { MessengerFacade } from './store';
   styleUrls: ['./messenger.component.scss']
 })
 export class MessengerComponent implements OnInit {
-  constructor(private readonly messengerFacade: MessengerFacade) { }
+  readonly selectedRecipient$ = this.recipientFacade.selectedRecipient$;
+
+  constructor(
+    private readonly recipientFacade: RecipientFacade,
+    private readonly messengerFacade: MessengerFacade
+  ) { }
 
   ngOnInit(): void {
-    // this.messengerFacade.connectWebSocket();
+    this.messengerFacade.connectWebSocket();
   }
 }

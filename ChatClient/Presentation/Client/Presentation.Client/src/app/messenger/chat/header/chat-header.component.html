@@ -3,12 +3,16 @@
 </div>
 
 <div id="recipient-information">
-  <span id="recipient-name">andriwandres</span>
-  <span id="availability-text">Online</span>
+  <span id="recipient-name">
+    {{ recipient.targetUser ? recipient.targetUser!.userName : recipient.targetGroup!.name }}
+  </span>
+  <span id="availability-text">
+    Online
+  </span>
 </div>
 
 <span id="spacer"></span>
 
-<button mat-icon-button>
+<button mat-icon-button id="menu-button">
   <mat-icon>more_vert</mat-icon>
 </button>

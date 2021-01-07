@@ -4,6 +4,7 @@ import { createEntityAdapter, EntityState } from '@ngrx/entity';
 export const RECIPIENTS_FEATURE_KEY = 'recipients';
 
 export interface State extends EntityState<Recipient> {
+  selectedRecipientId: number | null;
   isLoadingRecipients: boolean;
 }
 
@@ -16,5 +17,6 @@ export const recipientAdapter = createEntityAdapter<Recipient>({
 });
 
 export const initialState: State = recipientAdapter.getInitialState({
+  selectedRecipientId: null,
   isLoadingRecipients: false,
 });
