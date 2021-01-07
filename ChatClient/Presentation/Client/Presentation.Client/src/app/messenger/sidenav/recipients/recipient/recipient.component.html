@@ -1,0 +1,22 @@
+<div id="avatar"></div>
+
+<div id="recipient-information">
+  <div id="top-row">
+    <span id="recipient-name">
+      {{ !!recipient.targetUser ? recipient.targetUser!.userName : recipient.targetGroup!.name }}
+    </span>
+
+    <span id="timestamp">
+      {{ recipient.latestMessage.created | timestamp }}
+    </span>
+  </div>
+  <span id="spacer"></span>
+  <div id="bottom-row">
+    <span id="message-content">
+      {{ recipient.latestMessage.htmlContent | stripHtml }}
+    </span>
+    <span id="unread-messages" *ngIf="recipient.unreadMessagesCount > 0">
+      {{ recipient.unreadMessagesCount }}
+    </span>
+  </div>
+</div>

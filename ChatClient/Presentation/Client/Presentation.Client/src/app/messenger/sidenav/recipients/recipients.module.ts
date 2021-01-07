@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { RecipientModule } from './recipient/recipient.module';
 import { RecipientsComponent } from './recipients.component';
 import { RecipientStoreModule } from './store';
 
@@ -8,6 +9,7 @@ import { RecipientStoreModule } from './store';
   imports: [
     CommonModule,
     RecipientStoreModule,
+    RecipientModule
   ],
   exports: [RecipientsComponent]
 })

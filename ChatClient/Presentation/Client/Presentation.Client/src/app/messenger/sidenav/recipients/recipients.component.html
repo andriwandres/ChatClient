@@ -1,3 +1,4 @@
-<p *ngFor="let recipient of recipients$ | async">
-  {{ recipient.targetUser!.userName}}
-</p>
+
+<app-recipient *ngFor="let recipient of recipients$ | async"
+  [recipient]="recipient"
+></app-recipient>

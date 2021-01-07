@@ -13,7 +13,6 @@ export interface PartialState {
 
 export const recipientAdapter = createEntityAdapter<Recipient>({
   selectId: recipient => recipient.recipientId,
-  // sortComparer: (a, b) => a.latestMessage.created.getTime() - b.latestMessage.created.getTime()
 });
 
 export const initialState: State = recipientAdapter.getInitialState({
