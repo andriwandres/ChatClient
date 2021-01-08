@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TranslateService } from '@ngx-translate/core';
 import { RecipientFacade } from './sidenav/recipients/store';
 import { MessengerFacade } from './store';
 
@@ -12,7 +13,7 @@ export class MessengerComponent implements OnInit {
 
   constructor(
     private readonly recipientFacade: RecipientFacade,
-    private readonly messengerFacade: MessengerFacade
+    private readonly messengerFacade: MessengerFacade,
   ) { }
 
   ngOnInit(): void {

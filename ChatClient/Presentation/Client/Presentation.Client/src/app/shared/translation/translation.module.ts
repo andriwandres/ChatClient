@@ -7,6 +7,7 @@ import { ChatClientMissingTranslationHandler } from './missing-translation-handl
 @NgModule({
   imports: [
     TranslateModule.forRoot({
+      defaultLanguage: '1',
       loader: {
         provide: TranslateLoader,
         useClass: ChatClientTranslationLoader,
@@ -17,7 +18,7 @@ import { ChatClientMissingTranslationHandler } from './missing-translation-handl
         useClass: ChatClientMissingTranslationHandler,
         deps: []
       }
-    })
+    }),
   ],
 })
 export class TranslationModule {}

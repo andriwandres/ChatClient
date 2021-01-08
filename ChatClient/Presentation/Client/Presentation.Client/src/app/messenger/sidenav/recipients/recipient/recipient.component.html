@@ -7,7 +7,7 @@
     </span>
 
     <span id="timestamp">
-      {{ recipient.latestMessage.created | timestamp }}
+      {{ recipient.latestMessage.created | timestamp | async }}
     </span>
   </div>
   <span id="spacer"></span>

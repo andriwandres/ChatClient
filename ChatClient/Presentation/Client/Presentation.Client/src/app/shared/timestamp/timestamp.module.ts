@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
-import { TranslationModule } from '../translation';
+import { TranslateModule } from '@ngx-translate/core';
 import { TimestampPipe } from './timestamp.pipe';
 
 @NgModule({
   declarations: [TimestampPipe],
-  imports: [TranslationModule],
+  imports: [
+    TranslateModule.forChild({ extend: true })
+  ],
   exports: [TimestampPipe],
 })
 export class TimestampModule {}

@@ -1,6 +1,8 @@
 import { formatDate, WeekDay } from '@angular/common';
 import { Pipe, PipeTransform } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
+import { Observable, of } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 const ONE_DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
 
@@ -8,7 +10,7 @@ const ONE_DAY_IN_MILLISECONDS = 1000 * 60 * 60 * 24;
 export class TimestampPipe implements PipeTransform {
   constructor(private readonly translateService: TranslateService) {}
 
-  transform(date: Date): string {
+  transform(date: Date): Observable<string> {
     date = new Date(date);
 
     const locale = 'en-us';
@@ -16,26 +18,30 @@ export class TimestampPipe implements PipeTransform {
 
     // Date is today
     if (datesAreOnSameDay(date, now)) {
-      return formatDate(date, 'HH:mm', locale);
+      const formattedDate = formatDate(date, 'HH:mm', locale);
+
+      return of(formattedDate);
     }
 
     const difference = getDifferenceInDays(date, now);
 
     // Date was yesterday
     if (difference === 1) {
-      const yesterday = this.translateService.instant('Yesterday');
+      const formattedDate = formatDate(date, 'HH:mm', locale);
 
-      return yesterday + ', ' + formatDate(date, 'HH:mm', locale);
+      return this.translateService.get('Yesterday').pipe(
+        map(value => value + ', ' + formattedDate)
+      );
     }
 
     // Date was less than a week ago
     if (difference <= 6) {
       const key = 'Weekdays.' + WeekDay[date.getDay()];
 
-      return this.translateService.instant(key);
+      return this.translateService.get(key);
     }
 
-    return formatDate(date, 'dd.MM.yyyy', locale);
+    return of(formatDate(date, 'dd.MM.yyyy', locale));
   }
 }
 
