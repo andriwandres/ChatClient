@@ -17,6 +17,6 @@ export const recipientAdapter = createEntityAdapter<Recipient>({
 });
 
 export const initialState: State = recipientAdapter.getInitialState({
-  selectedRecipientId: null,
+  selectedRecipientId: 2, // default: null
   isLoadingRecipients: false,
 });

@@ -1,0 +1,47 @@
+:host {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  height: 55px;
+  background-color: #D9D9D9;
+  padding: 10px 20px;
+}
+
+#attach-button {
+  transform: rotate(-135deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20px;
+
+  mat-icon {
+    font-size: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+#message-input {
+  font-size: 18px;
+  flex-grow: 1;
+  padding: 20px;
+  border: none;
+  border-radius: 30px;
+  outline: none;
+  max-height: 70px;
+}
+
+#send-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: 20px;
+
+  mat-icon {
+    font-size: 35px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
