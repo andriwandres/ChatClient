@@ -1,1 +1,1 @@
-export const MESSENGER_FEATURE_KEY = 'messenger';
+export const SOCKET_FEATURE_KEY = 'webSocket';

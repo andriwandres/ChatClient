@@ -8,20 +8,20 @@ import { map } from 'rxjs/operators';
 
 interface ActionEventMapping {
   eventName: string;
-  actionFactory: (payload?: any) => TypedAction<string>;
+  actionFactory: (payload?: unknown) => TypedAction<string>;
 }
 
 const actionMappings: ActionEventMapping[] = [
   {
     eventName: 'ReceiveMessage',
-    actionFactory: (message: string) => {
+    actionFactory: () => {
       return AuthActions.resetAvailabilityChecks();
     }
   }
 ];
 
 @Injectable()
-export class MessengerEffects {
+export class WebSocketEffects {
   readonly mapEventsToActions$ = createEffect(() => this.actions$.pipe(
     ofType(SIGNALR_HUB_UNSTARTED),
     mergeMapHubToAction(({ hub }) => {

@@ -1,5 +1,5 @@
-import { MessengerFacade } from './facade';
-import { MessengerStoreModule } from './messenger-store.module';
+import { WebSocketFacade } from './facade';
+import { WebSocketStoreModule } from './web-socket-store.module';
 
-export { MessengerFacade, MessengerStoreModule };
+export { WebSocketFacade, WebSocketStoreModule };
 

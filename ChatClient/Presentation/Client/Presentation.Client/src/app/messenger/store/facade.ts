@@ -7,7 +7,7 @@ import { take } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
-export class MessengerFacade {
+export class WebSocketFacade {
   constructor(
     private readonly authFacade: AuthFacade,
     private readonly store: Store

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
 import { RecipientFacade } from './sidenav/recipients/store';
-import { MessengerFacade } from './store';
+import { WebSocketFacade } from './store';
 
 @Component({
   selector: 'app-messenger',
@@ -13,7 +12,7 @@ export class MessengerComponent implements OnInit {
 
   constructor(
     private readonly recipientFacade: RecipientFacade,
-    private readonly messengerFacade: MessengerFacade,
+    private readonly messengerFacade: WebSocketFacade,
   ) { }
 
   ngOnInit(): void {
