@@ -12,5 +12,5 @@ export interface PartialState {
 }
 
 export const initialState: State = {
-  isLoadingMessages: false
+  isLoadingMessages: false,
 };

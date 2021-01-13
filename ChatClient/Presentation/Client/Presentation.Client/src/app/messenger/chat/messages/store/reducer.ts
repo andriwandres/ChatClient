@@ -12,16 +12,20 @@ export const reducer = createReducer(
   // Load a list messages with a recipient
   on(messagesActions.loadMessages, (state) => ({
     ...state,
-    isLoadingMessages: true
+    isLoadingMessages: true,
   })),
 
-  on(messagesActions.loadMessagesSuccess, (state) => ({
-    ...state,
-    isLoadingMessages: false
-  })),
+  on(
+    messagesActions.loadMessagesSuccess,
+    (state, { result: [recipientId, messages] }) => ({
+      ...state,
+      isLoadingMessages: false,
+      [recipientId]: messages,
+    })
+  ),
 
   on(messagesActions.loadMessagesFailure, (state) => ({
     ...state,
-    isLoadingMessages: false
-  })),
+    isLoadingMessages: false,
+  }))
 );

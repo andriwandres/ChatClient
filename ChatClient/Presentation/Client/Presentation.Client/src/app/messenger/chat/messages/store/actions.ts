@@ -12,10 +12,12 @@ export const loadMessages = createAction(
   ActionTypes.LOAD_MESSAGES,
   props<{ recipientId: number }>()
 );
+
 export const loadMessagesSuccess = createAction(
   ActionTypes.LOAD_MESSAGES_SUCCESS,
-  props<{ messages: ChatMessage[] }>()
+  props<{ result: [recipientId: number, messages: ChatMessage[]] }>()
 );
+
 export const loadMessagesFailure = createAction(
   ActionTypes.LOAD_MESSAGES_FAILURE,
   props<{ error: ApiError | null }>()

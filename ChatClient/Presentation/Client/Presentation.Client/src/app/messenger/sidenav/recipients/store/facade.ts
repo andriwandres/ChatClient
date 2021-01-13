@@ -9,6 +9,7 @@ import { PartialState } from './state';
 export class RecipientFacade {
   readonly recipients$ = this.store.select(recipientSelectors.selectAll);
   readonly selectedRecipient$ = this.store.select(recipientSelectors.selectSelectedRecipient);
+  readonly selectedRecipientId$ = this.store.select(recipientSelectors.selectSelectedRecipientId);
 
   readonly isLoadingRecipients$ = this.store.select(recipientSelectors.selectIsLoadingRecipients);
 

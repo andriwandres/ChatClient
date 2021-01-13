@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Recipient } from '@chat-client/core/models';
 
 @Component({
@@ -6,12 +6,6 @@ import { Recipient } from '@chat-client/core/models';
   templateUrl: './chat.component.html',
   styleUrls: ['./chat.component.scss']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent {
   @Input() recipient!: Recipient;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
 }
