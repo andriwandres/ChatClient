@@ -1,13 +1,16 @@
-﻿using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoMapper;
-using AutoMapper.QueryableExtensions;
+﻿using AutoMapper;
 using Core.Application.Database;
 using Core.Application.Services;
+using Core.Domain.Resources.Messages;
 using Core.Domain.Resources.Recipients;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using Core.Domain.Resources.Groups;
+using Core.Domain.Resources.Users;
 
 namespace Core.Application.Requests.Recipients.Queries
 {
@@ -28,12 +31,54 @@ namespace Core.Application.Requests.Recipients.Queries
 
             public async Task<IEnumerable<RecipientResource>> Handle(GetOwnRecipientsQuery request, CancellationToken cancellationToken = default)
             {
-                int userId = _userProvider.GetCurrentUserId();
+                int currentUserId = _userProvider.GetCurrentUserId();
 
                 // Fetch relevant recipients for the current user alongside the latest message with each recipient
                 IEnumerable<RecipientResource> recipients = await _unitOfWork.MessageRecipients
-                    .GetLatestGroupedByRecipients(userId)
-                    .ProjectTo<RecipientResource>(_mapper.ConfigurationProvider, new { userId })
+                    .GetLatestGroupedByRecipients(currentUserId)
+                    .Select(source => new RecipientResource
+                    {
+                        RecipientId = source.Recipient.UserId != currentUserId
+                            ? source.RecipientId
+                            : source.Message.Author.Recipient.RecipientId,
+                        TargetGroup = source.Recipient.GroupMembershipId == null
+                            ? null
+                            : new TargetGroupResource
+                            {
+                                GroupId = source.Recipient.GroupMembership.GroupId,
+                                Name = source.Recipient.GroupMembership.Group.Name,
+                            },
+                        TargetUser = source.Recipient.UserId == null
+                            ? null
+                            : new TargetUserResource
+                            {
+                                UserId = source.Recipient.UserId == currentUserId
+                                    ? source.Message.AuthorId
+                                    : source.Recipient.User.UserId,
+                                UserName = source.Recipient.UserId == currentUserId
+                                    ? source.Message.Author.UserName
+                                    : source.Recipient.User.UserName
+                            },
+                        LatestMessage = new LatestMessageResource
+                        {
+                            MessageId = source.MessageId,
+                            MessageRecipientId = source.MessageRecipientId,
+                            AuthorId = source.Message.AuthorId,
+                            AuthorName = source.Message.Author.UserName,
+                            HtmlContent = source.Message.HtmlContent,
+                            IsRead = source.Message.AuthorId == currentUserId || source.IsRead,
+                            Created = source.Message.Created,
+                            IsOwnMessage = source.Message.AuthorId == currentUserId
+                        },
+                        AvailabilityStatusId = source.Recipient.UserId == null ? 0 : source.Recipient.User.Availability.StatusId,
+                        IsPinned = source.Recipient.Pins.Any(pin => pin.UserId == currentUserId),
+                        UnreadMessagesCount = source.Recipient.ReceivedMessages.Count(
+                            mr => mr.IsRead == false && (
+                                mr.Recipient.GroupMembershipId == null ||
+                                mr.Recipient.GroupMembership.UserId == currentUserId
+                            )
+                        )
+                    })
                     .ToListAsync(cancellationToken);
 
                 return recipients;

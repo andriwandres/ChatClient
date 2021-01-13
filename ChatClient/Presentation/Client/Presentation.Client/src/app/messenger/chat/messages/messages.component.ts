@@ -2,10 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnDestroy,
-  OnInit
+  OnInit,
 } from '@angular/core';
 import { Subject } from 'rxjs';
-import { filter, takeUntil, withLatestFrom } from 'rxjs/operators';
+import { takeUntil } from 'rxjs/operators';
 import { RecipientFacade } from '../../sidenav/recipients/store';
 import { MessageFacade } from './store/facade';
 
@@ -26,13 +26,10 @@ export class MessagesComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
+    // Load messages
     this.recipientFacade.selectedRecipientId$
-      .pipe(
-        takeUntil(this.destroy$),
-        withLatestFrom(this.messages$),
-        filter(([, messages]) => !messages || messages.length === 0)
-      )
-      .subscribe(([recipientId]) => {
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((recipientId) => {
         if (recipientId) {
           this.messageFacade.loadMessages(recipientId);
         }
