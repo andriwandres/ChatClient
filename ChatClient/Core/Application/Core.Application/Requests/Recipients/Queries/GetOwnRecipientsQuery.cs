@@ -63,7 +63,7 @@ namespace Core.Application.Requests.Recipients.Queries
                             AuthorId = source.Message.AuthorId,
                             AuthorName = source.Message.Author.UserName,
                             HtmlContent = source.Message.HtmlContent,
-                            IsRead = source.Message.AuthorId == currentUserId || source.IsRead,
+                            IsRead = source.IsRead,
                             Created = source.Message.Created,
                             IsOwnMessage = source.Message.AuthorId == currentUserId
                         },

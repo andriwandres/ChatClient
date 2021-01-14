@@ -13,7 +13,8 @@
   <span id="spacer"></span>
   <div id="bottom-row">
     <span id="message-content">
-      {{ recipient.latestMessage.htmlContent | stripHtml }}
+      <mat-icon id="read-indicator" *ngIf="recipient.latestMessage.isOwnMessage" [class.read]="recipient.latestMessage.isRead">check</mat-icon>
+      <span>{{ recipient.latestMessage.htmlContent | stripHtml }}</span>
     </span>
     <span id="unread-messages" *ngIf="recipient.unreadMessagesCount > 0">
       {{ recipient.unreadMessagesCount }}

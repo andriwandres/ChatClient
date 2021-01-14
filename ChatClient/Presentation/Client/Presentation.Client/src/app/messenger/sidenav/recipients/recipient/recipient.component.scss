@@ -49,6 +49,8 @@
 
   #message-content {
     color: #878787;
+    display: flex;
+    align-items: center;
   }
 
   #unread-messages {
@@ -60,5 +62,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+}
+
+#read-indicator {
+  display: flex;
+  align-items: center;
+  font-size: 17px;
+
+  &.read {
+    color: #4fc3f7;
   }
 }
