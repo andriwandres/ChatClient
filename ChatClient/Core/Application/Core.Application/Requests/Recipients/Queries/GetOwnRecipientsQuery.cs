@@ -1,16 +1,15 @@
-﻿using AutoMapper;
-using Core.Application.Database;
+﻿using Core.Application.Database;
 using Core.Application.Services;
+using Core.Domain.Resources.Groups;
 using Core.Domain.Resources.Messages;
 using Core.Domain.Resources.Recipients;
+using Core.Domain.Resources.Users;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Domain.Resources.Groups;
-using Core.Domain.Resources.Users;
 
 namespace Core.Application.Requests.Recipients.Queries
 {
@@ -18,15 +17,13 @@ namespace Core.Application.Requests.Recipients.Queries
     {
         public class Handler : IRequestHandler<GetOwnRecipientsQuery, IEnumerable<RecipientResource>>
         {
-            private readonly IMapper _mapper;
             private readonly IUnitOfWork _unitOfWork;
             private readonly IUserProvider _userProvider;
 
-            public Handler(IUnitOfWork unitOfWork, IUserProvider userProvider, IMapper mapper)
+            public Handler(IUnitOfWork unitOfWork, IUserProvider userProvider)
             {
                 _unitOfWork = unitOfWork;
                 _userProvider = userProvider;
-                _mapper = mapper;
             }
 
             public async Task<IEnumerable<RecipientResource>> Handle(GetOwnRecipientsQuery request, CancellationToken cancellationToken = default)
