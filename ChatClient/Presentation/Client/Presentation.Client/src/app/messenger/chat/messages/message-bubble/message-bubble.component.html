@@ -1,3 +1,5 @@
+<div id="avatar"></div>
+
 <div id="bubble" [class.own-message]="message.isOwnMessage">
   <span id="author" *ngIf="!message.isOwnMessage">{{ message.authorName }}</span>
   <div id="content-wrapper">

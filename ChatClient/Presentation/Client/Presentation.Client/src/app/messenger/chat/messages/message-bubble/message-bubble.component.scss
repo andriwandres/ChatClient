@@ -2,6 +2,14 @@
   display: flex;
 }
 
+#avatar {
+  background-color: #C4C4C4;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  margin: 0 10px;
+}
+
 #bubble {
   background-color: white;
   padding: 10px;

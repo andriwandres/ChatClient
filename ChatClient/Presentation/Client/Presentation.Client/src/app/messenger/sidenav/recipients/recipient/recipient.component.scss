@@ -21,11 +21,13 @@
   flex-direction: column;
   flex-grow: 1;
   align-items: stretch;
+  min-width: 0;
 }
 
 #top-row {
   display: flex;
   flex-direction: row;
+  align-items: flex-start;
   justify-content: space-between;
 
   #recipient-name {
@@ -45,19 +47,19 @@
 #bottom-row {
   display: flex;
   flex-direction: row;
+  align-items: flex-end;
   justify-content: space-between;
 
   #content-wrapper {
     color: #878787;
     display: flex;
     align-items: center;
-    // flex: 1;
     min-width: 0;
 
     #message-content {
-      // white-space: nowrap;
-      // overflow: hidden;
-      // text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 
@@ -65,8 +67,8 @@
     color: white;
     background-color: red;
     border-radius: 50%;
-    width: 25px;
-    height: 25px;
+    min-width: 25px;
+    min-height: 25px;
     display: flex;
     align-items: center;
     justify-content: center;
