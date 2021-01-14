@@ -1,6 +1,11 @@
 :host {
   display: flex;
   flex-direction: column;
+  justify-content: left;
   flex-grow: 1;
   padding: 50px;
+}
+
+app-message-bubble {
+  margin-bottom: 30px;
 }

@@ -1,4 +1,4 @@
-﻿using AutoMapper;
+﻿using System;
 using Core.Application.Database;
 using Core.Application.Requests.Messages.Queries;
 using Core.Application.Services;
@@ -15,7 +15,6 @@ namespace Core.Application.Test.Requests.Messages.Queries
 {
     public class GetMessagesWithRecipientQueryTests
     {
-        private readonly IMapper _mapperMock;
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly Mock<IUserProvider> _userProviderMock;
 
@@ -26,13 +25,6 @@ namespace Core.Application.Test.Requests.Messages.Queries
             _userProviderMock
                 .Setup(m => m.GetCurrentUserId())
                 .Returns(1);
-
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
-            {
-                config.CreateMap<MessageRecipient, ChatMessageResource>();
-            });
-
-            _mapperMock = mapperConfiguration.CreateMapper();
         }
 
         [Fact]
@@ -43,8 +35,48 @@ namespace Core.Application.Test.Requests.Messages.Queries
 
             IEnumerable<MessageRecipient> expectedMessageRecipients = new[]
             {
-                new MessageRecipient {MessageRecipientId = 1},
-                new MessageRecipient {MessageRecipientId = 2},
+                new MessageRecipient
+                {
+                    MessageRecipientId = 1,
+                    MessageId = 1,
+                    Message = new Message
+                    {
+                        MessageId = 1,
+                        AuthorId = 1,
+                        HtmlContent = "messageContent1",
+                        Created = new DateTime(2020, 2, 8, 15, 0, 0),
+                        Author = new User
+                        {
+                            UserId = 1,
+                            UserName = "someUsername"
+                        },
+                        MessageRecipients = new List<MessageRecipient>
+                        {
+                            new MessageRecipient { IsRead = true },
+                        }
+                    }
+                },
+                new MessageRecipient
+                {
+                    MessageRecipientId = 2,
+                    MessageId = 2,
+                    Message = new Message
+                    {
+                        MessageId = 2,
+                        AuthorId = 2,
+                        HtmlContent = "messageContent2",
+                        Created = new DateTime(2020, 2, 8, 15, 3, 0),
+                        Author = new User
+                        {
+                            UserId = 2,
+                            UserName = "someOtherUsername"
+                        },
+                        MessageRecipients = new List<MessageRecipient>
+                        {
+                            new MessageRecipient { IsRead = true },
+                        }
+                    }
+                },
             };
 
             IQueryable<MessageRecipient> queryableMock = expectedMessageRecipients
@@ -56,7 +88,7 @@ namespace Core.Application.Test.Requests.Messages.Queries
                 .Setup(m => m.MessageRecipients.GetMessagesWithRecipient(1, request.RecipientId))
                 .Returns(queryableMock);
 
-            GetMessagesWithRecipientQuery.Handler handler = new GetMessagesWithRecipientQuery.Handler(_mapperMock, _unitOfWorkMock.Object, _userProviderMock.Object);
+            GetMessagesWithRecipientQuery.Handler handler = new GetMessagesWithRecipientQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             IEnumerable<ChatMessageResource> result = await handler.Handle(request);

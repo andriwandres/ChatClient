@@ -1,0 +1,8 @@
+<div id="bubble" [class.own-message]="message.isOwnMessage">
+  <span id="author" *ngIf="!message.isOwnMessage">{{ message.authorName }}</span>
+  <div id="content-wrapper">
+    <span id="content">{{ message.htmlContent }}</span>
+    <span id="timestamp">{{ message.created | date: 'HH:mm' }}</span>
+    <mat-icon id="read-indicator" *ngIf="message.isOwnMessage" [class.read]="message.isRead">check</mat-icon>
+  </div>
+</div>

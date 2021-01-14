@@ -1,11 +1,10 @@
-﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
-using Core.Application.Database;
+﻿using Core.Application.Database;
 using Core.Application.Services;
 using Core.Domain.Resources.Messages;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,24 +16,31 @@ namespace Core.Application.Requests.Messages.Queries
 
         public class Handler : IRequestHandler<GetMessagesWithRecipientQuery, IEnumerable<ChatMessageResource>>
         {
-            private readonly IMapper _mapper;
             private readonly IUnitOfWork _unitOfWork;
             private readonly IUserProvider _userProvider;
 
-            public Handler(IMapper mapper, IUnitOfWork unitOfWork, IUserProvider userProvider)
+            public Handler(IUnitOfWork unitOfWork, IUserProvider userProvider)
             {
-                _mapper = mapper;
                 _unitOfWork = unitOfWork;
                 _userProvider = userProvider;
             }
 
             public async Task<IEnumerable<ChatMessageResource>> Handle(GetMessagesWithRecipientQuery request, CancellationToken cancellationToken = default)
             {
-                int userId = _userProvider.GetCurrentUserId();
+                int currentUserId = _userProvider.GetCurrentUserId();
 
                 IEnumerable<ChatMessageResource> messages = await _unitOfWork.MessageRecipients
-                    .GetMessagesWithRecipient(userId, request.RecipientId)
-                    .ProjectTo<ChatMessageResource>(_mapper.ConfigurationProvider)
+                    .GetMessagesWithRecipient(currentUserId, request.RecipientId)
+                    .Select(source => new ChatMessageResource
+                    {
+                        MessageRecipientId = source.MessageRecipientId,
+                        MessageId = source.MessageId,
+                        AuthorName = source.Message.Author.UserName,
+                        HtmlContent = source.Message.HtmlContent,
+                        Created = source.Message.Created,
+                        IsOwnMessage = source.Message.AuthorId == currentUserId,
+                        IsRead = source.Message.MessageRecipients.All(mr => mr.IsRead || mr.Message.AuthorId == currentUserId),
+                    })
                     .ToListAsync(cancellationToken);
 
                 return messages;
