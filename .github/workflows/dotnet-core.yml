@@ -16,11 +16,11 @@ on:
   
 jobs:
   build-and-test:
-    # build and test on 3 operating systems
+    # build and test on given operating systems
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest]
     
     steps:
     - uses: actions/checkout@v2
