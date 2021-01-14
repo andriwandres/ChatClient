@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.Dtos.Messages;
 
 namespace Presentation.Api.Controllers
 {
@@ -55,6 +56,10 @@ namespace Presentation.Api.Controllers
         /// Contains a list of messages with given recipient
         /// </response>
         ///
+        /// <response code="400">
+        /// Upper limit was not provided or is invalid
+        /// </response>
+        /// 
         /// <response code="404">
         /// Recipient with given ID does not exist
         /// </response>
@@ -68,6 +73,10 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetMessagesWithRecipientOkExample))]
 
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+        [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(GetMessagesWithRecipientBadRequestExample))]
+
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GetMessagesWithRecipientNotFoundExample))]
@@ -75,8 +84,13 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-        public async Task<ActionResult<IEnumerable<ChatMessageResource>>> GetMessagesWithRecipient([FromRoute] int recipientId, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<IEnumerable<ChatMessageResource>>> GetMessagesWithRecipient([FromRoute] int recipientId, [FromQuery] GetMessagesWithRecipientQueryParams model, CancellationToken cancellationToken = default)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
             // Check if the given recipient exists
             RecipientExistsQuery existsQuery = new RecipientExistsQuery { RecipientId = recipientId };
 

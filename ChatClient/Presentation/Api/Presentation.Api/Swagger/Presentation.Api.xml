@@ -725,7 +725,7 @@
              An unexpected error occurred
              </response>
         </member>
-        <member name="M:Presentation.Api.Controllers.RecipientController.GetMessagesWithRecipient(System.Int32,System.Threading.CancellationToken)">
+        <member name="M:Presentation.Api.Controllers.RecipientController.GetMessagesWithRecipient(System.Int32,Core.Domain.Dtos.Messages.GetMessagesWithRecipientQueryParams,System.Threading.CancellationToken)">
              <summary>
              Gets a list of messages with a recipient
              </summary>
@@ -750,6 +750,10 @@
              Contains a list of messages with given recipient
              </response>
             
+             <response code="400">
+             Upper limit was not provided or is invalid
+             </response>
+             
              <response code="404">
              Recipient with given ID does not exist
              </response>

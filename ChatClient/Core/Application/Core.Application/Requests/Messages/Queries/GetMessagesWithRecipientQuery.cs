@@ -39,7 +39,7 @@ namespace Core.Application.Requests.Messages.Queries
                         HtmlContent = source.Message.HtmlContent,
                         Created = source.Message.Created,
                         IsOwnMessage = source.Message.AuthorId == currentUserId,
-                        IsRead = source.Message.MessageRecipients.All(mr => mr.IsRead || mr.Message.AuthorId == currentUserId),
+                        IsRead = source.Message.MessageRecipients.All(mr => mr.IsRead),
                     })
                     .ToListAsync(cancellationToken);
 
