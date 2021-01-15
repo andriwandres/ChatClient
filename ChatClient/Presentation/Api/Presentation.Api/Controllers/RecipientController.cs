@@ -35,13 +35,17 @@ namespace Presentation.Api.Controllers
         /// <summary>
         /// Gets a list of messages with a recipient
         /// </summary>
-        ///
+        /// 
         /// <remarks>
         /// Returns a list of messages that have been sent to or received by the given recipient.
         /// </remarks>
         /// 
         /// <param name="recipientId">
         /// The ID of the recipient to load messages from
+        /// </param>
+        /// 
+        /// <param name="boundaries">
+        /// Paging boundaries for loading messages
         /// </param>
         /// 
         /// <param name="cancellationToken">
@@ -51,11 +55,11 @@ namespace Presentation.Api.Controllers
         /// <returns>
         /// List of messages with given recipient
         /// </returns>
-        ///
+        /// 
         /// <response code="200">
         /// Contains a list of messages with given recipient
         /// </response>
-        ///
+        /// 
         /// <response code="400">
         /// Upper limit was not provided or is invalid
         /// </response>
@@ -63,7 +67,7 @@ namespace Presentation.Api.Controllers
         /// <response code="404">
         /// Recipient with given ID does not exist
         /// </response>
-        ///
+        /// 
         /// <response code="500">
         /// An unexpected error occurred
         /// </response>
@@ -84,7 +88,7 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-        public async Task<ActionResult<IEnumerable<ChatMessageResource>>> GetMessagesWithRecipient([FromRoute] int recipientId, [FromQuery] GetMessagesWithRecipientQueryParams model, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<IEnumerable<ChatMessageResource>>> GetMessagesWithRecipient([FromRoute] int recipientId, [FromQuery] GetMessagesWithRecipientQueryParams boundaries, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
@@ -106,7 +110,13 @@ namespace Presentation.Api.Controllers
             }
             
             // Get messages with given recipient
-            GetMessagesWithRecipientQuery fetchQuery = new GetMessagesWithRecipientQuery{ RecipientId = recipientId };
+            GetMessagesWithRecipientQuery fetchQuery = new GetMessagesWithRecipientQuery
+            {
+                RecipientId = recipientId,
+                Limit = boundaries.Limit,
+                Before = boundaries.Before,
+                After = boundaries.After,
+            };
 
             IEnumerable<ChatMessageResource> messages = await _mediator.Send(fetchQuery, cancellationToken);
 

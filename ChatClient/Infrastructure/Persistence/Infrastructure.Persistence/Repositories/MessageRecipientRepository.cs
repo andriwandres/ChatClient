@@ -1,6 +1,7 @@
 ﻿using Core.Application.Common;
 using Core.Application.Database;
 using Core.Application.Repositories;
+using Core.Domain.Dtos.Messages;
 using Core.Domain.Entities;
 using Infrastructure.Persistence.Extensions;
 using Microsoft.EntityFrameworkCore;
@@ -18,16 +19,31 @@ namespace Infrastructure.Persistence.Repositories
 
         }
 
-        public IQueryable<MessageRecipient> GetMessagesWithRecipient(int userId, int recipientId)
+        public IQueryable<MessageRecipient> GetMessagesWithRecipient(int userId, int recipientId, MessageBoundaries boundaries)
         {
-            return Context.MessageRecipients
+            IQueryable<MessageRecipient> messages = Context.MessageRecipients
                 .AsNoTracking()
+                .Where(mr =>
+                    (boundaries.Before == null || mr.Message.Created < boundaries.Before) &&
+                    (boundaries.After == null || mr.Message.Created > boundaries.After)
+                )
                 .Where(mr =>
                     mr.RecipientId == recipientId && mr.Message.AuthorId == userId ||
                     mr.Recipient.GroupMembership.Recipient.RecipientId == recipientId ||
                     mr.Recipient.UserId == userId && mr.Message.Author.Recipient.RecipientId == recipientId
                 )
                 .OrderBy(mr => mr.Message.Created);
+
+            // Limit messages from bottom up
+            if (boundaries.Limit != null)
+            {
+                return messages
+                    .OrderByDescending(mr => mr.Message.Created)
+                    .Take((int) boundaries.Limit)
+                    .OrderBy(mr => mr.Message.Created);
+            }
+
+            return messages;
         }
 
         public IQueryable<MessageRecipient> GetLatestGroupedByRecipients(int userId)

@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.Dtos.Messages;
 using Xunit;
 
 namespace Infrastructure.Persistence.Test.Repositories
@@ -277,6 +278,8 @@ namespace Infrastructure.Persistence.Test.Repositories
             const int userId = 1;
             const int recipientId = 1;
 
+            MessageBoundaries boundaries = new MessageBoundaries();
+
             IEnumerable<MessageRecipient> databaseMessageRecipients = new[]
             {
                 // User is author of message to recipient 1
@@ -384,7 +387,7 @@ namespace Infrastructure.Persistence.Test.Repositories
 
             // Act
             IEnumerable<MessageRecipient> result = await repository
-                .GetMessagesWithRecipient(userId, recipientId)
+                .GetMessagesWithRecipient(userId, recipientId, boundaries)
                 .ToListAsync();
 
             // Assert
@@ -401,6 +404,8 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Arrange
             const int userId = 1;
             const int recipientId = 1;
+
+            MessageBoundaries boundaries = new MessageBoundaries();
 
             IEnumerable<MessageRecipient> databaseMessageRecipients = new[]
             {
@@ -503,7 +508,7 @@ namespace Infrastructure.Persistence.Test.Repositories
 
             // Act
             IEnumerable<MessageRecipient> result = await repository
-                .GetMessagesWithRecipient(userId, recipientId)
+                .GetMessagesWithRecipient(userId, recipientId, boundaries)
                 .ToListAsync();
 
             // Assert
@@ -520,6 +525,8 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Arrange
             const int userId = 1;
             const int recipientId = 1;
+
+            MessageBoundaries boundaries = new MessageBoundaries();
 
             IEnumerable<MessageRecipient> databaseMessageRecipients = new[]
             {
@@ -630,7 +637,7 @@ namespace Infrastructure.Persistence.Test.Repositories
 
             // Act
             IEnumerable<MessageRecipient> result = await repository
-                .GetMessagesWithRecipient(userId, recipientId)
+                .GetMessagesWithRecipient(userId, recipientId, boundaries)
                 .ToListAsync();
 
             // Assert
@@ -639,6 +646,396 @@ namespace Infrastructure.Persistence.Test.Repositories
 
             Assert.Equal(1, result.ElementAt(0).MessageRecipientId);
             Assert.Equal(4, result.ElementAt(1).MessageRecipientId);
+        }
+
+        [Fact]
+        public async Task GetMessagesWithRecipient_ShouldIncludeMessages_BeforeADate()
+        {
+            // Arrange
+            const int userId = 1;
+            const int recipientId = 1;
+
+            MessageBoundaries boundaries = new MessageBoundaries
+            {
+                Limit = 50,
+                Before = new DateTime(2020, 1, 1, 15, 3, 0),
+            };
+
+            IEnumerable<MessageRecipient> databaseMessageRecipients = new[]
+            {
+                // User is author of message to recipient 1
+                new MessageRecipient
+                {
+                    MessageRecipientId = 1,
+                    RecipientId = 1,
+                    Message = new Message
+                    {
+                        MessageId = 1,
+                        AuthorId = 1,
+                        Created = new DateTime(2020, 1, 1, 15, 0, 0),
+                        Author = new User
+                        {
+                            Recipient = new Recipient { RecipientId = 1 }
+                        }
+                    },
+                    Recipient = new Recipient
+                    {
+                        GroupMembership = new GroupMembership
+                        {
+                            Recipient = new Recipient { RecipientId = 2 }
+                        }
+                    }
+                },
+                new MessageRecipient
+                {
+                    MessageRecipientId = 2,
+                    RecipientId = 2,
+                    Message = new Message
+                    {
+                        MessageId = 2,
+                        AuthorId = 1,
+                        Created = new DateTime(2020, 1, 1, 15, 5, 0),
+                        Author = new User
+                        {
+                            Recipient = new Recipient { RecipientId = 2 }
+                        }
+                    },
+                    Recipient = new Recipient
+                    {
+                        GroupMembership = new GroupMembership
+                        {
+                            Recipient = new Recipient { RecipientId = 2 }
+                        }
+                    }
+                },
+                new MessageRecipient
+                {
+                    MessageRecipientId = 3,
+                    RecipientId = 1,
+                    Message = new Message
+                    {
+                        MessageId = 3,
+                        AuthorId = 2,
+                        Created = new DateTime(2020, 1, 1, 15, 6, 0),
+                        Author = new User
+                        {
+                            Recipient = new Recipient { RecipientId = 1 }
+                        }
+                    },
+                    Recipient = new Recipient
+                    {
+                        GroupMembership = new GroupMembership
+                        {
+                            Recipient = new Recipient { RecipientId = 2 }
+                        }
+                    }
+                },
+                // User is author of message to recipient 1
+                new MessageRecipient
+                {
+                    MessageRecipientId = 4,
+                    RecipientId = 1,
+                    Message = new Message
+                    {
+                        MessageId = 4,
+                        AuthorId = 1,
+                        Created = new DateTime(2020, 1, 1, 15, 6, 40),
+                        Author = new User
+                        {
+                            Recipient = new Recipient { RecipientId = 1 }
+                        }
+                    },
+                    Recipient = new Recipient
+                    {
+                        GroupMembership = new GroupMembership
+                        {
+                            Recipient = new Recipient { RecipientId = 2 }
+                        }
+                    }
+                },
+            };
+
+            DbSet<MessageRecipient> dbSetMock = databaseMessageRecipients
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            _contextMock
+                .Setup(m => m.MessageRecipients)
+                .Returns(dbSetMock);
+
+            MessageRecipientRepository repository = new MessageRecipientRepository(_contextMock.Object);
+
+            // Act
+            IEnumerable<MessageRecipient> result = await repository
+                .GetMessagesWithRecipient(userId, recipientId, boundaries)
+                .ToListAsync();
+
+            // Assert
+            Assert.NotEmpty(result);
+            Assert.Single(result);
+
+            Assert.Equal(1, result.ElementAt(0).MessageRecipientId);
+        }
+
+        [Fact]
+        public async Task GetMessagesWithRecipient_ShouldIncludeMessages_AfterADate()
+        {
+            // Arrange
+            const int userId = 1;
+            const int recipientId = 1;
+
+            MessageBoundaries boundaries = new MessageBoundaries
+            {
+                Limit = 50,
+                After = new DateTime(2020, 1, 1, 15, 3, 0),
+            };
+
+            IEnumerable<MessageRecipient> databaseMessageRecipients = new[]
+            {
+                // User is author of message to recipient 1
+                new MessageRecipient
+                {
+                    MessageRecipientId = 1,
+                    RecipientId = 1,
+                    Message = new Message
+                    {
+                        MessageId = 1,
+                        AuthorId = 1,
+                        Created = new DateTime(2020, 1, 1, 15, 0, 0),
+                        Author = new User
+                        {
+                            Recipient = new Recipient { RecipientId = 1 }
+                        }
+                    },
+                    Recipient = new Recipient
+                    {
+                        GroupMembership = new GroupMembership
+                        {
+                            Recipient = new Recipient { RecipientId = 2 }
+                        }
+                    }
+                },
+                new MessageRecipient
+                {
+                    MessageRecipientId = 2,
+                    RecipientId = 2,
+                    Message = new Message
+                    {
+                        MessageId = 2,
+                        AuthorId = 1,
+                        Created = new DateTime(2020, 1, 1, 15, 5, 0),
+                        Author = new User
+                        {
+                            Recipient = new Recipient { RecipientId = 2 }
+                        }
+                    },
+                    Recipient = new Recipient
+                    {
+                        GroupMembership = new GroupMembership
+                        {
+                            Recipient = new Recipient { RecipientId = 2 }
+                        }
+                    }
+                },
+                new MessageRecipient
+                {
+                    MessageRecipientId = 3,
+                    RecipientId = 1,
+                    Message = new Message
+                    {
+                        MessageId = 3,
+                        AuthorId = 2,
+                        Created = new DateTime(2020, 1, 1, 15, 6, 0),
+                        Author = new User
+                        {
+                            Recipient = new Recipient { RecipientId = 1 }
+                        }
+                    },
+                    Recipient = new Recipient
+                    {
+                        GroupMembership = new GroupMembership
+                        {
+                            Recipient = new Recipient { RecipientId = 2 }
+                        }
+                    }
+                },
+                // User is author of message to recipient 1
+                new MessageRecipient
+                {
+                    MessageRecipientId = 4,
+                    RecipientId = 1,
+                    Message = new Message
+                    {
+                        MessageId = 4,
+                        AuthorId = 1,
+                        Created = new DateTime(2020, 1, 1, 15, 6, 40),
+                        Author = new User
+                        {
+                            Recipient = new Recipient { RecipientId = 1 }
+                        }
+                    },
+                    Recipient = new Recipient
+                    {
+                        GroupMembership = new GroupMembership
+                        {
+                            Recipient = new Recipient { RecipientId = 2 }
+                        }
+                    }
+                },
+            };
+
+            DbSet<MessageRecipient> dbSetMock = databaseMessageRecipients
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            _contextMock
+                .Setup(m => m.MessageRecipients)
+                .Returns(dbSetMock);
+
+            MessageRecipientRepository repository = new MessageRecipientRepository(_contextMock.Object);
+
+            // Act
+            IEnumerable<MessageRecipient> result = await repository
+                .GetMessagesWithRecipient(userId, recipientId, boundaries)
+                .ToListAsync();
+
+            // Assert
+            Assert.NotEmpty(result);
+            Assert.Single(result);
+
+            Assert.Equal(4, result.ElementAt(0).MessageRecipientId);
+        }
+
+        [Fact]
+        public async Task GetMessagesWithRecipient_ShouldLimitTheAmountOfLoadedMessages_FromBottomUpwards()
+        {
+            // Arrange
+            const int userId = 1;
+            const int recipientId = 1;
+
+            // Define a limit
+            MessageBoundaries boundaries = new MessageBoundaries
+            {
+                Limit = 1,
+            };
+
+            IEnumerable<MessageRecipient> databaseMessageRecipients = new[]
+            {
+                // User is author of message to recipient 1
+                new MessageRecipient
+                {
+                    MessageRecipientId = 1,
+                    RecipientId = 1,
+                    Message = new Message
+                    {
+                        MessageId = 1,
+                        AuthorId = 1,
+                        Created = new DateTime(2020, 1, 1, 15, 0, 0),
+                        Author = new User
+                        {
+                            Recipient = new Recipient { RecipientId = 1 }
+                        }
+                    },
+                    Recipient = new Recipient
+                    {
+                        GroupMembership = new GroupMembership
+                        {
+                            Recipient = new Recipient { RecipientId = 2 }
+                        }
+                    }
+                },
+                new MessageRecipient
+                {
+                    MessageRecipientId = 2,
+                    RecipientId = 2,
+                    Message = new Message
+                    {
+                        MessageId = 2,
+                        AuthorId = 1,
+                        Created = new DateTime(2020, 1, 1, 15, 5, 0),
+                        Author = new User
+                        {
+                            Recipient = new Recipient { RecipientId = 2 }
+                        }
+                    },
+                    Recipient = new Recipient
+                    {
+                        GroupMembership = new GroupMembership
+                        {
+                            Recipient = new Recipient { RecipientId = 2 }
+                        }
+                    }
+                },
+                new MessageRecipient
+                {
+                    MessageRecipientId = 3,
+                    RecipientId = 1,
+                    Message = new Message
+                    {
+                        MessageId = 3,
+                        AuthorId = 2,
+                        Created = new DateTime(2020, 1, 1, 15, 6, 0),
+                        Author = new User
+                        {
+                            Recipient = new Recipient { RecipientId = 1 }
+                        }
+                    },
+                    Recipient = new Recipient
+                    {
+                        GroupMembership = new GroupMembership
+                        {
+                            Recipient = new Recipient { RecipientId = 2 }
+                        }
+                    }
+                },
+                // User is author of message to recipient 1
+                new MessageRecipient
+                {
+                    MessageRecipientId = 4,
+                    RecipientId = 1,
+                    Message = new Message
+                    {
+                        MessageId = 4,
+                        AuthorId = 1,
+                        Created = new DateTime(2020, 1, 1, 15, 6, 40),
+                        Author = new User
+                        {
+                            Recipient = new Recipient { RecipientId = 1 }
+                        }
+                    },
+                    Recipient = new Recipient
+                    {
+                        GroupMembership = new GroupMembership
+                        {
+                            Recipient = new Recipient { RecipientId = 2 }
+                        }
+                    }
+                },
+            };
+
+            DbSet<MessageRecipient> dbSetMock = databaseMessageRecipients
+                .AsQueryable()
+                .BuildMockDbSet()
+                .Object;
+
+            _contextMock
+                .Setup(m => m.MessageRecipients)
+                .Returns(dbSetMock);
+
+            MessageRecipientRepository repository = new MessageRecipientRepository(_contextMock.Object);
+
+            // Act
+            IEnumerable<MessageRecipient> result = await repository
+                .GetMessagesWithRecipient(userId, recipientId, boundaries)
+                .ToListAsync();
+
+            // Assert
+            Assert.NotEmpty(result);
+            Assert.Single(result);
+
+            Assert.Equal(4, result.ElementAt(0).MessageRecipientId);
         }
 
         #endregion

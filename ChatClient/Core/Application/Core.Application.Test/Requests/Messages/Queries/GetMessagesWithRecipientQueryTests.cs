@@ -1,11 +1,13 @@
-﻿using System;
+﻿using AutoMapper;
 using Core.Application.Database;
 using Core.Application.Requests.Messages.Queries;
 using Core.Application.Services;
+using Core.Domain.Dtos.Messages;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Messages;
 using MockQueryable.Moq;
 using Moq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,6 +19,7 @@ namespace Core.Application.Test.Requests.Messages.Queries
     {
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly Mock<IUserProvider> _userProviderMock;
+        private readonly IMapper _mapperMock;
 
         public GetMessagesWithRecipientQueryTests()
         {
@@ -25,13 +28,20 @@ namespace Core.Application.Test.Requests.Messages.Queries
             _userProviderMock
                 .Setup(m => m.GetCurrentUserId())
                 .Returns(1);
+
+            MapperConfiguration configuration = new MapperConfiguration(config =>
+            {
+                config.CreateMap<GetMessagesWithRecipientQuery, MessageBoundaries>();
+            });
+
+            _mapperMock = configuration.CreateMapper();
         }
 
         [Fact]
         public async Task GetMessagesWithRecipientQueryHandler_ShouldReturnMessages()
         {
             // Arrange
-            GetMessagesWithRecipientQuery request = new GetMessagesWithRecipientQuery { RecipientId = 1 };
+            GetMessagesWithRecipientQuery request = new GetMessagesWithRecipientQuery { RecipientId = 1, Limit = 50, Before = null, After = null };
 
             IEnumerable<MessageRecipient> expectedMessageRecipients = new[]
             {
@@ -85,10 +95,10 @@ namespace Core.Application.Test.Requests.Messages.Queries
                 .Object;
 
             _unitOfWorkMock
-                .Setup(m => m.MessageRecipients.GetMessagesWithRecipient(1, request.RecipientId))
+                .Setup(m => m.MessageRecipients.GetMessagesWithRecipient(1, request.RecipientId, It.IsAny<MessageBoundaries>()))
                 .Returns(queryableMock);
 
-            GetMessagesWithRecipientQuery.Handler handler = new GetMessagesWithRecipientQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+            GetMessagesWithRecipientQuery.Handler handler = new GetMessagesWithRecipientQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object, _mapperMock);
 
             // Act
             IEnumerable<ChatMessageResource> result = await handler.Handle(request);

@@ -11,6 +11,7 @@ namespace Presentation.Api.Examples.Messages
 {
     public class GetMessagesWithRecipientBadRequestExample : IMultipleExamplesProvider<ValidationErrorResource>
     {
+        // TODO: Write examples according to validation rules, once figured out
         public IEnumerable<SwaggerExample<ValidationErrorResource>> GetExamples()
         {
             const string limitName = nameof(GetMessagesWithRecipientQueryParams.Limit);

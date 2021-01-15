@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Core.Application.Requests.Messages.Commands;
+using Core.Application.Requests.Messages.Queries;
 using Core.Domain.Dtos.Messages;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Messages;
@@ -44,24 +45,7 @@ namespace Presentation.Api.Mapping
                     );
                 });
 
-            CreateMap<MessageRecipient, ChatMessageResource>()
-                .ForMember(destination => destination.AuthorName, config =>
-                {
-                    config.MapFrom(source => source.Message.Author.UserName);
-                })
-                .ForMember(destination => destination.HtmlContent, config =>
-                {
-                    config.MapFrom(source => source.Message.HtmlContent);
-                })
-                .ForMember(destination => destination.Created, config =>
-                {
-                    config.MapFrom(source => source.Message.Created);
-                })
-                .ForMember(destination => destination.IsOwnMessage, config =>
-                {
-                    config.MapFrom(source => source.Message.AuthorId == userId);
-                });
-
+            CreateMap<GetMessagesWithRecipientQuery, MessageBoundaries>();
             CreateMap<SendMessageBody, SendMessageCommand>();
         }
     }

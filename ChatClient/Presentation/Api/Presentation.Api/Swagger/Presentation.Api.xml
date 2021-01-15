@@ -726,41 +726,45 @@
              </response>
         </member>
         <member name="M:Presentation.Api.Controllers.RecipientController.GetMessagesWithRecipient(System.Int32,Core.Domain.Dtos.Messages.GetMessagesWithRecipientQueryParams,System.Threading.CancellationToken)">
-             <summary>
-             Gets a list of messages with a recipient
-             </summary>
+            <summary>
+            Gets a list of messages with a recipient
+            </summary>
             
-             <remarks>
-             Returns a list of messages that have been sent to or received by the given recipient.
-             </remarks>
-             
-             <param name="recipientId">
-             The ID of the recipient to load messages from
-             </param>
-             
-             <param name="cancellationToken">
-             Notifies asynchronous operations to cancel ongoing work and release resources
-             </param>
-             
-             <returns>
-             List of messages with given recipient
-             </returns>
+            <remarks>
+            Returns a list of messages that have been sent to or received by the given recipient.
+            </remarks>
             
-             <response code="200">
-             Contains a list of messages with given recipient
-             </response>
+            <param name="recipientId">
+            The ID of the recipient to load messages from
+            </param>
             
-             <response code="400">
-             Upper limit was not provided or is invalid
-             </response>
-             
-             <response code="404">
-             Recipient with given ID does not exist
-             </response>
+            <param name="boundaries">
+            Paging boundaries for loading messages
+            </param>
             
-             <response code="500">
-             An unexpected error occurred
-             </response>
+            <param name="cancellationToken">
+            Notifies asynchronous operations to cancel ongoing work and release resources
+            </param>
+            
+            <returns>
+            List of messages with given recipient
+            </returns>
+            
+            <response code="200">
+            Contains a list of messages with given recipient
+            </response>
+            
+            <response code="400">
+            Upper limit was not provided or is invalid
+            </response>
+            
+            <response code="404">
+            Recipient with given ID does not exist
+            </response>
+            
+            <response code="500">
+            An unexpected error occurred
+            </response>
         </member>
         <member name="M:Presentation.Api.Controllers.SessionController.Login(Core.Domain.Dtos.Session.LoginBody,System.Threading.CancellationToken)">
              <summary>

@@ -2,7 +2,7 @@
 
 namespace Core.Domain.Dtos.Messages
 {
-    public class GetMessagesWithRecipientQueryParams
+    public class MessageBoundaries
     {
         public int? Limit { get; set; }
         public DateTime? Before { get; set; }
