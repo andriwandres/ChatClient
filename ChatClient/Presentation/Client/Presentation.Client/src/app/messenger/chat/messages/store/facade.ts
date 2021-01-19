@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { ChatMessage } from '@chat-client/core/models';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { PartialState } from './state';
-import * as messageSelectors from './selectors';
 import * as messageActions from './actions';
+import * as messageSelectors from './selectors';
 
 @Injectable({ providedIn: 'root' })
 export class MessageFacade {

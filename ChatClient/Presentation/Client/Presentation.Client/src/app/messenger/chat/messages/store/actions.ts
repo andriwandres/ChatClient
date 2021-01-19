@@ -13,7 +13,7 @@ export enum ActionTypes {
 // Load a list of messages with a recipient
 export const loadMessages = createAction(
   ActionTypes.LOAD_MESSAGES,
-  props<{ recipientId: number, before: Date }>()
+  props<{ recipientId: number, before?: Date }>()
 );
 
 // Load a list of messages and replace the state completely

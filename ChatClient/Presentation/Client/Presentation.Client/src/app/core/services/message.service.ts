@@ -10,11 +10,12 @@ export class MessageService {
 
   getMessages(recipientId: number, boundaries: MessageBoundaries): Observable<ChatMessage[]> {
     const url = environment.api.recipients + `/${recipientId}/messages`;
+
     let params = new HttpParams()
-      .set('limit', boundaries.limit.toString());
+      .append('limit', boundaries.limit.toString());
 
     if (boundaries.before) {
-      params = params.set('before', boundaries.before.toString());
+      params = params.append('before', boundaries.before.toString());
     }
 
     const options = { params };
