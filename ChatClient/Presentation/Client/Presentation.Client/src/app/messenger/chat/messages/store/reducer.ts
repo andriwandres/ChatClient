@@ -15,12 +15,24 @@ export const reducer = createReducer(
     isLoadingMessages: true,
   })),
 
-  on(
-    messagesActions.loadMessagesSuccess,
+  // Store messages and replace messages completely
+  on(messagesActions.loadMessagesSuccess,
     (state, { result: [recipientId, messages] }) => ({
       ...state,
       isLoadingMessages: false,
       [recipientId]: messages,
+    })
+  ),
+
+  // Store messages before a certain date
+  on(messagesActions.loadPreviousMessagesSuccess,
+    (state, { result: [recipientId, messages] }) => ({
+      ...state,
+      isLoadingMessages: false,
+      [recipientId]: [
+        ...messages,
+        ...state[recipientId]
+      ],
     })
   ),
 

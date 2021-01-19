@@ -7,7 +7,16 @@ namespace Presentation.Api.Validation.Messages
     {
         public GetMessagesWithRecipientQueryParamsValidator()
         {
-            // TODO: Write validation rules for query params
+            RuleFor(model => model.Limit)
+                .GreaterThan(0)
+                .WithMessage("Limit must be greater than zero");
+
+            When(model => model.Before != null && model.After != null, () =>
+            {
+                RuleFor(model => model.Before)
+                    .GreaterThan(model => model.After)
+                    .WithMessage("'Before' must be at a later point in time than 'After'");
+            });
         }
     }
 }

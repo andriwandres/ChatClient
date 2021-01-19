@@ -19,3 +19,8 @@ export interface ChatMessage {
   isOwnMessage: boolean;
   created: Date;
 }
+
+export interface MessageBoundaries {
+  limit: number;
+  before?: Date;
+}

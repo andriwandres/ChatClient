@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AuthFacade } from '@chat-client/shared/auth/store';
-import { HttpTransportType } from '@microsoft/signalr';
+import { HttpTransportType, LogLevel } from '@microsoft/signalr';
 import { Store } from '@ngrx/store';
 import { createSignalRHub, ISignalRHub } from 'ngrx-signalr-core';
 import { take } from 'rxjs/operators';
@@ -19,6 +19,7 @@ export class WebSocketFacade {
       url: environment.socket.hub,
       options: {
         skipNegotiation: true,
+        logger: LogLevel.None,
         transport: HttpTransportType.WebSockets,
         accessTokenFactory: () => {
           return this.authFacade.token$.pipe(

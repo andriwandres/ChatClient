@@ -11,13 +11,24 @@ export class MessageEffects {
   readonly loadMessages$ = createEffect(() =>
     this.actions$.pipe(
       ofType(messagesActions.loadMessages),
-      switchMap(({ recipientId }) =>
-        this.messagesService.getMessages(recipientId).pipe(
-          map((messages) =>
-            messagesActions.loadMessagesSuccess({
+      switchMap(({ recipientId, before }) =>
+        this.messagesService.getMessages(recipientId, {
+          before,
+          limit: 50,
+        }).pipe(
+          map((messages) => {
+            // Load messages before a given date
+            if (before) {
+              return messagesActions.loadPreviousMessagesSuccess({
+                result: [recipientId, messages]
+              });
+            }
+
+            // Just load messages and replace state completely
+            return messagesActions.loadMessagesSuccess({
               result: [recipientId, messages],
-            })
-          ),
+            });
+          }),
           catchError((error: ApiError) =>
             of(messagesActions.loadMessagesFailure({ error }))
           )
