@@ -22,14 +22,14 @@ namespace Core.Application.Test.Requests.Messages.Commands
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly Mock<IDateProvider> _dateProviderMock;
         private readonly Mock<IUserProvider> _userProviderMock;
-        private readonly Mock<IHubContext<HubBase, IHubClient>> _hubContextMock;
+        private readonly Mock<IHubContext<ChatHubBase, IHubClient>> _hubContextMock;
 
         public SendMessageCommandTests()
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _dateProviderMock = new Mock<IDateProvider>();
             _userProviderMock = new Mock<IUserProvider>();
-            _hubContextMock = new Mock<IHubContext<HubBase, IHubClient>>();
+            _hubContextMock = new Mock<IHubContext<ChatHubBase, IHubClient>>();
 
             _dateProviderMock
                 .Setup(m => m.UtcNow())

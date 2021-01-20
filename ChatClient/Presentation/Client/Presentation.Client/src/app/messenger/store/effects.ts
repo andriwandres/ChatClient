@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { ChatMessage } from '@chat-client/core/models';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { TypedAction } from '@ngrx/store/src/models';
 import { mergeMapHubToAction, SIGNALR_HUB_UNSTARTED, startSignalRHub } from 'ngrx-signalr-core';
@@ -8,17 +9,13 @@ import { MessageActions } from '../chat/messages/store';
 
 interface ActionEventMapping {
   eventName: string;
-  actionFactory: (payload?: unknown, payload2?: unknown) => TypedAction<string>;
+  actionFactory: (payload?: any) => TypedAction<string>;
 }
 
 const actionMappings: ActionEventMapping[] = [
   {
     eventName: 'ReceiveMessage',
-    actionFactory: (p, m) => {
-      console.log(p);
-      console.log(m);
-      return MessageActions.loadMessagesFailure({ error: null });
-    }
+    actionFactory: (payload: { recipientId: number, message: ChatMessage }) => MessageActions.addMessage(payload)
   }
 ];
 

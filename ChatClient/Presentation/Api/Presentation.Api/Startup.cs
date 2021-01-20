@@ -4,6 +4,8 @@ using Core.Domain.Resources.Errors;
 using Infrastructure.Persistence.Database;
 using Infrastructure.Persistence.Extensions;
 using Infrastructure.Shared.Extensions;
+using Infrastructure.Socket.Extensions;
+using Infrastructure.Socket.Hubs;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -19,9 +21,7 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Mime;
-using Infrastructure.Socket.Extensions;
-using Infrastructure.Socket.Hubs;
-using Microsoft.AspNetCore.Http.Connections;
+using Core.Application.Hubs;
 using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Presentation.Api
@@ -123,7 +123,7 @@ namespace Presentation.Api
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapHub<ChatHub>("/chat");
+                endpoints.MapHub<ChatHubBase>("/chat");
                 endpoints.MapControllers();
             });
         }

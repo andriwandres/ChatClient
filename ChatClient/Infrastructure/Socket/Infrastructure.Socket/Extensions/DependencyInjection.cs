@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Core.Application.Hubs;
+using Infrastructure.Socket.Hubs;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Infrastructure.Socket.Extensions
 {
@@ -6,6 +8,7 @@ namespace Infrastructure.Socket.Extensions
     {
         public static void AddSocketInfrastructureServices(this IServiceCollection services)
         {
+            services.AddScoped<ChatHubBase, ChatHub>();
             services.AddSignalR();
         }
     }

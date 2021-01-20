@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Socket.Hubs
 {
-    public class ChatHub : HubBase
+    public class ChatHub : ChatHubBase
     {
         private readonly IMediator _mediator;
 

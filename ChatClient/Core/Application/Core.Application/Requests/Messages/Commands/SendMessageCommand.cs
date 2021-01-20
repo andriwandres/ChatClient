@@ -25,9 +25,9 @@ namespace Core.Application.Requests.Messages.Commands
             private readonly IUnitOfWork _unitOfWork;
             private readonly IDateProvider _dateProvider;
             private readonly IUserProvider _userProvider;
-            private readonly IHubContext<HubBase, IHubClient> _hubContext;
+            private readonly IHubContext<ChatHubBase, IHubClient> _hubContext;
 
-            public Handler(IUnitOfWork unitOfWork, IDateProvider dateProvider, IUserProvider userProvider, IHubContext<HubBase, IHubClient> hubContext)
+            public Handler(IUnitOfWork unitOfWork, IDateProvider dateProvider, IUserProvider userProvider, IHubContext<ChatHubBase, IHubClient> hubContext)
             {
                 _unitOfWork = unitOfWork;
                 _dateProvider = dateProvider;

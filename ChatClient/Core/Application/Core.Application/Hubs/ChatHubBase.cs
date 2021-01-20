@@ -2,7 +2,7 @@
 
 namespace Core.Application.Hubs
 {
-    public abstract class HubBase : Hub<IHubClient>
+    public abstract class ChatHubBase : Hub<IHubClient>
     {
     }
 }
