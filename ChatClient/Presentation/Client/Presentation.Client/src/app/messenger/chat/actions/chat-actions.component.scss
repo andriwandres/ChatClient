@@ -38,6 +38,10 @@
   justify-content: center;
   margin-left: 20px;
 
+  &:not(.disabled) {
+    color: #4B71BB;
+  }
+
   mat-icon {
     font-size: 35px;
     display: flex;

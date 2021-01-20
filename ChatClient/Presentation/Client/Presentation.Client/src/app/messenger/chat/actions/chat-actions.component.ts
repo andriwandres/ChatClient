@@ -42,5 +42,6 @@ export class ChatActionsComponent implements OnInit, OnDestroy {
 
   submit(): void {
     this.messageSent.emit(this.messageControl.value);
+    this.messageControl.setValue('');
   }
 }

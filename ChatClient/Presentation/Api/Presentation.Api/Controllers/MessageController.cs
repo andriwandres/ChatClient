@@ -98,7 +98,7 @@ namespace Presentation.Api.Controllers
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
         [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-        public async Task<ActionResult> SendMessage([FromBody] SendMessageBody body, CancellationToken cancellationToken = default)
+        public async Task<ActionResult<ChatMessageResource>> SendMessage([FromBody] SendMessageBody body, CancellationToken cancellationToken = default)
         {
             if (!ModelState.IsValid)
             {
@@ -169,7 +169,7 @@ namespace Presentation.Api.Controllers
 
             ChatMessageResource message = await _mediator.Send(sendMessageCommand, cancellationToken);
 
-            return CreatedAtAction(nameof(GetMessageById), new { messageId = message.MessageId }, null);
+            return CreatedAtAction(nameof(GetMessageById), new { messageId = message.MessageId }, message);
         }
 
         /// <summary>

@@ -46,10 +46,10 @@ namespace Presentation.Api.Test.Controllers
             controller.ModelState.AddModelError("", "");
 
             // Act
-            ActionResult response = await controller.SendMessage(body);
+            ActionResult<ChatMessageResource> response = await controller.SendMessage(body);
 
             // Assert
-            Assert.IsType<BadRequestObjectResult>(response);
+            Assert.IsType<BadRequestObjectResult>(response.Result);
         }
 
         [Fact]
@@ -68,10 +68,10 @@ namespace Presentation.Api.Test.Controllers
             MessageController controller = new MessageController(null, _mediatorMock.Object);
 
             // Act
-            ActionResult response = await controller.SendMessage(body);
+            ActionResult<ChatMessageResource> response = await controller.SendMessage(body);
 
             // Assert
-            NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response);
+            NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
 
             ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
 
@@ -100,10 +100,10 @@ namespace Presentation.Api.Test.Controllers
             MessageController controller = new MessageController(null, _mediatorMock.Object);
 
             // Act
-            ActionResult response = await controller.SendMessage(body);
+            ActionResult<ChatMessageResource> response = await controller.SendMessage(body);
 
             // Assert
-            ObjectResult result = Assert.IsType<ObjectResult>(response);
+            ObjectResult result = Assert.IsType<ObjectResult>(response.Result);
 
             ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
 
@@ -137,10 +137,10 @@ namespace Presentation.Api.Test.Controllers
             MessageController controller = new MessageController(null, _mediatorMock.Object);
 
             // Act
-            ActionResult response = await controller.SendMessage(body);
+            ActionResult<ChatMessageResource> response = await controller.SendMessage(body);
 
             // Assert
-            NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response);
+            NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
 
             ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
 
@@ -178,10 +178,10 @@ namespace Presentation.Api.Test.Controllers
             MessageController controller = new MessageController(null, _mediatorMock.Object);
 
             // Act
-            ActionResult response = await controller.SendMessage(body);
+            ActionResult<ChatMessageResource> response = await controller.SendMessage(body);
 
             // Assert
-            ObjectResult result = Assert.IsType<ObjectResult>(response);
+            ObjectResult result = Assert.IsType<ObjectResult>(response.Result);
 
             ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
 
@@ -223,10 +223,10 @@ namespace Presentation.Api.Test.Controllers
             MessageController controller = new MessageController(_mapperMock, _mediatorMock.Object);
 
             // Act
-            ActionResult response = await controller.SendMessage(body);
+            ActionResult<ChatMessageResource> response = await controller.SendMessage(body);
 
             // Assert
-            Assert.IsType<CreatedAtActionResult>(response);
+            Assert.IsType<CreatedAtActionResult>(response.Result);
         }
 
         #endregion

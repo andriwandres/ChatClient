@@ -1,4 +1,5 @@
-﻿using Core.Application.Database;
+﻿using System;
+using Core.Application.Database;
 using Core.Application.Hubs;
 using Core.Application.Services;
 using Core.Domain.Entities;
@@ -39,8 +40,9 @@ namespace Core.Application.Requests.Messages.Commands
             {
                 int currentUserId = _userProvider.GetCurrentUserId();
 
-                Task notifyTask;
                 MessageRecipient ownMessageRecipient;
+
+                Func<Task> notificationFactory;
 
                 // Message to be stored
                 Message message = new Message
@@ -87,7 +89,7 @@ namespace Core.Application.Requests.Messages.Commands
                     await _unitOfWork.MessageRecipients.AddRange(messageRecipients, cancellationToken);
 
                     // Pass task to perform when notifying users
-                    notifyTask = NotifyGroupChatRecipients(members, messageRecipients);
+                    notificationFactory = async () => await NotifyGroupChatRecipients(members, messageRecipients);
                 }
 
                 // Send private chat message
@@ -109,14 +111,14 @@ namespace Core.Application.Requests.Messages.Commands
                     await _unitOfWork.MessageRecipients.Add(messageRecipient, cancellationToken);
 
                     // Pass task to perform when notifying the recipient user
-                    notifyTask = NotifyPrivateChatRecipient(messageRecipient);
+                    notificationFactory = async () => await NotifyPrivateChatRecipient(messageRecipient);
                 }
                 
                 // Commit changes to the database
                 await _unitOfWork.CommitAsync(cancellationToken);
 
                 // Notify recipient(s) of message
-                await notifyTask;
+                await notificationFactory();
 
                 return new ChatMessageResource
                 {
