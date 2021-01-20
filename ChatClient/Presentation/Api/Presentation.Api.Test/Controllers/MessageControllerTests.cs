@@ -218,7 +218,7 @@ namespace Presentation.Api.Test.Controllers
 
             _mediatorMock
                 .Setup(m => m.Send(It.IsAny<SendMessageCommand>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(1);
+                .ReturnsAsync(new ChatMessageResource());
 
             MessageController controller = new MessageController(_mapperMock, _mediatorMock.Object);
 

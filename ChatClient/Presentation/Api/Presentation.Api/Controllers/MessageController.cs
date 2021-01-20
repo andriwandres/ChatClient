@@ -167,9 +167,9 @@ namespace Presentation.Api.Controllers
             // Send message to their recipients
             SendMessageCommand sendMessageCommand = _mapper.Map<SendMessageBody, SendMessageCommand>(body);
 
-            int messageId = await _mediator.Send(sendMessageCommand, cancellationToken);
+            ChatMessageResource message = await _mediator.Send(sendMessageCommand, cancellationToken);
 
-            return CreatedAtAction(nameof(GetMessageById), new { messageId }, null);
+            return CreatedAtAction(nameof(GetMessageById), new { messageId = message.MessageId }, null);
         }
 
         /// <summary>

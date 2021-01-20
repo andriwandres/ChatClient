@@ -1,7 +1,11 @@
 ﻿using Core.Application.Database;
+using Core.Application.Hubs;
 using Core.Application.Requests.Messages.Commands;
 using Core.Application.Services;
+using Core.Domain.Dtos.Messages;
 using Core.Domain.Entities;
+using Core.Domain.Resources.Messages;
+using Microsoft.AspNetCore.SignalR;
 using MockQueryable.Moq;
 using Moq;
 using System;
@@ -18,12 +22,14 @@ namespace Core.Application.Test.Requests.Messages.Commands
         private readonly Mock<IUnitOfWork> _unitOfWorkMock;
         private readonly Mock<IDateProvider> _dateProviderMock;
         private readonly Mock<IUserProvider> _userProviderMock;
+        private readonly Mock<IHubContext<HubBase, IHubClient>> _hubContextMock;
 
         public SendMessageCommandTests()
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _dateProviderMock = new Mock<IDateProvider>();
             _userProviderMock = new Mock<IUserProvider>();
+            _hubContextMock = new Mock<IHubContext<HubBase, IHubClient>>();
 
             _dateProviderMock
                 .Setup(m => m.UtcNow())
@@ -32,6 +38,13 @@ namespace Core.Application.Test.Requests.Messages.Commands
             _userProviderMock
                 .Setup(m => m.GetCurrentUserId())
                 .Returns(1);
+
+            _hubContextMock
+                .Setup(m => m.Clients
+                    .User(It.IsAny<string>())
+                    .ReceiveMessage(It.IsAny<ReceiveMessagePayload>())
+                )
+                .Returns(Task.CompletedTask);
         }
 
         [Fact]
@@ -40,7 +53,7 @@ namespace Core.Application.Test.Requests.Messages.Commands
             // Arrange
             SendMessageCommand request = new SendMessageCommand
             {
-                RecipientId = 1,
+                RecipientId = 2,
                 ParentId = 1,
                 HtmlContent = "<p>hello world</p>"
             };
@@ -50,7 +63,19 @@ namespace Core.Application.Test.Requests.Messages.Commands
                 new Recipient
                 {
                     RecipientId = request.RecipientId,
+                    UserId = 2,
+                }
+            }
+            .AsQueryable()
+            .BuildMock()
+            .Object;
+
+            IQueryable<User> databaseUser = new[]
+            {
+                new User
+                {
                     UserId = 1,
+                    Recipient = new Recipient {RecipientId = 2}
                 }
             }
             .AsQueryable()
@@ -58,7 +83,11 @@ namespace Core.Application.Test.Requests.Messages.Commands
             .Object;
 
             _unitOfWorkMock
-                .Setup(m => m.Recipients.GetById(1))
+                .Setup(m => m.Users.GetById(1))
+                .Returns(databaseUser);
+
+            _unitOfWorkMock
+                .Setup(m => m.Recipients.GetById(2))
                 .Returns(databaseRecipient);
 
             Message passedMessage = null;
@@ -75,17 +104,21 @@ namespace Core.Application.Test.Requests.Messages.Commands
 
             _unitOfWorkMock
                 .Setup(m => m.MessageRecipients.Add(It.IsAny<MessageRecipient>(), It.IsAny<CancellationToken>()))
-                .Callback<MessageRecipient, CancellationToken>((mr, _) => passedMessageRecipient = mr)
+                .Callback<MessageRecipient, CancellationToken>((mr, _) =>
+                {
+                    passedMessageRecipient = mr;
+                    passedMessageRecipient.RecipientId = 1;
+                })
                 .Returns(Task.CompletedTask);
 
             _unitOfWorkMock
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            SendMessageCommand.Handler handler = new SendMessageCommand.Handler(_unitOfWorkMock.Object, _dateProviderMock.Object, _userProviderMock.Object);
+            SendMessageCommand.Handler handler = new SendMessageCommand.Handler(_unitOfWorkMock.Object, _dateProviderMock.Object, _userProviderMock.Object, _hubContextMock.Object);
 
             // Act
-            int messageId = await handler.Handle(request);
+            ChatMessageResource result = await handler.Handle(request);
 
             // Assert
             _unitOfWorkMock.Verify(m => m.Messages.Add(It.IsAny<Message>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -101,7 +134,10 @@ namespace Core.Application.Test.Requests.Messages.Commands
 
             _unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()), Times.AtLeastOnce);
 
-            Assert.Equal(1, messageId);
+            _hubContextMock.Verify(m => m.Clients.User("1").ReceiveMessage(It.IsAny<ReceiveMessagePayload>()), Times.Once);
+
+            Assert.NotNull(result);
+            Assert.Equal(1, result.MessageId);
         }
 
         [Fact]
@@ -129,12 +165,20 @@ namespace Core.Application.Test.Requests.Messages.Commands
                                 new GroupMembership
                                 {
                                     UserId = 1,
-                                    Recipient = new Recipient { RecipientId = 1 }
+                                    Recipient = new Recipient
+                                    {
+                                        RecipientId = 1,
+                                        GroupMembership = new GroupMembership { UserId = 1 }
+                                    },
                                 },
                                 new GroupMembership
                                 {
                                     UserId = 2,
-                                    Recipient = new Recipient { RecipientId = 2 }
+                                    Recipient = new Recipient
+                                    {
+                                        RecipientId = 2,
+                                        GroupMembership = new GroupMembership { UserId = 2 }
+                                    },
                                 }
                             }
                         }
@@ -145,9 +189,25 @@ namespace Core.Application.Test.Requests.Messages.Commands
             .BuildMock()
             .Object;
 
+            IQueryable<User> databaseUser = new[]
+            {
+                new User
+                {
+                    UserId = 1,
+                    Recipient = new Recipient {RecipientId = 2}
+                }
+            }
+            .AsQueryable()
+            .BuildMock()
+            .Object;
+
             _unitOfWorkMock
                 .Setup(m => m.Recipients.GetById(1))
                 .Returns(databaseRecipient);
+
+            _unitOfWorkMock
+                .Setup(m => m.Users.GetById(1))
+                .Returns(databaseUser);
 
             Message passedMessage = null;
             IEnumerable<MessageRecipient> passedMessageRecipients = null;
@@ -170,10 +230,10 @@ namespace Core.Application.Test.Requests.Messages.Commands
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            SendMessageCommand.Handler handler = new SendMessageCommand.Handler(_unitOfWorkMock.Object, _dateProviderMock.Object, _userProviderMock.Object);
+            SendMessageCommand.Handler handler = new SendMessageCommand.Handler(_unitOfWorkMock.Object, _dateProviderMock.Object, _userProviderMock.Object, _hubContextMock.Object);
 
             // Act
-            int messageId = await handler.Handle(request);
+            ChatMessageResource result = await handler.Handle(request);
 
             // Assert
             _unitOfWorkMock.Verify(m => m.Messages.Add(It.IsAny<Message>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -189,7 +249,10 @@ namespace Core.Application.Test.Requests.Messages.Commands
 
             _unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()), Times.AtLeastOnce);
 
-            Assert.Equal(1, messageId);
+            _hubContextMock.Verify(m => m.Clients.User("1").ReceiveMessage(It.IsAny<ReceiveMessagePayload>()), Times.Exactly(1));
+
+            Assert.NotNull(result);
+            Assert.Equal(1, result.MessageId);
         }
     }
 }

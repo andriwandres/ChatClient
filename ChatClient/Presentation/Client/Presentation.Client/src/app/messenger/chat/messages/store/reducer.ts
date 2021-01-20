@@ -2,7 +2,10 @@ import { createReducer, on } from '@ngrx/store';
 import * as messagesActions from './actions';
 import { initialState, State } from './state';
 
-export function messagesReducer(state: State | undefined, action: messagesActions.MessagesActionUnion): State {
+export function messagesReducer(
+  state: State | undefined,
+  action: messagesActions.MessagesActionUnion
+): State {
   return reducer(state, action);
 }
 
@@ -29,12 +32,15 @@ export const reducer = createReducer(
     (state, { result: [recipientId, messages] }) => ({
       ...state,
       isLoadingMessages: false,
-      [recipientId]: [
-        ...messages,
-        ...state[recipientId]
-      ],
+      [recipientId]: [...messages, ...state[recipientId]],
     })
   ),
+
+  // Add single message to the list of messages
+  on(messagesActions.addMessage, (state, { recipientId, message }) => ({
+    ...state,
+    [recipientId]: [...state[recipientId], message],
+  })),
 
   on(messagesActions.loadMessagesFailure, (state) => ({
     ...state,

@@ -1,21 +1,23 @@
 import { Injectable } from '@angular/core';
-import { AuthActions } from '@chat-client/shared/auth/store';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { TypedAction } from '@ngrx/store/src/models';
 import { mergeMapHubToAction, SIGNALR_HUB_UNSTARTED, startSignalRHub } from 'ngrx-signalr-core';
 import { merge, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { MessageActions } from '../chat/messages/store';
 
 interface ActionEventMapping {
   eventName: string;
-  actionFactory: (payload?: unknown) => TypedAction<string>;
+  actionFactory: (payload?: unknown, payload2?: unknown) => TypedAction<string>;
 }
 
 const actionMappings: ActionEventMapping[] = [
   {
     eventName: 'ReceiveMessage',
-    actionFactory: () => {
-      return AuthActions.resetAvailabilityChecks();
+    actionFactory: (p, m) => {
+      console.log(p);
+      console.log(m);
+      return MessageActions.loadMessagesFailure({ error: null });
     }
   }
 ];

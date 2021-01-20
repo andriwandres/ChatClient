@@ -8,6 +8,8 @@ export enum ActionTypes {
   LOAD_PREVIOUS_MESSAGES_SUCCESS = '[Messages] Load Previous Messages Success',
 
   LOAD_MESSAGES_FAILURE = '[Messages] Load Messages Failure',
+
+  ADD_MESSAGE = '[Messages] Add Message'
 }
 
 // Load a list of messages with a recipient
@@ -28,6 +30,12 @@ export const loadPreviousMessagesSuccess = createAction(
   props<{ result: [recipientId: number, messages: ChatMessage[]] }>()
 );
 
+// Add a received message to the list of messages
+export const addMessage = createAction(
+  ActionTypes.ADD_MESSAGE,
+  props<{ recipientId: number, message: ChatMessage }>()
+);
+
 export const loadMessagesFailure = createAction(
   ActionTypes.LOAD_MESSAGES_FAILURE,
   props<{ error: ApiError | null }>()
@@ -40,6 +48,8 @@ const allActions = union({
   loadPreviousMessagesSuccess,
 
   loadMessagesFailure,
+
+  addMessage,
 });
 
 export type MessagesActionUnion = typeof allActions;
