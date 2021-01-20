@@ -1,9 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using Core.Domain.Resources.Messages;
+using System.Threading.Tasks;
 
 namespace Core.Application.Hubs
 {
     public interface IHubClient
     {
-        Task ReceiveMessage(string payload);
+        Task ReceiveMessage(int recipientId, ChatMessageResource message);
     }
 }

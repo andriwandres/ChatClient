@@ -7,6 +7,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Application.Hubs;
+using Microsoft.AspNetCore.SignalR;
 
 namespace Core.Application.Requests.Messages.Commands
 {
@@ -21,6 +23,7 @@ namespace Core.Application.Requests.Messages.Commands
             private readonly IUnitOfWork _unitOfWork;
             private readonly IDateProvider _dateProvider;
             private readonly IUserProvider _userProvider;
+            private readonly IHubContext<HubBase, IHubClient> _hubContext;
 
             public Handler(IUnitOfWork unitOfWork, IDateProvider dateProvider, IUserProvider userProvider)
             {
@@ -31,11 +34,12 @@ namespace Core.Application.Requests.Messages.Commands
 
             public async Task<int> Handle(SendMessageCommand request, CancellationToken cancellationToken = default)
             {
-                int userId = _userProvider.GetCurrentUserId();
+                int currentUserId = _userProvider.GetCurrentUserId();
 
+                // Message to be stored
                 Message message = new Message
                 {
-                    AuthorId = userId,
+                    AuthorId = currentUserId,
                     ParentId = request.ParentId,
                     HtmlContent = request.HtmlContent,
                     Created = _dateProvider.UtcNow(),
@@ -44,6 +48,7 @@ namespace Core.Application.Requests.Messages.Commands
 
                 await _unitOfWork.Messages.Add(message, cancellationToken);
 
+                // Recipient to send the message to
                 Recipient recipient = await _unitOfWork.Recipients
                     .GetById(request.RecipientId)
                     .AsTracking()
@@ -64,9 +69,9 @@ namespace Core.Application.Requests.Messages.Commands
                         RecipientId = member.Recipient.RecipientId,
                         ReadDate = null,
                         IsForwarded = false,
-                        IsRead = member.UserId == userId,
+                        IsRead = member.UserId == currentUserId,
                     });
-
+                    
                     await _unitOfWork.MessageRecipients.AddRange(messageRecipients, cancellationToken);
                 }
 
@@ -79,7 +84,7 @@ namespace Core.Application.Requests.Messages.Commands
                         RecipientId = request.RecipientId,
                         ReadDate = null,
                         IsForwarded = false,
-                        IsRead = recipient.UserId == userId
+                        IsRead = false
                     };
 
                     await _unitOfWork.MessageRecipients.Add(messageRecipient, cancellationToken);

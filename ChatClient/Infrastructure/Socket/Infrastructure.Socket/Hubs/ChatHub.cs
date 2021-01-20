@@ -1,12 +1,11 @@
 ﻿using Core.Application.Hubs;
-using Microsoft.AspNetCore.SignalR;
+using MediatR;
 using System;
 using System.Threading.Tasks;
-using MediatR;
 
 namespace Infrastructure.Socket.Hubs
 {
-    public class ChatHub : Hub<IHubClient>
+    public class ChatHub : HubBase
     {
         private readonly IMediator _mediator;
 
