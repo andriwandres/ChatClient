@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ChatMessage } from '@chat-client/core/models';
+import { ChatMessage, SendMessageBody } from '@chat-client/core/models';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import * as messageActions from './actions';
@@ -20,5 +20,9 @@ export class MessageFacade {
 
   loadMessages(recipientId: number): void {
     this.store.dispatch(messageActions.loadMessages({ recipientId }));
+  }
+
+  sendMessage(body: SendMessageBody): void {
+    this.store.dispatch(messageActions.sendMessage({ body }));
   }
 }

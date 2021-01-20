@@ -24,3 +24,9 @@ export interface MessageBoundaries {
   limit: number;
   before?: Date;
 }
+
+export interface SendMessageBody {
+  recipientId: number;
+  parentId?: number;
+  htmlContent: string;
+}

@@ -4,7 +4,8 @@ export const environment = {
     users: '',
     session: '',
     languages: '',
-    recipients: ''
+    recipients: '',
+    messages: '',
   },
   socket: {
     hub: ''

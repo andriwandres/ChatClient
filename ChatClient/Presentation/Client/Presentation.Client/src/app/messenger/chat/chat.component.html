@@ -4,4 +4,6 @@
 
 <app-messages></app-messages>
 
-<app-chat-actions></app-chat-actions>
+<app-chat-actions
+  (messageSent)="onMessageSent($event)"
+></app-chat-actions>

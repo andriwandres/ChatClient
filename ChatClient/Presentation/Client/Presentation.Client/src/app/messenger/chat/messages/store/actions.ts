@@ -1,4 +1,4 @@
-import { ApiError, ChatMessage } from '@chat-client/core/models';
+import { ApiError, ChatMessage, SendMessageBody } from '@chat-client/core/models';
 import { createAction, props, union } from '@ngrx/store';
 
 export enum ActionTypes {
@@ -7,9 +7,13 @@ export enum ActionTypes {
   LOAD_MESSAGES_SUCCESS = '[Messages] Load Messages Success',
   LOAD_PREVIOUS_MESSAGES_SUCCESS = '[Messages] Load Previous Messages Success',
 
+  SEND_MESSAGE = '[Messages] Send Message',
+
+  ADD_MESSAGE = '[Messages] Add Message',
+
   LOAD_MESSAGES_FAILURE = '[Messages] Load Messages Failure',
 
-  ADD_MESSAGE = '[Messages] Add Message'
+  SEND_MESSAGE_FAILURE = '[Messages] Send Message Failure',
 }
 
 // Load a list of messages with a recipient
@@ -36,8 +40,19 @@ export const addMessage = createAction(
   props<{ recipientId: number, message: ChatMessage }>()
 );
 
+// Send a new message
+export const sendMessage = createAction(
+  ActionTypes.SEND_MESSAGE,
+  props<{ body: SendMessageBody }>()
+);
+
 export const loadMessagesFailure = createAction(
   ActionTypes.LOAD_MESSAGES_FAILURE,
+  props<{ error: ApiError | null }>()
+);
+
+export const sendMessageFailure = createAction(
+  ActionTypes.SEND_MESSAGE_FAILURE,
   props<{ error: ApiError | null }>()
 );
 
@@ -48,7 +63,9 @@ const allActions = union({
   loadPreviousMessagesSuccess,
 
   loadMessagesFailure,
+  sendMessageFailure,
 
+  sendMessage,
   addMessage,
 });
 

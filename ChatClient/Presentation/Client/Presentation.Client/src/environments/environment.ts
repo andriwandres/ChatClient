@@ -8,7 +8,8 @@ export const environment = {
     users: 'http://localhost:5000/api/users',
     session: 'http://localhost:5000/api/session',
     languages: 'http://localhost:5000/api/languages',
-    recipients: 'http://localhost:5000/api/recipients'
+    recipients: 'http://localhost:5000/api/recipients',
+    messages: 'http://localhost:5000/api/messages',
   },
   socket: {
     hub: 'http://localhost:5000/chat'
