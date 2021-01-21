@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.Entities;
 
 namespace Core.Application.Requests.Recipients.Queries
 {
@@ -38,6 +39,7 @@ namespace Core.Application.Requests.Recipients.Queries
                         RecipientId = source.Recipient.UserId != currentUserId
                             ? source.RecipientId
                             : source.Message.Author.Recipient.RecipientId,
+
                         TargetGroup = source.Recipient.GroupMembershipId == null
                             ? null
                             : new TargetGroupResource
@@ -45,6 +47,7 @@ namespace Core.Application.Requests.Recipients.Queries
                                 GroupId = source.Recipient.GroupMembership.GroupId,
                                 Name = source.Recipient.GroupMembership.Group.Name,
                             },
+
                         TargetUser = source.Recipient.UserId == null
                             ? null
                             : new TargetUserResource
@@ -56,6 +59,7 @@ namespace Core.Application.Requests.Recipients.Queries
                                     ? source.Message.Author.UserName
                                     : source.Recipient.User.UserName
                             },
+
                         LatestMessage = new LatestMessageResource
                         {
                             MessageId = source.MessageId,
@@ -67,14 +71,19 @@ namespace Core.Application.Requests.Recipients.Queries
                             Created = source.Message.Created,
                             IsOwnMessage = source.Message.AuthorId == currentUserId
                         },
-                        AvailabilityStatusId = source.Recipient.UserId == null ? 0 : source.Recipient.User.Availability.StatusId,
+
+                        AvailabilityStatusId = source.Recipient.UserId == null
+                            ? 0
+                            : source.Recipient.User.Availability.StatusId,
+
                         IsPinned = source.Recipient.Pins.Any(pin => pin.UserId == currentUserId),
-                        UnreadMessagesCount = source.Recipient.ReceivedMessages.Count(
-                            mr => mr.IsRead == false && (
-                                mr.Recipient.GroupMembershipId == null ||
-                                mr.Recipient.GroupMembership.UserId == currentUserId
-                            )
-                        )
+
+                        UnreadMessagesCount = source.Recipient.UserId == null
+                            ? source.Recipient.ReceivedMessages.Count(mr => mr.IsRead == false && mr.Message.AuthorId != currentUserId)
+
+                            : source.Recipient.UserId != currentUserId
+                                ? 0
+                                : source.Recipient.ReceivedMessages.Count(mr => mr.IsRead == false && mr.Message.AuthorId == source.Message.AuthorId)
                     })
                     .ToListAsync(cancellationToken);
 
