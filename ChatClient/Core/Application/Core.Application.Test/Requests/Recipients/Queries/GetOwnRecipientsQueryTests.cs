@@ -25,70 +25,144 @@ namespace Core.Application.Test.Requests.Recipients.Queries
             _userProviderMock
                 .Setup(m => m.GetCurrentUserId())
                 .Returns(1);
-        }
 
-        // TODO: Split up in various different test methods for clarity in test reports
-        [Fact]
-        public async Task GetOwnRecipientsQueryHandler_CorrectlyMapsRecipients()
-        {
-            // Arrange
             IQueryable<MessageRecipient> queryableMock = _testData
                 .AsQueryable()
                 .BuildMock()
                 .Object;
 
             _unitOfWorkMock
-                .Setup(m => m.MessageRecipients.GetLatestGroupedByRecipients(It.IsAny<int>()))
+                .Setup(m => m.MessageRecipients.GetLatestGroupedByRecipients(1))
                 .Returns(queryableMock);
+        }
 
+        [Fact]
+        public async Task GetOwnRecipientsQueryHandler_CorrectlyMapsRecipientIds()
+        {
+            // Arrange
             GetOwnRecipientsQuery.Handler handler = new GetOwnRecipientsQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
-            
+
             // Act
-            IEnumerable<RecipientResource> recipients = await handler.Handle(new GetOwnRecipientsQuery());
+            List<RecipientResource> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
 
             // Assert
-            Assert.Equal(3, recipients.Count());
+            Assert.Equal(3, recipients.Count);
 
-            // * Mapped recipientId correctly
             Assert.Equal(2, recipients.ElementAt(0).RecipientId);
             Assert.Equal(3, recipients.ElementAt(1).RecipientId);
             Assert.Equal(4, recipients.ElementAt(2).RecipientId);
+        }
 
-            // * Mapped targets correctly
+        [Fact]
+        public async Task GetOwnRecipientsQueryHandler_CorrectlyMapsTargets()
+        {
+            // Arrange
+            GetOwnRecipientsQuery.Handler handler = new GetOwnRecipientsQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+
+            // Act
+            List<RecipientResource> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
+
+            // Assert
+            Assert.Equal(3, recipients.Count);
+
             Assert.Null(recipients.ElementAt(0).TargetGroup);
             Assert.NotNull(recipients.ElementAt(0).TargetUser);
             Assert.Equal(2, recipients.ElementAt(0).TargetUser.UserId);
+            Assert.Equal("user2", recipients.ElementAt(0).TargetUser.UserName);
 
             Assert.Null(recipients.ElementAt(1).TargetGroup);
             Assert.NotNull(recipients.ElementAt(1).TargetUser);
             Assert.Equal(3, recipients.ElementAt(1).TargetUser.UserId);
+            Assert.Equal("user3", recipients.ElementAt(1).TargetUser.UserName);
+
 
             Assert.Null(recipients.ElementAt(2).TargetUser);
             Assert.NotNull(recipients.ElementAt(2).TargetGroup);
             Assert.Equal(1, recipients.ElementAt(2).TargetGroup.GroupId);
+            Assert.Equal("group1", recipients.ElementAt(2).TargetGroup.Name);
+        }
 
-            // * Mapped latest message correctly
+        [Fact]
+        public async Task GetOwnRecipientsQueryHandler_CorrectlyMapsLatestMessages()
+        {
+            // Arrange
+            GetOwnRecipientsQuery.Handler handler = new GetOwnRecipientsQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+
+            // Act
+            List<RecipientResource> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
+
+            // Assert
+            Assert.Equal(3, recipients.Count);
+
             Assert.NotNull(recipients.ElementAt(0).LatestMessage);
             Assert.Equal(1, recipients.ElementAt(0).LatestMessage.MessageId);
+            Assert.False(recipients.ElementAt(0).LatestMessage.IsOwnMessage);
 
             Assert.NotNull(recipients.ElementAt(1).LatestMessage);
             Assert.Equal(2, recipients.ElementAt(1).LatestMessage.MessageId);
+            Assert.True(recipients.ElementAt(1).LatestMessage.IsOwnMessage);
 
             Assert.NotNull(recipients.ElementAt(2).LatestMessage);
             Assert.Equal(3, recipients.ElementAt(2).LatestMessage.MessageId);
-
-            // * Mapped unread messages correctly
-            Assert.Equal(1, recipients.ElementAt(0).UnreadMessagesCount);
-            Assert.Equal(0, recipients.ElementAt(1).UnreadMessagesCount);
-            Assert.Equal(2, recipients.ElementAt(2).UnreadMessagesCount);
+            Assert.False(recipients.ElementAt(2).LatestMessage.IsOwnMessage);
 
         }
 
-        // TODO: Add pin data & availability variants
+        [Fact]
+        public async Task GetOwnRecipientsQueryHandler_CorrectlyMapsAvailabilityStatuses()
+        {
+            // Arrange
+            GetOwnRecipientsQuery.Handler handler = new GetOwnRecipientsQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+
+            // Act
+            List<RecipientResource> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
+
+            // Assert
+            Assert.Equal(3, recipients.Count);
+
+            Assert.Equal(AvailabilityStatusId.Offline, recipients.ElementAt(0).AvailabilityStatusId);
+            Assert.Equal(AvailabilityStatusId.Online, recipients.ElementAt(1).AvailabilityStatusId);
+            Assert.Equal((AvailabilityStatusId) 0, recipients.ElementAt(2).AvailabilityStatusId);
+        }
+
+        [Fact]
+        public async Task GetOwnRecipientsQueryHandler_CorrectlyMapsPins()
+        {
+            // Arrange
+            GetOwnRecipientsQuery.Handler handler = new GetOwnRecipientsQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+
+            // Act
+            List<RecipientResource> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
+
+            // Assert
+            Assert.Equal(3, recipients.Count);
+
+            Assert.True(recipients.ElementAt(0).IsPinned);
+            Assert.False(recipients.ElementAt(1).IsPinned);
+            Assert.True(recipients.ElementAt(2).IsPinned);
+        }
+
+        [Fact]
+        public async Task GetOwnRecipientsQueryHandler_CorrectlyMapsUnreadMessages()
+        {
+            // Arrange
+            GetOwnRecipientsQuery.Handler handler = new GetOwnRecipientsQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+
+            // Act
+            List<RecipientResource> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
+
+            // Assert
+            Assert.Equal(3, recipients.Count);
+
+            Assert.Equal(1, recipients.ElementAt(0).UnreadMessagesCount);
+            Assert.Equal(0, recipients.ElementAt(1).UnreadMessagesCount);
+            Assert.Equal(2, recipients.ElementAt(2).UnreadMessagesCount);
+        }
+
         // Test data from the perspective of user #1
         private readonly IEnumerable<MessageRecipient> _testData = new[]
         {
-            // Recipient 1 - Private Chat with User #2 (1 unread message)
+            // Recipient 1 - Private Chat with User #2 (1 unread message) [pinned]
             new MessageRecipient
             {
                 MessageRecipientId = 1,
@@ -106,7 +180,17 @@ namespace Core.Application.Test.Requests.Recipients.Queries
                         UserName = "user2",
                         Recipient = new Recipient
                         {
-                            RecipientId = 2
+                            RecipientId = 2,
+                            Pins = new List<PinnedRecipient>
+                            {
+                                new PinnedRecipient { UserId = 378 },
+                                new PinnedRecipient { UserId = 1 },
+                                new PinnedRecipient { UserId = 3 },
+                            }
+                        },
+                        Availability =  new Availability
+                        {
+                            StatusId = AvailabilityStatusId.Offline
                         }
                     },
                     HtmlContent = "messageContent",
@@ -125,7 +209,11 @@ namespace Core.Application.Test.Requests.Recipients.Queries
                             StatusId = AvailabilityStatusId.Online
                         }
                     },
-                    Pins = new List<PinnedRecipient>(),
+                    Pins = new List<PinnedRecipient>
+                    {
+                        new PinnedRecipient { UserId = 378 },
+                        new PinnedRecipient { UserId = 3 },
+                    },
                     ReceivedMessages = new List<MessageRecipient>
                     {
                         new MessageRecipient
@@ -163,6 +251,14 @@ namespace Core.Application.Test.Requests.Recipients.Queries
                     {
                         UserId = 1,
                         UserName = "user1",
+                        Recipient = new Recipient
+                        {
+                            Pins = new List<PinnedRecipient>
+                            {
+                                new PinnedRecipient { UserId = 431 },
+                                new PinnedRecipient { UserId = 51 },
+                            }
+                        }
                     },
                     HtmlContent = "messageContent",
                     Created = new DateTime(2020, 2, 2, 15, 0, 0),
@@ -180,12 +276,28 @@ namespace Core.Application.Test.Requests.Recipients.Queries
                             StatusId = AvailabilityStatusId.Online
                         }
                     },
-                    Pins = new List<PinnedRecipient>(),
-                    ReceivedMessages = new List<MessageRecipient>(),
+                    Pins = new List<PinnedRecipient>
+                    {
+                        new PinnedRecipient { UserId = 431 },
+                        new PinnedRecipient { UserId = 51 },
+                    },
+                    ReceivedMessages = new List<MessageRecipient>
+                    {
+                        new MessageRecipient
+                        {
+                            IsRead = true, 
+                            Message = new Message { AuthorId = 1 }
+                        },
+                        new MessageRecipient
+                        {
+                            IsRead = true,
+                            Message = new Message { AuthorId = 1 }
+                        }
+                    },
                 },
             },
 
-            // Recipient 3 - Group Chat with User #2 and User #3 (2 unread messages)
+            // Recipient 3 - Group Chat with User #2 and User #3 (2 unread messages) [pinned]
             new MessageRecipient
             {
                 MessageRecipientId = 3,
@@ -201,6 +313,14 @@ namespace Core.Application.Test.Requests.Recipients.Queries
                     {
                         UserId = 3,
                         UserName = "user3",
+                        Recipient = new Recipient
+                        {
+                            Pins = new List<PinnedRecipient>
+                            {
+                                new PinnedRecipient { UserId = 431 },
+                                new PinnedRecipient { UserId = 51 },
+                            }
+                        }
                     },
                     HtmlContent = "messageContent",
                     Created = new DateTime(2020, 2, 2, 15, 1, 0),
@@ -219,7 +339,12 @@ namespace Core.Application.Test.Requests.Recipients.Queries
                             Name = "group1"
                         }
                     },
-                    Pins = new List<PinnedRecipient>(),
+                    Pins = new List<PinnedRecipient>
+                    {
+                        new PinnedRecipient { UserId = 431 },
+                        new PinnedRecipient { UserId = 51 },
+                        new PinnedRecipient { UserId = 1 },
+                    },
                     ReceivedMessages = new List<MessageRecipient>
                     {
                         new MessageRecipient

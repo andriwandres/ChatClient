@@ -74,9 +74,13 @@ namespace Core.Application.Requests.Recipients.Queries
 
                         AvailabilityStatusId = source.Recipient.UserId == null
                             ? 0
-                            : source.Recipient.User.Availability.StatusId,
+                            : source.Recipient.UserId == currentUserId
+                                ? source.Message.Author.Availability.StatusId
+                                : source.Recipient.User.Availability.StatusId,
 
-                        IsPinned = source.Recipient.Pins.Any(pin => pin.UserId == currentUserId),
+                        IsPinned = source.Recipient.UserId == currentUserId
+                            ? source.Message.Author.Recipient.Pins.Any(pin => pin.UserId == currentUserId)
+                            : source.Recipient.Pins.Any(pin => pin.UserId == currentUserId),
 
                         UnreadMessagesCount = source.Recipient.UserId == null
                             ? source.Recipient.ReceivedMessages.Count(mr => mr.IsRead == false && mr.Message.AuthorId != currentUserId)
