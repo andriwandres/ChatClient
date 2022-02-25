@@ -5,7 +5,7 @@
 ![Front-End](https://github.com/AndriWandres/ChatClient/workflows/Angular/badge.svg?branch=master)
 
 <!-- Intro section -->
-Instant-Messenger Chat Client that is built ontop of ASP.NET Core 3.1 and Angular 11. It leverages design patterns such as CQRS and Domain-Driven-Design.
+Instant-Messenger Chat Client that is built ontop of ASP.NET Core 6 and Angular 11. It leverages design patterns such as CQRS and Domain-Driven-Design.
 
 <!-- Table of contents -->
 ## 📜 Table of Contents
@@ -47,7 +47,7 @@ npm install
 ```
 
 #### .NET Core
-For running the ASP.NET Core application that serves the back-end, a [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core) of Version 3.1.100 or higher is required. Alternatively, you can install [Visual Studio 2019](https://visualstudio.microsoft.com/de/downloads), which already ships with the required SDKs and lets you run the application seemlessly.
+For running the ASP.NET Core application that serves the back-end, a [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core) of Version 6.0.0 or higher is required. Alternatively, you can install [Visual Studio 2019](https://visualstudio.microsoft.com/de/downloads), which already ships with the required SDKs and lets you run the application seemlessly.
 
 ### 🔨 Running the application
 You can open the solution file in Visual Studio 2019 and Run the startup project `Presentation.Api` in order to start the back-end application.
@@ -88,7 +88,7 @@ The following section lists the major technologies, frameworks and libraries use
 <code><img height="50" src="https://raw.githubusercontent.com/github/explore/96943574ba0c0340ba6ea1e6f768e9abe43e34e1/topics/sql-server/sql-server.png"></code>
 
 The back-end is built ontop of the .NET Core ecosystem and serves as a web API with a purely RESTful design. It utilizes design patterns such as CQRS and Domain-Driven-Design. For realizing chat-like functionality, it also uses web sockets for Server-To-Client communication. The database provider of choice is SQL Server. For querying and mutating database records, the Object-relational mapper Entity Framework Core is used.
-* [ASP.NET Core 3.1](https://dotnet.microsoft.com/learn/aspnet/what-is-aspnet-core) (RESTful Web API)
+* [ASP.NET Core](https://dotnet.microsoft.com/learn/aspnet/what-is-aspnet-core) (RESTful Web API)
 * [EF Core](https://docs.microsoft.com/en-us/ef/core/) (ORM)
 * [SignalR](https://dotnet.microsoft.com/apps/aspnet/signalr) (Web Socket)
 * [MediatR](https://github.com/jbogard/MediatR) (CQRS)
@@ -103,7 +103,7 @@ The back-end is built ontop of the .NET Core ecosystem and serves as a web API w
 <code><img height="50" src="https://raw.githubusercontent.com/github/explore/96943574ba0c0340ba6ea1e6f768e9abe43e34e1/topics/sass/sass.png"></code>
 
 The front-end is built as a Single-Page-Application using the Angular Framework from Google. It uses a state management solution similar to Redux for persisting local state. The design pattern follows mostly Google's material design, with a few exceptions here and there.
-* [Angular](https://angular.io) 11 (SPA Framework)
+* [Angular](https://angular.io) (SPA Framework)
 * [JavaScript/TypeScript](https://www.typescriptlang.org) (Interpreter/Transpiler)
 * [NGRX](https://ngrx.io) (State Management)
 * [Jasmine](https://jasmine.github.io/) (Testing)

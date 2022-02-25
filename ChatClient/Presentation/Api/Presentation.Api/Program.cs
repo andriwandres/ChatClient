@@ -20,7 +20,7 @@ using System.Net.Mime;
 using System.Text.Json;
 using Microsoft.Extensions.Configuration;
 using Swashbuckle.AspNetCore.SwaggerUI;
-
+ 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add presentation logic related services
@@ -114,5 +114,7 @@ application.UseEndpoints(endpoints =>
     endpoints.MapHub<ChatHubBase>("/chat");
     endpoints.MapControllers();
 });
+
+application.Run();
 
 public partial class Program {}
