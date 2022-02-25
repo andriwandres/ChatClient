@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
 using Swashbuckle.AspNetCore.Swagger;
 using System;
@@ -15,6 +14,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Presentation.Api.Extensions
 {
@@ -23,11 +24,11 @@ namespace Presentation.Api.Extensions
         public static void AddPresentationServices(this IServiceCollection services, IConfiguration configuration)
         {
             // Add AutoMapper
-            services.AddAutoMapper(typeof(Startup));
+            services.AddAutoMapper(typeof(Program));
 
             // Configure options
-            services.Configure<JwtOptions>(configuration.GetSection("JsonWebToken"));
-            services.Configure<CorsOptions>(configuration.GetSection("CrossOriginResourceSharing"));
+            services.AddOptions<JwtOptions>().Bind(configuration.GetSection("JsonWebToken"));
+            services.AddOptions<CorsOptions>().Bind(configuration.GetSection("CrossOriginResourceSharing"));
 
             // Add swagger
             services.AddSwaggerGen(options =>
@@ -37,7 +38,7 @@ namespace Presentation.Api.Extensions
                     Title = "Chat Client API",
                     Description = "REST API for instant-messenger web client",
                 });
-
+                
                 // Define jwt bearer authentication for securing the api in swagger
                 options.AddSecurityDefinition(JwtBearerDefaults.AuthenticationScheme, new OpenApiSecurityScheme
                 {
@@ -56,7 +57,7 @@ namespace Presentation.Api.Extensions
                         {
                             Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = JwtBearerDefaults.AuthenticationScheme }
                         },
-                        new string[] {}
+                        Array.Empty<string>()
                     }
                 });
 
@@ -88,7 +89,7 @@ namespace Presentation.Api.Extensions
             });
 
             // Add swagger example providers from assemblies
-            services.AddSwaggerExamplesFromAssemblyOf<Startup>();
+            services.AddSwaggerExamplesFromAssemblyOf<Program>();
 
             // Add cross-origin-resource-sharing
             services.AddCors();
@@ -97,7 +98,7 @@ namespace Presentation.Api.Extensions
             services.AddControllers()
                 .AddFluentValidation(config =>
                 {
-                    config.RegisterValidatorsFromAssemblyContaining<Startup>();
+                    config.RegisterValidatorsFromAssemblyContaining<Program>();
                 })
                 .ConfigureApiBehaviorOptions(options =>
                 {
@@ -106,12 +107,12 @@ namespace Presentation.Api.Extensions
                     {
                         IDictionary<string, IEnumerable<string>> errors = context.ModelState.ToDictionary(
                             state => state.Key,
-                            state => state.Value.Errors.Select(error => error.ErrorMessage)
+                            state => state.Value!.Errors.Select(error => error.ErrorMessage)
                         )
                         .Where(pair => pair.Value.Any())
                         .ToDictionary(pair => pair.Key, pair => pair.Value);
 
-                        ValidationErrorResource details = new ValidationErrorResource
+                        ValidationErrorResource details = new()
                         {
                             Errors = errors,
                             StatusCode = StatusCodes.Status400BadRequest,
