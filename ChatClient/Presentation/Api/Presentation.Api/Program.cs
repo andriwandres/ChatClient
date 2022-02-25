@@ -18,6 +18,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Mime;
 using System.Text.Json;
+using Microsoft.Extensions.Configuration;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
@@ -85,7 +86,10 @@ application.UseRouting();
 // Configure Cross-Origin-Resource-Sharing
 application.UseCors(corsBuilder =>
 {
-    CorsOptions cors = application.Services.GetService<CorsOptions>();
+    CorsOptions cors = application.Configuration
+        .GetSection(CorsOptions.ConfigurationKey)
+        .Get<CorsOptions>();
+    
     corsBuilder.WithOrigins(cors!.AllowedOrigins);
     corsBuilder.WithMethods(cors!.AllowedMethods);
     corsBuilder.WithHeaders(cors!.AllowedHeaders);
