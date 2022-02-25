@@ -12,7 +12,7 @@ namespace Presentation.Api.Test.Examples
     {
         private static IEnumerable<Type> GetTypesThatImplementOpenGenericInterface(Type genericInterface)
         {
-            return typeof(Startup).Assembly.GetTypes()
+            return typeof(Program).Assembly.GetTypes()
                 .SelectMany(type => type.GetInterfaces(), (type, @interface) => new {type, @interface})
                 .Select(t => new {t, baseType = t.type.BaseType})
                 .Where(t =>
