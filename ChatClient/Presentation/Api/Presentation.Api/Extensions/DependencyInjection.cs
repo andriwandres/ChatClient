@@ -1,21 +1,19 @@
-﻿using AutoMapper;
-using Core.Domain.Options;
+﻿using Core.Domain.Options;
 using Core.Domain.Resources.Errors;
 using FluentValidation.AspNetCore;
+using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.Filters;
-using Swashbuckle.AspNetCore.Swagger;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Microsoft.OpenApi.Models;
-using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace Presentation.Api.Extensions
 {
@@ -27,8 +25,8 @@ namespace Presentation.Api.Extensions
             services.AddAutoMapper(typeof(Program));
 
             // Configure options
-            services.AddOptions<JwtOptions>().Bind(configuration.GetSection("JsonWebToken"));
-            services.AddOptions<CorsOptions>().Bind(configuration.GetSection("CrossOriginResourceSharing"));
+            services.AddOptions<JwtOptions>().Bind(configuration.GetSection(JwtOptions.ConfigurationKey));
+            services.AddOptions<CorsOptions>().Bind(configuration.GetSection(CorsOptions.ConfigurationKey));
 
             // Add swagger
             services.AddSwaggerGen(options =>
@@ -76,17 +74,14 @@ namespace Presentation.Api.Extensions
                 {
                     options.IncludeXmlComments(path);
                 }
-
-                // Include validation rules from FluentValidation
-                options.AddFluentValidationRules();
-
+                
                 // Add support for swagger examples
                 options.ExampleFilters();
-
-                //options.OperationFilter<SecurityRequirementsOperationFilter>();
-
                 options.EnableAnnotations();
             });
+
+            // Include validation rules from FluentValidation
+            services.AddFluentValidationRulesToSwagger();
 
             // Add swagger example providers from assemblies
             services.AddSwaggerExamplesFromAssemblyOf<Program>();

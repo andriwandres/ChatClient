@@ -24,7 +24,7 @@ namespace Infrastructure.Shared.Extensions
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             // Get jwt secret
-            IConfigurationSection jwtSection = configuration.GetSection("JsonWebToken");
+            IConfigurationSection jwtSection = configuration.GetSection(JwtOptions.ConfigurationKey);
             string secretString = jwtSection.Get<JwtOptions>().Secret;
             byte[] secretBytes = Encoding.ASCII.GetBytes(secretString);
 
