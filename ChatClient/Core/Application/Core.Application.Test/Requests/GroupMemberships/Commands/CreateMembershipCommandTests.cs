@@ -4,10 +4,7 @@ using Core.Application.Requests.GroupMemberships.Commands;
 using Core.Application.Services;
 using Core.Domain.Entities;
 using Core.Domain.Resources.GroupMemberships;
-using MockQueryable.Moq;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -25,7 +22,7 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
             _unitOfWorkMock = new Mock<IUnitOfWork>();
             _dateProviderMock = new Mock<IDateProvider>();
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            MapperConfiguration mapperConfiguration = new(config =>
             {
                 config.CreateMap<GroupMembership, GroupMembershipResource>();
             });
@@ -37,26 +34,18 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
         public async Task CreateMembershipCommandHandler_ShouldCreateMembership_AndReturnCreatedMembership()
         {
             // Arrange
-            CreateMembershipCommand request = new CreateMembershipCommand
+            CreateMembershipCommand request = new()
             {
                 GroupId = 1,
                 UserId = 1,
                 IsAdmin = true
             };
 
-            IEnumerable<User> expectedUsers = new[]
+            User expectedUser = new User
             {
-                new User
-                {
-                    UserId = 1,
-                    UserName = "alfred_miller"
-                }
+                UserId = 1,
+                UserName = "alfred_miller"
             };
-
-            IQueryable<User> queryableMock = expectedUsers
-                .AsQueryable()
-                .BuildMock()
-                .Object;
 
             _unitOfWorkMock
                 .Setup(m => m.GroupMemberships.Add(It.IsAny<GroupMembership>(), It.IsAny<CancellationToken>()))
@@ -71,12 +60,10 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
                 .ReturnsAsync(2);
 
             _unitOfWorkMock
-                .Setup(m => m.Users.GetById(It.IsAny<int>()))
-                .Returns(queryableMock);
+                .Setup(m => m.Users.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(expectedUser);
 
-            
-
-            CreateMembershipCommand.Handler handler = new CreateMembershipCommand.Handler(_dateProviderMock.Object, _unitOfWorkMock.Object, _mapperMock);
+            CreateMembershipCommand.Handler handler = new(_dateProviderMock.Object, _unitOfWorkMock.Object, _mapperMock);
 
             // Act
             GroupMembershipResource membership = await handler.Handle(request);

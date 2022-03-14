@@ -1,19 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Core.Application.Database;
+﻿using Core.Application.Database;
 using Core.Application.Repositories;
 using Core.Domain.Entities;
 using Infrastructure.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
-using MockQueryable.Moq;
-using Moq;
+using Infrastructure.Persistence.Test.Helpers;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Infrastructure.Persistence.Test.Repositories
 {
     public class TranslationRepositoryTests
     {
+        private readonly IChatContext _context;
         private readonly IEnumerable<Translation> _translations = new[]
         {
             new Translation { TranslationId = 1, LanguageId = 1, Key = "Page.Group.LabelOne", Value = "Label 1" },
@@ -22,27 +21,24 @@ namespace Infrastructure.Persistence.Test.Repositories
             new Translation { TranslationId = 4, LanguageId = 2, Key = "Page.Group.LabelTwo", Value = "Text 1" },
         };
 
+        public TranslationRepositoryTests()
+        {
+            _context = TestContextFactory.Create();
+        }
+
         [Fact]
         public async Task GetByLanguage_ShouldReturnAllTranslations_InEnglish()
         {
             // Arrange
             const int languageId = 1;
 
-            Mock<DbSet<Translation>> translationDbSetMock = _translations
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Translations.AddRangeAsync(_translations);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Translations)
-                .Returns(translationDbSetMock.Object);
-
-            ITranslationRepository translationRepository = new TranslationRepository(contextMock.Object);
+            ITranslationRepository translationRepository = new TranslationRepository(_context);
 
             // Act
-            IEnumerable<Translation> actualTranslations = await translationRepository
-                .GetByLanguage(languageId)
-                .ToListAsync();
+            IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId);
 
             // Assert
             Assert.NotNull(actualTranslations);
@@ -58,21 +54,13 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Arrange
             const int languageId = 1817;
 
-            Mock<DbSet<Translation>> translationDbSetMock = _translations
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Translations.AddRangeAsync(_translations);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Translations)
-                .Returns(translationDbSetMock.Object);
-
-            ITranslationRepository translationRepository = new TranslationRepository(contextMock.Object);
+            ITranslationRepository translationRepository = new TranslationRepository(_context);
 
             // Act
-            IEnumerable<Translation> actualTranslations = await  translationRepository
-                .GetByLanguage(languageId)
-                .ToListAsync();
+            IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId);
 
             // Assert
             Assert.Empty(actualTranslations);
@@ -85,21 +73,13 @@ namespace Infrastructure.Persistence.Test.Repositories
             const int languageId = 1;
             const string pattern = "Page.Group.LabelTwo";
 
-            Mock<DbSet<Translation>> translationDbSetMock = _translations
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Translations.AddRangeAsync(_translations);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Translations)
-                .Returns(translationDbSetMock.Object);
-
-            ITranslationRepository translationRepository = new TranslationRepository(contextMock.Object);
+            ITranslationRepository translationRepository = new TranslationRepository(_context);
 
             // Act
-            IEnumerable<Translation> actualTranslations = await translationRepository
-                .GetByLanguage(languageId, pattern)
-                .ToListAsync();
+            IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId, pattern);
 
             // Assert
             Assert.NotEmpty(actualTranslations);
@@ -113,21 +93,13 @@ namespace Infrastructure.Persistence.Test.Repositories
             const int languageId = 1;
             const string pattern = "%LabelTwo";
 
-            Mock<DbSet<Translation>> translationDbSetMock = _translations
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Translations.AddRangeAsync(_translations);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Translations)
-                .Returns(translationDbSetMock.Object);
-
-            ITranslationRepository translationRepository = new TranslationRepository(contextMock.Object);
+            ITranslationRepository translationRepository = new TranslationRepository(_context);
 
             // Act
-            IEnumerable<Translation> actualTranslations = await translationRepository
-                .GetByLanguage(languageId, pattern)
-                .ToListAsync();
+            IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId, pattern);
 
             // Assert
             Assert.NotEmpty(actualTranslations);
@@ -141,21 +113,13 @@ namespace Infrastructure.Persistence.Test.Repositories
             const int languageId = 1;
             const string pattern = "Page.Group.Label%";
 
-            Mock<DbSet<Translation>> translationDbSetMock = _translations
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Translations.AddRangeAsync(_translations);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Translations)
-                .Returns(translationDbSetMock.Object);
-
-            ITranslationRepository translationRepository = new TranslationRepository(contextMock.Object);
+            ITranslationRepository translationRepository = new TranslationRepository(_context);
 
             // Act
-            IEnumerable<Translation> actualTranslations = await translationRepository
-                .GetByLanguage(languageId, pattern)
-                .ToListAsync();
+            IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId, pattern);
 
             // Assert
             Assert.NotEmpty(actualTranslations);
@@ -169,21 +133,13 @@ namespace Infrastructure.Persistence.Test.Repositories
             const int languageId = 1;
             const string pattern = "Page.%.LabelTwo";
 
-            Mock<DbSet<Translation>> translationDbSetMock = _translations
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Translations.AddRangeAsync(_translations);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Translations)
-                .Returns(translationDbSetMock.Object);
-
-            ITranslationRepository translationRepository = new TranslationRepository(contextMock.Object);
+            ITranslationRepository translationRepository = new TranslationRepository(_context);
 
             // Act
-            IEnumerable<Translation> actualTranslations = await translationRepository
-                .GetByLanguage(languageId, pattern)
-                .ToListAsync();
+            IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId, pattern);
 
             // Assert
             Assert.NotEmpty(actualTranslations);
@@ -197,21 +153,13 @@ namespace Infrastructure.Persistence.Test.Repositories
             const int languageId = 1;
             const string pattern = "unmatchable_pattern";
 
-            Mock<DbSet<Translation>> translationDbSetMock = _translations
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Translations.AddRangeAsync(_translations);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Translations)
-                .Returns(translationDbSetMock.Object);
-
-            ITranslationRepository translationRepository = new TranslationRepository(contextMock.Object);
+            ITranslationRepository translationRepository = new TranslationRepository(_context);
 
             // Act
-            IEnumerable<Translation> actualTranslations = await translationRepository
-                .GetByLanguage(languageId, pattern)
-                .ToListAsync();
+            IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId, pattern);
 
             // Assert
             Assert.Empty(actualTranslations);

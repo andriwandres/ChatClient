@@ -1,12 +1,8 @@
 ﻿using Core.Application.Database;
 using Core.Domain.Entities;
 using Infrastructure.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
-using MockQueryable.Moq;
-using Moq;
+using Infrastructure.Persistence.Test.Helpers;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -14,97 +10,54 @@ namespace Infrastructure.Persistence.Test.Repositories
 {
     public class GroupRepositoryTests
     {
+        private readonly IChatContext _context;
+
+        public GroupRepositoryTests()
+        {
+            _context = TestContextFactory.Create();
+        }
+
         [Fact]
         public async Task Add_ShouldAddGroupToTheDbContext()
         {
             // Arrange
-            Group group = new Group();
+            Group group = new();
 
-            Mock<DbSet<Group>> groupDbSetMock = Enumerable
-                .Empty<Group>()
-                .AsQueryable()
-                .BuildMockDbSet();
-
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Groups)
-                .Returns(groupDbSetMock.Object);
-
-            GroupRepository repository = new GroupRepository(contextMock.Object);
+            GroupRepository repository = new(_context);
 
             // Act
             await repository.Add(group);
 
             // Assert
-            contextMock.Verify(m => m.Groups.AddAsync(group, It.IsAny<CancellationToken>()));
+            Assert.NotEqual(0, group.GroupId);
+            Group addedGroup = await _context.Groups.FindAsync(group.GroupId);
+
+            Assert.NotNull(addedGroup);
         }
 
         [Fact]
-        public async Task GetById_ShouldReturnEmptyQueryable_WhenIdDoesNotMatch()
+        public async Task GetById_ShouldReturnNull_WhenIdDoesNotMatch()
         {
             // Arrange
             const int groupId = 38749;
 
             IEnumerable<Group> databaseGroups = new[]
             {
-                new Group {GroupId = 1},
-                new Group {GroupId = 2},
-                new Group {GroupId = 3},
+                new Group { GroupId = 1, Name = "Group #1", Description = "Group Description #1" },
+                new Group { GroupId = 2, Name = "Group #2", Description = "Group Description #2" },
+                new Group { GroupId = 3, Name = "Group #3", Description = "Group Description #3" },
             };
 
-            Mock<DbSet<Group>> groupDbSetMock = databaseGroups
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Groups.AddRangeAsync(databaseGroups);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Groups)
-                .Returns(groupDbSetMock.Object);
-
-            GroupRepository repository = new GroupRepository(contextMock.Object);
+            GroupRepository repository = new(_context);
 
             // Act
-            IEnumerable<Group> group = await repository
-                .GetById(groupId)
-                .ToListAsync();
+            Group group = await repository.GetByIdAsync(groupId);
 
             // Assert
-            Assert.NotNull(group);
-            Assert.Empty(group);
-        }
-
-        [Fact]
-        public async Task GetById_ShouldReturnEmptyQueryable_WhenGroupWasDeleted()
-        {
-            // Arrange
-            const int groupId = 1;
-
-            IEnumerable<Group> databaseGroups = new[]
-            {
-                new Group {GroupId = 1, IsDeleted = true },
-                new Group {GroupId = 2},
-                new Group {GroupId = 3},
-            };
-
-            Mock<DbSet<Group>> groupDbSetMock = databaseGroups
-                .AsQueryable()
-                .BuildMockDbSet();
-
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Groups)
-                .Returns(groupDbSetMock.Object);
-
-            GroupRepository repository = new GroupRepository(contextMock.Object);
-
-            // Act
-            IEnumerable<Group> group = await repository
-                .GetById(groupId)
-                .ToListAsync();
-
-            // Assert
-            Assert.NotNull(group);
-            Assert.Empty(group);
+            Assert.Null(group);
         }
 
         [Fact]
@@ -115,26 +68,18 @@ namespace Infrastructure.Persistence.Test.Repositories
 
             IEnumerable<Group> databaseGroups = new[]
             {
-                new Group {GroupId = 1},
-                new Group {GroupId = 2},
-                new Group {GroupId = 3},
+                new Group { GroupId = 1, Name = "Group #1", Description = "Group Description #1" },
+                new Group { GroupId = 2, Name = "Group #2", Description = "Group Description #2" },
+                new Group { GroupId = 3, Name = "Group #3", Description = "Group Description #3" },
             };
 
-            Mock<DbSet<Group>> groupDbSetMock = databaseGroups
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Groups.AddRangeAsync(databaseGroups);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Groups)
-                .Returns(groupDbSetMock.Object);
-
-            GroupRepository repository = new GroupRepository(contextMock.Object);
+            GroupRepository repository = new(_context);
 
             // Act
-            Group group = await repository
-                .GetById(groupId)
-                .SingleOrDefaultAsync();
+            Group group = await repository.GetByIdAsync(groupId);
 
             // Assert
             Assert.NotNull(group);
@@ -149,22 +94,15 @@ namespace Infrastructure.Persistence.Test.Repositories
 
             IEnumerable<Group> databaseGroups = new[]
             {
-                new Group { GroupId = 1 },
-                new Group { GroupId = 2 },
-                new Group { GroupId = 3 },
+                new Group { GroupId = 1, Name = "Group #1", Description = "Group Description #1" },
+                new Group { GroupId = 2, Name = "Group #2", Description = "Group Description #2" },
+                new Group { GroupId = 3, Name = "Group #3", Description = "Group Description #3" },
             };
 
-            DbSet<Group> mockDbSet = databaseGroups
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.Groups.AddRangeAsync(databaseGroups);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Groups)
-                .Returns(mockDbSet);
-
-            GroupRepository repository = new GroupRepository(contextMock.Object);
+            GroupRepository repository = new(_context);
 
             // Act
             bool exists = await repository.Exists(groupId);
@@ -181,22 +119,15 @@ namespace Infrastructure.Persistence.Test.Repositories
 
             IEnumerable<Group> databaseGroups = new[]
             {
-                new Group { GroupId = 1 },
-                new Group { GroupId = 2 },
-                new Group { GroupId = 3 },
+                new Group { GroupId = 1, Name = "Group #1", Description = "Group Description #1" },
+                new Group { GroupId = 2, Name = "Group #2", Description = "Group Description #2" },
+                new Group { GroupId = 3, Name = "Group #3", Description = "Group Description #3" },
             };
 
-            DbSet<Group> mockDbSet = databaseGroups
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.Groups.AddRangeAsync(databaseGroups);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Groups)
-                .Returns(mockDbSet);
-
-            GroupRepository repository = new GroupRepository(contextMock.Object);
+            GroupRepository repository = new(_context);
 
             // Act
             bool exists = await repository.Exists(groupId);
@@ -213,22 +144,15 @@ namespace Infrastructure.Persistence.Test.Repositories
 
             IEnumerable<Group> databaseGroups = new[]
             {
-                new Group { GroupId = 1, IsDeleted = true },
-                new Group { GroupId = 2 },
-                new Group { GroupId = 3 },
+                new Group { GroupId = 1, Name = "Group #1", Description = "Group Description #1", IsDeleted = true },
+                new Group { GroupId = 2, Name = "Group #2", Description = "Group Description #2" },
+                new Group { GroupId = 3, Name = "Group #3", Description = "Group Description #3" },
             };
 
-            DbSet<Group> mockDbSet = databaseGroups
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.Groups.AddRangeAsync(databaseGroups);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Groups)
-                .Returns(mockDbSet);
-
-            GroupRepository repository = new GroupRepository(contextMock.Object);
+            GroupRepository repository = new(_context);
 
             // Act
             bool exists = await repository.Exists(groupId);
@@ -238,33 +162,26 @@ namespace Infrastructure.Persistence.Test.Repositories
         }
 
         [Fact]
-        public void Update_ShouldUpdateGroupInContext()
+        public async Task Update_ShouldUpdateGroupInContext()
         {
             // Arrange
-            Group group = new Group {GroupId = 1};
+            Group group = new() {GroupId = 1, Name = "Test Group", Description = "Updated" };
+            Group databaseGroup = new() { GroupId = 1, Name = "Test Group", Description = "Original" };
 
-            IEnumerable<Group> databaseGroups = new []
-            {
-                new Group { GroupId = 1 }
-            };
+            await _context.Groups.AddAsync(databaseGroup);
+            await _context.SaveChangesAsync();
+            _context.ChangeTracker.Clear();
 
-            DbSet<Group> mockDbSet = databaseGroups
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
-
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Groups)
-                .Returns(mockDbSet);
-
-            GroupRepository repository = new GroupRepository(contextMock.Object);
+            GroupRepository repository = new(_context);
 
             // Act
-            repository.Update(new Group());
+            repository.Update(group);
 
             // Assert
-            contextMock.Verify(m => m.Groups.Update(It.IsAny<Group>()), Times.Once);
+            Group updatedGroup = await _context.Groups.FindAsync(group.GroupId);            
+
+            Assert.NotNull(updatedGroup);
+            Assert.Equal(group.Description, updatedGroup.Description);
         }
     }
 }

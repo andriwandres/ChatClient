@@ -2,11 +2,8 @@
 using Core.Application.Requests.Availabilities.Commands;
 using Core.Application.Services;
 using Core.Domain.Entities;
-using MockQueryable.Moq;
 using Moq;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -38,21 +35,11 @@ namespace Core.Application.Test.Requests.Availabilities.Commands
         public async Task UpdateAvailabilityCommandHandler_ShouldUpdateAvailabilityStatus()
         {
             // Arrange
-            UpdateAvailabilityCommand request = new UpdateAvailabilityCommand { AvailabilityStatusId = AvailabilityStatusId.Busy };
-
-            IEnumerable<Availability> databaseAvailabilities = new[]
-            {
-                new Availability {AvailabilityId = 1, UserId = 1}
-            };
-
-            IQueryable<Availability> queryableMock = databaseAvailabilities
-                .AsQueryable()
-                .BuildMock()
-                .Object;
+            UpdateAvailabilityCommand request = new() { AvailabilityStatusId = AvailabilityStatusId.Busy };
 
             _unitOfWorkMock
                 .Setup(m => m.Availabilities.GetByUser(1))
-                .Returns(queryableMock);
+                .ReturnsAsync(new Availability { AvailabilityId = 1, UserId = 1 });
 
             Availability passedAvailability = null;
 
@@ -64,7 +51,7 @@ namespace Core.Application.Test.Requests.Availabilities.Commands
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            UpdateAvailabilityCommand.Handler handler = new UpdateAvailabilityCommand.Handler(_unitOfWorkMock.Object, _userProviderMock.Object, _dateProviderMock.Object);
+            UpdateAvailabilityCommand.Handler handler = new(_unitOfWorkMock.Object, _userProviderMock.Object, _dateProviderMock.Object);
 
             // Act
             await handler.Handle(request);
@@ -76,6 +63,5 @@ namespace Core.Application.Test.Requests.Availabilities.Commands
             Assert.NotNull(passedAvailability);
             Assert.Equal(request.AvailabilityStatusId, passedAvailability.StatusId);
         }
-
     }
 }

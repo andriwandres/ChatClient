@@ -7,15 +7,10 @@ using System.Linq;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class CountryRepository : RepositoryBase, ICountryRepository
+    public class CountryRepository : RepositoryBase<Country>, ICountryRepository
     {
         public CountryRepository(IChatContext context) : base(context)
         {
-        }
-
-        public IQueryable<Country> GetAll()
-        {
-            return Context.Countries.AsNoTracking();
         }
     }
 }

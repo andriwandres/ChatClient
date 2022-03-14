@@ -1,17 +1,16 @@
-﻿using System;
-using Core.Application.Database;
+﻿using Core.Application.Database;
 using Core.Application.Hubs;
 using Core.Application.Services;
+using Core.Domain.Dtos.Messages;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Messages;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
-using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Domain.Dtos.Messages;
 
 namespace Core.Application.Requests.Messages.Commands
 {
@@ -57,14 +56,7 @@ namespace Core.Application.Requests.Messages.Commands
                 await _unitOfWork.Messages.Add(message, cancellationToken);
 
                 // Recipient to send the message to
-                Recipient recipient = await _unitOfWork.Recipients
-                    .GetById(request.RecipientId)
-                    .AsTracking()
-                    .Include(r => r.GroupMembership)
-                    .ThenInclude(gm => gm.Group)
-                    .ThenInclude(g => g.Memberships)
-                    .ThenInclude(gm => gm.Recipient)
-                    .SingleOrDefaultAsync(cancellationToken);
+                Recipient recipient = await _unitOfWork.Recipients.GetByIdIncludingMemberships(request.RecipientId, cancellationToken);
 
                 // Send group chat message to all members of the group
                 if (recipient.UserId == null)
@@ -95,7 +87,7 @@ namespace Core.Application.Requests.Messages.Commands
                 // Send private chat message
                 else
                 {
-                    MessageRecipient messageRecipient = new MessageRecipient
+                    MessageRecipient messageRecipient = new()
                     {
                         Message = message,
                         MessageId = message.MessageId,
@@ -142,9 +134,7 @@ namespace Core.Application.Requests.Messages.Commands
             {
                 int currentUserId = _userProvider.GetCurrentUserId();
 
-                User author = await _unitOfWork.Users
-                    .GetById(currentUserId)
-                    .SingleOrDefaultAsync();
+                User author = await _unitOfWork.Users.GetByIdAsync(currentUserId);
 
                 // Get a list of all users to notify (except the author)
                 IEnumerable<int> userIds = members
@@ -187,13 +177,10 @@ namespace Core.Application.Requests.Messages.Commands
             {
                 int currentUserId = _userProvider.GetCurrentUserId();
 
-                User author = await _unitOfWork.Users
-                    .GetById(currentUserId)
-                    .Include(u => u.Recipient)
-                    .SingleOrDefaultAsync();
+                User author = await _unitOfWork.Users.GetByIdIncludingRecipient(currentUserId);
 
                 // Map message to a view model
-                ChatMessageResource message = new ChatMessageResource
+                ChatMessageResource message = new()
                 {
                     MessageRecipientId = messageRecipient.MessageRecipientId,
                     MessageId = messageRecipient.MessageId,

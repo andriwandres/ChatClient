@@ -1,13 +1,12 @@
-﻿using Core.Domain.Entities;
-using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using Core.Application.Common;
+using Core.Domain.Entities;
 
 namespace Core.Application.Repositories
 {
-    public interface ILanguageRepository
+    public interface ILanguageRepository : IRepository<Language>
     {
-        IQueryable<Language> GetAll();
         Task<bool> Exists(int languageId, CancellationToken cancellationToken = default);
     }
 }

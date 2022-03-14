@@ -2,10 +2,8 @@
 using Core.Application.Requests.GroupMemberships.Queries;
 using Core.Application.Services;
 using Core.Domain.Entities;
-using MockQueryable.Moq;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -31,15 +29,9 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
             // Arrange
             CanCreateMembershipQuery request = new CanCreateMembershipQuery { GroupId = 1 };
 
-            IQueryable<GroupMembership> expectedMemberships = Enumerable
-                .Empty<GroupMembership>()
-                .AsQueryable()
-                .BuildMock()
-                .Object;
-
             _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.GetByCombination(request.GroupId, 1))
-                .Returns(expectedMemberships);
+                .Setup(m => m.GroupMemberships.GetByCombination(request.GroupId, 1, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(null as GroupMembership);
             
             CanCreateMembershipQuery.Handler handler = new CanCreateMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
@@ -56,19 +48,11 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
             // Arrange
             CanCreateMembershipQuery request = new CanCreateMembershipQuery { GroupId = 1 };
 
-            IEnumerable<GroupMembership> expectedMemberships = new[]
-            {
-                new GroupMembership {GroupMembershipId = 1, UserId = 1, IsAdmin = false}
-            };
-
-            IQueryable<GroupMembership> queryableMock = expectedMemberships
-                .AsQueryable()
-                .BuildMock()
-                .Object;
+            GroupMembership expectedMembership = new GroupMembership {GroupMembershipId = 1, UserId = 1, IsAdmin = false};
 
             _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.GetByCombination(request.GroupId, 1))
-                .Returns(queryableMock);
+                .Setup(m => m.GroupMemberships.GetByCombination(request.GroupId, 1, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expectedMembership);
 
             CanCreateMembershipQuery.Handler handler = new CanCreateMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
@@ -85,19 +69,11 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
             // Arrange
             CanCreateMembershipQuery request = new CanCreateMembershipQuery { GroupId = 1 };
 
-            IEnumerable<GroupMembership> expectedMemberships = new[]
-            {
-                new GroupMembership {GroupMembershipId = 1, UserId = 1, IsAdmin = true}
-            };
-
-            IQueryable<GroupMembership> queryableMock = expectedMemberships
-                .AsQueryable()
-                .BuildMock()
-                .Object;
+            GroupMembership expectedMembership = new GroupMembership {GroupMembershipId = 1, UserId = 1, IsAdmin = true};
 
             _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.GetByCombination(request.GroupId, 1))
-                .Returns(queryableMock);
+                .Setup(m => m.GroupMemberships.GetByCombination(request.GroupId, 1, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expectedMembership);
 
             CanCreateMembershipQuery.Handler handler = new CanCreateMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 

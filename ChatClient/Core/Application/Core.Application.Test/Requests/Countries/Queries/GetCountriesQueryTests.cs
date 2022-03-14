@@ -3,7 +3,6 @@ using Core.Application.Database;
 using Core.Application.Requests.Countries.Queries;
 using Core.Domain.Entities;
 using Core.Domain.Resources;
-using MockQueryable.Moq;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,24 +31,19 @@ namespace Core.Application.Test.Requests.Countries.Queries
         public async Task GetCountriesQueryHandler_ReturnsCountries()
         {
             // Arrange
-            GetCountriesQuery request = new GetCountriesQuery();
+            GetCountriesQuery request = new();
 
-            IEnumerable<Country> expectedCountries = new[]
+            List<Country> expectedCountries = new()
             {
                 new Country { CountryId = 1 },
                 new Country { CountryId = 2 },
             };
 
-            IQueryable<Country> queryableMock = expectedCountries
-                .AsQueryable()
-                .BuildMock()
-                .Object;
-
             _unitOfWorkMock
-                .Setup(m => m.Countries.GetAll())
-                .Returns(queryableMock);
+                .Setup(m => m.Countries.GetAllAsync())
+                .ReturnsAsync(expectedCountries);
 
-            GetCountriesQuery.Handler handler = new GetCountriesQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
+            GetCountriesQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object);
 
             // Act
             IEnumerable<CountryResource> actualCountries = await handler.Handle(request);

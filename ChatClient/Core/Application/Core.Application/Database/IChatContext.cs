@@ -1,13 +1,16 @@
-﻿using System;
+﻿using Core.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Domain.Entities;
-using Microsoft.EntityFrameworkCore;
 
 namespace Core.Application.Database
 {
     public interface IChatContext : IDisposable, IAsyncDisposable
     {
+        ChangeTracker ChangeTracker { get; }
+
         DbSet<ArchivedRecipient> ArchivedRecipients { get; set; }
         DbSet<Availability> Availabilities { get; set; }
         DbSet<AvailabilityStatus> AvailabilityStatuses { get; set; }
@@ -34,5 +37,6 @@ namespace Core.Application.Database
 
         int SaveChanges();
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+        DbSet<TEntity> Set<TEntity>() where TEntity : class;
     }
 }

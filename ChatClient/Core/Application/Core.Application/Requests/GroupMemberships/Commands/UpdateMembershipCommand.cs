@@ -1,7 +1,6 @@
 ﻿using Core.Application.Database;
 using Core.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,9 +22,7 @@ namespace Core.Application.Requests.GroupMemberships.Commands
 
             public async Task<Unit> Handle(UpdateMembershipCommand request, CancellationToken cancellationToken = default)
             {
-                GroupMembership membership = await _unitOfWork.GroupMemberships
-                    .GetById(request.GroupMembershipId)
-                    .SingleOrDefaultAsync(cancellationToken);
+                GroupMembership membership = await _unitOfWork.GroupMemberships.GetByIdAsync(request.GroupMembershipId);
 
                 membership.IsAdmin = request.IsAdmin;
 

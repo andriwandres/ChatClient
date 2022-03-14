@@ -1,7 +1,6 @@
 ﻿using Core.Application.Database;
 using Core.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -23,9 +22,7 @@ namespace Core.Application.Requests.Messages.Commands
 
             public async Task<Unit> Handle(EditMessageCommand request, CancellationToken cancellationToken = default)
             {
-                Message message = await _unitOfWork.Messages
-                    .GetById(request.MessageId)
-                    .SingleOrDefaultAsync(cancellationToken);
+                Message message = await _unitOfWork.Messages.GetByIdAsync(request.MessageId);
 
                 message.HtmlContent = request.HtmlContent;
                 message.IsEdited = true;

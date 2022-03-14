@@ -1,10 +1,7 @@
 ﻿using Core.Application.Database;
 using Core.Application.Requests.Groups.Commands;
 using Core.Domain.Entities;
-using MockQueryable.Moq;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -24,28 +21,20 @@ namespace Core.Application.Test.Requests.Groups.Commands
         public async Task UpdateGroupCommandHandler_ShouldUpdateGroup()
         {
             // Arrange
-            UpdateGroupCommand request = new UpdateGroupCommand
+            UpdateGroupCommand request = new()
             {
                 GroupId = 1,
                 Name = "Some updated name",
                 Description = "Some updated description"
             };
 
-            IEnumerable<Group> expectedGroup = new[]
-            {
-                new Group { GroupId = 1 }
-            };
-
-            IQueryable<Group> queryableMock = expectedGroup
-                .AsQueryable()
-                .BuildMock()
-                .Object;
+            Group expectedGroup = new() { GroupId = 1 };
 
             _unitOfWork
-                .Setup(m => m.Groups.GetById(request.GroupId))
-                .Returns(queryableMock);
+                .Setup(m => m.Groups.GetByIdAsync(request.GroupId))
+                .ReturnsAsync(expectedGroup);
 
-            UpdateGroupCommand.Handler handler = new UpdateGroupCommand.Handler(_unitOfWork.Object);
+            UpdateGroupCommand.Handler handler = new(_unitOfWork.Object);
 
             // Act
             await handler.Handle(request);

@@ -1,14 +1,14 @@
-﻿using Core.Domain.Entities;
-using System.Linq;
+﻿using Core.Application.Common;
+using Core.Domain.Entities;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Core.Application.Repositories
 {
-    public interface IFriendshipRepository
+    public interface IFriendshipRepository : IRepository<Friendship>
     {
-        IQueryable<Friendship> GetById(int friendshipId);
-        IQueryable<Friendship> GetByUser(int userId);
+        Task<List<Friendship>> GetByUser(int userId);
         Task<bool> Exists(int friendshipId, CancellationToken cancellationToken = default);
         Task<bool> CombinationExists(int requesterId, int addresseeId, CancellationToken cancellationToken = default);
         Task Add(Friendship friendship, CancellationToken cancellationToken = default);

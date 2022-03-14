@@ -1,12 +1,10 @@
 ﻿using Core.Application.Database;
+using Core.Application.Repositories;
 using Core.Domain.Entities;
 using Infrastructure.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
-using MockQueryable.Moq;
-using Moq;
+using Infrastructure.Persistence.Test.Helpers;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -14,29 +12,29 @@ namespace Infrastructure.Persistence.Test.Repositories
 {
     public class GroupMembershipRepositoryTests
     {
+        private readonly IChatContext _context;
+
+        public GroupMembershipRepositoryTests()
+        {
+            _context = TestContextFactory.Create();
+        }
+
         [Fact]
         public async Task Add_ShouldAddGroupMembershipsToTheDbContext()
         {
             // Arrange
-            GroupMembership membership = new GroupMembership();
+            GroupMembership membership = new();
 
-            Mock<DbSet<GroupMembership>> membershipDbSetMock = Enumerable
-                .Empty<GroupMembership>()
-                .AsQueryable()
-                .BuildMockDbSet();
-
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.GroupMemberships)
-                .Returns(membershipDbSetMock.Object);
-
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+            IGroupMembershipRepository repository = new GroupMembershipRepository(_context);
 
             // Act
             await repository.Add(membership);
 
             // Assert
-            contextMock.Verify(m => m.GroupMemberships.AddAsync(membership, It.IsAny<CancellationToken>()));
+            Assert.NotEqual(0, membership.GroupMembershipId);
+            GroupMembership addedMembership = await _context.GroupMemberships.FindAsync(membership.GroupMembershipId);
+
+            Assert.NotNull(addedMembership);
         }
 
         [Fact]
@@ -53,22 +51,13 @@ namespace Infrastructure.Persistence.Test.Repositories
                 new GroupMembership { GroupMembershipId = 4, GroupId = 3 },
             };
 
-            DbSet<GroupMembership> membershipDbSetMock = databaseMemberships
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.GroupMemberships.AddRangeAsync(databaseMemberships);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.GroupMemberships)
-                .Returns(membershipDbSetMock);
-
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+            GroupMembershipRepository repository = new(_context);
 
             // Act
-            IEnumerable<GroupMembership> actualMemberships = await repository
-                .GetByGroup(groupId)
-                .ToListAsync();
+            IEnumerable<GroupMembership> actualMemberships = await repository.GetByGroup(groupId);
 
             // Assert
             Assert.NotNull(actualMemberships);
@@ -91,17 +80,10 @@ namespace Infrastructure.Persistence.Test.Repositories
                 new GroupMembership { GroupMembershipId = 4, GroupId = 3, UserId = 1},
             };
 
-            DbSet<GroupMembership> membershipDbSetMock = databaseMemberships
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.GroupMemberships.AddRangeAsync(databaseMemberships);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.GroupMemberships)
-                .Returns(membershipDbSetMock);
-
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+            GroupMembershipRepository repository = new(_context);
 
             // Act
             bool exists = await repository.CombinationExists(groupId, userId);
@@ -125,95 +107,16 @@ namespace Infrastructure.Persistence.Test.Repositories
                 new GroupMembership { GroupMembershipId = 4, GroupId = 3, UserId = 1},
             };
 
-            DbSet<GroupMembership> membershipDbSetMock = databaseMemberships
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.GroupMemberships.AddRangeAsync(databaseMemberships);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.GroupMemberships)
-                .Returns(membershipDbSetMock);
-
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+            GroupMembershipRepository repository = new(_context);
 
             // Act
             bool exists = await repository.CombinationExists(groupId, userId);
 
             // Assert
             Assert.False(exists);
-        }
-
-        [Fact]
-        public async Task GetById_ShouldReturnEmptyQueryable_WhenIdDoesNotMatch()
-        {
-            // Arrange
-            const int membershipId = 43289;
-
-            IEnumerable<GroupMembership> databaseMemberships = new[]
-            {
-                new GroupMembership { GroupMembershipId = 1, GroupId = 1, UserId = 1 },
-                new GroupMembership { GroupMembershipId = 2, GroupId = 1, UserId = 2},
-                new GroupMembership { GroupMembershipId = 3, GroupId = 2, UserId = 1 },
-                new GroupMembership { GroupMembershipId = 4, GroupId = 3, UserId = 1},
-            };
-
-            DbSet<GroupMembership> membershipDbSetMock = databaseMemberships
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
-
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.GroupMemberships)
-                .Returns(membershipDbSetMock);
-
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
-
-            // Act
-            IEnumerable<GroupMembership> memberships = await repository
-                .GetById(membershipId)
-                .ToListAsync();
-
-            // Assert
-            Assert.NotNull(memberships);
-            Assert.Empty(memberships);
-        }
-
-        [Fact]
-        public async Task GetById_ShouldReturnMembership_WhenIdMatches()
-        {
-            // Arrange
-            const int membershipId = 2;
-
-            IEnumerable<GroupMembership> databaseMemberships = new[]
-            {
-                new GroupMembership { GroupMembershipId = 1, GroupId = 1, UserId = 1 },
-                new GroupMembership { GroupMembershipId = 2, GroupId = 1, UserId = 2},
-                new GroupMembership { GroupMembershipId = 3, GroupId = 2, UserId = 1 },
-                new GroupMembership { GroupMembershipId = 4, GroupId = 3, UserId = 1},
-            };
-
-            DbSet<GroupMembership> membershipDbSetMock = databaseMemberships
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
-
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.GroupMemberships)
-                .Returns(membershipDbSetMock);
-
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
-
-            // Act
-            GroupMembership membership = await repository
-                .GetById(membershipId)
-                .SingleOrDefaultAsync();
-
-            // Assert
-            Assert.NotNull(membership);
-            Assert.Equal(membershipId, membership.GroupMembershipId);
         }
 
         [Fact]
@@ -230,17 +133,10 @@ namespace Infrastructure.Persistence.Test.Repositories
                 new GroupMembership { GroupMembershipId = 4, GroupId = 3, UserId = 1},
             };
 
-            DbSet<GroupMembership> membershipDbSetMock = databaseMemberships
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.GroupMemberships.AddRangeAsync(databaseMemberships);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.GroupMemberships)
-                .Returns(membershipDbSetMock);
-
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+            GroupMembershipRepository repository = new(_context);
 
             // Act
             bool exists = await repository.Exists(membershipId);
@@ -263,17 +159,10 @@ namespace Infrastructure.Persistence.Test.Repositories
                 new GroupMembership { GroupMembershipId = 4, GroupId = 3, UserId = 1},
             };
 
-            DbSet<GroupMembership> membershipDbSetMock = databaseMemberships
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.GroupMemberships.AddRangeAsync(databaseMemberships);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.GroupMemberships)
-                .Returns(membershipDbSetMock);
-
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+            GroupMembershipRepository repository = new(_context);
 
             // Act
             bool exists = await repository.Exists(membershipId);
@@ -283,31 +172,29 @@ namespace Infrastructure.Persistence.Test.Repositories
         }
 
         [Fact]
-        public void Update_ShouldUpdateMembership()
+        public async Task Update_ShouldUpdateMembership()
         {
             // Arrange
-            DbSet<GroupMembership> dbSetMock = Enumerable
-                .Empty<GroupMembership>()
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            GroupMembership databaseMembership = new() { GroupMembershipId = 1, UserId = 1 };
+            GroupMembership membershipToUpdate = new() { GroupMembershipId = 2, UserId = 2 };
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.GroupMemberships)
-                .Returns(dbSetMock);
+            await _context.GroupMemberships.AddAsync(databaseMembership);
+            await _context.SaveChangesAsync();
 
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+            GroupMembershipRepository repository = new(_context);
 
             // Act
-            repository.Update(new GroupMembership());
+            repository.Update(membershipToUpdate);
 
             // Assert
-            contextMock.Verify(m => m.GroupMemberships.Update(It.IsAny<GroupMembership>()));
+            GroupMembership updatedMembership = await _context.GroupMemberships.FindAsync(membershipToUpdate.GroupMembershipId);
+
+            Assert.NotNull(updatedMembership);
+            Assert.Equal(membershipToUpdate.UserId, updatedMembership.UserId);
         }
 
         [Fact]
-        public async Task GetByCombination_ShouldReturnEmptyQueryable_WhenCombinationDoesNotMatch()
+        public async Task GetByCombination_ShouldReturnNull_WhenCombinationDoesNotMatch()
         {
             // Arrange
             const int userId = 4311;
@@ -321,22 +208,13 @@ namespace Infrastructure.Persistence.Test.Repositories
                 new GroupMembership {GroupMembershipId = 4, GroupId = 2, UserId = 2},
             };
 
-            DbSet<GroupMembership> dbSetMock = memberships
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.GroupMemberships.AddRangeAsync(memberships);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.GroupMemberships)
-                .Returns(dbSetMock);
-
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+            GroupMembershipRepository repository = new(_context);
 
             // Act
-            GroupMembership actualMembership = await repository
-                .GetByCombination(groupId, userId)
-                .SingleOrDefaultAsync();
+            GroupMembership actualMembership = await repository.GetByCombination(groupId, userId);
 
             // Assert
             Assert.Null(actualMembership);
@@ -357,22 +235,13 @@ namespace Infrastructure.Persistence.Test.Repositories
                 new GroupMembership {GroupMembershipId = 4, GroupId = 2, UserId = 2},
             };
 
-            DbSet<GroupMembership> dbSetMock = memberships
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.GroupMemberships.AddRangeAsync(memberships);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.GroupMemberships)
-                .Returns(dbSetMock);
-
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+            GroupMembershipRepository repository = new(_context);
 
             // Act
-            GroupMembership actualMembership = await repository
-                .GetByCombination(groupId, userId)
-                .SingleOrDefaultAsync();
+            GroupMembership actualMembership = await repository.GetByCombination(groupId, userId);
 
             // Assert
             Assert.NotNull(actualMembership);
@@ -386,34 +255,26 @@ namespace Infrastructure.Persistence.Test.Repositories
             const int userId = 1;
             const int membershipIdToUpdate = 1;
 
-            IEnumerable<GroupMembership> memberships = new[]
+            GroupMembership membership = new()
             {
-                new GroupMembership 
+                GroupMembershipId = 1, 
+                GroupId = 1, 
+                UserId = 2,
+                Group = new Group
                 {
-                    GroupMembershipId = 1, 
-                    GroupId = 1, 
-                    UserId = 2,
-                    Group = new Group
+                    Name = "Test Group",
+                    Description = "Test Group Description",
+                    Memberships = new HashSet<GroupMembership>
                     {
-                        Memberships = new HashSet<GroupMembership>
-                        {
-                            new GroupMembership { GroupMembershipId = 2, UserId = 2, IsAdmin = true }
-                        }
+                        new() { GroupMembershipId = 2, UserId = 2, IsAdmin = true }
                     }
-                },
+                }
             };
 
-            DbSet<GroupMembership> dbSetMock = memberships
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.GroupMemberships.AddAsync(membership);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.GroupMemberships)
-                .Returns(dbSetMock);
-
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+            GroupMembershipRepository repository = new(_context);
 
             // Act
             bool canUpdate = await repository.CanUpdateMembership(userId, membershipIdToUpdate);
@@ -429,34 +290,26 @@ namespace Infrastructure.Persistence.Test.Repositories
             const int userId = 1;
             const int membershipIdToUpdate = 1;
 
-            IEnumerable<GroupMembership> memberships = new[]
+            GroupMembership membership = new()
             {
-                new GroupMembership
+                GroupMembershipId = 1,
+                GroupId = 1,
+                UserId = 2,
+                Group = new Group
                 {
-                    GroupMembershipId = 1,
-                    GroupId = 1,
-                    UserId = 2,
-                    Group = new Group
+                    Name = "Test Group",
+                    Description = "Test Group Description",
+                    Memberships = new HashSet<GroupMembership>
                     {
-                        Memberships = new HashSet<GroupMembership>
-                        {
-                            new GroupMembership { GroupMembershipId = 2, UserId = 1, IsAdmin = false }
-                        }
+                        new() { GroupMembershipId = 2, UserId = 1, IsAdmin = false }
                     }
-                },
+                }
             };
 
-            DbSet<GroupMembership> dbSetMock = memberships
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.GroupMemberships.AddAsync(membership);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.GroupMemberships)
-                .Returns(dbSetMock);
-
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+            GroupMembershipRepository repository = new(_context);
 
             // Act
             bool canUpdate = await repository.CanUpdateMembership(userId, membershipIdToUpdate);
@@ -472,34 +325,26 @@ namespace Infrastructure.Persistence.Test.Repositories
             const int userId = 1;
             const int membershipIdToUpdate = 1;
 
-            IEnumerable<GroupMembership> memberships = new[]
+            GroupMembership membership = new GroupMembership
             {
-                new GroupMembership
+                GroupMembershipId = 1,
+                GroupId = 1,
+                UserId = 2,
+                Group = new Group
                 {
-                    GroupMembershipId = 1,
-                    GroupId = 1,
-                    UserId = 2,
-                    Group = new Group
+                    Name = "Test Group",
+                    Description = "Test Group Description",
+                    Memberships = new HashSet<GroupMembership>
                     {
-                        Memberships = new HashSet<GroupMembership>
-                        {
-                            new GroupMembership { GroupMembershipId = 2, UserId = 1, IsAdmin = true }
-                        }
+                        new() { GroupMembershipId = 2, UserId = 1, IsAdmin = true }
                     }
-                },
+                }
             };
 
-            DbSet<GroupMembership> dbSetMock = memberships
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.GroupMemberships.AddAsync(membership);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.GroupMemberships)
-                .Returns(dbSetMock);
-
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+            GroupMembershipRepository repository = new(_context);
 
             // Act
             bool canUpdate = await repository.CanUpdateMembership(userId, membershipIdToUpdate);
@@ -515,34 +360,26 @@ namespace Infrastructure.Persistence.Test.Repositories
             const int userId = 1;
             const int membershipIdToDelete = 1;
 
-            IEnumerable<GroupMembership> memberships = new[]
+            GroupMembership membership = new()
             {
-                new GroupMembership
+                GroupMembershipId = 1,
+                GroupId = 1,
+                UserId = 2,
+                Group = new Group
                 {
-                    GroupMembershipId = 1,
-                    GroupId = 1,
-                    UserId = 2,
-                    Group = new Group
+                    Name = "Test Group",
+                    Description = "Test Group Description",
+                    Memberships = new HashSet<GroupMembership>
                     {
-                        Memberships = new HashSet<GroupMembership>
-                        {
-                            new GroupMembership { GroupMembershipId = 2, UserId = 2, IsAdmin = true }
-                        }
+                        new() { GroupMembershipId = 2, UserId = 2, IsAdmin = true }
                     }
-                },
+                }
             };
 
-            DbSet<GroupMembership> dbSetMock = memberships
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.GroupMemberships.AddAsync(membership);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.GroupMemberships)
-                .Returns(dbSetMock);
-
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+            GroupMembershipRepository repository = new(_context);
 
             // Act
             bool canDelete = await repository.CanDeleteMembership(userId, membershipIdToDelete);
@@ -558,34 +395,26 @@ namespace Infrastructure.Persistence.Test.Repositories
             const int userId = 1;
             const int membershipIdToDelete = 1;
 
-            IEnumerable<GroupMembership> memberships = new[]
+            GroupMembership membership = new()
             {
-                new GroupMembership
+                GroupMembershipId = 1,
+                GroupId = 1,
+                UserId = 2,
+                Group = new Group
                 {
-                    GroupMembershipId = 1,
-                    GroupId = 1,
-                    UserId = 2,
-                    Group = new Group
+                    Name = "Test Group",
+                    Description = "Test Group Description",
+                    Memberships = new HashSet<GroupMembership>
                     {
-                        Memberships = new HashSet<GroupMembership>
-                        {
-                            new GroupMembership { GroupMembershipId = 2, UserId = 1, IsAdmin = false }
-                        }
+                        new() { GroupMembershipId = 2, UserId = 1, IsAdmin = false }
                     }
-                },
+                }
             };
 
-            DbSet<GroupMembership> dbSetMock = memberships
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.GroupMemberships.AddAsync(membership);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.GroupMemberships)
-                .Returns(dbSetMock);
-
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+            GroupMembershipRepository repository = new(_context);
 
             // Act
             bool canDelete = await repository.CanDeleteMembership(userId, membershipIdToDelete);
@@ -601,34 +430,26 @@ namespace Infrastructure.Persistence.Test.Repositories
             const int userId = 1;
             const int membershipIdToDelete = 1;
 
-            IEnumerable<GroupMembership> memberships = new[]
+            GroupMembership membership = new()
             {
-                new GroupMembership
+                GroupMembershipId = 1,
+                GroupId = 1,
+                UserId = 2,
+                Group = new Group
                 {
-                    GroupMembershipId = 1,
-                    GroupId = 1,
-                    UserId = 2,
-                    Group = new Group
+                    Name = "Test Group",
+                    Description = "Test Group Description",
+                    Memberships = new HashSet<GroupMembership>
                     {
-                        Memberships = new HashSet<GroupMembership>
-                        {
-                            new GroupMembership { GroupMembershipId = 2, UserId = 1, IsAdmin = true }
-                        }
+                        new() { GroupMembershipId = 2, UserId = 1, IsAdmin = true }
                     }
-                },
+                }
             };
 
-            DbSet<GroupMembership> dbSetMock = memberships
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.GroupMemberships.AddAsync(membership);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.GroupMemberships)
-                .Returns(dbSetMock);
-
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+            GroupMembershipRepository repository = new(_context);
 
             // Act
             bool canDelete = await repository.CanDeleteMembership(userId, membershipIdToDelete);
@@ -638,29 +459,27 @@ namespace Infrastructure.Persistence.Test.Repositories
         }
 
         [Fact]
-        public void Delete_ShouldDeleteMembershipFromContext()
+        public async Task Delete_ShouldDeleteMembershipFromContext()
         {
             // Arrange
-            GroupMembership membership = new GroupMembership {GroupMembershipId = 1};
+            GroupMembership membership = new();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
+            await _context.GroupMemberships.AddAsync(membership);
+            await _context.SaveChangesAsync();
 
-            GroupMembership passedMembership = null;
+            GroupMembershipRepository repository = new(_context);
 
-            contextMock
-                .Setup(m => m.GroupMemberships.Remove(It.IsAny<GroupMembership>()))
-                .Callback<GroupMembership>(gm => passedMembership = gm);
-
-            GroupMembershipRepository repository = new GroupMembershipRepository(contextMock.Object);
+            membership = await _context.GroupMemberships.FindAsync(membership.GroupMembershipId);
 
             // Act
             repository.Delete(membership);
 
-            // Assert
-            contextMock.Verify(m => m.GroupMemberships.Remove(It.IsAny<GroupMembership>()));
+            await _context.SaveChangesAsync();
 
-            Assert.NotNull(passedMembership);
-            Assert.Equal(membership.GroupMembershipId, passedMembership.GroupMembershipId);
+            // Assert
+            GroupMembership deletedMembership = await _context.GroupMemberships.FindAsync(membership.GroupMembershipId);
+
+            Assert.Null(deletedMembership);
         }
     }
 }

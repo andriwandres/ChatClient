@@ -1,33 +1,36 @@
-﻿using Core.Application.Common;
+﻿using System.Collections.Generic;
+using Core.Application.Common;
 using Core.Application.Database;
 using Core.Application.Repositories;
 using Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class TranslationRepository : RepositoryBase, ITranslationRepository
+    public class TranslationRepository : RepositoryBase<Translation>, ITranslationRepository
     {
         public TranslationRepository(IChatContext context) : base(context)
         {
         }
 
-        public IQueryable<Translation> GetByLanguage(int languageId)
+        public async Task<List<Translation>> GetByLanguage(int languageId)
         {
-            return Context.Translations
+            return await Context.Translations
                 .AsNoTracking()
                 .Where(translation => translation.LanguageId == languageId)
-                .OrderBy(translation => translation.Key);
+                .OrderBy(translation => translation.Key)
+                .ToListAsync();
         }
 
-        public IQueryable<Translation> GetByLanguage(int languageId, string pattern)
+        public async Task<List<Translation>> GetByLanguage(int languageId, string pattern)
         {
-            return Context.Translations
+            return await Context.Translations
                 .AsNoTracking()
-                .Where(translation =>
-                    translation.LanguageId == languageId && EF.Functions.Like(translation.Key, pattern))
-                .OrderBy(translation => translation.Key);
+                .Where(translation => translation.LanguageId == languageId && EF.Functions.Like(translation.Key, pattern))
+                .OrderBy(translation => translation.Key)
+                .ToListAsync();
         }
     }
 }

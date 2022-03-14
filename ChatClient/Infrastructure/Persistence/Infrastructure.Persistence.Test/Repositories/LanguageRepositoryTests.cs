@@ -2,9 +2,7 @@
 using Core.Application.Repositories;
 using Core.Domain.Entities;
 using Infrastructure.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
-using MockQueryable.Moq;
-using Moq;
+using Infrastructure.Persistence.Test.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -14,6 +12,13 @@ namespace Infrastructure.Persistence.Test.Repositories
 {
     public class LanguageRepositoryTests
     {
+        private readonly IChatContext _context;
+
+        public LanguageRepositoryTests()
+        {
+            _context = TestContextFactory.Create();
+        }
+
         [Fact]
         public async Task GetAll_ShouldReturnAllLanguages()
         {
@@ -25,21 +30,13 @@ namespace Infrastructure.Persistence.Test.Repositories
                 new Language { LanguageId = 3, Code = "FR", Name = "Language.French" },
             };
 
-            Mock<DbSet<Language>> languageDbSetMock = languages
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Languages.AddRangeAsync(languages);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Languages)
-                .Returns(languageDbSetMock.Object);
-
-            ILanguageRepository languageRepository = new LanguageRepository(contextMock.Object);
+            ILanguageRepository languageRepository = new LanguageRepository(_context);
 
             // Act
-            IEnumerable<Language> actualLanguages = await languageRepository
-                .GetAll()
-                .ToListAsync();
+            IEnumerable<Language> actualLanguages = await languageRepository.GetAllAsync();
 
             // Assert
             Assert.NotEmpty(actualLanguages);
@@ -59,16 +56,10 @@ namespace Infrastructure.Persistence.Test.Repositories
                 new Language { LanguageId = 3, Code = "FR", Name = "Language.French" },
             };
 
-            Mock<DbSet<Language>> languageDbSetMock = languages
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Languages.AddRangeAsync(languages);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Languages)
-                .Returns(languageDbSetMock.Object);
-
-            ILanguageRepository languageRepository = new LanguageRepository(contextMock.Object);
+            ILanguageRepository languageRepository = new LanguageRepository(_context);
 
             // Act
             bool exists = await languageRepository.Exists(languageId);
@@ -90,16 +81,10 @@ namespace Infrastructure.Persistence.Test.Repositories
                 new Language { LanguageId = 3, Code = "FR", Name = "Language.French" },
             };
 
-            Mock<DbSet<Language>> languageDbSetMock = languages
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Languages.AddRangeAsync(languages);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Languages)
-                .Returns(languageDbSetMock.Object);
-
-            ILanguageRepository languageRepository = new LanguageRepository(contextMock.Object);
+            ILanguageRepository languageRepository = new LanguageRepository(_context);
 
             // Act
             bool exists = await languageRepository.Exists(languageId);

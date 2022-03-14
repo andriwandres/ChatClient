@@ -5,7 +5,6 @@ using Core.Application.Services;
 using Core.Domain.Dtos.Messages;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Messages;
-using MockQueryable.Moq;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -43,7 +42,7 @@ namespace Core.Application.Test.Requests.Messages.Queries
             // Arrange
             GetMessagesWithRecipientQuery request = new GetMessagesWithRecipientQuery { RecipientId = 1, Limit = 50, Before = null, After = null };
 
-            IEnumerable<MessageRecipient> expectedMessageRecipients = new[]
+            List<MessageRecipient> expectedMessageRecipients = new()
             {
                 new MessageRecipient
                 {
@@ -89,14 +88,9 @@ namespace Core.Application.Test.Requests.Messages.Queries
                 },
             };
 
-            IQueryable<MessageRecipient> queryableMock = expectedMessageRecipients
-                .AsQueryable()
-                .BuildMock()
-                .Object;
-
             _unitOfWorkMock
                 .Setup(m => m.MessageRecipients.GetMessagesWithRecipient(1, request.RecipientId, It.IsAny<MessageBoundaries>()))
-                .Returns(queryableMock);
+                .ReturnsAsync(expectedMessageRecipients);
 
             GetMessagesWithRecipientQuery.Handler handler = new GetMessagesWithRecipientQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object, _mapperMock);
 

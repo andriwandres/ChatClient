@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Core.Application.Database;
+using Core.Domain.Entities;
 using Core.Domain.Resources.Friendships;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,12 +25,9 @@ namespace Core.Application.Requests.Friendships.Queries
 
             public async Task<FriendshipResource> Handle(GetFriendshipByIdQuery request, CancellationToken cancellationToken = default)
             {
-                FriendshipResource friendship = await _unitOfWork.Friendships
-                    .GetById(request.FriendshipId)
-                    .ProjectTo<FriendshipResource>(_mapper.ConfigurationProvider)
-                    .SingleOrDefaultAsync(cancellationToken);
+                Friendship friendship = await _unitOfWork.Friendships.GetByIdAsync(request.FriendshipId);
 
-                return friendship;
+                return _mapper.Map<Friendship, FriendshipResource>(friendship);
             }
         }
     }

@@ -1,4 +1,5 @@
-﻿using Core.Application.Common;
+﻿using System.Collections.Generic;
+using Core.Application.Common;
 using Core.Application.Database;
 using Core.Application.Repositories;
 using Core.Domain.Entities;
@@ -9,25 +10,19 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class FriendshipRepository : RepositoryBase, IFriendshipRepository
+    public class FriendshipRepository : RepositoryBase<Friendship>, IFriendshipRepository
     {
         public FriendshipRepository(IChatContext context) : base(context)
         {
 
         }
 
-        public IQueryable<Friendship> GetById(int friendshipId)
+        public async Task<List<Friendship>> GetByUser(int userId)
         {
-            return Context.Friendships
+            return await Context.Friendships
                 .AsNoTracking()
-                .Where(friendship => friendship.FriendshipId == friendshipId);
-        }
-
-        public IQueryable<Friendship> GetByUser(int userId)
-        {
-            return Context.Friendships
-                .AsNoTracking()
-                .Where(friendship => friendship.RequesterId == userId || friendship.AddresseeId == userId);
+                .Where(friendship => friendship.RequesterId == userId || friendship.AddresseeId == userId)
+                .ToListAsync();
         }
 
         public async Task<bool> Exists(int friendshipId, CancellationToken cancellationToken = default)

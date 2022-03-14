@@ -3,7 +3,6 @@ using Core.Application.Database;
 using Core.Application.Requests.Languages.Queries;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Languages;
-using MockQueryable.Moq;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +20,7 @@ namespace Core.Application.Test.Requests.Languages.Queries
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            MapperConfiguration mapperConfiguration = new(config =>
             {
                 config.CreateMap<Language, LanguageResource>()
                     .ForMember(d => d.CountryFlagImage, c => c.Ignore());
@@ -34,21 +33,17 @@ namespace Core.Application.Test.Requests.Languages.Queries
         public async Task GetAllLanguagesQueryHandler_ShouldReturnLanguages()
         {
             // Arrange
-            IEnumerable<Language> expectedLanguages = new []
+            List<Language> expectedLanguages = new()
             {
                 new Language { LanguageId = 1 },
                 new Language { LanguageId = 2 },
             };
 
-            Mock<IQueryable<Language>> languageQueryableMock = expectedLanguages
-                .AsQueryable()
-                .BuildMock();
-
             _unitOfWorkMock
-                .Setup(m => m.Languages.GetAll())
-                .Returns(languageQueryableMock.Object);
+                .Setup(m => m.Languages.GetAllAsync())
+                .ReturnsAsync(expectedLanguages);
 
-            GetAllLanguagesQuery.Handler handler = new GetAllLanguagesQuery.Handler(_unitOfWorkMock.Object, _mapperMock);
+            GetAllLanguagesQuery.Handler handler = new(_unitOfWorkMock.Object, _mapperMock);
 
             // Act
             IEnumerable<LanguageResource> languages = await handler.Handle(new GetAllLanguagesQuery());

@@ -29,9 +29,7 @@ namespace Core.Application.Requests.Availabilities.Commands
             {
                 int userId = _userProvider.GetCurrentUserId();
 
-                Availability availability = await _unitOfWork.Availabilities
-                    .GetByUser(userId)
-                    .SingleOrDefaultAsync(cancellationToken);
+                Availability availability = await _unitOfWork.Availabilities.GetByUser(userId);
 
                 availability.StatusId = request.AvailabilityStatusId;
                 availability.Modified = _dateProvider.UtcNow();

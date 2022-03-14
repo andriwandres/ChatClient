@@ -1,13 +1,13 @@
 ﻿using Core.Domain.Entities;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Application.Common;
 
 namespace Core.Application.Repositories
 {
-    public interface IRecipientRepository
+    public interface IRecipientRepository : IRepository<Recipient>
     {
-        IQueryable<Recipient> GetById(int recipientId);
+        Task<Recipient> GetByIdIncludingMemberships(int recipientId, CancellationToken cancellationToken = default);
 
         Task<bool> Exists(int recipientId, CancellationToken cancellationToken = default);
 

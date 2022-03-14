@@ -29,25 +29,18 @@ namespace Core.Application.Requests.GroupMemberships.Commands
             {
                 int userId = _userProvider.GetCurrentUserId();
 
-                GroupMembership membership = await _unitOfWork.GroupMemberships
-                    .GetById(request.GroupMembershipId)
-                    .SingleOrDefaultAsync(cancellationToken);
+                GroupMembership membership = await _unitOfWork.GroupMemberships.GetByIdAsync(request.GroupMembershipId);
 
                 // If the user leaves the group himself
                 if (membership.UserId == userId)
                 {
-                    IEnumerable<GroupMembership> otherMembers = await _unitOfWork.GroupMemberships
-                        .GetByGroup(membership.GroupId)
-                        .Where(m => m.UserId != userId)
-                        .ToListAsync(cancellationToken);
+                    List<GroupMembership> members = await _unitOfWork.GroupMemberships.GetByGroup(membership.GroupId, cancellationToken);
+                    List<GroupMembership> otherMembers = members.Where(gm => gm.UserId != userId).ToList();
 
                     // When there are no members left, soft-delete the group
                     if (!otherMembers.Any())
                     {
-                        Group group = await _unitOfWork.Groups
-                            .GetById(membership.GroupId)
-                            .AsTracking()
-                            .SingleOrDefaultAsync(cancellationToken);
+                        Group group = await _unitOfWork.Groups.GetByIdAsync(membership.GroupId);
 
                         group.IsDeleted = true;
 

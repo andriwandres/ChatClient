@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Core.Application.Database;
+using Core.Domain.Entities;
 using Core.Domain.Resources.Users;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,12 +25,9 @@ namespace Core.Application.Requests.Users.Queries
 
             public async Task<UserProfileResource> Handle(GetUserProfileQuery request, CancellationToken cancellationToken = default)
             {
-                UserProfileResource userProfile = await _unitOfWork.Users
-                    .GetById(request.UserId)
-                    .ProjectTo<UserProfileResource>(_mapper.ConfigurationProvider)
-                    .SingleOrDefaultAsync(cancellationToken);
+                User user = await _unitOfWork.Users.GetByIdAsync(request.UserId);
 
-                return userProfile;
+                return _mapper.Map<User, UserProfileResource>(user);
             }
         }
     }

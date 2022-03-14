@@ -7,6 +7,8 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.Entities;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace Core.Application.Requests.Messages.Queries
 {
@@ -31,12 +33,12 @@ namespace Core.Application.Requests.Messages.Queries
             {
                 int userId = _userProvider.GetCurrentUserId();
 
-                MessageResource message = await _unitOfWork.Messages
-                    .GetById(request.MessageId)
-                    .ProjectTo<MessageResource>(_mapper.ConfigurationProvider, new { userId })
-                    .SingleOrDefaultAsync(cancellationToken);
+                Message message = await _unitOfWork.Messages.GetByIdAsync(request.MessageId);
 
-                return message;
+                return _mapper.Map<Message, MessageResource>(message, options =>
+                {
+                    options.Items["userId"] = userId;
+                });
             }
         }
     }

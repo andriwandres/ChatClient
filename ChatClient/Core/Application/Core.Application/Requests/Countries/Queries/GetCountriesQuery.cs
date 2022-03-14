@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Core.Application.Database;
+using Core.Domain.Entities;
 using Core.Domain.Resources;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,12 +24,9 @@ namespace Core.Application.Requests.Countries.Queries
 
             public async Task<IEnumerable<CountryResource>> Handle(GetCountriesQuery request, CancellationToken cancellationToken = default)
             {
-                IEnumerable<CountryResource> countries = await _unitOfWork.Countries
-                    .GetAll()
-                    .ProjectTo<CountryResource>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken);
-
-                return countries;
+                List<Country> countries = await _unitOfWork.Countries.GetAllAsync();
+                
+                return _mapper.Map<List<Country>, List<CountryResource>>(countries);
             }
         }
     }

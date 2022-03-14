@@ -3,10 +3,7 @@ using Core.Application.Database;
 using Core.Application.Requests.Friendships.Queries;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Friendships;
-using MockQueryable.Moq;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -21,7 +18,7 @@ namespace Core.Application.Test.Requests.Friendships.Queries
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            MapperConfiguration mapperConfiguration = new(config =>
             {
                 config.CreateMap<Friendship, FriendshipResource>();
             });
@@ -33,18 +30,13 @@ namespace Core.Application.Test.Requests.Friendships.Queries
         public async Task GetFriendshipByIdQueryHandler_ShouldReturnNull_WhenFriendshipIsNotFound()
         {
             // Arrange
-            GetFriendshipByIdQuery request = new GetFriendshipByIdQuery { FriendshipId = 2151 };
-
-            Mock<IQueryable<Friendship>> expectedFriendships = Enumerable
-                .Empty<Friendship>()
-                .AsQueryable()
-                .BuildMock();
-
+            GetFriendshipByIdQuery request = new() { FriendshipId = 2151 };
+            
             _unitOfWorkMock
-                .Setup(m => m.Friendships.GetById(request.FriendshipId))
-                .Returns(expectedFriendships.Object);
+                .Setup(m => m.Friendships.GetByIdAsync(request.FriendshipId))
+                .ReturnsAsync(null as Friendship);
 
-            GetFriendshipByIdQuery.Handler handler = new GetFriendshipByIdQuery.Handler(_unitOfWorkMock.Object, _mapperMock);
+            GetFriendshipByIdQuery.Handler handler = new(_unitOfWorkMock.Object, _mapperMock);
 
             // Act
             FriendshipResource friendship = await handler.Handle(request);
@@ -57,22 +49,15 @@ namespace Core.Application.Test.Requests.Friendships.Queries
         public async Task GetFriendshipByIdQueryHandler_ShouldReturnFriendship_WhenFriendshipExists()
         {
             // Arrange
-            GetFriendshipByIdQuery request = new GetFriendshipByIdQuery { FriendshipId = 1 };
+            GetFriendshipByIdQuery request = new() { FriendshipId = 1 };
 
-            IEnumerable<Friendship> expectedFriendships = new[]
-            {
-                new Friendship { FriendshipId = 1 }
-            };
-
-            Mock<IQueryable<Friendship>> friendshipQueryableMock = expectedFriendships
-                .AsQueryable()
-                .BuildMock();
+            Friendship expectedFriendship = new() { FriendshipId = 1 };
 
             _unitOfWorkMock
-                .Setup(m => m.Friendships.GetById(request.FriendshipId))
-                .Returns(friendshipQueryableMock.Object);
+                .Setup(m => m.Friendships.GetByIdAsync(request.FriendshipId))
+                .ReturnsAsync(expectedFriendship);
 
-            GetFriendshipByIdQuery.Handler handler = new GetFriendshipByIdQuery.Handler(_unitOfWorkMock.Object, _mapperMock);
+            GetFriendshipByIdQuery.Handler handler = new(_unitOfWorkMock.Object, _mapperMock);
 
             // Act
             FriendshipResource friendship = await handler.Handle(request);

@@ -2,7 +2,6 @@
 using Core.Application.Services;
 using Core.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,9 +28,7 @@ namespace Core.Application.Requests.GroupMemberships.Queries
                 int userId = _userProvider.GetCurrentUserId();
 
                 // Get the users membership in this group
-                GroupMembership membership = await _unitOfWork.GroupMemberships
-                    .GetByCombination(request.GroupId, userId)
-                    .SingleOrDefaultAsync(cancellationToken);
+                GroupMembership membership = await _unitOfWork.GroupMemberships.GetByCombination(request.GroupId, userId, cancellationToken);
 
                 return membership != null && membership.IsAdmin;
             }

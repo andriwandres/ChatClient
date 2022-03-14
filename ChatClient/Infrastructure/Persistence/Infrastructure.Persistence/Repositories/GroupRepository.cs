@@ -9,17 +9,10 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class GroupRepository : RepositoryBase, IGroupRepository
+    public class GroupRepository : RepositoryBase<Group>, IGroupRepository
     {
         public GroupRepository(IChatContext context) : base(context)
         {
-        }
-
-        public IQueryable<Group> GetById(int groupId)
-        {
-            return Context.Groups
-                .AsNoTracking()
-                .Where(group => group.GroupId == groupId && group.IsDeleted == false);
         }
 
         public Task<bool> Exists(int groupId, CancellationToken cancellationToken = default)

@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Core.Application.Database;
+using Core.Domain.Entities;
 using Core.Domain.Resources.Groups;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -26,12 +25,9 @@ namespace Core.Application.Requests.Groups.Queries
 
             public async Task<GroupResource> Handle(GetGroupByIdQuery request, CancellationToken cancellationToken = default)
             {
-                GroupResource group = await _unitOfWork.Groups
-                    .GetById(request.GroupId)
-                    .ProjectTo<GroupResource>(_mapper.ConfigurationProvider)
-                    .SingleOrDefaultAsync(cancellationToken);
+                Group group = await _unitOfWork.Groups.GetByIdAsync(request.GroupId);
 
-                return group;
+                return _mapper.Map<Group, GroupResource>(group);
             }
         }
     }

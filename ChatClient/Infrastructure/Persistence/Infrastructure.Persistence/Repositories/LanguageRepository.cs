@@ -9,15 +9,10 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class LanguageRepository : RepositoryBase, ILanguageRepository
+    public class LanguageRepository : RepositoryBase<Language>, ILanguageRepository
     {
         public LanguageRepository(IChatContext context) : base(context)
         {
-        }
-
-        public IQueryable<Language> GetAll()
-        {
-            return Context.Languages.AsNoTracking();
         }
 
         public async Task<bool> Exists(int languageId, CancellationToken cancellationToken = default)

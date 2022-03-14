@@ -9,17 +9,21 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class RecipientRepository : RepositoryBase, IRecipientRepository
+    public class RecipientRepository : RepositoryBase<Recipient>, IRecipientRepository
     {
         public RecipientRepository(IChatContext context) : base(context)
         {
         }
 
-        public IQueryable<Recipient> GetById(int recipientId)
+        public async Task<Recipient> GetByIdIncludingMemberships(int recipientId, CancellationToken cancellationToken = default)
         {
-            return Context.Recipients
-                .AsNoTracking()
-                .Where(recipient => recipient.RecipientId == recipientId);
+            return await Context.Recipients
+                .AsTracking()
+                .Include(r => r.GroupMembership)
+                .ThenInclude(gm => gm.Group)
+                .ThenInclude(g => g.Memberships)
+                .ThenInclude(gm => gm.Recipient)
+                .SingleOrDefaultAsync(gm => gm.RecipientId == recipientId, cancellationToken);
         }
 
         public async Task<bool> Exists(int recipientId, CancellationToken cancellationToken = default)
