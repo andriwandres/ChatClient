@@ -1,10 +1,7 @@
 ﻿using Core.Application.Database;
 using Core.Application.Requests.Groups.Commands;
 using Core.Domain.Entities;
-using MockQueryable.Moq;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -24,21 +21,13 @@ namespace Core.Application.Test.Requests.Groups.Commands
         public async Task DeleteGroupCommandHandler_ShouldSetDeleteFlagOnGroup()
         {
             // Arrange
-            DeleteGroupCommand request = new DeleteGroupCommand { GroupId = 1 };
+            DeleteGroupCommand request = new() { GroupId = 1 };
 
-            IEnumerable<Group> expectedGroups = new[]
-            {
-                new Group {GroupId = 1}
-            };
-
-            IQueryable<Group> queryableMock = expectedGroups
-                .AsQueryable()
-                .BuildMock()
-                .Object;
+            Group expectedGroup = new() { GroupId = 1 };
 
             _unitOfWorkMock
-                .Setup(m => m.Groups.GetById(request.GroupId))
-                .Returns(queryableMock);
+                .Setup(m => m.Groups.GetByIdAsync(request.GroupId))
+                .ReturnsAsync(expectedGroup);
 
             Group passedGroup = null;
 
@@ -46,7 +35,7 @@ namespace Core.Application.Test.Requests.Groups.Commands
                 .Setup(m => m.Groups.Update(It.IsAny<Group>()))
                 .Callback<Group>(g => passedGroup = g);
 
-            DeleteGroupCommand.Handler handler = new DeleteGroupCommand.Handler(_unitOfWorkMock.Object);
+            DeleteGroupCommand.Handler handler = new(_unitOfWorkMock.Object);
 
             // Act
             await handler.Handle(request);

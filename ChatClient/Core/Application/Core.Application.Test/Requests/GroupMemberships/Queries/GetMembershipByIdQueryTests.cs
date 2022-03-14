@@ -3,10 +3,7 @@ using Core.Application.Database;
 using Core.Application.Requests.GroupMemberships.Queries;
 using Core.Domain.Entities;
 using Core.Domain.Resources.GroupMemberships;
-using MockQueryable.Moq;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -21,7 +18,7 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            MapperConfiguration mapperConfiguration = new(config =>
             {
                 config.CreateMap<GroupMembership, GroupMembershipResource>();
             });
@@ -33,19 +30,13 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
         public async Task GetMembershipByIdQueryHandler_ShouldReturnNull_WhenMembershipDoesNotExist()
         {
             // Arrange
-            GetMembershipByIdQuery request = new GetMembershipByIdQuery { GroupMembershipId = 1 };
-
-            IQueryable<GroupMembership> expectedMemberships = Enumerable
-                .Empty<GroupMembership>()
-                .AsQueryable()
-                .BuildMock()
-                .Object;
+            GetMembershipByIdQuery request = new() { GroupMembershipId = 1 };
 
             _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.GetById(request.GroupMembershipId))
-                .Returns(expectedMemberships);
+                .Setup(m => m.GroupMemberships.GetByIdAsync(request.GroupMembershipId))
+                .ReturnsAsync(null as GroupMembership);
 
-            GetMembershipByIdQuery.Handler handler = new GetMembershipByIdQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
+            GetMembershipByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object);
 
             // Act
             GroupMembershipResource membership = await handler.Handle(request);
@@ -58,23 +49,15 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
         public async Task GetMembershipByIdQueryHandler_ShouldReturnMembership_WhenMembershipExists()
         {
             // Arrange
-            GetMembershipByIdQuery request = new GetMembershipByIdQuery { GroupMembershipId = 1 };
+            GetMembershipByIdQuery request = new() { GroupMembershipId = 1 };
 
-            IEnumerable<GroupMembership> expectedMemberships = new[]
-            {
-                new GroupMembership {GroupMembershipId = 1}
-            };
-
-            IQueryable<GroupMembership> queryableMock = expectedMemberships
-                .AsQueryable()
-                .BuildMock()
-                .Object;
+            GroupMembership expectedMembership = new() {GroupMembershipId = 1};
 
             _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.GetById(request.GroupMembershipId))
-                .Returns(queryableMock);
+                .Setup(m => m.GroupMemberships.GetByIdAsync(request.GroupMembershipId))
+                .ReturnsAsync(expectedMembership);
 
-            GetMembershipByIdQuery.Handler handler = new GetMembershipByIdQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
+            GetMembershipByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object);
 
             // Act
             GroupMembershipResource membership = await handler.Handle(request);

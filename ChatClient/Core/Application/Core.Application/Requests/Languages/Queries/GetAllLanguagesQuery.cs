@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Core.Application.Database;
+using Core.Domain.Entities;
 using Core.Domain.Resources.Languages;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,12 +24,9 @@ namespace Core.Application.Requests.Languages.Queries
 
             public async Task<IEnumerable<LanguageResource>> Handle(GetAllLanguagesQuery request, CancellationToken cancellationToken = default)
             {
-                IEnumerable<LanguageResource> languages = await _unitOfWork.Languages
-                    .GetAll()
-                    .ProjectTo<LanguageResource>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken);
+                List<Language> languages = await _unitOfWork.Languages.GetAllAsync();
 
-                return languages;
+                return _mapper.Map<List<Language>, List<LanguageResource>>(languages);
             }
         }
     }

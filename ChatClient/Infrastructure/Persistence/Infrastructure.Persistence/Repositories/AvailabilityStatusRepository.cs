@@ -7,15 +7,10 @@ using System.Linq;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class AvailabilityStatusRepository : RepositoryBase, IAvailabilityStatusRepository
+    public class AvailabilityStatusRepository : RepositoryBase<AvailabilityStatus>, IAvailabilityStatusRepository
     {
         public AvailabilityStatusRepository(IChatContext context) : base(context)
         {
-        }
-
-        public IQueryable<AvailabilityStatus> GetAll()
-        {
-            return Context.AvailabilityStatuses.AsNoTracking();
         }
     }
 }

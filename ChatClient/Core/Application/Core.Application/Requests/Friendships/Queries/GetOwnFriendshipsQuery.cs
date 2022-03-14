@@ -1,10 +1,9 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Core.Application.Database;
 using Core.Application.Services;
+using Core.Domain.Entities;
 using Core.Domain.Resources.Friendships;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,12 +30,9 @@ namespace Core.Application.Requests.Friendships.Queries
                 // Get the current users id
                 int userId = _userProvider.GetCurrentUserId();
 
-                IEnumerable<FriendshipResource> friendships = await _unitOfWork.Friendships
-                    .GetByUser(userId)
-                    .ProjectTo<FriendshipResource>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken);
-
-                return friendships;
+                List<Friendship> friendships = await _unitOfWork.Friendships.GetByUser(userId);
+                
+                return _mapper.Map<List<Friendship>, List<FriendshipResource>>(friendships);
             }
         }
     }

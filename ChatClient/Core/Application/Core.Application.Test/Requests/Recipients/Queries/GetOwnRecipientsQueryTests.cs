@@ -3,7 +3,6 @@ using Core.Application.Requests.Recipients.Queries;
 using Core.Application.Services;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Recipients;
-using MockQueryable.Moq;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -26,14 +25,9 @@ namespace Core.Application.Test.Requests.Recipients.Queries
                 .Setup(m => m.GetCurrentUserId())
                 .Returns(1);
 
-            IQueryable<MessageRecipient> queryableMock = _testData
-                .AsQueryable()
-                .BuildMock()
-                .Object;
-
             _unitOfWorkMock
                 .Setup(m => m.MessageRecipients.GetLatestGroupedByRecipients(1))
-                .Returns(queryableMock);
+                .ReturnsAsync(_testData);
         }
 
         [Fact]
@@ -160,7 +154,7 @@ namespace Core.Application.Test.Requests.Recipients.Queries
         }
 
         // Test data from the perspective of user #1
-        private readonly IEnumerable<MessageRecipient> _testData = new[]
+        private readonly List<MessageRecipient> _testData = new()
         {
             // Recipient 1 - Private Chat with User #2 (1 unread message) [pinned]
             new MessageRecipient

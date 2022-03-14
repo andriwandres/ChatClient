@@ -12,14 +12,14 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class MessageRecipientRepository : RepositoryBase, IMessageRecipientRepository
+    public class MessageRecipientRepository : RepositoryBase<MessageRecipient>, IMessageRecipientRepository
     {
         public MessageRecipientRepository(IChatContext context) : base(context)
         {
 
         }
 
-        public IQueryable<MessageRecipient> GetMessagesWithRecipient(int userId, int recipientId, MessageBoundaries boundaries)
+        public async Task<List<MessageRecipient>> GetMessagesWithRecipient(int userId, int recipientId, MessageBoundaries boundaries)
         {
             IQueryable<MessageRecipient> messages = Context.MessageRecipients
                 .AsNoTracking()
@@ -37,16 +37,17 @@ namespace Infrastructure.Persistence.Repositories
             // Limit messages from bottom up
             if (boundaries.Limit != null)
             {
-                return messages
+                return await messages
                     .OrderByDescending(mr => mr.Message.Created)
                     .Take((int) boundaries.Limit)
-                    .OrderBy(mr => mr.Message.Created);
+                    .OrderBy(mr => mr.Message.Created)
+                    .ToListAsync();
             }
 
-            return messages;
+            return await messages.ToListAsync();
         }
 
-        public IQueryable<MessageRecipient> GetLatestGroupedByRecipients(int userId)
+        public async Task<List<MessageRecipient>> GetLatestGroupedByRecipients(int userId)
         {
             IQueryable<MessageRecipient> latestMessages = Context.MessageRecipients
                 .AsNoTracking()
@@ -62,7 +63,7 @@ namespace Infrastructure.Persistence.Repositories
                 .GroupByTargetAndGetLatest(userId)
                 .OrderByDescending(mr => mr.Message.Created);
 
-            return latestMessages;
+            return await latestMessages.ToListAsync();
         }
 
         public async Task Add(MessageRecipient messageRecipient, CancellationToken cancellationToken = default)

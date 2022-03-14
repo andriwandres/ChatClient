@@ -4,7 +4,6 @@ using Core.Application.Requests.Friendships.Queries;
 using Core.Application.Services;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Friendships;
-using MockQueryable.Moq;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,20 +38,15 @@ namespace Core.Application.Test.Requests.Friendships.Queries
         public async Task GetOwnFriendshipsQueryHandler_ShouldReturnOwnFriendships()
         {
             // Arrange
-            IEnumerable<Friendship> expectedFriendships = new[]
+            List<Friendship> expectedFriendships = new()
             {
                 new Friendship { FriendshipId = 1, RequesterId = 1, AddresseeId = 2 },
                 new Friendship { FriendshipId = 2, RequesterId = 3, AddresseeId = 1 },
             };
 
-            IQueryable<Friendship> friendshipQueryableMock = expectedFriendships
-                .AsQueryable()
-                .BuildMock()
-                .Object;
-
             _unitOfWorkMock
                 .Setup(m => m.Friendships.GetByUser(1))
-                .Returns(friendshipQueryableMock);
+                .ReturnsAsync(expectedFriendships);
 
             GetOwnFriendshipsQuery.Handler handler = new GetOwnFriendshipsQuery.Handler(_unitOfWorkMock.Object, _mapperMock, _userProviderMock.Object);
 

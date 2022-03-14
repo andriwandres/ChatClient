@@ -3,32 +3,32 @@ using Core.Application.Database;
 using Core.Application.Repositories;
 using Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class UserRepository : RepositoryBase, IUserRepository
+    public class UserRepository : RepositoryBase<User>, IUserRepository
     {
         public UserRepository(IChatContext context) : base(context)
         {
         }
 
-        public IQueryable<User> GetById(int userId)
+        public async Task<User> GetByIdIncludingRecipient(int userId, CancellationToken cancellationToken = default)
         {
-            return Context.Users
+            return await Context.Users
                 .AsNoTracking()
-                .Where(user => user.UserId == userId);
+                .Include(u => u.Recipient)
+                .SingleOrDefaultAsync(u => u.UserId == userId, cancellationToken);
         }
 
-        public IQueryable<User> GetByUserNameOrEmail(string userNameOrEmail)
+        public async Task<User> GetByUserNameOrEmail(string userNameOrEmail)
         {
             userNameOrEmail = userNameOrEmail.ToLower();
 
-            return Context.Users
+            return await Context.Users
                 .AsNoTracking()
-                .Where(user => user.UserName.ToLower() == userNameOrEmail || user.Email.ToLower() == userNameOrEmail);
+                .SingleOrDefaultAsync(user => user.UserName.ToLower() == userNameOrEmail || user.Email.ToLower() == userNameOrEmail);
         }
 
         public async Task<bool> Exists(int userId, CancellationToken cancellationToken = default)

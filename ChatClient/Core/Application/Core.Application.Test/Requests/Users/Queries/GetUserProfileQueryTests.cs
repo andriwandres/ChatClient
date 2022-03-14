@@ -3,10 +3,7 @@ using Core.Application.Database;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Users;
-using MockQueryable.Moq;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -21,7 +18,7 @@ namespace Core.Application.Test.Requests.Users.Queries
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            MapperConfiguration mapperConfiguration = new(config =>
             {
                 config.CreateMap<User, UserProfileResource>();
             });
@@ -33,24 +30,19 @@ namespace Core.Application.Test.Requests.Users.Queries
         public async Task GetUserProfileQueryHandler_ShouldReturnUserProfile_WhenIdIsValid()
         {
             // Arrange
-            GetUserProfileQuery request = new GetUserProfileQuery { UserId = 1 };
+            GetUserProfileQuery request = new() { UserId = 1 };
 
-            IEnumerable<User> expectedUser = new[]
+            User expectedUser = new()
             {
-                new User
-                {
-                    UserId = 1,
-                    Availability = new Availability { StatusId = AvailabilityStatusId.Online }
-                }
+                UserId = 1,
+                Availability = new Availability { StatusId = AvailabilityStatusId.Online }
             };
 
-            Mock<IQueryable<User>> userQueryableMock = expectedUser.AsQueryable().BuildMock();
-
             _unitOfWorkMock
-                .Setup(m => m.Users.GetById(It.IsAny<int>()))
-                .Returns(userQueryableMock.Object);
+                .Setup(m => m.Users.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(expectedUser);
 
-            GetUserProfileQuery.Handler handler = new GetUserProfileQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
+            GetUserProfileQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object);
 
             // Act
             UserProfileResource userProfile = await handler.Handle(request);
@@ -64,18 +56,13 @@ namespace Core.Application.Test.Requests.Users.Queries
         public async Task GetUserProfileQueryHandler_ShouldReturnNull_WhenIdIsInvalid()
         {
             // Arrange
-            GetUserProfileQuery request = new GetUserProfileQuery { UserId = 2181 };
-
-            Mock<IQueryable<User>> userQueryableMock = Enumerable
-                .Empty<User>()
-                .AsQueryable()
-                .BuildMock();
+            GetUserProfileQuery request = new() { UserId = 2181 };
 
             _unitOfWorkMock
-                .Setup(m => m.Users.GetById(request.UserId))
-                .Returns(userQueryableMock.Object);
+                .Setup(m => m.Users.GetByIdAsync(request.UserId))
+                .ReturnsAsync(null as User);
 
-            GetUserProfileQuery.Handler handler = new GetUserProfileQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
+            GetUserProfileQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object);
 
             // Act
             UserProfileResource userProfile = await handler.Handle(request);

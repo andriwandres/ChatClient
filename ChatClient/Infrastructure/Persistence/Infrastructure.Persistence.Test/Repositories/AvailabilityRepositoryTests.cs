@@ -1,12 +1,8 @@
 ﻿using Core.Application.Database;
 using Core.Domain.Entities;
 using Infrastructure.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
-using MockQueryable.Moq;
-using Moq;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
+using Infrastructure.Persistence.Test.Helpers;
+using System;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -14,43 +10,41 @@ namespace Infrastructure.Persistence.Test.Repositories
 {
     public class AvailabilityRepositoryTests
     {
-        private readonly Mock<IChatContext> _contextMock;
+        private readonly IChatContext _context;
 
         public AvailabilityRepositoryTests()
         {
-            _contextMock = new Mock<IChatContext>();
+            _context = TestContextFactory.Create();
+            
+            // Insert Test Data
+            for (int index = 1; index <= 3; index++)
+            {
+                _context.Availabilities.Add(new Availability
+                {
+                    AvailabilityId = index,
+                    UserId = index,
+                    StatusId = AvailabilityStatusId.Online,
+                    Modified = DateTime.Now,
+                    ModifiedManually = false,
+                });
+            }
+
+            _context.SaveChanges();
+            _context.ChangeTracker.Clear();
         }
 
-        #region GetByUser()
+        #region GetByUser
 
         [Fact]
-        public async Task GetByUser_ShouldReturnEmptyQueryable_WhenAvailabilityWithGivenUserDoesNotExist()
+        public async Task GetByUser_ShouldReturnNull_WhenAvailabilityWithGivenUserDoesNotExist()
         {
             // Arrange
             const int userId = 5782;
 
-            IEnumerable<Availability> databaseAvailabilities = new[]
-            {
-                new Availability { AvailabilityId = 1, UserId = 1, },
-                new Availability { AvailabilityId = 2, UserId = 2, },
-                new Availability { AvailabilityId = 3, UserId = 3, }
-            };
-
-            DbSet<Availability> dbSetMock = databaseAvailabilities
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
-
-            _contextMock
-                .Setup(m => m.Availabilities)
-                .Returns(dbSetMock);
-
-            AvailabilityRepository repository = new AvailabilityRepository(_contextMock.Object);
+            AvailabilityRepository repository = new(_context);
 
             // Act
-            Availability availability = await repository
-                .GetByUser(userId)
-                .SingleOrDefaultAsync();
+            Availability availability = await repository.GetByUser(userId);
 
             // Assert
             Assert.Null(availability);
@@ -62,75 +56,63 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Arrange
             const int userId = 1;
 
-            IEnumerable<Availability> databaseAvailabilities = new[]
-            {
-                new Availability { AvailabilityId = 1, UserId = 1, },
-                new Availability { AvailabilityId = 2, UserId = 2, },
-                new Availability { AvailabilityId = 3, UserId = 3, }
-            };
-
-            DbSet<Availability> dbSetMock = databaseAvailabilities
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
-
-            _contextMock
-                .Setup(m => m.Availabilities)
-                .Returns(dbSetMock);
-
-            AvailabilityRepository repository = new AvailabilityRepository(_contextMock.Object);
+            AvailabilityRepository repository = new(_context);
 
             // Act
-            Availability availability = await repository
-                .GetByUser(userId)
-                .SingleOrDefaultAsync();
+            Availability availability = await repository.GetByUser(userId);
 
             // Assert
             Assert.NotNull(availability);
+            Assert.Equal(userId, availability.UserId);
         }
 
         #endregion
 
-        #region Add()
+        #region Add
 
         [Fact]
         public async Task Add_ShouldAddNewAvailability()
         {
             // Arrange
-            Availability availability = new Availability();
+            const int userId = 55;
+            Availability availability = new() { UserId = userId };
 
-            _contextMock
-                .Setup(m => m.Availabilities.AddAsync(availability, It.IsAny<CancellationToken>()))
-                .Verifiable();
-
-            AvailabilityRepository repository = new AvailabilityRepository(_contextMock.Object);
+            AvailabilityRepository repository = new(_context);
 
             // Act
             await repository.Add(availability);
 
             // Assert
-            _contextMock.Verify();
+            Assert.NotEqual(0, availability.AvailabilityId);
+
+            Availability addedAvailability = await _context.Availabilities.FindAsync(availability.AvailabilityId);
+
+            Assert.NotNull(addedAvailability);
+            Assert.Equal(userId, addedAvailability.UserId);
         }
 
         #endregion
 
-        #region Update()
+        #region Update
 
         [Fact]
-        public void Update_ShouldUpdateAvailability()
+        public async Task Update_ShouldUpdateAvailability()
         {
             // Arrange
-            Availability availability = new Availability();
+            const int userId = 55;
+            const int availabilityId = 3;
+            Availability availability = new() { AvailabilityId = availabilityId, UserId = userId };
 
-            _contextMock.Setup(m => m.Availabilities.Update(availability));
-
-            AvailabilityRepository repository = new AvailabilityRepository(_contextMock.Object);
+            AvailabilityRepository repository = new(_context);
 
             // Act
             repository.Update(availability);
 
             // Assert
-            _contextMock.Verify(m => m.Availabilities.Update(availability));
+            Availability updatedAvailability = await _context.Availabilities.FindAsync(availabilityId);
+
+            Assert.NotNull(updatedAvailability);
+            Assert.Equal(userId, availability.UserId);
         }
 
         #endregion

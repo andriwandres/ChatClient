@@ -3,7 +3,6 @@ using Core.Application.Database;
 using Core.Application.Requests.AvailabilityStatus.Queries;
 using Core.Domain.Entities;
 using Core.Domain.Resources.AvailabilityStatuses;
-using MockQueryable.Moq;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +20,7 @@ namespace Core.Application.Test.Requests.AvailabilityStatuses.Queries
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            MapperConfiguration mapperConfiguration = new(config =>
             {
                 config.CreateMap<AvailabilityStatus, AvailabilityStatusResource>();
             });
@@ -33,22 +32,17 @@ namespace Core.Application.Test.Requests.AvailabilityStatuses.Queries
         public async Task GetAllAvailabilityStatusesQueryHandler_ShouldReturnAvailabilityStatuses()
         {
             // Arrange
-            IEnumerable<AvailabilityStatus> databaseStatuses = new[]
+            List<AvailabilityStatus> databaseStatuses = new()
             {
                 new AvailabilityStatus {AvailabilityStatusId = AvailabilityStatusId.Online},
                 new AvailabilityStatus {AvailabilityStatusId = AvailabilityStatusId.Busy},
             };
 
-            IQueryable<AvailabilityStatus> queryableMock = databaseStatuses
-                .AsQueryable()
-                .BuildMock()
-                .Object;
-
             _unitOfWorkMock
-                .Setup(m => m.AvailabilityStatuses.GetAll())
-                .Returns(queryableMock);
+                .Setup(m => m.AvailabilityStatuses.GetAllAsync())
+                .ReturnsAsync(databaseStatuses);
 
-            GetAllAvailabilityStatusesQuery.Handler handler = new GetAllAvailabilityStatusesQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
+            GetAllAvailabilityStatusesQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object);
 
             // Act
             IEnumerable<AvailabilityStatusResource> statuses = await handler.Handle(new GetAllAvailabilityStatusesQuery());

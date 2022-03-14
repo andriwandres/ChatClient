@@ -1,10 +1,9 @@
-﻿using Core.Domain.Entities;
-using System.Linq;
+﻿using Core.Application.Common;
+using Core.Domain.Entities;
 
 namespace Core.Application.Repositories
 {
-    public interface ICountryRepository
+    public interface ICountryRepository : IRepository<Country>
     {
-        IQueryable<Country> GetAll();
     }
 }

@@ -1,7 +1,6 @@
 ﻿using Core.Application.Database;
 using Core.Application.Requests.Translations.Queries;
 using Core.Domain.Entities;
-using MockQueryable.Moq;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,19 +22,13 @@ namespace Core.Application.Test.Requests.Translations.Queries
         public async Task GetTranslationsByLanguageQueryHandler_ShouldReturnEmptyDictionary_WhenLanguageDoesNotExist()
         {
             // Arrange
-            GetTranslationsByLanguageQuery request = new GetTranslationsByLanguageQuery { LanguageId = 8917 };
-
-            Mock<IQueryable<Translation>> translationQueryableMock = Enumerable
-                .Empty<Translation>()
-                .AsQueryable()
-                .BuildMock();
+            GetTranslationsByLanguageQuery request = new() { LanguageId = 8917 };
 
             _unitOfWorkMock
                 .Setup(m => m.Translations.GetByLanguage(It.IsAny<int>()))
-                .Returns(translationQueryableMock.Object);
+                .ReturnsAsync(new List<Translation>());
 
-            GetTranslationsByLanguageQuery.Handler handler
-                = new GetTranslationsByLanguageQuery.Handler(_unitOfWorkMock.Object);
+            GetTranslationsByLanguageQuery.Handler handler = new(_unitOfWorkMock.Object);
 
             // Act
             IDictionary<string, string> translations = await handler.Handle(request);
@@ -49,23 +42,18 @@ namespace Core.Application.Test.Requests.Translations.Queries
         public async Task GetTranslationsByLanguageQueryHandler_ShouldReturnTranslationDictionary_WhenLanguageExists()
         {
             // Arrange
-            GetTranslationsByLanguageQuery request = new GetTranslationsByLanguageQuery { LanguageId = 1 };
+            GetTranslationsByLanguageQuery request = new() { LanguageId = 1 };
 
-            IEnumerable<Translation> expectedTranslations = new []
+            List<Translation> expectedTranslations = new()
             {
                 new Translation { TranslationId = 1, Key = "key", Value = "value" }
             };
 
-            Mock<IQueryable<Translation>> translationQueryableMock = expectedTranslations
-                .AsQueryable()
-                .BuildMock();
-
             _unitOfWorkMock
                 .Setup(m => m.Translations.GetByLanguage(It.IsAny<int>()))
-                .Returns(translationQueryableMock.Object);
+                .ReturnsAsync(expectedTranslations);
 
-            GetTranslationsByLanguageQuery.Handler handler
-                = new GetTranslationsByLanguageQuery.Handler(_unitOfWorkMock.Object);
+            GetTranslationsByLanguageQuery.Handler handler = new(_unitOfWorkMock.Object);
 
             // Act
             IDictionary<string, string> translations = await handler.Handle(request);
@@ -83,23 +71,18 @@ namespace Core.Application.Test.Requests.Translations.Queries
         public async Task GetTranslationsByLanguageQueryHandler_ShouldReturnTranslationDictionary_WhenLanguageExistsAndPatternMatches()
         {
             // Arrange
-            GetTranslationsByLanguageQuery request = new GetTranslationsByLanguageQuery { LanguageId = 1, Pattern = "key" };
+            GetTranslationsByLanguageQuery request = new() { LanguageId = 1, Pattern = "key" };
 
-            IEnumerable<Translation> expectedTranslations = new[]
+            List<Translation> expectedTranslations = new()
             {
                 new Translation { TranslationId = 1, Key = "key", Value = "value" }
             };
 
-            Mock<IQueryable<Translation>> translationQueryableMock = expectedTranslations
-                .AsQueryable()
-                .BuildMock();
-
             _unitOfWorkMock
                 .Setup(m => m.Translations.GetByLanguage(It.IsAny<int>(), It.IsAny<string>()))
-                .Returns(translationQueryableMock.Object);
+                .ReturnsAsync(expectedTranslations);
 
-            GetTranslationsByLanguageQuery.Handler handler
-                = new GetTranslationsByLanguageQuery.Handler(_unitOfWorkMock.Object);
+            GetTranslationsByLanguageQuery.Handler handler = new(_unitOfWorkMock.Object);
 
             // Act
             IDictionary<string, string> translations = await handler.Handle(request);

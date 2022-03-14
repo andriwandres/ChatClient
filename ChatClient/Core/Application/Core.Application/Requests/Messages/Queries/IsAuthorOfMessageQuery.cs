@@ -2,7 +2,6 @@
 using Core.Application.Services;
 using Core.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,9 +26,7 @@ namespace Core.Application.Requests.Messages.Queries
             {
                 int userId = _userProvider.GetCurrentUserId();
 
-                Message message = await _unitOfWork.Messages
-                    .GetById(request.MessageId)
-                    .SingleOrDefaultAsync(cancellationToken);
+                Message message = await _unitOfWork.Messages.GetByIdAsync(request.MessageId);
 
                 return message.AuthorId == userId;
             }

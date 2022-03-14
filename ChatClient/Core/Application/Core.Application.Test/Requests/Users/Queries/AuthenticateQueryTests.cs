@@ -5,10 +5,7 @@ using Core.Application.Services;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Users;
 using Microsoft.AspNetCore.Http;
-using MockQueryable.Moq;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
@@ -32,7 +29,7 @@ namespace Core.Application.Test.Requests.Users.Queries
                 .Setup(m => m.GetCurrentUserId())
                 .Returns(1);
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            MapperConfiguration mapperConfiguration = new(config =>
             {
                 config.CreateMap<User, AuthenticatedUserResource>();
             });
@@ -51,26 +48,18 @@ namespace Core.Application.Test.Requests.Users.Queries
                 { "Authorization", expectedToken }
             };
 
-            IEnumerable<User> expectedUser = new []
-            {
-                new User { UserId = 1 }
-            };
-
-            IQueryable<User> userQueryableMock = expectedUser
-                .AsQueryable()
-                .BuildMock()
-                .Object;
+            User expectedUser = new() { UserId = 1 };
 
             _httpContextAccessorMock
                 .Setup(m => m.HttpContext.Request.Headers)
                 .Returns(headers);
 
             _unitOfWorkMock
-                .Setup(m => m.Users.GetById(It.IsAny<int>()))
-                .Returns(userQueryableMock);
+                .Setup(m => m.Users.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(expectedUser);
 
             AuthenticateQuery.Handler handler = 
-                new AuthenticateQuery.Handler(_unitOfWorkMock.Object, _mapperMock, _httpContextAccessorMock.Object, _userProviderMock.Object);
+                new(_unitOfWorkMock.Object, _mapperMock, _httpContextAccessorMock.Object, _userProviderMock.Object);
 
             // Act
             AuthenticatedUserResource user = await handler.Handle(new AuthenticateQuery());
@@ -87,19 +76,12 @@ namespace Core.Application.Test.Requests.Users.Queries
             // Arrange
             const string expectedToken = "some.access.token";
 
-            Claim expectedNameIdentifierClaim = new Claim(ClaimTypes.NameIdentifier, "8979");
+            Claim expectedNameIdentifierClaim = new(ClaimTypes.NameIdentifier, "8979");
 
             IHeaderDictionary headers = new HeaderDictionary
             {
                 { "Authorization", expectedToken }
             };
-
-            IEnumerable<User> expectedUser = Enumerable.Empty<User>();
-
-            IQueryable<User> userQueryableMock = expectedUser
-                .AsQueryable()
-                .BuildMock()
-                .Object;
 
             _httpContextAccessorMock
                 .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
@@ -110,11 +92,11 @@ namespace Core.Application.Test.Requests.Users.Queries
                 .Returns(headers);
 
             _unitOfWorkMock
-                .Setup(m => m.Users.GetById(It.IsAny<int>()))
-                .Returns(userQueryableMock);
+                .Setup(m => m.Users.GetByIdAsync(It.IsAny<int>()))
+                .ReturnsAsync(null as User);
 
             AuthenticateQuery.Handler handler =
-                new AuthenticateQuery.Handler(_unitOfWorkMock.Object, _mapperMock, _httpContextAccessorMock.Object, _userProviderMock.Object);
+                new(_unitOfWorkMock.Object, _mapperMock, _httpContextAccessorMock.Object, _userProviderMock.Object);
 
             // Act
             AuthenticatedUserResource user = await handler.Handle(new AuthenticateQuery());

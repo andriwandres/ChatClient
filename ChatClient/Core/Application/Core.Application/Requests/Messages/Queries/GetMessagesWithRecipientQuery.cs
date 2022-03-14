@@ -10,6 +10,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
 using Core.Domain.Dtos.Messages;
+using Core.Domain.Entities;
 
 namespace Core.Application.Requests.Messages.Queries
 {
@@ -39,8 +40,10 @@ namespace Core.Application.Requests.Messages.Queries
 
                 MessageBoundaries boundaries = _mapper.Map<GetMessagesWithRecipientQuery, MessageBoundaries>(request);
 
-                IEnumerable<ChatMessageResource> messages = await _unitOfWork.MessageRecipients
-                    .GetMessagesWithRecipient(currentUserId, request.RecipientId, boundaries)
+                List<MessageRecipient> messagesWithRecipients = await _unitOfWork.MessageRecipients
+                    .GetMessagesWithRecipient(currentUserId, request.RecipientId, boundaries);
+
+                IEnumerable<ChatMessageResource> messages = messagesWithRecipients
                     .Select(source => new ChatMessageResource
                     {
                         MessageRecipientId = source.MessageRecipientId,
@@ -50,8 +53,7 @@ namespace Core.Application.Requests.Messages.Queries
                         Created = source.Message.Created,
                         IsOwnMessage = source.Message.AuthorId == currentUserId,
                         IsRead = source.Message.MessageRecipients.All(mr => mr.IsRead),
-                    })
-                    .ToListAsync(cancellationToken);
+                    });
 
                 return messages;
             }

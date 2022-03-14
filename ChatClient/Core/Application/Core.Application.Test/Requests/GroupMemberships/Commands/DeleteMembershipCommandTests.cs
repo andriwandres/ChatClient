@@ -2,11 +2,9 @@
 using Core.Application.Requests.GroupMemberships.Commands;
 using Core.Application.Services;
 using Core.Domain.Entities;
-using MockQueryable.Moq;
 using Moq;
 using System;
-using System.Linq;
-using System.Security.Claims;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -32,19 +30,12 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
         public async Task DeleteMembershipCommandHandler_ShouldDeleteMembership_WhenItIsForeignMembership()
         {
             // Arrange
-            DeleteMembershipCommand request = new DeleteMembershipCommand { GroupMembershipId = 1 };
-
-            IQueryable<GroupMembership> expectedMembership = new[]
-            {
-                new GroupMembership {GroupMembershipId = 1, UserId = 2}
-            }
-            .AsQueryable()
-            .BuildMock()
-            .Object;
+            DeleteMembershipCommand request = new() { GroupMembershipId = 1 };
+            GroupMembership expectedMembership = new() {GroupMembershipId = 1, UserId = 2};
 
             _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.GetById(1))
-                .Returns(expectedMembership);
+                .Setup(m => m.GroupMemberships.GetByIdAsync(1))
+                .ReturnsAsync(expectedMembership);
 
             GroupMembership passedMembership = null;
 
@@ -56,7 +47,7 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            DeleteMembershipCommand.Handler handler = new DeleteMembershipCommand.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+            DeleteMembershipCommand.Handler handler = new(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             await handler.Handle(request);
@@ -73,43 +64,26 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
         public async Task DeleteMembershipCommandHandler_ShouldDeleteMembership_AndDeleteGroup_WhenTheUserLeavesByHimselfAndThereAreNoOtherMembersInTheGroup()
         {
             // Arrange
-            DeleteMembershipCommand request = new DeleteMembershipCommand { GroupMembershipId = 1 };
-
-            IQueryable<GroupMembership> expectedMembership = new[]
+            DeleteMembershipCommand request = new() { GroupMembershipId = 1 };
+            
+            Group expectedGroup = new() { GroupId = 1 };
+            GroupMembership expectedMembership = new() { GroupMembershipId = 1, UserId = 1, GroupId = 1 };
+            List<GroupMembership> expectedMembershipsOfGroup = new()
             {
-                new GroupMembership {GroupMembershipId = 1, UserId = 1, GroupId = 1 }
-            }
-            .AsQueryable()
-            .BuildMock()
-            .Object;
-
-            IQueryable<GroupMembership> expectedMembershipsOfGroup = new[]
-            {
-                new GroupMembership {GroupMembershipId = 1, UserId = 1, GroupId = 1 },
-            }
-            .AsQueryable()
-            .BuildMock()
-            .Object;
-
-            IQueryable<Group> expectedGroup = new[]
-            {
-                new Group { GroupId = 1 },
-            }
-            .AsQueryable()
-            .BuildMock()
-            .Object;
+                new GroupMembership { GroupMembershipId = 1, UserId = 1, GroupId = 1 },
+            };
 
             _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.GetById(1))
-                .Returns(expectedMembership);
+                .Setup(m => m.GroupMemberships.GetByIdAsync(1))
+                .ReturnsAsync(expectedMembership);
 
             _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.GetByGroup(1))
-                .Returns(expectedMembershipsOfGroup);
+                .Setup(m => m.GroupMemberships.GetByGroup(1, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expectedMembershipsOfGroup);
 
             _unitOfWorkMock
-                .Setup(m => m.Groups.GetById(1))
-                .Returns(expectedGroup);
+                .Setup(m => m.Groups.GetByIdAsync(1))
+                .ReturnsAsync(expectedGroup);
 
             Group passedUpdateGroup = null;
 
@@ -127,7 +101,7 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            DeleteMembershipCommand.Handler handler = new DeleteMembershipCommand.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+            DeleteMembershipCommand.Handler handler = new(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             await handler.Handle(request);
@@ -150,33 +124,22 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
         public async Task DeleteMembershipCommandHandler_ShouldDeleteMembership_AndAssignNewAdministrator_WhenTheUserLeavesByHimselfAndThereAreNoOtherAdministrators()
         {
             // Arrange
-            DeleteMembershipCommand request = new DeleteMembershipCommand { GroupMembershipId = 1 };
-
-            IQueryable<GroupMembership> expectedMembership = new[]
-            {
-                new GroupMembership {GroupMembershipId = 1, UserId = 1, GroupId = 1 }
-            }
-            .AsQueryable()
-            .BuildMock()
-            .Object;
-
-            IQueryable<GroupMembership> expectedMembershipsOfGroup = new[]
+            DeleteMembershipCommand request = new() { GroupMembershipId = 1 };
+            GroupMembership expectedMembership = new() { GroupMembershipId = 1, UserId = 1, GroupId = 1 };
+            List<GroupMembership> expectedMembershipsOfGroup = new()
             {
                 new GroupMembership {GroupMembershipId = 1, UserId = 1, GroupId = 1, Created = new DateTime(2020, 1, 1) },
                 new GroupMembership {GroupMembershipId = 2, UserId = 2, GroupId = 1, Created = new DateTime(2020, 1, 2) },
                 new GroupMembership {GroupMembershipId = 3, UserId = 3, GroupId = 1, Created = new DateTime(2020, 1, 3) }
-            }
-            .AsQueryable()
-            .BuildMock()
-            .Object;
+            };
+            
+            _unitOfWorkMock
+                .Setup(m => m.GroupMemberships.GetByIdAsync(1))
+                .ReturnsAsync(expectedMembership);
 
             _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.GetById(1))
-                .Returns(expectedMembership);
-
-            _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.GetByGroup(1))
-                .Returns(expectedMembershipsOfGroup);
+                .Setup(m => m.GroupMemberships.GetByGroup(1, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expectedMembershipsOfGroup);
 
             GroupMembership passedUpdateMembership = null;
 
@@ -194,7 +157,7 @@ namespace Core.Application.Test.Requests.GroupMemberships.Commands
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            DeleteMembershipCommand.Handler handler = new DeleteMembershipCommand.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+            DeleteMembershipCommand.Handler handler = new(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             await handler.Handle(request);

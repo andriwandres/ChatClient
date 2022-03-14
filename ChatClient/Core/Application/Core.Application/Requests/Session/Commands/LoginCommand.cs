@@ -30,9 +30,7 @@ namespace Core.Application.Requests.Session.Commands
 
             public async Task<AuthenticatedUserResource> Handle(LoginCommand request, CancellationToken cancellationToken = default)
             {
-                User user = await _unitOfWork.Users
-                    .GetByUserNameOrEmail(request.UserNameOrEmail)
-                    .SingleOrDefaultAsync(cancellationToken);
+                User user = await _unitOfWork.Users.GetByUserNameOrEmail(request.UserNameOrEmail);
 
                 if (user == null)
                 {

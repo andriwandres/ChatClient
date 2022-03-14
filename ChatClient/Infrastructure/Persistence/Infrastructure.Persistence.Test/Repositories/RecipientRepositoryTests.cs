@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Core.Application.Database;
+﻿using Core.Application.Database;
+using Core.Application.Repositories;
 using Core.Domain.Entities;
 using Infrastructure.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
-using MockQueryable.Moq;
-using Moq;
-using System.Linq;
-using System.Threading;
+using Infrastructure.Persistence.Test.Helpers;
+using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -15,11 +12,11 @@ namespace Infrastructure.Persistence.Test.Repositories
 {
     public class RecipientRepositoryTests
     {
-        private readonly Mock<IChatContext> _contextMock;
+        private readonly IChatContext _context;
 
         public RecipientRepositoryTests()
         {
-            _contextMock = new Mock<IChatContext>();
+            _context = TestContextFactory.Create();
         }
 
         #region GetById()
@@ -30,22 +27,10 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Arrange
             const int recipientId = 5431;
 
-            DbSet<Recipient> databaseRecipients = Enumerable
-                .Empty<Recipient>()
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
-
-            _contextMock
-                .Setup(m => m.Recipients)
-                .Returns(databaseRecipients);
-
-            RecipientRepository repository = new RecipientRepository(_contextMock.Object);
+            IRecipientRepository repository = new RecipientRepository(_context);
 
             // Act
-            Recipient recipient = await repository
-                .GetById(recipientId)
-                .SingleOrDefaultAsync();
+            Recipient recipient = await repository.GetByIdAsync(recipientId);
 
             // Assert
             Assert.Null(recipient);
@@ -57,25 +42,19 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Arrange
             const int recipientId = 2;
 
-            DbSet<Recipient> databaseRecipients = new[]
+            Recipient[] recipients = 
             {
-                new Recipient { RecipientId = 1 },
-                new Recipient { RecipientId = 2 },
-            }
-            .AsQueryable()
-            .BuildMockDbSet()
-            .Object;
+                new() { RecipientId = 1 },
+                new() { RecipientId = 2 },
+            };
 
-            _contextMock
-                .Setup(m => m.Recipients)
-                .Returns(databaseRecipients);
+            await _context.Recipients.AddRangeAsync(recipients);
+            await _context.SaveChangesAsync();
 
-            RecipientRepository repository = new RecipientRepository(_contextMock.Object);
+            IRecipientRepository repository = new RecipientRepository(_context);
 
             // Act
-            Recipient recipient = await repository
-                .GetById(recipientId)
-                .SingleOrDefaultAsync();
+            Recipient recipient = await repository.GetByIdAsync(recipientId);
 
             // Assert
             Assert.NotNull(recipient);
@@ -92,21 +71,16 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Arrange
             const int recipientId = 1;
 
-            DbSet<Recipient> databaseRecipients = new[]
+            Recipient[] recipients =
             {
-                new Recipient {RecipientId = 1},
-                new Recipient {RecipientId = 2},
-            }
-            .AsQueryable()
-            .BuildMockDbSet()
-            .Object;
+                new() { RecipientId = 1 },
+                new() { RecipientId = 2 },
+            };
 
+            await _context.Recipients.AddRangeAsync(recipients);
+            await _context.SaveChangesAsync();
 
-            _contextMock
-                .Setup(m => m.Recipients)
-                .Returns(databaseRecipients);
-
-            RecipientRepository repository = new RecipientRepository(_contextMock.Object);
+            IRecipientRepository repository = new RecipientRepository(_context);
 
             // Act
             bool exists = await repository.Exists(recipientId);
@@ -121,21 +95,16 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Arrange
             const int recipientId = 341;
 
-            DbSet<Recipient> databaseRecipients = new[]
+            Recipient[] recipients =
             {
-                new Recipient {RecipientId = 1},
-                new Recipient {RecipientId = 2},
-            }
-            .AsQueryable()
-            .BuildMockDbSet()
-            .Object;
+                new() { RecipientId = 1 },
+                new() { RecipientId = 2 },
+            };
 
+            await _context.Recipients.AddRangeAsync(recipients);
+            await _context.SaveChangesAsync();
 
-            _contextMock
-                .Setup(m => m.Recipients)
-                .Returns(databaseRecipients);
-
-            RecipientRepository repository = new RecipientRepository(_contextMock.Object);
+            IRecipientRepository repository = new RecipientRepository(_context);
 
             // Act
             bool exists = await repository.Exists(recipientId);
@@ -152,24 +121,20 @@ namespace Infrastructure.Persistence.Test.Repositories
         public async Task Add_ShouldAddRecipientsToTheDbContext()
         {
             // Arrange
-            Recipient recipient = new Recipient();
+            Recipient recipient = new();
 
-            Mock<DbSet<Recipient>> membershipDbSetMock = Enumerable
-                .Empty<Recipient>()
-                .AsQueryable()
-                .BuildMockDbSet();
-
-            _contextMock
-                .Setup(m => m.Recipients)
-                .Returns(membershipDbSetMock.Object);
-
-            RecipientRepository repository = new RecipientRepository(_contextMock.Object);
+            IRecipientRepository repository = new RecipientRepository(_context);
 
             // Act
             await repository.Add(recipient);
+            await _context.SaveChangesAsync();
+            _context.ChangeTracker.Clear();
 
             // Assert
-            _contextMock.Verify(m => m.Recipients.AddAsync(recipient, It.IsAny<CancellationToken>()));
+            Assert.NotEqual(0, recipient.RecipientId);
+            Recipient addedRecipient = await _context.Recipients.FindAsync(recipient.RecipientId);
+
+            Assert.NotNull(addedRecipient);
         }
 
         #endregion

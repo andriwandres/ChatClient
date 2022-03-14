@@ -1,15 +1,16 @@
-﻿using Core.Domain.Entities;
+﻿using Core.Application.Common;
+using Core.Domain.Entities;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Core.Application.Repositories
 {
-    public interface IGroupMembershipRepository
+    public interface IGroupMembershipRepository : IRepository<GroupMembership>
     {
-        IQueryable<GroupMembership> GetById(int membershipId);
-        IQueryable<GroupMembership> GetByGroup(int groupId);
-        IQueryable<GroupMembership> GetByCombination(int groupId, int userId);
+        Task<List<GroupMembership>> GetByGroup(int groupId, CancellationToken cancellationToken = default);
+        Task<GroupMembership> GetByCombination(int groupId, int userId, CancellationToken cancellationToken = default);
 
         Task<bool> Exists(int membershipId, CancellationToken cancellationToken = default);
         Task<bool> CombinationExists(int groupId, int userId, CancellationToken cancellationToken = default);

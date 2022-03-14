@@ -1,11 +1,13 @@
-﻿using Core.Domain.Entities;
-using System.Linq;
+﻿using Core.Application.Common;
+using Core.Domain.Entities;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Core.Application.Repositories
 {
-    public interface ITranslationRepository
+    public interface ITranslationRepository : IRepository<Translation>
     {
-        IQueryable<Translation> GetByLanguage(int languageId);
-        IQueryable<Translation> GetByLanguage(int languageId, string pattern);
+        Task<List<Translation>> GetByLanguage(int languageId);
+        Task<List<Translation>> GetByLanguage(int languageId, string pattern);
     }
 }

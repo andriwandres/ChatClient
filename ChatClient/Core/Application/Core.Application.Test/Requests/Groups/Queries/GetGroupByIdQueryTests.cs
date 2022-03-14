@@ -3,10 +3,7 @@ using Core.Application.Database;
 using Core.Application.Requests.Groups.Queries;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Groups;
-using MockQueryable.Moq;
 using Moq;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -21,7 +18,7 @@ namespace Core.Application.Test.Requests.Groups.Queries
         {
             _unitOfWorkMock = new Mock<IUnitOfWork>();
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            MapperConfiguration mapperConfiguration = new(config =>
             {
                 config.CreateMap<Group, GroupResource>();
             });
@@ -33,19 +30,13 @@ namespace Core.Application.Test.Requests.Groups.Queries
         public async Task GetGroupByIdHandler_ShouldReturnNull_WhenGroupDoesNotExist()
         {
             // Arrange
-            GetGroupByIdQuery request = new GetGroupByIdQuery {GroupId = 3891};
-
-            IQueryable<Group> emptyQueryable = Enumerable
-                .Empty<Group>()
-                .AsQueryable()
-                .BuildMock()
-                .Object;
+            GetGroupByIdQuery request = new() {GroupId = 3891};
 
             _unitOfWorkMock
-                .Setup(m => m.Groups.GetById(request.GroupId))
-                .Returns(emptyQueryable);
+                .Setup(m => m.Groups.GetByIdAsync(request.GroupId))
+                .ReturnsAsync(null as Group);
 
-            GetGroupByIdQuery.Handler handler = new GetGroupByIdQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
+            GetGroupByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object);
 
             // Act
             GroupResource group = await handler.Handle(request);
@@ -58,23 +49,15 @@ namespace Core.Application.Test.Requests.Groups.Queries
         public async Task GetGroupByIdHandler_ShouldReturnGroup_WhenGroupExists()
         {
             // Arrange
-            GetGroupByIdQuery request = new GetGroupByIdQuery { GroupId = 1 };
+            GetGroupByIdQuery request = new() { GroupId = 1 };
 
-            IEnumerable<Group> expectedGroups = new[]
-            {
-                new Group {GroupId = 1}
-            };
-
-            IQueryable<Group> queryableMock = expectedGroups
-                .AsQueryable()
-                .BuildMock()
-                .Object;
+            Group expectedGroups = new() { GroupId = 1 };
 
             _unitOfWorkMock
-                .Setup(m => m.Groups.GetById(request.GroupId))
-                .Returns(queryableMock);
+                .Setup(m => m.Groups.GetByIdAsync(request.GroupId))
+                .ReturnsAsync(expectedGroups);
 
-            GetGroupByIdQuery.Handler handler = new GetGroupByIdQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
+            GetGroupByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object);
 
             // Act
             GroupResource group = await handler.Handle(request);
