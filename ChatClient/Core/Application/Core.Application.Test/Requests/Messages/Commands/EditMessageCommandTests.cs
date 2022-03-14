@@ -1,9 +1,7 @@
 ﻿using Core.Application.Database;
 using Core.Application.Requests.Messages.Commands;
 using Core.Domain.Entities;
-using MockQueryable.Moq;
 using Moq;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -23,23 +21,17 @@ namespace Core.Application.Test.Requests.Messages.Commands
         public async Task EditMessageCommandHandler_ShouldUpdateMessagesContent()
         {
             // Arrange
-            EditMessageCommand request = new EditMessageCommand
+            EditMessageCommand request = new()
             {
                 MessageId = 1,
                 HtmlContent = "<p>hello world</p>"
             };
 
-            IQueryable<Message> databaseMessage = new[]
-            {
-                new Message { MessageId = 1, HtmlContent = "<p>original</p>", IsEdited = false }
-            }
-            .AsQueryable()
-            .BuildMock()
-            .Object;
+            Message databaseMessage = new() { MessageId = 1, HtmlContent = "<p>original</p>", IsEdited = false };
 
             _unitOfWorkMock
-                .Setup(m => m.Messages.GetById(request.MessageId))
-                .Returns(databaseMessage);
+                .Setup(m => m.Messages.GetByIdAsync(request.MessageId))
+                .ReturnsAsync(databaseMessage);
 
             Message passedMessage = null;
 
@@ -51,7 +43,7 @@ namespace Core.Application.Test.Requests.Messages.Commands
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            EditMessageCommand.Handler handler = new EditMessageCommand.Handler(_unitOfWorkMock.Object);
+            EditMessageCommand.Handler handler = new(_unitOfWorkMock.Object);
 
             // Act
             await handler.Handle(request);

@@ -4,7 +4,6 @@ using Core.Application.Services;
 using Core.Domain.Entities;
 using Core.Domain.Resources.GroupMemberships;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,12 +30,9 @@ namespace Core.Application.Requests.GroupMemberships.Commands
 
             public async Task<GroupMembershipResource> Handle(CreateMembershipCommand request, CancellationToken cancellationToken = default)
             {
-                User user = await _unitOfWork.Users
-                    .GetById(request.UserId)
-                    .AsTracking()
-                    .SingleOrDefaultAsync(cancellationToken);
+                User user = await _unitOfWork.Users.GetByIdAsync(request.UserId);
 
-                GroupMembership membership = new GroupMembership
+                GroupMembership membership = new()
                 {
                     User = user,
                     UserId = request.UserId,
@@ -45,7 +41,7 @@ namespace Core.Application.Requests.GroupMemberships.Commands
                     Created = _dateProvider.UtcNow(),
                 };
 
-                Recipient recipient = new Recipient
+                Recipient recipient = new()
                 {
                     GroupMembership = membership,
                 };

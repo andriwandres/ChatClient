@@ -1,9 +1,7 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Core.Application.Database;
 using Core.Domain.Resources.AvailabilityStatuses;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -25,12 +23,9 @@ namespace Core.Application.Requests.AvailabilityStatus.Queries
 
             public async Task<IEnumerable<AvailabilityStatusResource>> Handle(GetAllAvailabilityStatusesQuery request, CancellationToken cancellationToken = default)
             {
-                IEnumerable<AvailabilityStatusResource> availabilityStatuses = await _unitOfWork.AvailabilityStatuses
-                    .GetAll()
-                    .ProjectTo<AvailabilityStatusResource>(_mapper.ConfigurationProvider)
-                    .ToListAsync(cancellationToken);
+                List<Domain.Entities.AvailabilityStatus> availabilityStatus = await _unitOfWork.AvailabilityStatuses.GetAllAsync();
 
-                return availabilityStatuses;
+                return _mapper.Map<List<Domain.Entities.AvailabilityStatus>, List<AvailabilityStatusResource>>(availabilityStatus);
             }
         }
     }

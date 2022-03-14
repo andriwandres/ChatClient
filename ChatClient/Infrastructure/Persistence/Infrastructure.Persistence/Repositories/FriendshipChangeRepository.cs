@@ -3,13 +3,14 @@ using Core.Application.Database;
 using Core.Application.Repositories;
 using Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class FriendshipChangeRepository : RepositoryBase, IFriendshipChangeRepository
+    public class FriendshipChangeRepository : RepositoryBase<FriendshipChange>, IFriendshipChangeRepository
     {
         public FriendshipChangeRepository(IChatContext context) : base(context)
         {
@@ -20,11 +21,12 @@ namespace Infrastructure.Persistence.Repositories
             await Context.FriendshipChanges.AddAsync(change, cancellationToken);
         }
 
-        public IQueryable<FriendshipChange> GetByFriendship(int friendshipId)
+        public async Task<List<FriendshipChange>> GetByFriendship(int friendshipId)
         {
-            return Context.FriendshipChanges
+            return await Context.FriendshipChanges
                 .AsNoTracking()
-                .Where(change => change.FriendshipId == friendshipId);
+                .Where(change => change.FriendshipId == friendshipId)
+                .ToListAsync();
         }
     }
 }

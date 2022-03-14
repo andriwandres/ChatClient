@@ -1,16 +1,15 @@
 ﻿using Core.Application.Database;
 using Core.Application.Services;
+using Core.Domain.Entities;
 using Core.Domain.Resources.Groups;
 using Core.Domain.Resources.Messages;
 using Core.Domain.Resources.Recipients;
 using Core.Domain.Resources.Users;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Domain.Entities;
 
 namespace Core.Application.Requests.Recipients.Queries
 {
@@ -32,8 +31,10 @@ namespace Core.Application.Requests.Recipients.Queries
                 int currentUserId = _userProvider.GetCurrentUserId();
 
                 // Fetch relevant recipients for the current user alongside the latest message with each recipient
-                IEnumerable<RecipientResource> recipients = await _unitOfWork.MessageRecipients
-                    .GetLatestGroupedByRecipients(currentUserId)
+                List<MessageRecipient> latestGroupedByRecipients = await _unitOfWork.MessageRecipients
+                    .GetLatestGroupedByRecipients(currentUserId);
+
+                IEnumerable<RecipientResource> recipients = latestGroupedByRecipients
                     .Select(source => new RecipientResource
                     {
                         RecipientId = source.Recipient.UserId != currentUserId
@@ -88,8 +89,7 @@ namespace Core.Application.Requests.Recipients.Queries
                             : source.Recipient.UserId != currentUserId
                                 ? 0
                                 : source.Recipient.ReceivedMessages.Count(mr => mr.IsRead == false && mr.Message.AuthorId == source.Message.AuthorId)
-                    })
-                    .ToListAsync(cancellationToken);
+                    });
 
                 return recipients;
             }

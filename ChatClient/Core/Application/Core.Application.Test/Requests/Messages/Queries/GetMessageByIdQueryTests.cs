@@ -4,9 +4,7 @@ using Core.Application.Requests.Messages.Queries;
 using Core.Application.Services;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Messages;
-using MockQueryable.Moq;
 using Moq;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -27,7 +25,7 @@ namespace Core.Application.Test.Requests.Messages.Queries
                 .Setup(m => m.GetCurrentUserId())
                 .Returns(1);
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
+            MapperConfiguration mapperConfiguration = new(config =>
             {
                 config.CreateMap<Message, MessageResource>();
             });
@@ -39,19 +37,13 @@ namespace Core.Application.Test.Requests.Messages.Queries
         public async Task GetMessageByIdHandler_ShouldReturnNull_WhenMessageDoesNotExist()
         {
             // Arrange
-            GetMessageByIdQuery request = new GetMessageByIdQuery { MessageId = 1 };
-
-            IQueryable<Message> expectedMessage = Enumerable
-                .Empty<Message>()
-                .AsQueryable()
-                .BuildMock()
-                .Object;
+            GetMessageByIdQuery request = new() { MessageId = 1 };
 
             _unitOfWorkMock
-                .Setup(m => m.Messages.GetById(request.MessageId))
-                .Returns(expectedMessage);
+                .Setup(m => m.Messages.GetByIdAsync(request.MessageId))
+                .ReturnsAsync(null as Message);
 
-            GetMessageByIdQuery.Handler handler = new GetMessageByIdQuery.Handler(_mapperMock, _unitOfWorkMock.Object, _userProviderMock.Object);
+            GetMessageByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             MessageResource message = await handler.Handle(request);
@@ -64,21 +56,15 @@ namespace Core.Application.Test.Requests.Messages.Queries
         public async Task GetMessageByIdHandler_ShouldReturnMessage_WhenMessageExists()
         {
             // Arrange
-            GetMessageByIdQuery request = new GetMessageByIdQuery { MessageId = 1 };
+            GetMessageByIdQuery request = new() { MessageId = 1 };
 
-            IQueryable<Message> expectedMessage = new[]
-            {
-                new Message { MessageId = 1 }
-            }
-            .AsQueryable()
-            .BuildMock()
-            .Object;
+            Message expectedMessage = new() { MessageId = 1 };
 
             _unitOfWorkMock
-                .Setup(m => m.Messages.GetById(request.MessageId))
-                .Returns(expectedMessage);
+                .Setup(m => m.Messages.GetByIdAsync(request.MessageId))
+                .ReturnsAsync(expectedMessage);
 
-            GetMessageByIdQuery.Handler handler = new GetMessageByIdQuery.Handler(_mapperMock, _unitOfWorkMock.Object, _userProviderMock.Object);
+            GetMessageByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             MessageResource message = await handler.Handle(request);

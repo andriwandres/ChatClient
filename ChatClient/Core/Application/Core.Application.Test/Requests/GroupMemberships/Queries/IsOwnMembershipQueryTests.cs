@@ -2,9 +2,7 @@
 using Core.Application.Requests.GroupMemberships.Queries;
 using Core.Application.Services;
 using Core.Domain.Entities;
-using MockQueryable.Moq;
 using Moq;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -28,21 +26,15 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
         public async Task IsOwnMembershipQueryHandler_ShouldReturnTrue_WhenMembershipIsOwn()
         {
             // Arrange
-            IsOwnMembershipQuery request = new IsOwnMembershipQuery {GroupMembershipId = 2};
+            IsOwnMembershipQuery request = new() {GroupMembershipId = 2};
 
-            IQueryable<GroupMembership> expectedMembership = new[]
-            {
-                new GroupMembership { GroupMembershipId = 2, UserId = 1, GroupId = 2 }
-            }
-            .AsQueryable()
-            .BuildMock()
-            .Object;
+            GroupMembership expectedMembership = new() { GroupMembershipId = 2, UserId = 1, GroupId = 2 };
 
             _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.GetById(request.GroupMembershipId))
-                .Returns(expectedMembership);
+                .Setup(m => m.GroupMemberships.GetByIdAsync(request.GroupMembershipId))
+                .ReturnsAsync(expectedMembership);
 
-            IsOwnMembershipQuery.Handler handler = new IsOwnMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+            IsOwnMembershipQuery.Handler handler = new(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             bool isOwn = await handler.Handle(request);
@@ -55,21 +47,15 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
         public async Task IsOwnMembershipQueryHandler_ShouldReturnFalse_WhenMembershipIsForeign()
         {
             // Arrange
-            IsOwnMembershipQuery request = new IsOwnMembershipQuery { GroupMembershipId = 2 };
+            IsOwnMembershipQuery request = new() { GroupMembershipId = 2 };
 
-            IQueryable<GroupMembership> expectedMembership = new[]
-            {
-                new GroupMembership { GroupMembershipId = 2, UserId = 142, GroupId = 2 }
-            }
-            .AsQueryable()
-            .BuildMock()
-            .Object;
+            GroupMembership expectedMembership = new() { GroupMembershipId = 2, UserId = 142, GroupId = 2 };
 
             _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.GetById(request.GroupMembershipId))
-                .Returns(expectedMembership);
+                .Setup(m => m.GroupMemberships.GetByIdAsync(request.GroupMembershipId))
+                .ReturnsAsync(expectedMembership);
 
-            IsOwnMembershipQuery.Handler handler = new IsOwnMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+            IsOwnMembershipQuery.Handler handler = new(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             bool isOwn = await handler.Handle(request);

@@ -6,7 +6,6 @@ using Core.Domain.Dtos.Messages;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Messages;
 using Microsoft.AspNetCore.SignalR;
-using MockQueryable.Moq;
 using Moq;
 using System;
 using System.Collections.Generic;
@@ -51,44 +50,32 @@ namespace Core.Application.Test.Requests.Messages.Commands
         public async Task SendMessageCommandHandler_ShouldAddMessage_IncludingOneRecipient_WhenMessageIsSentToPrivateChatUser()
         {
             // Arrange
-            SendMessageCommand request = new SendMessageCommand
+            SendMessageCommand request = new()
             {
                 RecipientId = 2,
                 ParentId = 1,
                 HtmlContent = "<p>hello world</p>"
             };
 
-            IQueryable<Recipient> databaseRecipient = new[]
-            {
-                new Recipient
+            Recipient databaseRecipient = new()
                 {
-                    RecipientId = request.RecipientId,
-                    UserId = 2,
-                }
-            }
-            .AsQueryable()
-            .BuildMock()
-            .Object;
+                RecipientId = request.RecipientId,
+                UserId = 2,
+            };
 
-            IQueryable<User> databaseUser = new[]
-            {
-                new User
+            User databaseUser = new()
                 {
-                    UserId = 1,
-                    Recipient = new Recipient {RecipientId = 2}
-                }
-            }
-            .AsQueryable()
-            .BuildMock()
-            .Object;
+                UserId = 1,
+                Recipient = new Recipient {RecipientId = 2}
+            };
 
             _unitOfWorkMock
-                .Setup(m => m.Users.GetById(1))
-                .Returns(databaseUser);
+                .Setup(m => m.Users.GetByIdAsync(1))
+                .ReturnsAsync(databaseUser);
 
             _unitOfWorkMock
-                .Setup(m => m.Recipients.GetById(2))
-                .Returns(databaseRecipient);
+                .Setup(m => m.Recipients.GetByIdAsync(2))
+                .ReturnsAsync(databaseRecipient);
 
             Message passedMessage = null;
             MessageRecipient passedMessageRecipient = null;
@@ -151,63 +138,51 @@ namespace Core.Application.Test.Requests.Messages.Commands
                 HtmlContent = "<p>hello world</p>"
             };
 
-            IQueryable<Recipient> databaseRecipient = new[]
+            Recipient databaseRecipient = new()
             {
-                new Recipient
+                RecipientId = request.RecipientId,
+                GroupMembership = new GroupMembership
                 {
-                    RecipientId = request.RecipientId,
-                    GroupMembership = new GroupMembership
+                    Group = new Group
                     {
-                        Group = new Group
+                        Memberships = new HashSet<GroupMembership>
                         {
-                            Memberships = new HashSet<GroupMembership>
+                            new()
                             {
-                                new GroupMembership
+                                UserId = 1,
+                                Recipient = new Recipient
                                 {
-                                    UserId = 1,
-                                    Recipient = new Recipient
-                                    {
-                                        RecipientId = 1,
-                                        GroupMembership = new GroupMembership { UserId = 1 }
-                                    },
+                                    RecipientId = 1,
+                                    GroupMembership = new GroupMembership { UserId = 1 }
                                 },
-                                new GroupMembership
+                            },
+                            new()
+                            {
+                                UserId = 2,
+                                Recipient = new Recipient
                                 {
-                                    UserId = 2,
-                                    Recipient = new Recipient
-                                    {
-                                        RecipientId = 2,
-                                        GroupMembership = new GroupMembership { UserId = 2 }
-                                    },
-                                }
+                                    RecipientId = 2,
+                                    GroupMembership = new GroupMembership { UserId = 2 }
+                                },
                             }
                         }
-                    },
-                }
-            }
-            .AsQueryable()
-            .BuildMock()
-            .Object;
+                    }
+                },
+            };
 
-            IQueryable<User> databaseUser = new[]
+            User databaseUser = new()
             {
-                new User
-                {
-                    UserId = 1,
-                    Recipient = new Recipient {RecipientId = 2}
-                }
-            }
-            .AsQueryable()
-            .BuildMock()
-            .Object;
+                UserId = 1,
+                Recipient = new Recipient {RecipientId = 2}
+            };
 
             _unitOfWorkMock
-                .Setup(m => m.Recipients.GetById(1))
-                .Returns(databaseRecipient);
+                .Setup(m => m.Recipients.GetByIdAsync(1))
+                .ReturnsAsync(databaseRecipient);
 
             _unitOfWorkMock
-                .Setup(m => m.Users.GetById(1))
-                .Returns(databaseUser);
+                .Setup(m => m.Users.GetByIdAsync(1))
+                .ReturnsAsync(databaseUser);
 
             Message passedMessage = null;
             IEnumerable<MessageRecipient> passedMessageRecipients = null;
@@ -230,7 +205,7 @@ namespace Core.Application.Test.Requests.Messages.Commands
                 .Setup(m => m.CommitAsync(It.IsAny<CancellationToken>()))
                 .ReturnsAsync(1);
 
-            SendMessageCommand.Handler handler = new SendMessageCommand.Handler(_unitOfWorkMock.Object, _dateProviderMock.Object, _userProviderMock.Object, _hubContextMock.Object);
+            SendMessageCommand.Handler handler = new(_unitOfWorkMock.Object, _dateProviderMock.Object, _userProviderMock.Object, _hubContextMock.Object);
 
             // Act
             ChatMessageResource result = await handler.Handle(request);

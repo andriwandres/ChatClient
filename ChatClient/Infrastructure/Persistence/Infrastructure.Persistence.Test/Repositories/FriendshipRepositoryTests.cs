@@ -2,12 +2,9 @@
 using Core.Application.Repositories;
 using Core.Domain.Entities;
 using Infrastructure.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
-using MockQueryable.Moq;
-using Moq;
+using Infrastructure.Persistence.Test.Helpers;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -15,67 +12,52 @@ namespace Infrastructure.Persistence.Test.Repositories
 {
     public class FriendshipRepositoryTests
     {
+        private readonly IChatContext _context;
+
+        public FriendshipRepositoryTests()
+        {
+            _context = TestContextFactory.Create();
+        }
+
         [Fact]
         public async Task GetById_ShouldReturnFriendship_WhenIdMatches()
         {
             // Arrange
             const int friendshipId = 1;
 
-            IEnumerable<Friendship> expectedFriendship = new[]
-            {
-                new Friendship {FriendshipId = 1}
-            };
+            Friendship expectedFriendship = new() {FriendshipId = 1};
 
-            Mock<DbSet<Friendship>> friendshipDbSetMock = expectedFriendship
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Friendships.AddAsync(expectedFriendship);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Friendships)
-                .Returns(friendshipDbSetMock.Object);
-
-            IFriendshipRepository repository = new FriendshipRepository(contextMock.Object);
+            IFriendshipRepository repository = new FriendshipRepository(_context);
 
             // Act
-            IEnumerable<Friendship> friendships = await repository
-                .GetById(friendshipId)
-                .ToListAsync();
+            Friendship friendship = await repository.GetByIdAsync(friendshipId);
 
             // Assert
-            Assert.Single(friendships);
-            Assert.Equal(friendshipId, friendships.First().FriendshipId);
+            Assert.NotNull(friendship);
+            Assert.Equal(friendshipId, friendship.FriendshipId);
         }
 
         [Fact]
-        public async Task GetById_ShouldReturnEmptyQueryable_WhenIdDoesNotExist()
+        public async Task GetById_ShouldReturnNull_WhenIdDoesNotExist()
         {
             // Arrange
             const int friendshipId = 21231;
 
-            IEnumerable<Friendship> expectedFriendship = new[]
-            {
-                new Friendship {FriendshipId = 1}
-            };
+            Friendship expectedFriendship = new() {FriendshipId = 1};
 
-            Mock<DbSet<Friendship>> friendshipDbSetMock = expectedFriendship
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Friendships.AddAsync(expectedFriendship);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Friendships)
-                .Returns(friendshipDbSetMock.Object);
-
-            IFriendshipRepository repository = new FriendshipRepository(contextMock.Object);
+            IFriendshipRepository repository = new FriendshipRepository(_context);
 
             // Act
-            IEnumerable<Friendship> friendships = await repository
-                .GetById(friendshipId)
-                .ToListAsync();
+            Friendship friendship = await repository.GetByIdAsync(friendshipId);
 
             // Assert
-            Assert.Empty(friendships);
+            Assert.Null(friendship);
         }
 
         [Fact]
@@ -84,21 +66,12 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Arrange
             const int friendshipId = 1;
 
-            IEnumerable<Friendship> expectedFriendship = new[]
-            {
-                new Friendship {FriendshipId = 1}
-            };
+            Friendship expectedFriendship = new() {FriendshipId = 1};
 
-            Mock<DbSet<Friendship>> friendshipDbSetMock = expectedFriendship
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Friendships.AddAsync(expectedFriendship);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Friendships)
-                .Returns(friendshipDbSetMock.Object);
-
-            IFriendshipRepository repository = new FriendshipRepository(contextMock.Object);
+            IFriendshipRepository repository = new FriendshipRepository(_context);
 
             // Act
             bool exists = await repository.Exists(friendshipId);
@@ -113,21 +86,12 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Arrange
             const int friendshipId = 9881641;
 
-            IEnumerable<Friendship> expectedFriendship = new[]
-            {
-                new Friendship {FriendshipId = 1}
-            };
+            Friendship expectedFriendship = new() {FriendshipId = 1};
 
-            Mock<DbSet<Friendship>> friendshipDbSetMock = expectedFriendship
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Friendships.AddAsync(expectedFriendship);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Friendships)
-                .Returns(friendshipDbSetMock.Object);
-
-            IFriendshipRepository repository = new FriendshipRepository(contextMock.Object);
+            IFriendshipRepository repository = new FriendshipRepository(_context);
 
             // Act
             bool exists = await repository.Exists(friendshipId);
@@ -140,28 +104,18 @@ namespace Infrastructure.Persistence.Test.Repositories
         public async Task Add_ShouldAddFriendship()
         {
             // Arrange
-            Friendship friendship = new Friendship
-            {
-                RequesterId = 1, AddresseeId = 1
-            };
+            Friendship friendship = new() { RequesterId = 1, AddresseeId = 1 };
 
-            Mock<DbSet<Friendship>> friendshipDbSetMock = Enumerable
-                .Empty<Friendship>()
-                .AsQueryable()
-                .BuildMockDbSet();
-
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Friendships)
-                .Returns(friendshipDbSetMock.Object);
-
-            IFriendshipRepository repository = new FriendshipRepository(contextMock.Object);
+            IFriendshipRepository repository = new FriendshipRepository(_context);
 
             // Act
             await repository.Add(friendship);
 
             // Assert
-            contextMock.Verify(m => m.Friendships.AddAsync(friendship, It.IsAny<CancellationToken>()));
+            Assert.NotEqual(0, friendship.FriendshipId);
+            Friendship addedFriendship = await _context.Friendships.FindAsync(friendship.FriendshipId);
+
+            Assert.NotNull(addedFriendship);
         }
 
         [Fact]
@@ -172,27 +126,19 @@ namespace Infrastructure.Persistence.Test.Repositories
 
             IEnumerable<Friendship> friendships = new[]
             {
-                new Friendship { FriendshipId = 1, RequesterId = 1, AddresseeId = 2},
+                new Friendship { FriendshipId = 1, RequesterId = 1, AddresseeId = 2}, // Match #1
                 new Friendship { FriendshipId = 2, RequesterId = 3, AddresseeId = 1},
-                new Friendship { FriendshipId = 3, RequesterId = 3, AddresseeId = 2},
+                new Friendship { FriendshipId = 3, RequesterId = 3, AddresseeId = 2}, // Match #2
                 new Friendship { FriendshipId = 4, RequesterId = 2, AddresseeId = 4},
             };
 
-            Mock<DbSet<Friendship>> friendshipsDbSetMock = friendships
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Friendships.AddRangeAsync(friendships);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Friendships)
-                .Returns(friendshipsDbSetMock.Object);
-
-            FriendshipRepository repository = new FriendshipRepository(contextMock.Object);
+            FriendshipRepository repository = new(_context);
 
             // Act
-            IEnumerable<Friendship> actualFriendships = await repository
-                .GetByUser(userId)
-                .ToListAsync();
+            IEnumerable<Friendship> actualFriendships = await repository.GetByUser(userId);
 
             // Assert
             Assert.Equal(2, actualFriendships.Count());
@@ -213,19 +159,13 @@ namespace Infrastructure.Persistence.Test.Repositories
                 new Friendship {FriendshipId = 1, RequesterId = 1, AddresseeId = 3},
                 new Friendship {FriendshipId = 2, RequesterId = 2, AddresseeId = 1},
                 new Friendship {FriendshipId = 3, RequesterId = 1, AddresseeId = 5},
-                new Friendship {FriendshipId = 3, RequesterId = 4, AddresseeId = 1},
+                new Friendship {FriendshipId = 4, RequesterId = 4, AddresseeId = 1},
             };
 
-            Mock<DbSet<Friendship>> friendshipDbSetMock = expectedFriendship
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Friendships.AddRangeAsync(expectedFriendship);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Friendships)
-                .Returns(friendshipDbSetMock.Object);
-
-            IFriendshipRepository repository = new FriendshipRepository(contextMock.Object);
+            IFriendshipRepository repository = new FriendshipRepository(_context);
 
             // Act
             bool exists = await repository.CombinationExists(requesterId, addresseeId);
@@ -246,19 +186,13 @@ namespace Infrastructure.Persistence.Test.Repositories
                 new Friendship {FriendshipId = 1, RequesterId = 1, AddresseeId = 3},
                 new Friendship {FriendshipId = 2, RequesterId = 2, AddresseeId = 1},
                 new Friendship {FriendshipId = 3, RequesterId = 1, AddresseeId = 5},
-                new Friendship {FriendshipId = 3, RequesterId = 4, AddresseeId = 1},
+                new Friendship {FriendshipId = 4, RequesterId = 4, AddresseeId = 1},
             };
 
-            Mock<DbSet<Friendship>> friendshipDbSetMock = expectedFriendship
-                .AsQueryable()
-                .BuildMockDbSet();
+            await _context.Friendships.AddRangeAsync(expectedFriendship);
+            await _context.SaveChangesAsync();
 
-            Mock<IChatContext> contextMock = new Mock<IChatContext>();
-            contextMock
-                .Setup(m => m.Friendships)
-                .Returns(friendshipDbSetMock.Object);
-
-            IFriendshipRepository repository = new FriendshipRepository(contextMock.Object);
+            IFriendshipRepository repository = new FriendshipRepository(_context);
 
             // Act
             bool exists = await repository.CombinationExists(requesterId, addresseeId);

@@ -3,10 +3,10 @@ using Core.Application.Database;
 using Core.Application.Requests.GroupMemberships.Queries;
 using Core.Domain.Entities;
 using Core.Domain.Resources.GroupMemberships;
-using MockQueryable.Moq;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -35,20 +35,15 @@ namespace Core.Application.Test.Requests.GroupMemberships.Queries
             // Arrange
             GetMembershipsByGroupQuery request = new GetMembershipsByGroupQuery { GroupId = 1 };
 
-            IEnumerable<GroupMembership> expectedMemberships = new []
+            List<GroupMembership> expectedMemberships = new ()
             {
                 new GroupMembership { GroupMembershipId = 1, GroupId = 1 },
                 new GroupMembership { GroupMembershipId = 2, GroupId = 1 },
             };
 
-            IQueryable<GroupMembership> queryableMock = expectedMemberships
-                .AsQueryable()
-                .BuildMock()
-                .Object;
-
             _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.GetByGroup(request.GroupId))
-                .Returns(queryableMock);
+                .Setup(m => m.GroupMemberships.GetByGroup(request.GroupId, It.IsAny<CancellationToken>()))
+                .ReturnsAsync(expectedMemberships);
 
             GetMembershipsByGroupQuery.Handler handler = new GetMembershipsByGroupQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
 

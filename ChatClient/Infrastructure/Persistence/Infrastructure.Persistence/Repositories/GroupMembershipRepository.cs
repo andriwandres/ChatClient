@@ -3,37 +3,32 @@ using Core.Application.Database;
 using Core.Application.Repositories;
 using Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class GroupMembershipRepository : RepositoryBase, IGroupMembershipRepository
+    public class GroupMembershipRepository : RepositoryBase<GroupMembership>, IGroupMembershipRepository
     {
         public GroupMembershipRepository(IChatContext context) : base(context)
         {
         }
 
-        public IQueryable<GroupMembership> GetById(int membershipId)
+        public async Task<List<GroupMembership>> GetByGroup(int groupId, CancellationToken cancellationToken = default)
         {
-            return Context.GroupMemberships
+            return await Context.GroupMemberships
                 .AsNoTracking()
-                .Where(membership => membership.GroupMembershipId == membershipId);
+                .Where(membership => membership.GroupId == groupId)
+                .ToListAsync(cancellationToken);
         }
 
-        public IQueryable<GroupMembership> GetByGroup(int groupId)
+        public async Task<GroupMembership> GetByCombination(int groupId, int userId, CancellationToken cancellationToken = default)
         {
-            return Context.GroupMemberships
+            return await Context.GroupMemberships
                 .AsNoTracking()
-                .Where(membership => membership.GroupId == groupId);
-        }
-
-        public IQueryable<GroupMembership> GetByCombination(int groupId, int userId)
-        {
-            return Context.GroupMemberships
-                .AsNoTracking()
-                .Where(membership => membership.GroupId == groupId && membership.UserId == userId);
+                .SingleOrDefaultAsync(membership => membership.GroupId == groupId && membership.UserId == userId, cancellationToken);
         }
 
         public async Task<bool> Exists(int membershipId, CancellationToken cancellationToken = default)

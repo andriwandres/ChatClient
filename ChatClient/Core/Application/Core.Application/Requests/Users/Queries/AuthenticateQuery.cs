@@ -1,11 +1,10 @@
 ﻿using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Core.Application.Database;
 using Core.Application.Services;
+using Core.Domain.Entities;
 using Core.Domain.Resources.Users;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,17 +35,16 @@ namespace Core.Application.Requests.Users.Queries
                 string authorizationHeader = _httpContextAccessor.HttpContext.Request.Headers["Authorization"].ToString();
                 string token = authorizationHeader.Split(' ').Last();
 
-                AuthenticatedUserResource user = await _unitOfWork.Users
-                    .GetById(userId)
-                    .ProjectTo<AuthenticatedUserResource>(_mapper.ConfigurationProvider)
-                    .SingleOrDefaultAsync(cancellationToken);
+                User user = await _unitOfWork.Users.GetByIdAsync(userId);
+                
+                AuthenticatedUserResource authenticatedUserResource = _mapper.Map<User, AuthenticatedUserResource>(user);
 
-                if (user != null)
+                if (authenticatedUserResource != null)
                 {
-                    user.Token = token;
+                    authenticatedUserResource.Token = token;
                 }
 
-                return user;
+                return authenticatedUserResource;
             }
         }
     }

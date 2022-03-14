@@ -1,7 +1,6 @@
 ﻿using Core.Application.Database;
 using Core.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,9 +23,7 @@ namespace Core.Application.Requests.Groups.Commands
 
             public async Task<Unit> Handle(UpdateGroupCommand request, CancellationToken cancellationToken = default)
             {
-                Group group = await _unitOfWork.Groups
-                    .GetById(request.GroupId)
-                    .SingleOrDefaultAsync(cancellationToken);
+                Group group = await _unitOfWork.Groups.GetByIdAsync(request.GroupId);
 
                 group.Name = request.Name;
                 group.Description = request.Description;

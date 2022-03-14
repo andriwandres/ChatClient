@@ -1,26 +1,24 @@
 ﻿using Core.Application.Database;
+using Core.Application.Repositories;
+using Core.Domain.Dtos.Messages;
 using Core.Domain.Entities;
 using Infrastructure.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
-using MockQueryable.Moq;
-using Moq;
+using Infrastructure.Persistence.Test.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using Core.Domain.Dtos.Messages;
 using Xunit;
 
 namespace Infrastructure.Persistence.Test.Repositories
 {
     public class MessageRecipientRepositoryTests
     {
-        private readonly Mock<IChatContext> _contextMock;
+        private readonly IChatContext _context;
 
         public MessageRecipientRepositoryTests()
         {
-            _contextMock = new Mock<IChatContext>();
+            _context = TestContextFactory.Create();
         }
 
         #region Add()
@@ -31,15 +29,18 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Arrange
             MessageRecipient messageRecipient = new MessageRecipient();
 
-            _contextMock.Setup(m => m.MessageRecipients.AddAsync(messageRecipient, It.IsAny<CancellationToken>()));
-
-            MessageRecipientRepository repository = new MessageRecipientRepository(_contextMock.Object);
+            IMessageRecipientRepository repository = new MessageRecipientRepository(_context);
 
             // Act
             await repository.Add(messageRecipient);
-
+            await _context.SaveChangesAsync();
+            _context.ChangeTracker.Clear();
+            
             // Assert
-            _contextMock.Verify(m => m.MessageRecipients.AddAsync(messageRecipient, It.IsAny<CancellationToken>()));
+            Assert.NotEqual(0, messageRecipient.MessageRecipientId);
+            MessageRecipient addedMessageRecipient = await _context.MessageRecipients.FindAsync(messageRecipient.MessageRecipientId);
+
+            Assert.NotNull(addedMessageRecipient);
         }
 
         #endregion
@@ -56,15 +57,17 @@ namespace Infrastructure.Persistence.Test.Repositories
                 new MessageRecipient(),
             };
 
-            _contextMock.Setup(m => m.MessageRecipients.AddRangeAsync(messageRecipients, It.IsAny<CancellationToken>()));
-
-            MessageRecipientRepository repository = new MessageRecipientRepository(_contextMock.Object);
+            IMessageRecipientRepository repository = new MessageRecipientRepository(_context);
 
             // Act
             await repository.AddRange(messageRecipients);
+            await _context.SaveChangesAsync();
+            _context.ChangeTracker.Clear();
 
             // Assert
-            _contextMock.Verify(m => m.MessageRecipients.AddRangeAsync(messageRecipients, It.IsAny<CancellationToken>()));
+            Assert.All(messageRecipients, mr => Assert.NotEqual(0, mr.MessageRecipientId));
+
+
         }
 
         #endregion
@@ -77,43 +80,35 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Arrange
             const int userId = 1;
 
-            IEnumerable<MessageRecipient> databaseMessageRecipients = new[]
+            IEnumerable<MessageRecipient> messageRecipients = new[]
             {
                 new MessageRecipient
                 {
                     MessageRecipientId = 1,
-                    Message = new Message { MessageId = 1, AuthorId = 1, Created = new DateTime (2020, 1, 1) },
+                    Message = new Message { MessageId = 1, AuthorId = 1, Created = new DateTime (2020, 1, 1), HtmlContent = "<p>Hello World</p>" },
                     Recipient = new Recipient { UserId = 2 }
                 },
                 new MessageRecipient
                 {
                     MessageRecipientId = 2,
-                    Message = new Message { MessageId = 2, AuthorId = 2, Created = new DateTime (2020, 1, 2) },
+                    Message = new Message { MessageId = 2, AuthorId = 2, Created = new DateTime (2020, 1, 2), HtmlContent = "<p>Hello World</p>" },
                     Recipient = new Recipient { UserId = 3 }
                 },
                 new MessageRecipient
                 {
                     MessageRecipientId = 3,
-                    Message = new Message { MessageId = 3, AuthorId = 1, Created = new DateTime (2020, 1, 3) },
+                    Message = new Message { MessageId = 3, AuthorId = 1, Created = new DateTime (2020, 1, 3), HtmlContent = "<p>Hello World</p>" },
                     Recipient = new Recipient { UserId = 3 }
                 },
             };
 
-            DbSet<MessageRecipient> dbSetMock = databaseMessageRecipients
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.MessageRecipients.AddRangeAsync(messageRecipients);
+            await _context.SaveChangesAsync();
 
-            _contextMock
-                .Setup(m => m.MessageRecipients)
-                .Returns(dbSetMock);
-
-            MessageRecipientRepository repository = new MessageRecipientRepository(_contextMock.Object);
+            IMessageRecipientRepository repository = new MessageRecipientRepository(_context);
 
             // Act
-            IEnumerable<MessageRecipient> result = await repository
-                .GetLatestGroupedByRecipients(userId)
-                .ToListAsync();
+            IEnumerable<MessageRecipient> result = await repository.GetLatestGroupedByRecipients(userId);
 
             // Assert
             Assert.NotEmpty(result);
@@ -129,43 +124,35 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Arrange
             const int userId = 1;
 
-            IEnumerable<MessageRecipient> databaseMessageRecipients = new[]
+            IEnumerable<MessageRecipient> messageRecipients = new[]
             {
                 new MessageRecipient
                 {
                     MessageRecipientId = 1,
-                    Message = new Message { MessageId = 1, AuthorId = 2, Created = new DateTime (2020, 1, 1) },
+                    Message = new Message { MessageId = 1, AuthorId = 2, Created = new DateTime (2020, 1, 1), HtmlContent = "<p>Hello World</p>" },
                     Recipient = new Recipient { UserId = 1 } // User as recipient
                 },
                 new MessageRecipient
                 {
                     MessageRecipientId = 2,
-                    Message = new Message { MessageId = 2, AuthorId = 3, Created = new DateTime (2020, 1, 2) },
+                    Message = new Message { MessageId = 2, AuthorId = 3, Created = new DateTime (2020, 1, 2), HtmlContent = "<p>Hello World</p>" },
                     Recipient = new Recipient { UserId = 2 }
                 },
                 new MessageRecipient
                 {
                     MessageRecipientId = 3,
-                    Message = new Message { MessageId = 3, AuthorId = 3, Created = new DateTime (2020, 1, 3) },
+                    Message = new Message { MessageId = 3, AuthorId = 3, Created = new DateTime (2020, 1, 3), HtmlContent = "<p>Hello World</p>" },
                     Recipient = new Recipient { UserId = 1 } // User as recipient
                 },
             };
 
-            DbSet<MessageRecipient> dbSetMock = databaseMessageRecipients
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.MessageRecipients.AddRangeAsync(messageRecipients);
+            await _context.SaveChangesAsync();
 
-            _contextMock
-                .Setup(m => m.MessageRecipients)
-                .Returns(dbSetMock);
-
-            MessageRecipientRepository repository = new MessageRecipientRepository(_contextMock.Object);
+            IMessageRecipientRepository repository = new MessageRecipientRepository(_context);
 
             // Act
-            IEnumerable<MessageRecipient> result = await repository
-                .GetLatestGroupedByRecipients(userId)
-                .ToListAsync();
+            IEnumerable<MessageRecipient> result = await repository.GetLatestGroupedByRecipients(userId);
 
             // Assert
             Assert.NotEmpty(result);
@@ -181,13 +168,13 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Arrange
             const int userId = 1;
 
-            IEnumerable<MessageRecipient> databaseMessageRecipients = new[]
+            IEnumerable<MessageRecipient> messageRecipients = new[]
             {
                 // User is author in message to group 1
                 new MessageRecipient
                 {
                     MessageRecipientId = 1,
-                    Message = new Message { MessageId = 1, AuthorId = 1, Created = new DateTime (2020, 1, 1) },
+                    Message = new Message { MessageId = 1, AuthorId = 1, Created = new DateTime (2020, 1, 1), HtmlContent = "<p>Hello World</p>" },
                     Recipient = new Recipient
                     {
                         GroupMembershipId = 1,
@@ -201,7 +188,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                 new MessageRecipient
                 {
                     MessageRecipientId = 2,
-                    Message = new Message { MessageId = 1, AuthorId = 1, Created = new DateTime (2020, 1, 1) },
+                    Message = new Message { MessageId = 2, AuthorId = 1, Created = new DateTime (2020, 1, 1), HtmlContent = "<p>Hello World</p>" },
                     Recipient = new Recipient
                     {
                         GroupMembershipId = 2,
@@ -215,7 +202,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                 new MessageRecipient
                 {
                     MessageRecipientId = 3,
-                    Message = new Message { MessageId = 2, AuthorId = 2, Created = new DateTime (2020, 1, 2) },
+                    Message = new Message { MessageId = 3, AuthorId = 2, Created = new DateTime (2020, 1, 2), HtmlContent = "<p>Hello World</p>" },
                     Recipient = new Recipient
                     {
                         GroupMembershipId = 3,
@@ -230,7 +217,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                 new MessageRecipient
                 {
                     MessageRecipientId = 4,
-                    Message = new Message { MessageId = 2, AuthorId = 2, Created = new DateTime (2020, 1, 2) },
+                    Message = new Message { MessageId = 4, AuthorId = 2, Created = new DateTime (2020, 1, 2), HtmlContent = "<p>Hello World</p>" },
                     Recipient = new Recipient
                     {
                         GroupMembershipId = 4,
@@ -243,21 +230,13 @@ namespace Infrastructure.Persistence.Test.Repositories
                 },
             };
 
-            DbSet<MessageRecipient> dbSetMock = databaseMessageRecipients
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.MessageRecipients.AddRangeAsync(messageRecipients);
+            await _context.SaveChangesAsync();
 
-            _contextMock
-                .Setup(m => m.MessageRecipients)
-                .Returns(dbSetMock);
-
-            MessageRecipientRepository repository = new MessageRecipientRepository(_contextMock.Object);
+            IMessageRecipientRepository repository = new MessageRecipientRepository(_context);
 
             // Act
-            IEnumerable<MessageRecipient> result = await repository
-                .GetLatestGroupedByRecipients(userId)
-                .ToListAsync();
+            IEnumerable<MessageRecipient> result = await repository.GetLatestGroupedByRecipients(userId);
 
             // Assert
             Assert.NotEmpty(result);
@@ -272,17 +251,17 @@ namespace Infrastructure.Persistence.Test.Repositories
         #region GetMessagesWithRecipient()
 
         [Fact]
-        public async Task GetMessagesWithRecipient_ShouldIncludeMessage_WhenUserIsAuthorTheMessage()
+        public async Task GetMessagesWithRecipient_ShouldIncludeMessage_WhenUserIsAuthorOfTheMessage()
         {
             // Arrange
             const int userId = 1;
             const int recipientId = 1;
-
+            
             MessageBoundaries boundaries = new MessageBoundaries();
 
-            IEnumerable<MessageRecipient> databaseMessageRecipients = new[]
+            IEnumerable<MessageRecipient> messageRecipients = new[]
             {
-                // User is author of message to recipient 1
+                // User 1 is author of message to recipient 2
                 new MessageRecipient
                 {
                     MessageRecipientId = 1,
@@ -291,9 +270,15 @@ namespace Infrastructure.Persistence.Test.Repositories
                     { 
                         MessageId = 1, 
                         AuthorId = 1, 
-                        Created = new DateTime (2020, 1, 1), 
+                        Created = new DateTime (2020, 1, 1),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
+                            UserId = 1,
+                            Email = "user1@test.ch",
+                            UserName = "user1",
+                            PasswordHash = new byte[] {},
+                            PasswordSalt = new byte[] {},
                             Recipient = new Recipient { RecipientId = 1 }
                         }
                     },
@@ -312,10 +297,16 @@ namespace Infrastructure.Persistence.Test.Repositories
                     Message = new Message
                     {
                         MessageId = 2,
-                        AuthorId = 1,
+                        AuthorId = 2,
                         Created = new DateTime (2020, 1, 1),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
+                            UserId = 2,
+                            Email = "user2@test.ch",
+                            UserName = "user2",
+                            PasswordHash = new byte[] {},
+                            PasswordSalt = new byte[] {},
                             Recipient = new Recipient { RecipientId = 2 }
                         }
                     },
@@ -336,16 +327,22 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 3,
                         AuthorId = 2,
                         Created = new DateTime (2020, 1, 1),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
-                            Recipient = new Recipient { RecipientId = 1 }
+                            UserId = 2,
+                            Email = "user2@test.ch",
+                            UserName = "user2",
+                            PasswordHash = new byte[] {},
+                            PasswordSalt = new byte[] {},
+                            Recipient = new Recipient { RecipientId = 2 }
                         }
                     },
                     Recipient = new Recipient
                     {
                         GroupMembership = new GroupMembership
                         {
-                            Recipient = new Recipient { RecipientId = 2 }
+                            Recipient = new Recipient { RecipientId = 1 }
                         }
                     }
                 },
@@ -359,8 +356,14 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 4,
                         AuthorId = 1,
                         Created = new DateTime (2020, 1, 4),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
+                            UserId = 1,
+                            Email = "user1@test.ch",
+                            UserName = "user1",
+                            PasswordHash = new byte[] {},
+                            PasswordSalt = new byte[] {},
                             Recipient = new Recipient { RecipientId = 1 }
                         }
                     },
@@ -374,21 +377,17 @@ namespace Infrastructure.Persistence.Test.Repositories
                 },
             };
 
-            DbSet<MessageRecipient> dbSetMock = databaseMessageRecipients
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            foreach (MessageRecipient messageRecipient in messageRecipients)
+            {
+                await _context.MessageRecipients.AddAsync(messageRecipient);
+                await _context.SaveChangesAsync();
+                _context.ChangeTracker.Clear();
+            }
 
-            _contextMock
-                .Setup(m => m.MessageRecipients)
-                .Returns(dbSetMock);
-
-            MessageRecipientRepository repository = new MessageRecipientRepository(_contextMock.Object);
+            IMessageRecipientRepository repository = new MessageRecipientRepository(_context);
 
             // Act
-            IEnumerable<MessageRecipient> result = await repository
-                .GetMessagesWithRecipient(userId, recipientId, boundaries)
-                .ToListAsync();
+            IEnumerable<MessageRecipient> result = await repository.GetMessagesWithRecipient(userId, recipientId, boundaries);
 
             // Assert
             Assert.NotEmpty(result);
@@ -407,7 +406,7 @@ namespace Infrastructure.Persistence.Test.Repositories
 
             MessageBoundaries boundaries = new MessageBoundaries();
 
-            IEnumerable<MessageRecipient> databaseMessageRecipients = new[]
+            IEnumerable<MessageRecipient> messageRecipients = new[]
             {
                 // User is recipient of message from recipient 1 (included)
                 new MessageRecipient
@@ -419,6 +418,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 1,
                         AuthorId = 2,
                         Created = new DateTime (2020, 1, 1),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 1 }
@@ -440,6 +440,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 2,
                         AuthorId = 3,
                         Created = new DateTime (2020, 1, 2),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 3 }
@@ -461,6 +462,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 3,
                         AuthorId = 2,
                         Created = new DateTime (2020, 1, 3),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 1 }
@@ -482,6 +484,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 4,
                         AuthorId = 2,
                         Created = new DateTime (2020, 1, 4),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 1 }
@@ -495,21 +498,13 @@ namespace Infrastructure.Persistence.Test.Repositories
                 },
             };
 
-            DbSet<MessageRecipient> dbSetMock = databaseMessageRecipients
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.MessageRecipients.AddRangeAsync(messageRecipients);
+            await _context.SaveChangesAsync();
 
-            _contextMock
-                .Setup(m => m.MessageRecipients)
-                .Returns(dbSetMock);
-
-            MessageRecipientRepository repository = new MessageRecipientRepository(_contextMock.Object);
+            IMessageRecipientRepository repository = new MessageRecipientRepository(_context);
 
             // Act
-            IEnumerable<MessageRecipient> result = await repository
-                .GetMessagesWithRecipient(userId, recipientId, boundaries)
-                .ToListAsync();
+            IEnumerable<MessageRecipient> result = await repository.GetMessagesWithRecipient(userId, recipientId, boundaries);
 
             // Assert
             Assert.NotEmpty(result);
@@ -528,7 +523,7 @@ namespace Infrastructure.Persistence.Test.Repositories
 
             MessageBoundaries boundaries = new MessageBoundaries();
 
-            IEnumerable<MessageRecipient> databaseMessageRecipients = new[]
+            IEnumerable<MessageRecipient> messageRecipients = new[]
             {
                 // User is recipient of message from recipient 1 (included)
                 new MessageRecipient
@@ -540,6 +535,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 1,
                         AuthorId = 2,
                         Created = new DateTime (2020, 1, 1),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 1 }
@@ -563,6 +559,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 2,
                         AuthorId = 3,
                         Created = new DateTime (2020, 1, 2),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 3 }
@@ -586,6 +583,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 3,
                         AuthorId = 2,
                         Created = new DateTime (2020, 1, 3),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 1 }
@@ -609,6 +607,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 4,
                         AuthorId = 2,
                         Created = new DateTime (2020, 1, 4),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 1 }
@@ -624,21 +623,13 @@ namespace Infrastructure.Persistence.Test.Repositories
                 },
             };
 
-            DbSet<MessageRecipient> dbSetMock = databaseMessageRecipients
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.MessageRecipients.AddRangeAsync(messageRecipients);
+            await _context.SaveChangesAsync();
 
-            _contextMock
-                .Setup(m => m.MessageRecipients)
-                .Returns(dbSetMock);
-
-            MessageRecipientRepository repository = new MessageRecipientRepository(_contextMock.Object);
+            IMessageRecipientRepository repository = new MessageRecipientRepository(_context);
 
             // Act
-            IEnumerable<MessageRecipient> result = await repository
-                .GetMessagesWithRecipient(userId, recipientId, boundaries)
-                .ToListAsync();
+            IEnumerable<MessageRecipient> result = await repository.GetMessagesWithRecipient(userId, recipientId, boundaries);
 
             // Assert
             Assert.NotEmpty(result);
@@ -661,7 +652,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                 Before = new DateTime(2020, 1, 1, 15, 3, 0),
             };
 
-            IEnumerable<MessageRecipient> databaseMessageRecipients = new[]
+            IEnumerable<MessageRecipient> messageRecipients = new[]
             {
                 // User is author of message to recipient 1
                 new MessageRecipient
@@ -673,6 +664,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 1,
                         AuthorId = 1,
                         Created = new DateTime(2020, 1, 1, 15, 0, 0),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 1 }
@@ -695,6 +687,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 2,
                         AuthorId = 1,
                         Created = new DateTime(2020, 1, 1, 15, 5, 0),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 2 }
@@ -717,6 +710,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 3,
                         AuthorId = 2,
                         Created = new DateTime(2020, 1, 1, 15, 6, 0),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 1 }
@@ -740,6 +734,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 4,
                         AuthorId = 1,
                         Created = new DateTime(2020, 1, 1, 15, 6, 40),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 1 }
@@ -755,21 +750,13 @@ namespace Infrastructure.Persistence.Test.Repositories
                 },
             };
 
-            DbSet<MessageRecipient> dbSetMock = databaseMessageRecipients
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.MessageRecipients.AddRangeAsync(messageRecipients);
+            await _context.SaveChangesAsync();
 
-            _contextMock
-                .Setup(m => m.MessageRecipients)
-                .Returns(dbSetMock);
-
-            MessageRecipientRepository repository = new MessageRecipientRepository(_contextMock.Object);
+            IMessageRecipientRepository repository = new MessageRecipientRepository(_context);
 
             // Act
-            IEnumerable<MessageRecipient> result = await repository
-                .GetMessagesWithRecipient(userId, recipientId, boundaries)
-                .ToListAsync();
+            IEnumerable<MessageRecipient> result = await repository.GetMessagesWithRecipient(userId, recipientId, boundaries);
 
             // Assert
             Assert.NotEmpty(result);
@@ -791,7 +778,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                 After = new DateTime(2020, 1, 1, 15, 3, 0),
             };
 
-            IEnumerable<MessageRecipient> databaseMessageRecipients = new[]
+            IEnumerable<MessageRecipient> messageRecipients = new[]
             {
                 // User is author of message to recipient 1
                 new MessageRecipient
@@ -803,6 +790,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 1,
                         AuthorId = 1,
                         Created = new DateTime(2020, 1, 1, 15, 0, 0),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 1 }
@@ -825,6 +813,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 2,
                         AuthorId = 1,
                         Created = new DateTime(2020, 1, 1, 15, 5, 0),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 2 }
@@ -847,6 +836,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 3,
                         AuthorId = 2,
                         Created = new DateTime(2020, 1, 1, 15, 6, 0),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 1 }
@@ -870,6 +860,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 4,
                         AuthorId = 1,
                         Created = new DateTime(2020, 1, 1, 15, 6, 40),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 1 }
@@ -885,21 +876,13 @@ namespace Infrastructure.Persistence.Test.Repositories
                 },
             };
 
-            DbSet<MessageRecipient> dbSetMock = databaseMessageRecipients
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.MessageRecipients.AddRangeAsync(messageRecipients);
+            await _context.SaveChangesAsync();
 
-            _contextMock
-                .Setup(m => m.MessageRecipients)
-                .Returns(dbSetMock);
-
-            MessageRecipientRepository repository = new MessageRecipientRepository(_contextMock.Object);
+            IMessageRecipientRepository repository = new MessageRecipientRepository(_context);
 
             // Act
-            IEnumerable<MessageRecipient> result = await repository
-                .GetMessagesWithRecipient(userId, recipientId, boundaries)
-                .ToListAsync();
+            IEnumerable<MessageRecipient> result = await repository.GetMessagesWithRecipient(userId, recipientId, boundaries);
 
             // Assert
             Assert.NotEmpty(result);
@@ -921,7 +904,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                 Limit = 1,
             };
 
-            IEnumerable<MessageRecipient> databaseMessageRecipients = new[]
+            IEnumerable<MessageRecipient> messageRecipients = new[]
             {
                 // User is author of message to recipient 1
                 new MessageRecipient
@@ -933,6 +916,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 1,
                         AuthorId = 1,
                         Created = new DateTime(2020, 1, 1, 15, 0, 0),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 1 }
@@ -955,6 +939,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 2,
                         AuthorId = 1,
                         Created = new DateTime(2020, 1, 1, 15, 5, 0),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 2 }
@@ -977,6 +962,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 3,
                         AuthorId = 2,
                         Created = new DateTime(2020, 1, 1, 15, 6, 0),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 1 }
@@ -1000,6 +986,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         MessageId = 4,
                         AuthorId = 1,
                         Created = new DateTime(2020, 1, 1, 15, 6, 40),
+                        HtmlContent = "<p>Hello World</p>",
                         Author = new User
                         {
                             Recipient = new Recipient { RecipientId = 1 }
@@ -1015,21 +1002,13 @@ namespace Infrastructure.Persistence.Test.Repositories
                 },
             };
 
-            DbSet<MessageRecipient> dbSetMock = databaseMessageRecipients
-                .AsQueryable()
-                .BuildMockDbSet()
-                .Object;
+            await _context.MessageRecipients.AddRangeAsync(messageRecipients);
+            await _context.SaveChangesAsync();
 
-            _contextMock
-                .Setup(m => m.MessageRecipients)
-                .Returns(dbSetMock);
-
-            MessageRecipientRepository repository = new MessageRecipientRepository(_contextMock.Object);
+            IMessageRecipientRepository repository = new MessageRecipientRepository(_context);
 
             // Act
-            IEnumerable<MessageRecipient> result = await repository
-                .GetMessagesWithRecipient(userId, recipientId, boundaries)
-                .ToListAsync();
+            IEnumerable<MessageRecipient> result = await repository.GetMessagesWithRecipient(userId, recipientId, boundaries);
 
             // Assert
             Assert.NotEmpty(result);

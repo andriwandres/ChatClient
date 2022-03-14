@@ -1,12 +1,9 @@
 ﻿using Core.Application.Database;
+using Core.Application.Repositories;
 using Core.Domain.Entities;
 using Infrastructure.Persistence.Repositories;
-using Microsoft.EntityFrameworkCore;
-using MockQueryable.Moq;
-using Moq;
+using Infrastructure.Persistence.Test.Helpers;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -14,41 +11,35 @@ namespace Infrastructure.Persistence.Test.Repositories
 {
     public class MessageRepositoryTests
     {
-        private readonly Mock<IChatContext> _contextMock;
+        private readonly IChatContext _context;
 
         public MessageRepositoryTests()
         {
-            _contextMock = new Mock<IChatContext>();
+            _context = TestContextFactory.Create();
         }
 
         #region GetById()
 
         [Fact]
-        public async Task GetById_ShouldReturnEmptyQueryable_WhenIdDoesNotMatch()
+        public async Task GetById_ShouldReturnNull_WhenIdDoesNotMatch()
         {
             // Arrange
             const int messageId = 5204;
 
-            DbSet<Message> expectedMessages = new[]
+            IEnumerable<Message> expectedMessages = new[]
             {
-                new Message { MessageId = 1 },
-                new Message { MessageId = 2 },
-                new Message { MessageId = 3 },
-            }
-            .AsQueryable()
-            .BuildMockDbSet()
-            .Object;
+                new Message { MessageId = 1, HtmlContent = "Test", },
+                new Message { MessageId = 2, HtmlContent = "Test", },
+                new Message { MessageId = 3, HtmlContent = "Test", },
+            };
 
-            _contextMock
-                .Setup(m => m.Messages)
-                .Returns(expectedMessages);
+            await _context.Messages.AddRangeAsync(expectedMessages);
+            await _context.SaveChangesAsync();
 
-            MessageRepository repository = new MessageRepository(_contextMock.Object);
+            IMessageRepository repository = new MessageRepository(_context);
 
             // Act
-            Message message = await repository
-                .GetById(messageId)
-                .SingleOrDefaultAsync();
+            Message message = await repository.GetByIdAsync(messageId);
 
             // Assert
             Assert.Null(message);
@@ -60,26 +51,20 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Arrange
             const int messageId = 2;
 
-            DbSet<Message> expectedMessages = new[]
+            IEnumerable<Message> expectedMessages = new[]
             {
-                new Message { MessageId = 1 },
-                new Message { MessageId = 2 },
-                new Message { MessageId = 3 },
-            }
-            .AsQueryable()
-            .BuildMockDbSet()
-            .Object;
+                new Message { MessageId = 1, HtmlContent = "Test", },
+                new Message { MessageId = 2, HtmlContent = "Test", },
+                new Message { MessageId = 3, HtmlContent = "Test", },
+            };
 
-            _contextMock
-                .Setup(m => m.Messages)
-                .Returns(expectedMessages);
+            await _context.Messages.AddRangeAsync(expectedMessages);
+            await _context.SaveChangesAsync();
 
-            MessageRepository repository = new MessageRepository(_contextMock.Object);
+            IMessageRepository repository = new MessageRepository(_context);
 
             // Act
-            Message message = await repository
-                .GetById(messageId)
-                .SingleOrDefaultAsync();
+            Message message = await repository.GetByIdAsync(messageId);
 
             // Assert
             Assert.NotNull(message);
@@ -96,21 +81,17 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Arrange
             const int messageId = 1;
 
-            DbSet<Message> expectedMessages = new[]
+            IEnumerable<Message> expectedMessages = new[]
             {
-                new Message { MessageId = 1 },
-                new Message { MessageId = 2 },
-                new Message { MessageId = 3 },
-            }
-            .AsQueryable()
-            .BuildMockDbSet()
-            .Object;
+                new Message { MessageId = 1, HtmlContent = "Test", },
+                new Message { MessageId = 2, HtmlContent = "Test", },
+                new Message { MessageId = 3, HtmlContent = "Test", },
+            };
 
-            _contextMock
-                .Setup(m => m.Messages)
-                .Returns(expectedMessages);
+            await _context.Messages.AddRangeAsync(expectedMessages);
+            await _context.SaveChangesAsync();
 
-            MessageRepository repository = new MessageRepository(_contextMock.Object);
+            IMessageRepository repository = new MessageRepository(_context);
 
             // Act
             bool exists = await repository.Exists(messageId);
@@ -125,21 +106,17 @@ namespace Infrastructure.Persistence.Test.Repositories
             // Arrange
             const int messageId = 89471;
 
-            DbSet<Message> expectedMessages = new[]
+            IEnumerable<Message> expectedMessages = new[]
             {
-                new Message { MessageId = 1 },
-                new Message { MessageId = 2 },
-                new Message { MessageId = 3 },
-            }
-            .AsQueryable()
-            .BuildMockDbSet()
-            .Object;
+                new Message { MessageId = 1, HtmlContent = "Test", },
+                new Message { MessageId = 2, HtmlContent = "Test", },
+                new Message { MessageId = 3, HtmlContent = "Test", },
+            };
 
-            _contextMock
-                .Setup(m => m.Messages)
-                .Returns(expectedMessages);
+            await _context.Messages.AddRangeAsync(expectedMessages);
+            await _context.SaveChangesAsync();
 
-            MessageRepository repository = new MessageRepository(_contextMock.Object);
+            IMessageRepository repository = new MessageRepository(_context);
 
             // Act
             bool exists = await repository.Exists(messageId);
@@ -159,23 +136,22 @@ namespace Infrastructure.Persistence.Test.Repositories
             const int userId = 1;
             const int messageId = 1;
 
-            DbSet<Message> expectedMessages = new[]
+            Message expectedMessage = new()
             {
-                new Message { MessageId = 1, AuthorId = 1, MessageRecipients = new List<MessageRecipient>
+                MessageId = 1, 
+                AuthorId = 1,
+                HtmlContent = "Test",
+                MessageRecipients = new List<MessageRecipient>
                 {
-                    new MessageRecipient { Recipient = new Recipient { UserId = 2 }},
-                    new MessageRecipient { Recipient = new Recipient { UserId = 3 }}
-                }},
-            }
-            .AsQueryable()
-            .BuildMockDbSet()
-            .Object;
+                    new() { Recipient = new Recipient { UserId = 2 } },
+                    new() { Recipient = new Recipient { UserId = 3 } }
+                }
+            };
 
-            _contextMock
-                .Setup(m => m.Messages)
-                .Returns(expectedMessages);
+            await _context.Messages.AddAsync(expectedMessage);
+            await _context.SaveChangesAsync();
 
-            MessageRepository repository = new MessageRepository(_contextMock.Object);
+            IMessageRepository repository = new MessageRepository(_context);
 
             // Act
             bool canAccess = await repository.CanAccess(messageId, userId);
@@ -191,23 +167,22 @@ namespace Infrastructure.Persistence.Test.Repositories
             const int userId = 1;
             const int messageId = 1;
 
-            DbSet<Message> expectedMessages = new[]
-            {
-                new Message { MessageId = 1, AuthorId = 2, MessageRecipients = new List<MessageRecipient>
+            Message expectedMessage = new()
+            { 
+                MessageId = 1, 
+                AuthorId = 2,
+                HtmlContent = "Test",
+                MessageRecipients = new List<MessageRecipient>
                 {
-                    new MessageRecipient { Recipient = new Recipient { UserId = 1 }},
-                    new MessageRecipient { Recipient = new Recipient { UserId = 3 }}
-                }},
-            }
-            .AsQueryable()
-            .BuildMockDbSet()
-            .Object;
+                    new() { Recipient = new Recipient { UserId = 1 }},
+                    new() { Recipient = new Recipient { UserId = 3 }}
+                }
+            };
 
-            _contextMock
-                .Setup(m => m.Messages)
-                .Returns(expectedMessages);
+            await _context.Messages.AddAsync(expectedMessage);
+            await _context.SaveChangesAsync();
 
-            MessageRepository repository = new MessageRepository(_contextMock.Object);
+            IMessageRepository repository = new MessageRepository(_context);
 
             // Act
             bool canAccess = await repository.CanAccess(messageId, userId);
@@ -223,24 +198,23 @@ namespace Infrastructure.Persistence.Test.Repositories
             const int userId = 1;
             const int messageId = 1;
 
-            DbSet<Message> expectedMessages = new[]
+            Message expectedMessage =  new()
             {
-                new Message { MessageId = 1, AuthorId = 2, MessageRecipients = new List<MessageRecipient>
+                MessageId = 1, 
+                AuthorId = 2,
+                HtmlContent = "Test",
+                MessageRecipients = new List<MessageRecipient>
                 {
-                    new MessageRecipient { Recipient = new Recipient { GroupMembership = new GroupMembership { UserId = 3 }}},
-                    new MessageRecipient { Recipient = new Recipient { GroupMembership = new GroupMembership { UserId = 1 }}},
-                    new MessageRecipient { Recipient = new Recipient { GroupMembership = new GroupMembership { UserId = 4 }}}
-                }},
-            }
-            .AsQueryable()
-            .BuildMockDbSet()
-            .Object;
+                    new() { Recipient = new Recipient { GroupMembership = new GroupMembership { UserId = 3 } } },
+                    new() { Recipient = new Recipient { GroupMembership = new GroupMembership { UserId = 1 } } },
+                    new() { Recipient = new Recipient { GroupMembership = new GroupMembership { UserId = 4 } } }
+                }
+            };
 
-            _contextMock
-                .Setup(m => m.Messages)
-                .Returns(expectedMessages);
+            await _context.Messages.AddAsync(expectedMessage);
+            await _context.SaveChangesAsync();
 
-            MessageRepository repository = new MessageRepository(_contextMock.Object);
+            IMessageRepository repository = new MessageRepository(_context);
 
             // Act
             bool canAccess = await repository.CanAccess(messageId, userId);
@@ -256,23 +230,22 @@ namespace Infrastructure.Persistence.Test.Repositories
             const int userId = 1;
             const int messageId = 1;
 
-            DbSet<Message> expectedMessages = new[]
+            Message expectedMessage = new()
             {
-                new Message { MessageId = 1, AuthorId = 2, MessageRecipients = new List<MessageRecipient>
+                MessageId = 1,
+                AuthorId = 2,
+                HtmlContent = "Test",
+                MessageRecipients = new List<MessageRecipient>
                 {
-                    new MessageRecipient { Recipient = new Recipient { UserId = 3 }},
-                    new MessageRecipient { Recipient = new Recipient { UserId = 4 }}
-                }},
-            }
-            .AsQueryable()
-            .BuildMockDbSet()
-            .Object;
+                    new() { Recipient = new Recipient { UserId = 3 } },
+                    new() { Recipient = new Recipient { UserId = 4 } }
+                }
+            };
 
-            _contextMock
-                .Setup(m => m.Messages)
-                .Returns(expectedMessages);
+            await _context.Messages.AddAsync(expectedMessage);
+            await _context.SaveChangesAsync();
 
-            MessageRepository repository = new MessageRepository(_contextMock.Object);
+            IMessageRepository repository = new MessageRepository(_context);
 
             // Act
             bool canAccess = await repository.CanAccess(messageId, userId);
@@ -289,17 +262,18 @@ namespace Infrastructure.Persistence.Test.Repositories
         public async Task Add_ShouldAddMessage()
         {
             // Arrange
-            Message message = new Message();
+            Message message = new();
 
-            _contextMock.Setup(m => m.Messages.AddAsync(message, It.IsAny<CancellationToken>()));
-
-            MessageRepository repository = new MessageRepository(_contextMock.Object);
+            IMessageRepository repository = new MessageRepository(_context);
 
             // Act
             await repository.Add(message);
 
             // Assert
-            _contextMock.Verify(m => m.Messages.AddAsync(message, It.IsAny<CancellationToken>()));
+            Assert.NotEqual(0, message.MessageId);
+            Message addedMessage = await _context.Messages.FindAsync(message.MessageId);
+
+            Assert.NotNull(addedMessage);
         }
 
         #endregion
@@ -307,20 +281,26 @@ namespace Infrastructure.Persistence.Test.Repositories
         #region Update()
 
         [Fact]
-        public void Update_ShouldUpdateMessage()
+        public async Task Update_ShouldUpdateMessage()
         {
             // Arrange
-            Message message = new Message();
+            Message message = new() { MessageId = 1, HtmlContent = "<p>Updated</p>" };
+            Message databaseMessage = new() { MessageId = 1, HtmlContent = "<p>Original</p>" };
 
-            _contextMock.Setup(m => m.Messages.Update(message));
+            await _context.Messages.AddAsync(databaseMessage);
+            await _context.SaveChangesAsync();
+            _context.ChangeTracker.Clear();
 
-            MessageRepository repository = new MessageRepository(_contextMock.Object);
+            IMessageRepository repository = new MessageRepository(_context);
 
             // Act
             repository.Update(message);
 
             // Assert
-            _contextMock.Verify(m => m.Messages.Update(message));
+            Message updatedMessage = await _context.Messages.FindAsync(message.MessageId);
+
+            Assert.NotNull(updatedMessage);
+            Assert.Equal(message.HtmlContent, updatedMessage.HtmlContent);
         }
 
         #endregion

@@ -9,17 +9,10 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class MessageRepository : RepositoryBase, IMessageRepository
+    public class MessageRepository : RepositoryBase<Message>, IMessageRepository
     {
         public MessageRepository(IChatContext context) : base(context)
         {
-        }
-
-        public IQueryable<Message> GetById(int messageId)
-        {
-            return Context.Messages
-                .AsNoTracking()
-                .Where(message => message.MessageId == messageId);
         }
 
         public async Task<bool> Exists(int messageId, CancellationToken cancellationToken = default)

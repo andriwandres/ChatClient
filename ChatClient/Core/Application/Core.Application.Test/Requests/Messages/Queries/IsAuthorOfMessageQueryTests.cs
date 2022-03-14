@@ -2,9 +2,7 @@
 using Core.Application.Requests.Messages.Queries;
 using Core.Application.Services;
 using Core.Domain.Entities;
-using MockQueryable.Moq;
 using Moq;
-using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -30,19 +28,13 @@ namespace Core.Application.Test.Requests.Messages.Queries
             // Arrange
             IsAuthorOfMessageQuery request = new IsAuthorOfMessageQuery { MessageId = 1 };
 
-            IQueryable<Message> databaseMessage = new[]
-            {
-                new Message { MessageId = 1, AuthorId = 1 }
-            }
-            .AsQueryable()
-            .BuildMock()
-            .Object;
+            Message databaseMessage = new() { MessageId = 1, AuthorId = 1 };
 
             _unitOfWorkMock
-                .Setup(m => m.Messages.GetById(request.MessageId))
-                .Returns(databaseMessage);
+                .Setup(m => m.Messages.GetByIdAsync(request.MessageId))
+                .ReturnsAsync(databaseMessage);
 
-            IsAuthorOfMessageQuery.Handler handler = new IsAuthorOfMessageQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+            IsAuthorOfMessageQuery.Handler handler = new(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             bool isAuthor = await handler.Handle(request);
@@ -55,21 +47,15 @@ namespace Core.Application.Test.Requests.Messages.Queries
         public async Task IsAuthorOfMessageQuery_ShouldReturnFalse_WhenUserIsNotAuthor()
         {
             // Arrange
-            IsAuthorOfMessageQuery request = new IsAuthorOfMessageQuery { MessageId = 1 };
+            IsAuthorOfMessageQuery request = new() { MessageId = 1 };
 
-            IQueryable<Message> databaseMessage = new[]
-                {
-                    new Message { MessageId = 1, AuthorId = 2 }
-                }
-                .AsQueryable()
-                .BuildMock()
-                .Object;
+            Message databaseMessage = new() { MessageId = 1, AuthorId = 2 };
 
             _unitOfWorkMock
-                .Setup(m => m.Messages.GetById(request.MessageId))
-                .Returns(databaseMessage);
+                .Setup(m => m.Messages.GetByIdAsync(request.MessageId))
+                .ReturnsAsync(databaseMessage);
 
-            IsAuthorOfMessageQuery.Handler handler = new IsAuthorOfMessageQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+            IsAuthorOfMessageQuery.Handler handler = new(_unitOfWorkMock.Object, _userProviderMock.Object);
 
             // Act
             bool isAuthor = await handler.Handle(request);

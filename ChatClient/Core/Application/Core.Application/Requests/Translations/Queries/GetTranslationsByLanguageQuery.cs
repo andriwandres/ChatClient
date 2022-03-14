@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
+﻿using Core.Application.Database;
+using Core.Domain.Entities;
+using MediatR;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Core.Application.Database;
-using Core.Domain.Entities;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Core.Application.Requests.Translations.Queries
 {
@@ -30,14 +29,13 @@ namespace Core.Application.Requests.Translations.Queries
                     request.Pattern = request.Pattern.Trim().ToLower().Replace('*', '%');
                 }
 
-                IQueryable<Translation> translations = string.IsNullOrEmpty(request.Pattern)
-                    ? _unitOfWork.Translations.GetByLanguage(request.LanguageId)
-                    : _unitOfWork.Translations.GetByLanguage(request.LanguageId, request.Pattern);
+                List<Translation> translations = string.IsNullOrEmpty(request.Pattern)
+                    ? await _unitOfWork.Translations.GetByLanguage(request.LanguageId)
+                    : await _unitOfWork.Translations.GetByLanguage(request.LanguageId, request.Pattern);
 
-                return await translations.ToDictionaryAsync(
+                return translations.ToDictionary(
                     translation => translation.Key,
-                    translation => translation.Value,
-                    cancellationToken
+                    translation => translation.Value
                 );
             }
         }
