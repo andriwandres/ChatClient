@@ -251,253 +251,122 @@ namespace Infrastructure.Persistence.Test.Repositories
         #region GetMessagesWithRecipient()
 
         [Fact]
-        public async Task GetMessagesWithRecipient_ShouldIncludeMessage_WhenUserIsAuthorOfTheMessage()
-        {
-            // Arrange
-            const int userId = 1;
-            const int recipientId = 1;
-            
-            MessageBoundaries boundaries = new MessageBoundaries();
-
-            IEnumerable<MessageRecipient> messageRecipients = new[]
-            {
-                // User 1 is author of message to recipient 2
-                new MessageRecipient
-                {
-                    MessageRecipientId = 1,
-                    RecipientId = 1,
-                    Message = new Message 
-                    { 
-                        MessageId = 1, 
-                        AuthorId = 1, 
-                        Created = new DateTime (2020, 1, 1),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            UserId = 1,
-                            Email = "user1@test.ch",
-                            UserName = "user1",
-                            PasswordHash = new byte[] {},
-                            PasswordSalt = new byte[] {},
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    },
-                    Recipient = new Recipient 
-                    { 
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    }
-                },
-                new MessageRecipient
-                {
-                    MessageRecipientId = 2,
-                    RecipientId = 2,
-                    Message = new Message
-                    {
-                        MessageId = 2,
-                        AuthorId = 2,
-                        Created = new DateTime (2020, 1, 1),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            UserId = 2,
-                            Email = "user2@test.ch",
-                            UserName = "user2",
-                            PasswordHash = new byte[] {},
-                            PasswordSalt = new byte[] {},
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    }
-                },
-                new MessageRecipient
-                {
-                    MessageRecipientId = 3,
-                    RecipientId = 1,
-                    Message = new Message
-                    {
-                        MessageId = 3,
-                        AuthorId = 2,
-                        Created = new DateTime (2020, 1, 1),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            UserId = 2,
-                            Email = "user2@test.ch",
-                            UserName = "user2",
-                            PasswordHash = new byte[] {},
-                            PasswordSalt = new byte[] {},
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    }
-                },
-                // User is author of message to recipient 1
-                new MessageRecipient
-                {
-                    MessageRecipientId = 4,
-                    RecipientId = 1,
-                    Message = new Message
-                    {
-                        MessageId = 4,
-                        AuthorId = 1,
-                        Created = new DateTime (2020, 1, 4),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            UserId = 1,
-                            Email = "user1@test.ch",
-                            UserName = "user1",
-                            PasswordHash = new byte[] {},
-                            PasswordSalt = new byte[] {},
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    }
-                },
-            };
-
-            foreach (MessageRecipient messageRecipient in messageRecipients)
-            {
-                await _context.MessageRecipients.AddAsync(messageRecipient);
-                await _context.SaveChangesAsync();
-                _context.ChangeTracker.Clear();
-            }
-
-            IMessageRecipientRepository repository = new MessageRecipientRepository(_context);
-
-            // Act
-            IEnumerable<MessageRecipient> result = await repository.GetMessagesWithRecipient(userId, recipientId, boundaries);
-
-            // Assert
-            Assert.NotEmpty(result);
-            Assert.Equal(2, result.Count());
-
-            Assert.Equal(1, result.ElementAt(0).MessageRecipientId);
-            Assert.Equal(4, result.ElementAt(1).MessageRecipientId);
-        }
-
-        [Fact]
         public async Task GetMessagesWithRecipient_ShouldIncludeMessage_WhenUserIsRecipientOfPrivateMessage()
         {
             // Arrange
             const int userId = 1;
-            const int recipientId = 1;
+            const int recipientId = 3;
 
-            MessageBoundaries boundaries = new MessageBoundaries();
+            MessageBoundaries boundaries = new();
+
+            IEnumerable<User> users = new[]
+            {
+                new User
+                {
+                    UserId = 1,
+                    Email = "user1@test.ch",
+                    UserName = "user1",
+                    PasswordHash = Array.Empty<byte>(),
+                    PasswordSalt = Array.Empty<byte>()
+                },
+                new User
+                {
+                    UserId = 2,
+                    Email = "user2@test.ch",
+                    UserName = "user2",
+                    PasswordHash = Array.Empty<byte>(),
+                    PasswordSalt = Array.Empty<byte>()
+                },
+            };
+
+            IEnumerable<GroupMembership> groupMemberships = new[]
+            {
+                new GroupMembership
+                {
+                    GroupMembershipId = 1,
+                    UserId = 1
+                },
+                new GroupMembership
+                {
+                    GroupMembershipId = 2,
+                    UserId = 2
+                }
+            };
+
+            IEnumerable<Recipient> recipients = new[]
+            {
+                new Recipient
+                {
+                    RecipientId = 1,
+                    UserId = 1,
+                },
+                new Recipient
+                {
+                    RecipientId = 2,
+                    GroupMembershipId = 1
+                },
+                new Recipient
+                {
+                    RecipientId = 3,
+                    UserId = 2,
+                },
+                new Recipient
+                {
+                    RecipientId = 4,
+                    GroupMembershipId = 2,
+                },
+            };
+
+            IEnumerable<Message> messages = new[]
+            {
+                new Message
+                {
+                    MessageId = 1,
+                    AuthorId = 1,
+                    Created = new DateTime (2020, 1, 1),
+                    HtmlContent = "<p>Hello Friend</p>",
+                },
+                new Message
+                {
+                    MessageId = 2,
+                    AuthorId = 2,
+                    Created = new DateTime (2020, 1, 1),
+                    HtmlContent = "<p>Hello Friend</p>",
+                },
+            };
 
             IEnumerable<MessageRecipient> messageRecipients = new[]
             {
-                // User is recipient of message from recipient 1 (included)
                 new MessageRecipient
                 {
                     MessageRecipientId = 1,
-                    RecipientId = 1,
-                    Message = new Message
-                    {
-                        MessageId = 1,
-                        AuthorId = 2,
-                        Created = new DateTime (2020, 1, 1),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        UserId = 1,
-                        GroupMembership = new GroupMembership { Recipient = new Recipient() }
-                    }
+                    RecipientId = 3,
+                    MessageId = 1
                 },
-                // User is recipient of message from recipient 3 (not included)
                 new MessageRecipient
                 {
                     MessageRecipientId = 2,
-                    RecipientId = 3,
-                    Message = new Message
-                    {
-                        MessageId = 2,
-                        AuthorId = 3,
-                        Created = new DateTime (2020, 1, 2),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 3 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        UserId = 1,
-                        GroupMembership = new GroupMembership { Recipient = new Recipient() }
-                    }
+                    RecipientId = 1,
+                    MessageId = 2
                 },
-                // Different user is recipient of message from recipient 1 (not included)
                 new MessageRecipient
                 {
                     MessageRecipientId = 3,
                     RecipientId = 2,
-                    Message = new Message
-                    {
-                        MessageId = 3,
-                        AuthorId = 2,
-                        Created = new DateTime (2020, 1, 3),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        UserId = 2,
-                        GroupMembership = new GroupMembership { Recipient = new Recipient() }
-                    }
+                    MessageId = 2
                 },
-                // User is recipient of message from recipient 1
                 new MessageRecipient
                 {
                     MessageRecipientId = 4,
-                    RecipientId = 1,
-                    Message = new Message
-                    {
-                        MessageId = 4,
-                        AuthorId = 2,
-                        Created = new DateTime (2020, 1, 4),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        UserId = 1,
-                        GroupMembership = new GroupMembership { Recipient = new Recipient() }
-                    }
+                    RecipientId = 4,
+                    MessageId = 2
                 },
             };
 
+            await _context.Users.AddRangeAsync(users);
+            await _context.GroupMemberships.AddRangeAsync(groupMemberships);
+            await _context.Recipients.AddRangeAsync(recipients);
+            await _context.Messages.AddRangeAsync(messages);
             await _context.MessageRecipients.AddRangeAsync(messageRecipients);
             await _context.SaveChangesAsync();
 
@@ -511,7 +380,7 @@ namespace Infrastructure.Persistence.Test.Repositories
             Assert.Equal(2, result.Count());
 
             Assert.Equal(1, result.ElementAt(0).MessageRecipientId);
-            Assert.Equal(4, result.ElementAt(1).MessageRecipientId);
+            Assert.Equal(2, result.ElementAt(1).MessageRecipientId);
         }
 
         [Fact]
@@ -519,110 +388,118 @@ namespace Infrastructure.Persistence.Test.Repositories
         {
             // Arrange
             const int userId = 1;
-            const int recipientId = 1;
+            const int recipientId = 2;
 
-            MessageBoundaries boundaries = new MessageBoundaries();
+            MessageBoundaries boundaries = new();
+
+            IEnumerable<User> users = new[]
+            {
+                new User
+                {
+                    UserId = 1,
+                    Email = "user1@test.ch",
+                    UserName = "user1",
+                    PasswordHash = Array.Empty<byte>(),
+                    PasswordSalt = Array.Empty<byte>()
+                },
+                new User
+                {
+                    UserId = 2,
+                    Email = "user2@test.ch",
+                    UserName = "user2",
+                    PasswordHash = Array.Empty<byte>(),
+                    PasswordSalt = Array.Empty<byte>()
+                },
+            };
+
+            IEnumerable<GroupMembership> groupMemberships = new[]
+            {
+                new GroupMembership
+                {
+                    GroupMembershipId = 1,
+                    UserId = 1
+                },
+                new GroupMembership
+                {
+                    GroupMembershipId = 2,
+                    UserId = 2
+                }
+            };
+
+            IEnumerable<Recipient> recipients = new[]
+            {
+                new Recipient
+                {
+                    RecipientId = 1,
+                    UserId = 1,
+                },
+                new Recipient
+                {
+                    RecipientId = 2,
+                    GroupMembershipId = 1
+                },
+                new Recipient
+                {
+                    RecipientId = 3,
+                    UserId = 2,
+                },
+                new Recipient
+                {
+                    RecipientId = 4,
+                    GroupMembershipId = 2,
+                },
+            };
+
+            IEnumerable<Message> messages = new[]
+            {
+                new Message
+                {
+                    MessageId = 1,
+                    AuthorId = 1,
+                    Created = new DateTime (2020, 1, 1),
+                    HtmlContent = "<p>Hello Group</p>",
+                },
+                new Message
+                {
+                    MessageId = 2,
+                    AuthorId = 2,
+                    Created = new DateTime (2020, 1, 1),
+                    HtmlContent = "<p>Hello Group</p>",
+                },
+            };
 
             IEnumerable<MessageRecipient> messageRecipients = new[]
             {
-                // User is recipient of message from recipient 1 (included)
                 new MessageRecipient
                 {
                     MessageRecipientId = 1,
-                    RecipientId = 1,
-                    Message = new Message
-                    {
-                        MessageId = 1,
-                        AuthorId = 2,
-                        Created = new DateTime (2020, 1, 1),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    }
+                    RecipientId = 2,
+                    MessageId = 1
                 },
-                // User is recipient of message from recipient 3 (not included)
                 new MessageRecipient
                 {
                     MessageRecipientId = 2,
-                    RecipientId = 3,
-                    Message = new Message
-                    {
-                        MessageId = 2,
-                        AuthorId = 3,
-                        Created = new DateTime (2020, 1, 2),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 3 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 3 }
-                        }
-                    }
+                    RecipientId = 4,
+                    MessageId = 1
                 },
-                // Different user is recipient of message from recipient 1 (not included)
                 new MessageRecipient
                 {
                     MessageRecipientId = 3,
                     RecipientId = 2,
-                    Message = new Message
-                    {
-                        MessageId = 3,
-                        AuthorId = 2,
-                        Created = new DateTime (2020, 1, 3),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    }
+                    MessageId = 2
                 },
-                // User is recipient of message from recipient 1
                 new MessageRecipient
                 {
                     MessageRecipientId = 4,
-                    RecipientId = 1,
-                    Message = new Message
-                    {
-                        MessageId = 4,
-                        AuthorId = 2,
-                        Created = new DateTime (2020, 1, 4),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    }
+                    RecipientId = 4,
+                    MessageId = 2
                 },
             };
 
+            await _context.Users.AddRangeAsync(users);
+            await _context.GroupMemberships.AddRangeAsync(groupMemberships);
+            await _context.Recipients.AddRangeAsync(recipients);
+            await _context.Messages.AddRangeAsync(messages);
             await _context.MessageRecipients.AddRangeAsync(messageRecipients);
             await _context.SaveChangesAsync();
 
@@ -636,7 +513,7 @@ namespace Infrastructure.Persistence.Test.Repositories
             Assert.Equal(2, result.Count());
 
             Assert.Equal(1, result.ElementAt(0).MessageRecipientId);
-            Assert.Equal(4, result.ElementAt(1).MessageRecipientId);
+            Assert.Equal(3, result.ElementAt(1).MessageRecipientId);
         }
 
         [Fact]
@@ -644,7 +521,7 @@ namespace Infrastructure.Persistence.Test.Repositories
         {
             // Arrange
             const int userId = 1;
-            const int recipientId = 1;
+            const int recipientId = 2;
 
             MessageBoundaries boundaries = new MessageBoundaries
             {
@@ -652,104 +529,114 @@ namespace Infrastructure.Persistence.Test.Repositories
                 Before = new DateTime(2020, 1, 1, 15, 3, 0),
             };
 
+            IEnumerable<User> users = new[]
+            {
+                new User
+                {
+                    UserId = 1,
+                    Email = "user1@test.ch",
+                    UserName = "user1",
+                    PasswordHash = Array.Empty<byte>(),
+                    PasswordSalt = Array.Empty<byte>()
+                },
+                new User
+                {
+                    UserId = 2,
+                    Email = "user2@test.ch",
+                    UserName = "user2",
+                    PasswordHash = Array.Empty<byte>(),
+                    PasswordSalt = Array.Empty<byte>()
+                },
+            };
+
+            IEnumerable<GroupMembership> groupMemberships = new[]
+            {
+                new GroupMembership
+                {
+                    GroupMembershipId = 1,
+                    UserId = 1
+                },
+                new GroupMembership
+                {
+                    GroupMembershipId = 2,
+                    UserId = 2
+                }
+            };
+
+            IEnumerable<Recipient> recipients = new[]
+            {
+                new Recipient
+                {
+                    RecipientId = 1,
+                    UserId = 1,
+                },
+                new Recipient
+                {
+                    RecipientId = 2,
+                    GroupMembershipId = 1
+                },
+                new Recipient
+                {
+                    RecipientId = 3,
+                    UserId = 2,
+                },
+                new Recipient
+                {
+                    RecipientId = 4,
+                    GroupMembershipId = 2,
+                },
+            };
+
+            IEnumerable<Message> messages = new[]
+            {
+                new Message
+                {
+                    MessageId = 1,
+                    AuthorId = 1,
+                    Created = new DateTime(2020, 1, 1, 15, 0, 0),
+                    HtmlContent = "<p>Hello Group</p>",
+                },
+                new Message
+                {
+                    MessageId = 2,
+                    AuthorId = 2,
+                    Created = new DateTime(2020, 1, 1, 15, 5, 0),
+                    HtmlContent = "<p>Hello Group</p>",
+                },
+            };
+
             IEnumerable<MessageRecipient> messageRecipients = new[]
             {
-                // User is author of message to recipient 1
                 new MessageRecipient
                 {
                     MessageRecipientId = 1,
-                    RecipientId = 1,
-                    Message = new Message
-                    {
-                        MessageId = 1,
-                        AuthorId = 1,
-                        Created = new DateTime(2020, 1, 1, 15, 0, 0),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    }
+                    RecipientId = 2,
+                    MessageId = 1
                 },
                 new MessageRecipient
                 {
                     MessageRecipientId = 2,
-                    RecipientId = 2,
-                    Message = new Message
-                    {
-                        MessageId = 2,
-                        AuthorId = 1,
-                        Created = new DateTime(2020, 1, 1, 15, 5, 0),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    }
+                    RecipientId = 4,
+                    MessageId = 1
                 },
                 new MessageRecipient
                 {
                     MessageRecipientId = 3,
-                    RecipientId = 1,
-                    Message = new Message
-                    {
-                        MessageId = 3,
-                        AuthorId = 2,
-                        Created = new DateTime(2020, 1, 1, 15, 6, 0),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    }
+                    RecipientId = 2,
+                    MessageId = 2
                 },
-                // User is author of message to recipient 1
                 new MessageRecipient
                 {
                     MessageRecipientId = 4,
-                    RecipientId = 1,
-                    Message = new Message
-                    {
-                        MessageId = 4,
-                        AuthorId = 1,
-                        Created = new DateTime(2020, 1, 1, 15, 6, 40),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    }
+                    RecipientId = 4,
+                    MessageId = 2
                 },
             };
 
+            await _context.Users.AddRangeAsync(users);
+            await _context.GroupMemberships.AddRangeAsync(groupMemberships);
+            await _context.Recipients.AddRangeAsync(recipients);
+            await _context.Messages.AddRangeAsync(messages);
             await _context.MessageRecipients.AddRangeAsync(messageRecipients);
             await _context.SaveChangesAsync();
 
@@ -770,7 +657,7 @@ namespace Infrastructure.Persistence.Test.Repositories
         {
             // Arrange
             const int userId = 1;
-            const int recipientId = 1;
+            const int recipientId = 2;
 
             MessageBoundaries boundaries = new MessageBoundaries
             {
@@ -778,104 +665,114 @@ namespace Infrastructure.Persistence.Test.Repositories
                 After = new DateTime(2020, 1, 1, 15, 3, 0),
             };
 
+            IEnumerable<User> users = new[]
+            {
+                new User
+                {
+                    UserId = 1,
+                    Email = "user1@test.ch",
+                    UserName = "user1",
+                    PasswordHash = Array.Empty<byte>(),
+                    PasswordSalt = Array.Empty<byte>()
+                },
+                new User
+                {
+                    UserId = 2,
+                    Email = "user2@test.ch",
+                    UserName = "user2",
+                    PasswordHash = Array.Empty<byte>(),
+                    PasswordSalt = Array.Empty<byte>()
+                },
+            };
+
+            IEnumerable<GroupMembership> groupMemberships = new[]
+            {
+                new GroupMembership
+                {
+                    GroupMembershipId = 1,
+                    UserId = 1
+                },
+                new GroupMembership
+                {
+                    GroupMembershipId = 2,
+                    UserId = 2
+                }
+            };
+
+            IEnumerable<Recipient> recipients = new[]
+            {
+                new Recipient
+                {
+                    RecipientId = 1,
+                    UserId = 1,
+                },
+                new Recipient
+                {
+                    RecipientId = 2,
+                    GroupMembershipId = 1
+                },
+                new Recipient
+                {
+                    RecipientId = 3,
+                    UserId = 2,
+                },
+                new Recipient
+                {
+                    RecipientId = 4,
+                    GroupMembershipId = 2,
+                },
+            };
+
+            IEnumerable<Message> messages = new[]
+            {
+                new Message
+                {
+                    MessageId = 1,
+                    AuthorId = 1,
+                    Created = new DateTime(2020, 1, 1, 15, 0, 0),
+                    HtmlContent = "<p>Hello Group</p>",
+                },
+                new Message
+                {
+                    MessageId = 2,
+                    AuthorId = 2,
+                    Created = new DateTime(2020, 1, 1, 15, 5, 0),
+                    HtmlContent = "<p>Hello Group</p>",
+                },
+            };
+
             IEnumerable<MessageRecipient> messageRecipients = new[]
             {
-                // User is author of message to recipient 1
                 new MessageRecipient
                 {
                     MessageRecipientId = 1,
-                    RecipientId = 1,
-                    Message = new Message
-                    {
-                        MessageId = 1,
-                        AuthorId = 1,
-                        Created = new DateTime(2020, 1, 1, 15, 0, 0),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    }
+                    RecipientId = 2,
+                    MessageId = 1
                 },
                 new MessageRecipient
                 {
                     MessageRecipientId = 2,
-                    RecipientId = 2,
-                    Message = new Message
-                    {
-                        MessageId = 2,
-                        AuthorId = 1,
-                        Created = new DateTime(2020, 1, 1, 15, 5, 0),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    }
+                    RecipientId = 4,
+                    MessageId = 1
                 },
                 new MessageRecipient
                 {
                     MessageRecipientId = 3,
-                    RecipientId = 1,
-                    Message = new Message
-                    {
-                        MessageId = 3,
-                        AuthorId = 2,
-                        Created = new DateTime(2020, 1, 1, 15, 6, 0),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    }
+                    RecipientId = 2,
+                    MessageId = 2
                 },
-                // User is author of message to recipient 1
                 new MessageRecipient
                 {
                     MessageRecipientId = 4,
-                    RecipientId = 1,
-                    Message = new Message
-                    {
-                        MessageId = 4,
-                        AuthorId = 1,
-                        Created = new DateTime(2020, 1, 1, 15, 6, 40),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    }
+                    RecipientId = 4,
+                    MessageId = 2
                 },
             };
 
+            await _context.Users.AddRangeAsync(users);
+            await _context.GroupMemberships.AddRangeAsync(groupMemberships);
+            await _context.Recipients.AddRangeAsync(recipients);
+            await _context.Messages.AddRangeAsync(messages);
             await _context.MessageRecipients.AddRangeAsync(messageRecipients);
             await _context.SaveChangesAsync();
 
@@ -888,7 +785,7 @@ namespace Infrastructure.Persistence.Test.Repositories
             Assert.NotEmpty(result);
             Assert.Single(result);
 
-            Assert.Equal(4, result.ElementAt(0).MessageRecipientId);
+            Assert.Equal(3, result.ElementAt(0).MessageRecipientId);
         }
 
         [Fact]
@@ -896,7 +793,7 @@ namespace Infrastructure.Persistence.Test.Repositories
         {
             // Arrange
             const int userId = 1;
-            const int recipientId = 1;
+            const int recipientId = 2;
 
             // Define a limit
             MessageBoundaries boundaries = new MessageBoundaries
@@ -904,104 +801,114 @@ namespace Infrastructure.Persistence.Test.Repositories
                 Limit = 1,
             };
 
+            IEnumerable<User> users = new[]
+            {
+                new User
+                {
+                    UserId = 1,
+                    Email = "user1@test.ch",
+                    UserName = "user1",
+                    PasswordHash = Array.Empty<byte>(),
+                    PasswordSalt = Array.Empty<byte>()
+                },
+                new User
+                {
+                    UserId = 2,
+                    Email = "user2@test.ch",
+                    UserName = "user2",
+                    PasswordHash = Array.Empty<byte>(),
+                    PasswordSalt = Array.Empty<byte>()
+                },
+            };
+
+            IEnumerable<GroupMembership> groupMemberships = new[]
+            {
+                new GroupMembership
+                {
+                    GroupMembershipId = 1,
+                    UserId = 1
+                },
+                new GroupMembership
+                {
+                    GroupMembershipId = 2,
+                    UserId = 2
+                }
+            };
+
+            IEnumerable<Recipient> recipients = new[]
+            {
+                new Recipient
+                {
+                    RecipientId = 1,
+                    UserId = 1,
+                },
+                new Recipient
+                {
+                    RecipientId = 2,
+                    GroupMembershipId = 1
+                },
+                new Recipient
+                {
+                    RecipientId = 3,
+                    UserId = 2,
+                },
+                new Recipient
+                {
+                    RecipientId = 4,
+                    GroupMembershipId = 2,
+                },
+            };
+
+            IEnumerable<Message> messages = new[]
+            {
+                new Message
+                {
+                    MessageId = 1,
+                    AuthorId = 1,
+                    Created = new DateTime(2020, 1, 1, 15, 0, 0),
+                    HtmlContent = "<p>Hello Group</p>",
+                },
+                new Message
+                {
+                    MessageId = 2,
+                    AuthorId = 2,
+                    Created = new DateTime(2020, 1, 1, 15, 5, 0),
+                    HtmlContent = "<p>Hello Group</p>",
+                },
+            };
+
             IEnumerable<MessageRecipient> messageRecipients = new[]
             {
-                // User is author of message to recipient 1
                 new MessageRecipient
                 {
                     MessageRecipientId = 1,
-                    RecipientId = 1,
-                    Message = new Message
-                    {
-                        MessageId = 1,
-                        AuthorId = 1,
-                        Created = new DateTime(2020, 1, 1, 15, 0, 0),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    }
+                    RecipientId = 2,
+                    MessageId = 1
                 },
                 new MessageRecipient
                 {
                     MessageRecipientId = 2,
-                    RecipientId = 2,
-                    Message = new Message
-                    {
-                        MessageId = 2,
-                        AuthorId = 1,
-                        Created = new DateTime(2020, 1, 1, 15, 5, 0),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    }
+                    RecipientId = 4,
+                    MessageId = 1
                 },
                 new MessageRecipient
                 {
                     MessageRecipientId = 3,
-                    RecipientId = 1,
-                    Message = new Message
-                    {
-                        MessageId = 3,
-                        AuthorId = 2,
-                        Created = new DateTime(2020, 1, 1, 15, 6, 0),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    }
+                    RecipientId = 2,
+                    MessageId = 2
                 },
-                // User is author of message to recipient 1
                 new MessageRecipient
                 {
                     MessageRecipientId = 4,
-                    RecipientId = 1,
-                    Message = new Message
-                    {
-                        MessageId = 4,
-                        AuthorId = 1,
-                        Created = new DateTime(2020, 1, 1, 15, 6, 40),
-                        HtmlContent = "<p>Hello World</p>",
-                        Author = new User
-                        {
-                            Recipient = new Recipient { RecipientId = 1 }
-                        }
-                    },
-                    Recipient = new Recipient
-                    {
-                        GroupMembership = new GroupMembership
-                        {
-                            Recipient = new Recipient { RecipientId = 2 }
-                        }
-                    }
+                    RecipientId = 4,
+                    MessageId = 2
                 },
             };
 
+            await _context.Users.AddRangeAsync(users);
+            await _context.GroupMemberships.AddRangeAsync(groupMemberships);
+            await _context.Recipients.AddRangeAsync(recipients);
+            await _context.Messages.AddRangeAsync(messages);
             await _context.MessageRecipients.AddRangeAsync(messageRecipients);
             await _context.SaveChangesAsync();
 
@@ -1014,7 +921,7 @@ namespace Infrastructure.Persistence.Test.Repositories
             Assert.NotEmpty(result);
             Assert.Single(result);
 
-            Assert.Equal(4, result.ElementAt(0).MessageRecipientId);
+            Assert.Equal(3, result.ElementAt(0).MessageRecipientId);
         }
 
         #endregion
