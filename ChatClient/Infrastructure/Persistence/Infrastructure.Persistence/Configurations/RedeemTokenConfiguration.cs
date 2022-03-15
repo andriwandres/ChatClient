@@ -14,7 +14,7 @@ namespace Infrastructure.Persistence.Configurations
             // Properties
             builder.Property(token => token.UserId);
 
-            builder.Property(token => token.TypeId);
+            builder.Property(token => token.Type);
 
             builder.Property(token => token.Token)
                 .IsRequired()
@@ -31,10 +31,6 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasOne(token => token.User)
                 .WithMany(user => user.RedeemTokens)
                 .HasForeignKey(token => token.UserId);
-
-            builder.HasOne(token => token.Type)
-                .WithMany(type => type.Tokens)
-                .HasForeignKey(token => token.TypeId);
         }
     }
 }

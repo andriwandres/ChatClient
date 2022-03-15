@@ -8,7 +8,6 @@ namespace Core.Application.Database
     public interface IUnitOfWork : IDisposable, IAsyncDisposable
     {
         IAvailabilityRepository Availabilities { get; }
-        IAvailabilityStatusRepository AvailabilityStatuses { get; }
         ICountryRepository Countries { get; }
         IFriendshipChangeRepository FriendshipChanges { get; }
         IFriendshipRepository Friendships { get; }

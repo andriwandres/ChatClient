@@ -3,7 +3,7 @@ using Core.Application.Requests.Friendships.Commands;
 using Core.Application.Requests.Friendships.Queries;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Friendships;
-using Core.Domain.Entities;
+using Core.Domain.Enums;
 using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Friendships;
 using MediatR;
@@ -278,7 +278,7 @@ namespace Presentation.Api.Test.Controllers
 
             UpdateFriendshipStatusBody model = new UpdateFriendshipStatusBody
             {
-                FriendshipStatusId = FriendshipStatusId.Accepted
+                FriendshipStatus = FriendshipStatus.Accepted
             };
 
             Mock<IMediator> mediatorMock = new Mock<IMediator>();
@@ -307,7 +307,7 @@ namespace Presentation.Api.Test.Controllers
 
             UpdateFriendshipStatusBody model = new UpdateFriendshipStatusBody
             {
-                FriendshipStatusId = FriendshipStatusId.Accepted
+                FriendshipStatus = FriendshipStatus.Accepted
             };
 
             Mock<IMediator> mediatorMock = new Mock<IMediator>();

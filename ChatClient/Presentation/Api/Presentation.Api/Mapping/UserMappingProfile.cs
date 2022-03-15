@@ -16,9 +16,9 @@ namespace Presentation.Api.Mapping
                     config => config.Ignore());
 
             CreateMap<User, UserProfileResource>()
-                .ForMember(destination => destination.AvailabilityStatusId, config =>
+                .ForMember(destination => destination.AvailabilityStatus, config =>
                 {
-                    config.MapFrom(source => source.Availability.StatusId);
+                    config.MapFrom(source => source.Availability.Status);
                 });
 
             CreateMap<CreateAccountBody, CreateAccountCommand>();

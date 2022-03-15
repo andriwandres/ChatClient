@@ -1,6 +1,7 @@
 ﻿using Core.Application.Database;
 using Core.Application.Services;
 using Core.Domain.Entities;
+using Core.Domain.Enums;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace Core.Application.Requests.Users.Commands
                 Availability availability = new Availability
                 {
                     User = user,
-                    StatusId = AvailabilityStatusId.Offline,
+                    Status = AvailabilityStatus.Offline,
                     Modified = _dateProvider.UtcNow(),
                     ModifiedManually = false,
                 };

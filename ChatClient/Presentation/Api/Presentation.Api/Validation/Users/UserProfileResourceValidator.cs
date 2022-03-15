@@ -17,7 +17,7 @@ namespace Presentation.Api.Validation.Users
                 .MinimumLength(2)
                 .Matches(new Regex(@"\w*"));
 
-            RuleFor(model => model.AvailabilityStatusId)
+            RuleFor(model => model.AvailabilityStatus)
                 .NotEmpty()
                 .IsInEnum();
         }

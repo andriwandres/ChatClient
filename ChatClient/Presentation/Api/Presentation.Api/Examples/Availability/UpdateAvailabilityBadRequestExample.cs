@@ -1,5 +1,5 @@
 ﻿using Core.Domain.Dtos.Availability;
-using Core.Domain.Entities;
+using Core.Domain.Enums;
 using Core.Domain.Resources.Errors;
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Filters;
@@ -13,10 +13,10 @@ namespace Presentation.Api.Examples.Availability
     {
         public ValidationErrorResource GetExamples()
         {
-            const string availabilityStatusIdName = nameof(UpdateAvailabilityBody.AvailabilityStatusId);
+            const string availabilityStatusName = nameof(UpdateAvailabilityBody.AvailabilityStatus);
 
             IEnumerable<int> values = Enum
-                .GetValues(typeof(AvailabilityStatusId))
+                .GetValues(typeof(AvailabilityStatus))
                 .Cast<int>();
 
             string valuesString = string.Join(", ", values);
@@ -28,10 +28,10 @@ namespace Presentation.Api.Examples.Availability
                 Errors = new Dictionary<string, IEnumerable<string>>
                 {
                     {
-                        availabilityStatusIdName,
+                        availabilityStatusName,
                         new []
                         {
-                            $"'{availabilityStatusIdName}' must be one of the following values: {valuesString}"
+                            $"'{availabilityStatusName}' must be one of the following values: {valuesString}"
                         }
                     }
                 }

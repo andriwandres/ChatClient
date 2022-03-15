@@ -1,5 +1,5 @@
 ﻿using Core.Domain.Dtos.Friendships;
-using Core.Domain.Entities;
+using Core.Domain.Enums;
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 
@@ -17,7 +17,7 @@ namespace Presentation.Api.Examples.Friendships
                     Summary = "Set friendship to pending",
                     Value = new UpdateFriendshipStatusBody
                     {
-                        FriendshipStatusId = FriendshipStatusId.Pending,
+                        FriendshipStatus = FriendshipStatus.Pending,
                     }
                 },
                 new SwaggerExample<UpdateFriendshipStatusBody>
@@ -26,7 +26,7 @@ namespace Presentation.Api.Examples.Friendships
                     Summary = "Accept friendship request",
                     Value = new UpdateFriendshipStatusBody
                     {
-                        FriendshipStatusId = FriendshipStatusId.Accepted,
+                        FriendshipStatus = FriendshipStatus.Accepted,
                     }
                 },
                 new SwaggerExample<UpdateFriendshipStatusBody>
@@ -35,7 +35,7 @@ namespace Presentation.Api.Examples.Friendships
                     Summary = "Ignore friendship request",
                     Value = new UpdateFriendshipStatusBody
                     {
-                        FriendshipStatusId = FriendshipStatusId.Ignored,
+                        FriendshipStatus = FriendshipStatus.Ignored,
                     }
                 },
                 new SwaggerExample<UpdateFriendshipStatusBody>
@@ -44,7 +44,7 @@ namespace Presentation.Api.Examples.Friendships
                     Summary = "Block the requesting user",
                     Value = new UpdateFriendshipStatusBody
                     {
-                        FriendshipStatusId = FriendshipStatusId.Blocked,
+                        FriendshipStatus = FriendshipStatus.Blocked,
                     }
                 },
             };

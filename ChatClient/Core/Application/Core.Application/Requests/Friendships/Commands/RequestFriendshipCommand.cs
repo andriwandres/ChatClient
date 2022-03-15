@@ -2,6 +2,7 @@
 using Core.Application.Database;
 using Core.Application.Services;
 using Core.Domain.Entities;
+using Core.Domain.Enums;
 using Core.Domain.Resources.Friendships;
 using MediatR;
 using System.Threading;
@@ -41,7 +42,7 @@ namespace Core.Application.Requests.Friendships.Commands
                 FriendshipChange change = new FriendshipChange
                 {
                     Created = _dateProvider.UtcNow(),
-                    StatusId = FriendshipStatusId.Pending,
+                    Status = FriendshipStatus.Pending,
                 };
 
                 friendship.StatusChanges.Add(change);

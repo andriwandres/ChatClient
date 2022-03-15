@@ -1,6 +1,7 @@
 ﻿using Core.Application.Database;
 using Core.Application.Services;
 using Core.Domain.Entities;
+using Core.Domain.Enums;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ namespace Core.Application.Requests.Friendships.Commands
     public class UpdateFriendshipStatusCommand : IRequest
     {
         public int FriendshipId { get; set; }
-        public FriendshipStatusId FriendshipStatusId { get; set; }
+        public FriendshipStatus FriendshipStatus { get; set; }
 
         public class Handler : IRequestHandler<UpdateFriendshipStatusCommand, Unit>
         {
@@ -28,7 +29,7 @@ namespace Core.Application.Requests.Friendships.Commands
                 FriendshipChange newChange = new FriendshipChange
                 {
                     FriendshipId = request.FriendshipId,
-                    StatusId = request.FriendshipStatusId,
+                    Status = request.FriendshipStatus,
                     Created = _dateProvider.UtcNow()
                 };
 
