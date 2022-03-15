@@ -17,7 +17,7 @@ namespace Presentation.Api.Examples.Session
                     Value = new LoginBody
                     {
                         UserNameOrEmail = "alfred_miller",
-                        Password = "p455w0rd"
+                        Password = "p4ssw0rd"
                     }
                 },
                 new SwaggerExample<LoginBody>
@@ -27,7 +27,7 @@ namespace Presentation.Api.Examples.Session
                     Value = new LoginBody
                     {
                         UserNameOrEmail = "alfred.miller@gmail.com",
-                        Password = "p455w0rd"
+                        Password = "p4ssw0rd"
                     }
                 },
             };
