@@ -2,38 +2,37 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Persistence.Configurations
+namespace Infrastructure.Persistence.Configurations;
+
+public class PinnedRecipientConfiguration : IEntityTypeConfiguration<PinnedRecipient>
 {
-    public class PinnedRecipientConfiguration : IEntityTypeConfiguration<PinnedRecipient>
+    public void Configure(EntityTypeBuilder<PinnedRecipient> builder)
     {
-        public void Configure(EntityTypeBuilder<PinnedRecipient> builder)
-        {
-            // Keys
-            builder.HasKey(pin => pin.PinnedRecipientId);
+        // Keys
+        builder.HasKey(pin => pin.PinnedRecipientId);
 
-            // Indexes
-            builder.HasIndex(pin => new {pin.UserId, pin.RecipientId})
-                .IsUnique();
+        // Indexes
+        builder.HasIndex(pin => new {pin.UserId, pin.RecipientId})
+            .IsUnique();
 
-            // Properties
-            builder.Property(pin => pin.UserId);
+        // Properties
+        builder.Property(pin => pin.UserId);
 
-            builder.Property(pin => pin.RecipientId);
+        builder.Property(pin => pin.RecipientId);
 
-            builder.Property(pin => pin.OrderIndex);
+        builder.Property(pin => pin.OrderIndex);
 
-            builder.Property(pin => pin.Modified)
-                .IsRequired();
+        builder.Property(pin => pin.Modified)
+            .IsRequired();
 
-            // Relationships
-            builder.HasOne(pin => pin.User)
-                .WithMany(user => user.PinnedRecipients)
-                .HasForeignKey(pin => pin.UserId)
-                .OnDelete(DeleteBehavior.NoAction);
+        // Relationships
+        builder.HasOne(pin => pin.User)
+            .WithMany(user => user.PinnedRecipients)
+            .HasForeignKey(pin => pin.UserId)
+            .OnDelete(DeleteBehavior.NoAction);
 
-            builder.HasOne(pin => pin.Recipient)
-                .WithMany(recipient => recipient.Pins)
-                .HasForeignKey(pin => pin.RecipientId);
-        }
+        builder.HasOne(pin => pin.Recipient)
+            .WithMany(recipient => recipient.Pins)
+            .HasForeignKey(pin => pin.RecipientId);
     }
 }

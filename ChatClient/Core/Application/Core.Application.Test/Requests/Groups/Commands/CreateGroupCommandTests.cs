@@ -10,72 +10,71 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.Groups.Commands
+namespace Core.Application.Test.Requests.Groups.Commands;
+
+public class CreateGroupCommandTests
 {
-    public class CreateGroupCommandTests
+    private readonly IMapper _mapperMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<IDateProvider> _dateProviderMock;
+    private readonly Mock<IUserProvider> _userProviderMock;
+
+    public CreateGroupCommandTests()
     {
-        private readonly IMapper _mapperMock;
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly Mock<IDateProvider> _dateProviderMock;
-        private readonly Mock<IUserProvider> _userProviderMock;
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _dateProviderMock = new Mock<IDateProvider>();
+        _dateProviderMock
+            .Setup(m => m.UtcNow())
+            .Returns(new DateTime(2020, 1, 1));
 
-        public CreateGroupCommandTests()
+        _userProviderMock = new Mock<IUserProvider>();
+        _userProviderMock
+            .Setup(m => m.GetCurrentUserId())
+            .Returns(1);
+
+        MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
         {
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
-            _dateProviderMock = new Mock<IDateProvider>();
-            _dateProviderMock
-                .Setup(m => m.UtcNow())
-                .Returns(new DateTime(2020, 1, 1));
+            config.CreateMap<Group, GroupResource>();
+        });
 
-            _userProviderMock = new Mock<IUserProvider>();
-            _userProviderMock
-                .Setup(m => m.GetCurrentUserId())
-                .Returns(1);
+        _mapperMock = mapperConfiguration.CreateMapper();
+    }
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
-            {
-                config.CreateMap<Group, GroupResource>();
-            });
-
-            _mapperMock = mapperConfiguration.CreateMapper();
-        }
-
-        [Fact]
-        public async Task CreateGroupCommandHandler_ShouldReturnCreatedGroup()
+    [Fact]
+    public async Task CreateGroupCommandHandler_ShouldReturnCreatedGroup()
+    {
+        // Arrange
+        CreateGroupCommand request = new CreateGroupCommand
         {
-            // Arrange
-            CreateGroupCommand request = new CreateGroupCommand
-            {
-                Name = "Some group name",
-                Description = "Some group description"
-            };
+            Name = "Some group name",
+            Description = "Some group description"
+        };
 
-            _unitOfWorkMock
-                .Setup(m => m.Groups.Add(It.IsAny<Group>(), It.IsAny<CancellationToken>()))
-                .Returns(Task.CompletedTask);
+        _unitOfWorkMock
+            .Setup(m => m.Groups.Add(It.IsAny<Group>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
 
-            _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.Add(It.IsAny<GroupMembership>(), It.IsAny<CancellationToken>()))
-                .Returns(Task.CompletedTask);
+        _unitOfWorkMock
+            .Setup(m => m.GroupMemberships.Add(It.IsAny<GroupMembership>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
 
-            _unitOfWorkMock
-                .Setup(m => m.Recipients.Add(It.IsAny<Recipient>(), It.IsAny<CancellationToken>()))
-                .Returns(Task.CompletedTask);
+        _unitOfWorkMock
+            .Setup(m => m.Recipients.Add(It.IsAny<Recipient>(), It.IsAny<CancellationToken>()))
+            .Returns(Task.CompletedTask);
 
-            CreateGroupCommand.Handler handler = 
-                new CreateGroupCommand.Handler(_mapperMock, _unitOfWorkMock.Object, _dateProviderMock.Object, _userProviderMock.Object);
+        CreateGroupCommand.Handler handler = 
+            new CreateGroupCommand.Handler(_mapperMock, _unitOfWorkMock.Object, _dateProviderMock.Object, _userProviderMock.Object);
 
-            // Act
-            GroupResource group = await handler.Handle(request);
+        // Act
+        GroupResource group = await handler.Handle(request);
 
-            // Assert
-            Assert.NotNull(group);
+        // Assert
+        Assert.NotNull(group);
 
-            _unitOfWorkMock.Verify(m => m.Groups.Add(It.IsAny<Group>(), It.IsAny<CancellationToken>()), Times.Once);
-            _unitOfWorkMock.Verify(m => m.GroupMemberships.Add(It.IsAny<GroupMembership>(), It.IsAny<CancellationToken>()), Times.Once);
-            _unitOfWorkMock.Verify(m => m.Recipients.Add(It.IsAny<Recipient>(), It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWorkMock.Verify(m => m.Groups.Add(It.IsAny<Group>(), It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWorkMock.Verify(m => m.GroupMemberships.Add(It.IsAny<GroupMembership>(), It.IsAny<CancellationToken>()), Times.Once);
+        _unitOfWorkMock.Verify(m => m.Recipients.Add(It.IsAny<Recipient>(), It.IsAny<CancellationToken>()), Times.Once);
 
-            _unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()), Times.AtLeastOnce);
-        }
+        _unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()), Times.AtLeastOnce);
     }
 }

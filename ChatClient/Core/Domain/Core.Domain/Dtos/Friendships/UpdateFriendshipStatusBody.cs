@@ -1,9 +1,8 @@
 ﻿using Core.Domain.Enums;
 
-namespace Core.Domain.Dtos.Friendships
+namespace Core.Domain.Dtos.Friendships;
+
+public class UpdateFriendshipStatusBody
 {
-    public class UpdateFriendshipStatusBody
-    {
-        public FriendshipStatus FriendshipStatus { get; set; }
-    }
+    public FriendshipStatus FriendshipStatus { get; set; }
 }

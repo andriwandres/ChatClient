@@ -2,27 +2,26 @@
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 
-namespace Presentation.Api.Examples.Friendships
+namespace Presentation.Api.Examples.Friendships;
+
+public class GetOwnFriendshipsOkExample : IExamplesProvider<IEnumerable<FriendshipResource>>
 {
-    public class GetOwnFriendshipsOkExample : IExamplesProvider<IEnumerable<FriendshipResource>>
+    public IEnumerable<FriendshipResource> GetExamples()
     {
-        public IEnumerable<FriendshipResource> GetExamples()
+        return new[]
         {
-            return new[]
+            new FriendshipResource
             {
-                new FriendshipResource
-                {
-                    FriendshipId = 1,
-                    RequesterId = 1,
-                    AddresseeId = 2
-                },
-                new FriendshipResource
-                {
-                    FriendshipId = 2,
-                    RequesterId = 4,
-                    AddresseeId = 1
-                },
-            };
-        }
+                FriendshipId = 1,
+                RequesterId = 1,
+                AddresseeId = 2
+            },
+            new FriendshipResource
+            {
+                FriendshipId = 2,
+                RequesterId = 4,
+                AddresseeId = 1
+            },
+        };
     }
 }

@@ -3,28 +3,27 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.GroupMemberships.Queries
+namespace Core.Application.Requests.GroupMemberships.Queries;
+
+public class MembershipCombinationExistsQuery : IRequest<bool>
 {
-    public class MembershipCombinationExistsQuery : IRequest<bool>
+    public int UserId { get; set; }
+    public int GroupId { get; set; }
+
+    public class Handler : IRequestHandler<MembershipCombinationExistsQuery, bool>
     {
-        public int UserId { get; set; }
-        public int GroupId { get; set; }
+        private readonly IUnitOfWork _unitOfWork;
 
-        public class Handler : IRequestHandler<MembershipCombinationExistsQuery, bool>
+        public Handler(IUnitOfWork unitOfWork)
         {
-            private readonly IUnitOfWork _unitOfWork;
+            _unitOfWork = unitOfWork;
+        }
 
-            public Handler(IUnitOfWork unitOfWork)
-            {
-                _unitOfWork = unitOfWork;
-            }
+        public async Task<bool> Handle(MembershipCombinationExistsQuery request, CancellationToken cancellationToken = default)
+        {
+            bool exists = await _unitOfWork.GroupMemberships.CombinationExists(request.GroupId, request.UserId, cancellationToken);
 
-            public async Task<bool> Handle(MembershipCombinationExistsQuery request, CancellationToken cancellationToken = default)
-            {
-                bool exists = await _unitOfWork.GroupMemberships.CombinationExists(request.GroupId, request.UserId, cancellationToken);
-
-                return exists;
-            }
+            return exists;
         }
     }
 }

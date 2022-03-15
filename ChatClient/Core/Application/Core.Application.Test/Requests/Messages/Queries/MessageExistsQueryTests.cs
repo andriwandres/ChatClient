@@ -5,53 +5,52 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.Messages.Queries
+namespace Core.Application.Test.Requests.Messages.Queries;
+
+public class MessageExistsQueryTests
 {
-    public class MessageExistsQueryTests
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+    public MessageExistsQueryTests()
     {
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+    }
 
-        public MessageExistsQueryTests()
-        {
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
-        }
+    [Fact]
+    public async Task MessageExistsQueryHandler_ShouldReturnTrue_WhenMessageExists()
+    {
+        // Arrange
+        MessageExistsQuery request = new MessageExistsQuery { MessageId = 1 };
 
-        [Fact]
-        public async Task MessageExistsQueryHandler_ShouldReturnTrue_WhenMessageExists()
-        {
-            // Arrange
-            MessageExistsQuery request = new MessageExistsQuery { MessageId = 1 };
+        _unitOfWorkMock
+            .Setup(m => m.Messages.Exists(request.MessageId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
 
-            _unitOfWorkMock
-                .Setup(m => m.Messages.Exists(request.MessageId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
+        MessageExistsQuery.Handler handler = new MessageExistsQuery.Handler(_unitOfWorkMock.Object);
 
-            MessageExistsQuery.Handler handler = new MessageExistsQuery.Handler(_unitOfWorkMock.Object);
+        // Act
+        bool exists = await handler.Handle(request);
 
-            // Act
-            bool exists = await handler.Handle(request);
+        // Assert
+        Assert.True(exists);
+    }
 
-            // Assert
-            Assert.True(exists);
-        }
+    [Fact]
+    public async Task MessageExistsQueryHandler_ShouldReturnFalse_WhenMessageDoesNotExist()
+    {
+        // Arrange
+        MessageExistsQuery request = new MessageExistsQuery { MessageId = 442 };
 
-        [Fact]
-        public async Task MessageExistsQueryHandler_ShouldReturnFalse_WhenMessageDoesNotExist()
-        {
-            // Arrange
-            MessageExistsQuery request = new MessageExistsQuery { MessageId = 442 };
+        _unitOfWorkMock
+            .Setup(m => m.Messages.Exists(request.MessageId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
 
-            _unitOfWorkMock
-                .Setup(m => m.Messages.Exists(request.MessageId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
+        MessageExistsQuery.Handler handler = new MessageExistsQuery.Handler(_unitOfWorkMock.Object);
 
-            MessageExistsQuery.Handler handler = new MessageExistsQuery.Handler(_unitOfWorkMock.Object);
+        // Act
+        bool exists = await handler.Handle(request);
 
-            // Act
-            bool exists = await handler.Handle(request);
-
-            // Assert
-            Assert.False(exists);
-        }
+        // Assert
+        Assert.False(exists);
     }
 }

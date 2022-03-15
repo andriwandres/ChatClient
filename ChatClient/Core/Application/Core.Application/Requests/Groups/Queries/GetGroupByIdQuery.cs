@@ -6,29 +6,28 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.Groups.Queries
+namespace Core.Application.Requests.Groups.Queries;
+
+public class GetGroupByIdQuery : IRequest<GroupResource>
 {
-    public class GetGroupByIdQuery : IRequest<GroupResource>
+    public int GroupId { get; set; }
+
+    public class Handler : IRequestHandler<GetGroupByIdQuery, GroupResource>
     {
-        public int GroupId { get; set; }
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public class Handler : IRequestHandler<GetGroupByIdQuery, GroupResource>
+        public Handler(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            private readonly IMapper _mapper;
-            private readonly IUnitOfWork _unitOfWork;
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
+        }
 
-            public Handler(IMapper mapper, IUnitOfWork unitOfWork)
-            {
-                _mapper = mapper;
-                _unitOfWork = unitOfWork;
-            }
+        public async Task<GroupResource> Handle(GetGroupByIdQuery request, CancellationToken cancellationToken = default)
+        {
+            Group group = await _unitOfWork.Groups.GetByIdAsync(request.GroupId);
 
-            public async Task<GroupResource> Handle(GetGroupByIdQuery request, CancellationToken cancellationToken = default)
-            {
-                Group group = await _unitOfWork.Groups.GetByIdAsync(request.GroupId);
-
-                return _mapper.Map<Group, GroupResource>(group);
-            }
+            return _mapper.Map<Group, GroupResource>(group);
         }
     }
 }

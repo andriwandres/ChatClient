@@ -7,29 +7,28 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Persistence.Repositories
+namespace Infrastructure.Persistence.Repositories;
+
+public class GroupRepository : RepositoryBase<Group>, IGroupRepository
 {
-    public class GroupRepository : RepositoryBase<Group>, IGroupRepository
+    public GroupRepository(IChatContext context) : base(context)
     {
-        public GroupRepository(IChatContext context) : base(context)
-        {
-        }
+    }
 
-        public Task<bool> Exists(int groupId, CancellationToken cancellationToken = default)
-        {
-            return Context.Groups
-                .AsNoTracking()
-                .AnyAsync(group => group.GroupId == groupId && group.IsDeleted == false, cancellationToken);
-        }
+    public Task<bool> Exists(int groupId, CancellationToken cancellationToken = default)
+    {
+        return Context.Groups
+            .AsNoTracking()
+            .AnyAsync(group => group.GroupId == groupId && group.IsDeleted == false, cancellationToken);
+    }
          
-        public async Task Add(Group group, CancellationToken cancellationToken = default)
-        {
-            await Context.Groups.AddAsync(group, cancellationToken);
-        }
+    public async Task Add(Group group, CancellationToken cancellationToken = default)
+    {
+        await Context.Groups.AddAsync(group, cancellationToken);
+    }
 
-        public void Update(Group group)
-        {
-            Context.Groups.Update(group);
-        }
+    public void Update(Group group)
+    {
+        Context.Groups.Update(group);
     }
 }

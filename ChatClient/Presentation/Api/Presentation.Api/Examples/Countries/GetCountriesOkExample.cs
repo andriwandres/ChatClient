@@ -2,33 +2,32 @@
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 
-namespace Presentation.Api.Examples.Countries
+namespace Presentation.Api.Examples.Countries;
+
+public class GetCountriesOkExample : IExamplesProvider<IEnumerable<CountryResource>>
 {
-    public class GetCountriesOkExample : IExamplesProvider<IEnumerable<CountryResource>>
+    public IEnumerable<CountryResource> GetExamples()
     {
-        public IEnumerable<CountryResource> GetExamples()
+        return new[]
         {
-            return new[]
+            new CountryResource
             {
-                new CountryResource
-                {
-                    CountryId = 1,
-                    Code = "CH",
-                    Name = "Countries.Switzerland"
-                },
-                new CountryResource
-                {
-                    CountryId = 2,
-                    Code = "DE",
-                    Name = "Countries.Germany"
-                },
-                new CountryResource
-                {
-                    CountryId = 3,
-                    Code = "FR",
-                    Name = "Countries.France"
-                },
-            };
-        }
+                CountryId = 1,
+                Code = "CH",
+                Name = "Countries.Switzerland"
+            },
+            new CountryResource
+            {
+                CountryId = 2,
+                Code = "DE",
+                Name = "Countries.Germany"
+            },
+            new CountryResource
+            {
+                CountryId = 3,
+                Code = "FR",
+                Name = "Countries.France"
+            },
+        };
     }
 }

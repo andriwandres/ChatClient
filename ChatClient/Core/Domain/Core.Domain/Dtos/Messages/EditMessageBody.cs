@@ -1,7 +1,6 @@
-﻿namespace Core.Domain.Dtos.Messages
+﻿namespace Core.Domain.Dtos.Messages;
+
+public class EditMessageBody
 {
-    public class EditMessageBody
-    {
-        public string HtmlContent { get; set; }
-    }
+    public string HtmlContent { get; set; }
 }

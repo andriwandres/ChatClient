@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
 
-namespace Core.Domain.Entities
+namespace Core.Domain.Entities;
+
+public class Country
 {
-    public class Country
+    public int CountryId { get; set; }
+    public string Code { get; set; }
+    public string Name { get; set; }
+    public string FlagImage { get; set; }
+
+    public ICollection<User> Users { get; set; }
+
+    public Country()
     {
-        public int CountryId { get; set; }
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public string FlagImage { get; set; }
-
-        public ICollection<User> Users { get; set; }
-
-        public Country()
-        {
-            Users = new HashSet<User>();
-        }
+        Users = new HashSet<User>();
     }
 }

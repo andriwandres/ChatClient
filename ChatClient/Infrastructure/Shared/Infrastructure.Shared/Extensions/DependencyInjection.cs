@@ -10,26 +10,26 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Shared.Extensions
+namespace Infrastructure.Shared.Extensions;
+
+public static class DependencyInjection
 {
-    public static class DependencyInjection
+    public static void AddSharedInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
     {
-        public static void AddSharedInfrastructureServices(this IServiceCollection services, IConfiguration configuration)
-        {
-            // Add infrastructure services
-            services.AddTransient<ICryptoService, CryptoService>();
-            services.AddTransient<IDateProvider, DateProvider>();
-            services.AddTransient<IUserProvider, UserProvider>();
+        // Add infrastructure services
+        services.AddTransient<ICryptoService, CryptoService>();
+        services.AddTransient<IDateProvider, DateProvider>();
+        services.AddTransient<IUserProvider, UserProvider>();
 
-            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+        services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
-            // Get jwt secret
-            IConfigurationSection jwtSection = configuration.GetSection(JwtOptions.ConfigurationKey);
-            string secretString = jwtSection.Get<JwtOptions>().Secret;
-            byte[] secretBytes = Encoding.ASCII.GetBytes(secretString);
+        // Get jwt secret
+        IConfigurationSection jwtSection = configuration.GetSection(JwtOptions.ConfigurationKey);
+        string secretString = jwtSection.Get<JwtOptions>().Secret;
+        byte[] secretBytes = Encoding.ASCII.GetBytes(secretString);
 
-            // Add jwt bearer authentication
-            services.AddAuthentication(builder =>
+        // Add jwt bearer authentication
+        services.AddAuthentication(builder =>
             {
                 builder.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 builder.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -63,6 +63,5 @@ namespace Infrastructure.Shared.Extensions
                     }
                 };
             });
-        }
     }
 }

@@ -1,18 +1,17 @@
 ﻿using Core.Domain.Resources.Groups;
 using FluentValidation;
 
-namespace Presentation.Api.Validation.Groups
-{
-    public class TargetGroupResourceValidator : AbstractValidator<TargetGroupResource>
-    {
-        public TargetGroupResourceValidator()
-        {
-            RuleFor(group => group.GroupId)
-                .NotEmpty()
-                .GreaterThan(0);
+namespace Presentation.Api.Validation.Groups;
 
-            RuleFor(group => group.Name)
-                .NotEmpty();
-        }
+public class TargetGroupResourceValidator : AbstractValidator<TargetGroupResource>
+{
+    public TargetGroupResourceValidator()
+    {
+        RuleFor(group => group.GroupId)
+            .NotEmpty()
+            .GreaterThan(0);
+
+        RuleFor(group => group.Name)
+            .NotEmpty();
     }
 }

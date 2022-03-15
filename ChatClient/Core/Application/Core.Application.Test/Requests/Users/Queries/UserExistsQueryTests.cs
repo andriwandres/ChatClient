@@ -5,53 +5,52 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.Users.Queries
+namespace Core.Application.Test.Requests.Users.Queries;
+
+public class UserExistsQueryTests
 {
-    public class UserExistsQueryTests
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+    public UserExistsQueryTests()
     {
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+    }
 
-        public UserExistsQueryTests()
-        {
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
-        }
+    [Fact]
+    public async Task UserExistsQueryHandler_ShouldReturnTrue_WhenUserExists()
+    {
+        // Arrange
+        UserExistsQuery request = new UserExistsQuery { UserId = 1 };
 
-        [Fact]
-        public async Task UserExistsQueryHandler_ShouldReturnTrue_WhenUserExists()
-        {
-            // Arrange
-            UserExistsQuery request = new UserExistsQuery { UserId = 1 };
+        _unitOfWorkMock
+            .Setup(m => m.Users.Exists(request.UserId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
 
-            _unitOfWorkMock
-                .Setup(m => m.Users.Exists(request.UserId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
+        UserExistsQuery.Handler handler = new UserExistsQuery.Handler(_unitOfWorkMock.Object);
 
-            UserExistsQuery.Handler handler = new UserExistsQuery.Handler(_unitOfWorkMock.Object);
+        // Act
+        bool exists = await handler.Handle(request);
 
-            // Act
-            bool exists = await handler.Handle(request);
+        // Assert
+        Assert.True(exists);
+    }
 
-            // Assert
-            Assert.True(exists);
-        }
+    [Fact]
+    public async Task UserExistsQueryHandler_ShouldReturnFalse_WhenUserDoesNotExist()
+    {
+        // Arrange
+        UserExistsQuery request = new UserExistsQuery { UserId = 124311 };
 
-        [Fact]
-        public async Task UserExistsQueryHandler_ShouldReturnFalse_WhenUserDoesNotExist()
-        {
-            // Arrange
-            UserExistsQuery request = new UserExistsQuery { UserId = 124311 };
+        _unitOfWorkMock
+            .Setup(m => m.Users.Exists(request.UserId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
 
-            _unitOfWorkMock
-                .Setup(m => m.Users.Exists(request.UserId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
+        UserExistsQuery.Handler handler = new UserExistsQuery.Handler(_unitOfWorkMock.Object);
 
-            UserExistsQuery.Handler handler = new UserExistsQuery.Handler(_unitOfWorkMock.Object);
+        // Act
+        bool exists = await handler.Handle(request);
 
-            // Act
-            bool exists = await handler.Handle(request);
-
-            // Assert
-            Assert.False(exists);
-        }
+        // Assert
+        Assert.False(exists);
     }
 }

@@ -3,28 +3,27 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.Friendships.Queries
+namespace Core.Application.Requests.Friendships.Queries;
+
+public class FriendshipCombinationExistsQuery : IRequest<bool>
 {
-    public class FriendshipCombinationExistsQuery : IRequest<bool>
+    public int RequesterId { get; set; }
+    public int AddresseeId { get; set; }
+
+    public class Handler : IRequestHandler<FriendshipCombinationExistsQuery, bool>
     {
-        public int RequesterId { get; set; }
-        public int AddresseeId { get; set; }
+        private readonly IUnitOfWork _unitOfWork;
 
-        public class Handler : IRequestHandler<FriendshipCombinationExistsQuery, bool>
+        public Handler(IUnitOfWork unitOfWork)
         {
-            private readonly IUnitOfWork _unitOfWork;
+            _unitOfWork = unitOfWork;
+        }
 
-            public Handler(IUnitOfWork unitOfWork)
-            {
-                _unitOfWork = unitOfWork;
-            }
+        public async Task<bool> Handle(FriendshipCombinationExistsQuery request, CancellationToken cancellationToken = default)
+        {
+            bool combinationExists = await _unitOfWork.Friendships.CombinationExists(request.RequesterId, request.AddresseeId, cancellationToken);
 
-            public async Task<bool> Handle(FriendshipCombinationExistsQuery request, CancellationToken cancellationToken = default)
-            {
-                bool combinationExists = await _unitOfWork.Friendships.CombinationExists(request.RequesterId, request.AddresseeId, cancellationToken);
-
-                return combinationExists;
-            }
+            return combinationExists;
         }
     }
 }

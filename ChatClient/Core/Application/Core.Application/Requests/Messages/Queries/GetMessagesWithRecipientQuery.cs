@@ -12,51 +12,50 @@ using AutoMapper;
 using Core.Domain.Dtos.Messages;
 using Core.Domain.Entities;
 
-namespace Core.Application.Requests.Messages.Queries
+namespace Core.Application.Requests.Messages.Queries;
+
+public class GetMessagesWithRecipientQuery : IRequest<IEnumerable<ChatMessageResource>>
 {
-    public class GetMessagesWithRecipientQuery : IRequest<IEnumerable<ChatMessageResource>>
+    public int RecipientId { get; set; }
+    public int? Limit { get; set; }
+    public DateTime? Before { get; set; }
+    public DateTime? After { get; set; }
+
+    public class Handler : IRequestHandler<GetMessagesWithRecipientQuery, IEnumerable<ChatMessageResource>>
     {
-        public int RecipientId { get; set; }
-        public int? Limit { get; set; }
-        public DateTime? Before { get; set; }
-        public DateTime? After { get; set; }
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserProvider _userProvider;
+        private readonly IMapper _mapper;
 
-        public class Handler : IRequestHandler<GetMessagesWithRecipientQuery, IEnumerable<ChatMessageResource>>
+        public Handler(IUnitOfWork unitOfWork, IUserProvider userProvider, IMapper mapper)
         {
-            private readonly IUnitOfWork _unitOfWork;
-            private readonly IUserProvider _userProvider;
-            private readonly IMapper _mapper;
+            _unitOfWork = unitOfWork;
+            _userProvider = userProvider;
+            _mapper = mapper;
+        }
 
-            public Handler(IUnitOfWork unitOfWork, IUserProvider userProvider, IMapper mapper)
-            {
-                _unitOfWork = unitOfWork;
-                _userProvider = userProvider;
-                _mapper = mapper;
-            }
+        public async Task<IEnumerable<ChatMessageResource>> Handle(GetMessagesWithRecipientQuery request, CancellationToken cancellationToken = default)
+        {
+            int currentUserId = _userProvider.GetCurrentUserId();
 
-            public async Task<IEnumerable<ChatMessageResource>> Handle(GetMessagesWithRecipientQuery request, CancellationToken cancellationToken = default)
-            {
-                int currentUserId = _userProvider.GetCurrentUserId();
+            MessageBoundaries boundaries = _mapper.Map<GetMessagesWithRecipientQuery, MessageBoundaries>(request);
 
-                MessageBoundaries boundaries = _mapper.Map<GetMessagesWithRecipientQuery, MessageBoundaries>(request);
+            List<MessageRecipient> messagesWithRecipients = await _unitOfWork.MessageRecipients
+                .GetMessagesWithRecipient(currentUserId, request.RecipientId, boundaries);
 
-                List<MessageRecipient> messagesWithRecipients = await _unitOfWork.MessageRecipients
-                    .GetMessagesWithRecipient(currentUserId, request.RecipientId, boundaries);
+            IEnumerable<ChatMessageResource> messages = messagesWithRecipients
+                .Select(source => new ChatMessageResource
+                {
+                    MessageRecipientId = source.MessageRecipientId,
+                    MessageId = source.MessageId,
+                    AuthorName = source.Message.Author.UserName,
+                    HtmlContent = source.Message.HtmlContent,
+                    Created = source.Message.Created,
+                    IsOwnMessage = source.Message.AuthorId == currentUserId,
+                    IsRead = source.Message.MessageRecipients.All(mr => mr.IsRead),
+                });
 
-                IEnumerable<ChatMessageResource> messages = messagesWithRecipients
-                    .Select(source => new ChatMessageResource
-                    {
-                        MessageRecipientId = source.MessageRecipientId,
-                        MessageId = source.MessageId,
-                        AuthorName = source.Message.Author.UserName,
-                        HtmlContent = source.Message.HtmlContent,
-                        Created = source.Message.Created,
-                        IsOwnMessage = source.Message.AuthorId == currentUserId,
-                        IsRead = source.Message.MessageRecipients.All(mr => mr.IsRead),
-                    });
-
-                return messages;
-            }
+            return messages;
         }
     }
 }

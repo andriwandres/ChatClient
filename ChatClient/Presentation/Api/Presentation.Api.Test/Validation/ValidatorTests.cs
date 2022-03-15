@@ -7,43 +7,42 @@ using Presentation.Api.Validation.Session;
 using Presentation.Api.Validation.Users;
 using Xunit;
 
-namespace Presentation.Api.Test.Validation
+namespace Presentation.Api.Test.Validation;
+
+public class ValidatorTests
 {
-    public class ValidatorTests
+    [Fact]
+    public void Validators_DoNotThrow()
     {
-        [Fact]
-        public void Validators_DoNotThrow()
-        {
-            // Countries
-            Assert.NotNull(new CountryResourceValidator());
+        // Countries
+        Assert.NotNull(new CountryResourceValidator());
 
-            // Errors
-            Assert.NotNull(new ErrorResourceValidator());
-            Assert.NotNull(new ValidationErrorResourceValidator());
+        // Errors
+        Assert.NotNull(new ErrorResourceValidator());
+        Assert.NotNull(new ValidationErrorResourceValidator());
 
-            // Friendships
-            Assert.NotNull(new FriendshipResourceValidator());
-            Assert.NotNull(new RequestFriendshipBodyValidator());
-            Assert.NotNull(new UpdateFriendshipStatusBodyValidator());
+        // Friendships
+        Assert.NotNull(new FriendshipResourceValidator());
+        Assert.NotNull(new RequestFriendshipBodyValidator());
+        Assert.NotNull(new UpdateFriendshipStatusBodyValidator());
 
-            // GroupMemberships
-            Assert.NotNull(new GroupMembershipResourceValidator());
-            Assert.NotNull(new CreateMembershipBodyValidator());
+        // GroupMemberships
+        Assert.NotNull(new GroupMembershipResourceValidator());
+        Assert.NotNull(new CreateMembershipBodyValidator());
 
-            // Groups
-            Assert.NotNull(new CreateGroupBodyValidator());
-            Assert.NotNull(new UpdateGroupBodyValidator());
-            Assert.NotNull(new GroupResourceValidator());
+        // Groups
+        Assert.NotNull(new CreateGroupBodyValidator());
+        Assert.NotNull(new UpdateGroupBodyValidator());
+        Assert.NotNull(new GroupResourceValidator());
 
-            // Session
-            Assert.NotNull(new LoginBodyValidator());
+        // Session
+        Assert.NotNull(new LoginBodyValidator());
 
-            // Users
-            Assert.NotNull(new AuthenticatedUserResourceValidator());
-            Assert.NotNull(new EmailExistsQueryParamsValidator());
-            Assert.NotNull(new CreateAccountBodyValidator());
-            Assert.NotNull(new UserNameExistsQueryParamsValidator());
-            Assert.NotNull(new UserProfileResourceValidator());
-        }
+        // Users
+        Assert.NotNull(new AuthenticatedUserResourceValidator());
+        Assert.NotNull(new EmailExistsQueryParamsValidator());
+        Assert.NotNull(new CreateAccountBodyValidator());
+        Assert.NotNull(new UserNameExistsQueryParamsValidator());
+        Assert.NotNull(new UserProfileResourceValidator());
     }
 }

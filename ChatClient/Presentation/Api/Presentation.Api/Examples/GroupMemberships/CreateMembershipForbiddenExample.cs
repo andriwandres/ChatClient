@@ -3,35 +3,34 @@ using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 
-namespace Presentation.Api.Examples.GroupMemberships
+namespace Presentation.Api.Examples.GroupMemberships;
+
+public class CreateMembershipForbiddenExample : IMultipleExamplesProvider<ErrorResource>
 {
-    public class CreateMembershipForbiddenExample : IMultipleExamplesProvider<ErrorResource>
+    public IEnumerable<SwaggerExample<ErrorResource>> GetExamples()
     {
-        public IEnumerable<SwaggerExample<ErrorResource>> GetExamples()
+        return new[]
         {
-            return new[]
+            new SwaggerExample<ErrorResource>
             {
-                new SwaggerExample<ErrorResource>
+                Name = "AlreadyMember",
+                Summary = "User is already a member of this group",
+                Value = new ErrorResource
                 {
-                    Name = "AlreadyMember",
-                    Summary = "User is already a member of this group",
-                    Value = new ErrorResource
-                    {
-                        StatusCode = StatusCodes.Status403Forbidden,
-                        Message = "This user is already a member of this group"
-                    }
-                },
-                new SwaggerExample<ErrorResource>
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "This user is already a member of this group"
+                }
+            },
+            new SwaggerExample<ErrorResource>
+            {
+                Name = "NotPermitted",
+                Summary = "Not permitted to create memberships",
+                Value = new ErrorResource
                 {
-                    Name = "NotPermitted",
-                    Summary = "Not permitted to create memberships",
-                    Value = new ErrorResource
-                    {
-                        StatusCode = StatusCodes.Status403Forbidden,
-                        Message = "You are not permitted to add users to this group. This privilege is only granted to administrators of the group"
-                    }
-                },
-            };
-        }
+                    StatusCode = StatusCodes.Status403Forbidden,
+                    Message = "You are not permitted to add users to this group. This privilege is only granted to administrators of the group"
+                }
+            },
+        };
     }
 }

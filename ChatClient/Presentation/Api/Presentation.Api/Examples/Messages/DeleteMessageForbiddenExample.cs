@@ -2,17 +2,16 @@
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Presentation.Api.Examples.Messages
+namespace Presentation.Api.Examples.Messages;
+
+public class DeleteMessageForbiddenExample : IExamplesProvider<ErrorResource>
 {
-    public class DeleteMessageForbiddenExample : IExamplesProvider<ErrorResource>
+    public ErrorResource GetExamples()
     {
-        public ErrorResource GetExamples()
+        return new ErrorResource
         {
-            return new ErrorResource
-            {
-                StatusCode = StatusCodes.Status403Forbidden,
-                Message = "Only the author of a message is allowed to delete a message"
-            };
-        }
+            StatusCode = StatusCodes.Status403Forbidden,
+            Message = "Only the author of a message is allowed to delete a message"
+        };
     }
 }

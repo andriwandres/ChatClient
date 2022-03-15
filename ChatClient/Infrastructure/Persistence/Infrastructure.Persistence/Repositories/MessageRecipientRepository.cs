@@ -10,70 +10,69 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Persistence.Repositories
+namespace Infrastructure.Persistence.Repositories;
+
+public class MessageRecipientRepository : RepositoryBase<MessageRecipient>, IMessageRecipientRepository
 {
-    public class MessageRecipientRepository : RepositoryBase<MessageRecipient>, IMessageRecipientRepository
+    public MessageRecipientRepository(IChatContext context) : base(context)
     {
-        public MessageRecipientRepository(IChatContext context) : base(context)
-        {
 
+    }
+
+    public async Task<List<MessageRecipient>> GetMessagesWithRecipient(int userId, int recipientId, MessageBoundaries boundaries)
+    {
+        IQueryable<MessageRecipient> messages = Context.MessageRecipients
+            .AsNoTracking()
+            .Where(mr =>
+                (boundaries.Before == null || mr.Message.Created < boundaries.Before) &&
+                (boundaries.After == null || mr.Message.Created > boundaries.After)
+            )
+            .Where(mr =>
+                mr.RecipientId == recipientId && mr.Message.AuthorId == userId ||
+                mr.Recipient.GroupMembership.Recipient.RecipientId == recipientId ||
+                mr.Recipient.UserId == userId && mr.Message.Author.Recipient.RecipientId == recipientId
+            )
+            .OrderBy(mr => mr.Message.Created);
+
+        // Limit messages from bottom up
+        if (boundaries.Limit != null)
+        {
+            return await messages
+                .OrderByDescending(mr => mr.Message.Created)
+                .Take((int) boundaries.Limit)
+                .OrderBy(mr => mr.Message.Created)
+                .ToListAsync();
         }
 
-        public async Task<List<MessageRecipient>> GetMessagesWithRecipient(int userId, int recipientId, MessageBoundaries boundaries)
-        {
-            IQueryable<MessageRecipient> messages = Context.MessageRecipients
-                .AsNoTracking()
-                .Where(mr =>
-                    (boundaries.Before == null || mr.Message.Created < boundaries.Before) &&
-                    (boundaries.After == null || mr.Message.Created > boundaries.After)
-                )
-                .Where(mr =>
-                    mr.RecipientId == recipientId && mr.Message.AuthorId == userId ||
-                    mr.Recipient.GroupMembership.Recipient.RecipientId == recipientId ||
-                    mr.Recipient.UserId == userId && mr.Message.Author.Recipient.RecipientId == recipientId
-                )
-                .OrderBy(mr => mr.Message.Created);
+        return await messages.ToListAsync();
+    }
 
-            // Limit messages from bottom up
-            if (boundaries.Limit != null)
-            {
-                return await messages
-                    .OrderByDescending(mr => mr.Message.Created)
-                    .Take((int) boundaries.Limit)
-                    .OrderBy(mr => mr.Message.Created)
-                    .ToListAsync();
-            }
+    public async Task<List<MessageRecipient>> GetLatestGroupedByRecipients(int userId)
+    {
+        IQueryable<MessageRecipient> latestMessages = Context.MessageRecipients
+            .AsNoTracking()
+            .Where(mr =>
+                mr.Message.AuthorId == userId &&
+                mr.Recipient.GroupMembershipId == null ||
 
-            return await messages.ToListAsync();
-        }
+                mr.Recipient.UserId == userId ||
 
-        public async Task<List<MessageRecipient>> GetLatestGroupedByRecipients(int userId)
-        {
-            IQueryable<MessageRecipient> latestMessages = Context.MessageRecipients
-                .AsNoTracking()
-                .Where(mr =>
-                    mr.Message.AuthorId == userId &&
-                    mr.Recipient.GroupMembershipId == null ||
+                mr.Recipient.UserId == null &&
+                mr.Recipient.GroupMembership.UserId == userId
+            )
+            .GroupByTargetAndGetLatest(userId)
+            .OrderByDescending(mr => mr.Message.Created);
 
-                    mr.Recipient.UserId == userId ||
+        return await latestMessages.ToListAsync();
+    }
 
-                    mr.Recipient.UserId == null &&
-                    mr.Recipient.GroupMembership.UserId == userId
-                )
-                .GroupByTargetAndGetLatest(userId)
-                .OrderByDescending(mr => mr.Message.Created);
+    public async Task Add(MessageRecipient messageRecipient, CancellationToken cancellationToken = default)
+    {
+        await Context.MessageRecipients.AddAsync(messageRecipient, cancellationToken);
+    }
 
-            return await latestMessages.ToListAsync();
-        }
-
-        public async Task Add(MessageRecipient messageRecipient, CancellationToken cancellationToken = default)
-        {
-            await Context.MessageRecipients.AddAsync(messageRecipient, cancellationToken);
-        }
-
-        public async Task AddRange(IEnumerable<MessageRecipient> messageRecipients, CancellationToken cancellationToken = default)
-        {
-            await Context.MessageRecipients.AddRangeAsync(messageRecipients, cancellationToken);
-        }
+    public async Task AddRange(IEnumerable<MessageRecipient> messageRecipients, CancellationToken cancellationToken = default)
+    {
+        await Context.MessageRecipients.AddRangeAsync(messageRecipients, cancellationToken);
     }
 }

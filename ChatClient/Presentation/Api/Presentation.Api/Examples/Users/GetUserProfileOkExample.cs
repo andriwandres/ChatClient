@@ -2,18 +2,17 @@
 using Core.Domain.Resources.Users;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Presentation.Api.Examples.Users
+namespace Presentation.Api.Examples.Users;
+
+public class GetUserProfileOkExample : IExamplesProvider<UserProfileResource>
 {
-    public class GetUserProfileOkExample : IExamplesProvider<UserProfileResource>
+    public UserProfileResource GetExamples()
     {
-        public UserProfileResource GetExamples()
+        return new UserProfileResource
         {
-            return new UserProfileResource
-            {
-                UserId = 1,
-                UserName = "alfred_miller",
-                AvailabilityStatus = AvailabilityStatus.Online
-            };
-        }
+            UserId = 1,
+            UserName = "alfred_miller",
+            AvailabilityStatus = AvailabilityStatus.Online
+        };
     }
 }

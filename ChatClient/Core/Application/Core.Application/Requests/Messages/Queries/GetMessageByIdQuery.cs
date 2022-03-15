@@ -10,36 +10,35 @@ using System.Threading.Tasks;
 using Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 
-namespace Core.Application.Requests.Messages.Queries
+namespace Core.Application.Requests.Messages.Queries;
+
+public class GetMessageByIdQuery : IRequest<MessageResource>
 {
-    public class GetMessageByIdQuery : IRequest<MessageResource>
+    public int MessageId { get; set; }
+
+    public class Handler : IRequestHandler<GetMessageByIdQuery, MessageResource>
     {
-        public int MessageId { get; set; }
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserProvider _userProvider;
 
-        public class Handler : IRequestHandler<GetMessageByIdQuery, MessageResource>
+        public Handler(IMapper mapper, IUnitOfWork unitOfWork, IUserProvider userProvider)
         {
-            private readonly IMapper _mapper;
-            private readonly IUnitOfWork _unitOfWork;
-            private readonly IUserProvider _userProvider;
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
+            _userProvider = userProvider;
+        }
 
-            public Handler(IMapper mapper, IUnitOfWork unitOfWork, IUserProvider userProvider)
+        public async Task<MessageResource> Handle(GetMessageByIdQuery request, CancellationToken cancellationToken = default)
+        {
+            int userId = _userProvider.GetCurrentUserId();
+
+            Message message = await _unitOfWork.Messages.GetByIdAsync(request.MessageId);
+
+            return _mapper.Map<Message, MessageResource>(message, options =>
             {
-                _mapper = mapper;
-                _unitOfWork = unitOfWork;
-                _userProvider = userProvider;
-            }
-
-            public async Task<MessageResource> Handle(GetMessageByIdQuery request, CancellationToken cancellationToken = default)
-            {
-                int userId = _userProvider.GetCurrentUserId();
-
-                Message message = await _unitOfWork.Messages.GetByIdAsync(request.MessageId);
-
-                return _mapper.Map<Message, MessageResource>(message, options =>
-                {
-                    options.Items["userId"] = userId;
-                });
-            }
+                options.Items["userId"] = userId;
+            });
         }
     }
 }

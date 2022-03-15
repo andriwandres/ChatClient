@@ -4,33 +4,32 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.GroupMemberships.Commands
+namespace Core.Application.Requests.GroupMemberships.Commands;
+
+public class UpdateMembershipCommand : IRequest
 {
-    public class UpdateMembershipCommand : IRequest
+    public int GroupMembershipId { get; set; }
+    public bool IsAdmin { get; set; }
+
+    public class Handler : IRequestHandler<UpdateMembershipCommand, Unit>
     {
-        public int GroupMembershipId { get; set; }
-        public bool IsAdmin { get; set; }
+        private readonly IUnitOfWork _unitOfWork;
 
-        public class Handler : IRequestHandler<UpdateMembershipCommand, Unit>
+        public Handler(IUnitOfWork unitOfWork)
         {
-            private readonly IUnitOfWork _unitOfWork;
+            _unitOfWork = unitOfWork;
+        }
 
-            public Handler(IUnitOfWork unitOfWork)
-            {
-                _unitOfWork = unitOfWork;
-            }
+        public async Task<Unit> Handle(UpdateMembershipCommand request, CancellationToken cancellationToken = default)
+        {
+            GroupMembership membership = await _unitOfWork.GroupMemberships.GetByIdAsync(request.GroupMembershipId);
 
-            public async Task<Unit> Handle(UpdateMembershipCommand request, CancellationToken cancellationToken = default)
-            {
-                GroupMembership membership = await _unitOfWork.GroupMemberships.GetByIdAsync(request.GroupMembershipId);
+            membership.IsAdmin = request.IsAdmin;
 
-                membership.IsAdmin = request.IsAdmin;
+            _unitOfWork.GroupMemberships.Update(membership);
+            await _unitOfWork.CommitAsync(cancellationToken);
 
-                _unitOfWork.GroupMemberships.Update(membership);
-                await _unitOfWork.CommitAsync(cancellationToken);
-
-                return Unit.Value;
-            }
+            return Unit.Value;
         }
     }
 }

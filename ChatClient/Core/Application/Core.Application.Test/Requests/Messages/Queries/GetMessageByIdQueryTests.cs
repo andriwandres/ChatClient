@@ -8,69 +8,68 @@ using Moq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.Messages.Queries
+namespace Core.Application.Test.Requests.Messages.Queries;
+
+public class GetMessageByIdQueryTests
 {
-    public class GetMessageByIdQueryTests
+    private readonly IMapper _mapperMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<IUserProvider> _userProviderMock;
+
+    public GetMessageByIdQueryTests()
     {
-        private readonly IMapper _mapperMock;
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly Mock<IUserProvider> _userProviderMock;
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
 
-        public GetMessageByIdQueryTests()
+        _userProviderMock = new Mock<IUserProvider>();
+        _userProviderMock
+            .Setup(m => m.GetCurrentUserId())
+            .Returns(1);
+
+        MapperConfiguration mapperConfiguration = new(config =>
         {
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
+            config.CreateMap<Message, MessageResource>();
+        });
 
-            _userProviderMock = new Mock<IUserProvider>();
-            _userProviderMock
-                .Setup(m => m.GetCurrentUserId())
-                .Returns(1);
+        _mapperMock = mapperConfiguration.CreateMapper();
+    }
 
-            MapperConfiguration mapperConfiguration = new(config =>
-            {
-                config.CreateMap<Message, MessageResource>();
-            });
+    [Fact]
+    public async Task GetMessageByIdHandler_ShouldReturnNull_WhenMessageDoesNotExist()
+    {
+        // Arrange
+        GetMessageByIdQuery request = new() { MessageId = 1 };
 
-            _mapperMock = mapperConfiguration.CreateMapper();
-        }
+        _unitOfWorkMock
+            .Setup(m => m.Messages.GetByIdAsync(request.MessageId))
+            .ReturnsAsync(null as Message);
 
-        [Fact]
-        public async Task GetMessageByIdHandler_ShouldReturnNull_WhenMessageDoesNotExist()
-        {
-            // Arrange
-            GetMessageByIdQuery request = new() { MessageId = 1 };
+        GetMessageByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object, _userProviderMock.Object);
 
-            _unitOfWorkMock
-                .Setup(m => m.Messages.GetByIdAsync(request.MessageId))
-                .ReturnsAsync(null as Message);
+        // Act
+        MessageResource message = await handler.Handle(request);
 
-            GetMessageByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object, _userProviderMock.Object);
+        // Assert
+        Assert.Null(message);
+    }
 
-            // Act
-            MessageResource message = await handler.Handle(request);
+    [Fact]
+    public async Task GetMessageByIdHandler_ShouldReturnMessage_WhenMessageExists()
+    {
+        // Arrange
+        GetMessageByIdQuery request = new() { MessageId = 1 };
 
-            // Assert
-            Assert.Null(message);
-        }
+        Message expectedMessage = new() { MessageId = 1 };
 
-        [Fact]
-        public async Task GetMessageByIdHandler_ShouldReturnMessage_WhenMessageExists()
-        {
-            // Arrange
-            GetMessageByIdQuery request = new() { MessageId = 1 };
+        _unitOfWorkMock
+            .Setup(m => m.Messages.GetByIdAsync(request.MessageId))
+            .ReturnsAsync(expectedMessage);
 
-            Message expectedMessage = new() { MessageId = 1 };
+        GetMessageByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object, _userProviderMock.Object);
 
-            _unitOfWorkMock
-                .Setup(m => m.Messages.GetByIdAsync(request.MessageId))
-                .ReturnsAsync(expectedMessage);
+        // Act
+        MessageResource message = await handler.Handle(request);
 
-            GetMessageByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object, _userProviderMock.Object);
-
-            // Act
-            MessageResource message = await handler.Handle(request);
-
-            // Assert
-            Assert.NotNull(message);
-        }
+        // Assert
+        Assert.NotNull(message);
     }
 }

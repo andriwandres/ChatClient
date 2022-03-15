@@ -1,7 +1,6 @@
-﻿namespace Core.Domain.Dtos.GroupMemberships
+﻿namespace Core.Domain.Dtos.GroupMemberships;
+
+public class UpdateMembershipBody
 {
-    public class UpdateMembershipBody
-    {
-        public bool? IsAdmin { get; set; }
-    }
+    public bool? IsAdmin { get; set; }
 }

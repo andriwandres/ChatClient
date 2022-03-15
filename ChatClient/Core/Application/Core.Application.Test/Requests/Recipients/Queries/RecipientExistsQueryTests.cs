@@ -5,53 +5,52 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.Recipients.Queries
+namespace Core.Application.Test.Requests.Recipients.Queries;
+
+public class RecipientExistsQueryTests
 {
-    public class RecipientExistsQueryTests
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+    public RecipientExistsQueryTests()
     {
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+    }
 
-        public RecipientExistsQueryTests()
-        {
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
-        }
+    [Fact]
+    public async Task RecipientExistsQueryHandler_ShouldReturnTrue_WhenRecipientExists()
+    {
+        // Arrange
+        RecipientExistsQuery request = new RecipientExistsQuery {RecipientId = 1};
 
-        [Fact]
-        public async Task RecipientExistsQueryHandler_ShouldReturnTrue_WhenRecipientExists()
-        {
-            // Arrange
-            RecipientExistsQuery request = new RecipientExistsQuery {RecipientId = 1};
+        _unitOfWorkMock
+            .Setup(m => m.Recipients.Exists(request.RecipientId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
 
-            _unitOfWorkMock
-                .Setup(m => m.Recipients.Exists(request.RecipientId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
+        RecipientExistsQuery.Handler handler = new RecipientExistsQuery.Handler(_unitOfWorkMock.Object);
 
-            RecipientExistsQuery.Handler handler = new RecipientExistsQuery.Handler(_unitOfWorkMock.Object);
+        // Act
+        bool exists = await handler.Handle(request);
 
-            // Act
-            bool exists = await handler.Handle(request);
+        // Assert
+        Assert.True(exists);
+    }
 
-            // Assert
-            Assert.True(exists);
-        }
+    [Fact]
+    public async Task RecipientExistsQueryHandler_ShouldReturnFalse_WhenRecipientDoesNotExist()
+    {
+        // Arrange
+        RecipientExistsQuery request = new RecipientExistsQuery { RecipientId = 1 };
 
-        [Fact]
-        public async Task RecipientExistsQueryHandler_ShouldReturnFalse_WhenRecipientDoesNotExist()
-        {
-            // Arrange
-            RecipientExistsQuery request = new RecipientExistsQuery { RecipientId = 1 };
+        _unitOfWorkMock
+            .Setup(m => m.Recipients.Exists(request.RecipientId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
 
-            _unitOfWorkMock
-                .Setup(m => m.Recipients.Exists(request.RecipientId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
+        RecipientExistsQuery.Handler handler = new RecipientExistsQuery.Handler(_unitOfWorkMock.Object);
 
-            RecipientExistsQuery.Handler handler = new RecipientExistsQuery.Handler(_unitOfWorkMock.Object);
+        // Act
+        bool exists = await handler.Handle(request);
 
-            // Act
-            bool exists = await handler.Handle(request);
-
-            // Assert
-            Assert.False(exists);
-        }
+        // Assert
+        Assert.False(exists);
     }
 }
