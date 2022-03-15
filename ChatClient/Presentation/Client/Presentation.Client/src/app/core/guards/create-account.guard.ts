@@ -1,6 +1,5 @@
-import { Route } from '@angular/compiler/src/core';
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanLoad, Router, RouterStateSnapshot, UrlSegment } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanLoad, Router, RouterStateSnapshot, UrlSegment, Route } from '@angular/router';
 import { AuthFacade } from '@chat-client/shared/auth/store';
 import { Observable } from 'rxjs';
 import { map, skipWhile, switchMapTo, tap } from 'rxjs/operators';
