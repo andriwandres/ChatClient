@@ -5,7 +5,7 @@
 ![Front-End](https://github.com/AndriWandres/ChatClient/workflows/Angular/badge.svg?branch=master)
 
 <!-- Intro section -->
-Instant-Messenger Chat Client that is built ontop of ASP.NET Core 6 and Angular 11. It leverages design patterns such as CQRS and Domain-Driven-Design.
+Instant-Messenger Chat Client that is built ontop of ASP.NET Core 6 and Angular 13. It leverages design patterns such as CQRS and Domain-Driven-Design.
 
 <!-- Table of contents -->
 ## 📜 Table of Contents
@@ -29,8 +29,8 @@ Here's how you get this application running on your system.
 Before launching the application, make sure that the below listed criterias are met.
 
 #### Angular
-For running the Angular application, you need a [Node.js](https://nodejs.org/en/) version of at least 12.11.x or higher.
-Also, make sure you have the latest version of the Angular CLI installed (11.0.3 or higher).
+For running the Angular application, you need a [Node.js](https://nodejs.org/en/) version of at least 16.14.x or higher.
+Also, make sure you have the latest version of the Angular CLI installed (13.2.6 or higher).
 
 ```shell
 npm install -g @angular/cli
@@ -50,7 +50,7 @@ npm install
 For running the ASP.NET Core application that serves the back-end, a [.NET Core SDK](https://dotnet.microsoft.com/download/dotnet-core) of Version 6.0.0 or higher is required. Alternatively, you can install [Visual Studio 2019](https://visualstudio.microsoft.com/de/downloads), which already ships with the required SDKs and lets you run the application seemlessly.
 
 ### 🔨 Running the application
-You can open the solution file in Visual Studio 2019 and Run the startup project `Presentation.Api` in order to start the back-end application.
+You can open the solution file in Visual Studio 2022 and Run the startup project `Presentation.Api` in order to start the back-end application.
 
 If you prefer using the `dotnet CLI` for running the application. Use the following commands in your command-line:
 ```shell
@@ -69,7 +69,7 @@ After the back-end is up and running, you can open your command line and execute
 cd ChatClient/Presentation/Client/Presentation.Client
 
 # Run the application
-ng serve --hmr --open
+ng serve --open
 ```
 This will open a new browser window on `localhost:4200` with the served Angular application.
 
