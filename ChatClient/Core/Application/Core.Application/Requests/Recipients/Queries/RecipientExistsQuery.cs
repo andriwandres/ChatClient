@@ -3,27 +3,26 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.Recipients.Queries
+namespace Core.Application.Requests.Recipients.Queries;
+
+public class RecipientExistsQuery : IRequest<bool>
 {
-    public class RecipientExistsQuery : IRequest<bool>
+    public int RecipientId { get; set; }
+
+    public class Handler : IRequestHandler<RecipientExistsQuery, bool>
     {
-        public int RecipientId { get; set; }
+        private readonly IUnitOfWork _unitOfWork;
 
-        public class Handler : IRequestHandler<RecipientExistsQuery, bool>
+        public Handler(IUnitOfWork unitOfWork)
         {
-            private readonly IUnitOfWork _unitOfWork;
+            _unitOfWork = unitOfWork;
+        }
 
-            public Handler(IUnitOfWork unitOfWork)
-            {
-                _unitOfWork = unitOfWork;
-            }
+        public async Task<bool> Handle(RecipientExistsQuery request, CancellationToken cancellationToken = default)
+        {
+            bool exists = await _unitOfWork.Recipients.Exists(request.RecipientId, cancellationToken);
 
-            public async Task<bool> Handle(RecipientExistsQuery request, CancellationToken cancellationToken = default)
-            {
-                bool exists = await _unitOfWork.Recipients.Exists(request.RecipientId, cancellationToken);
-
-                return exists;
-            }
+            return exists;
         }
     }
 }

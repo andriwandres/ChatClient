@@ -7,19 +7,18 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Persistence.Repositories
-{
-    public class LanguageRepository : RepositoryBase<Language>, ILanguageRepository
-    {
-        public LanguageRepository(IChatContext context) : base(context)
-        {
-        }
+namespace Infrastructure.Persistence.Repositories;
 
-        public async Task<bool> Exists(int languageId, CancellationToken cancellationToken = default)
-        {
-            return await Context.Languages
-                .AsNoTracking()
-                .AnyAsync(language => language.LanguageId == languageId, cancellationToken);
-        }
+public class LanguageRepository : RepositoryBase<Language>, ILanguageRepository
+{
+    public LanguageRepository(IChatContext context) : base(context)
+    {
+    }
+
+    public async Task<bool> Exists(int languageId, CancellationToken cancellationToken = default)
+    {
+        return await Context.Languages
+            .AsNoTracking()
+            .AnyAsync(language => language.LanguageId == languageId, cancellationToken);
     }
 }

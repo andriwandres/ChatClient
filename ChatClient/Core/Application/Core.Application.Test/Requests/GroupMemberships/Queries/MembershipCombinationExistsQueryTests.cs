@@ -5,61 +5,60 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.GroupMemberships.Queries
+namespace Core.Application.Test.Requests.GroupMemberships.Queries;
+
+public class MembershipCombinationExistsQueryTests
 {
-    public class MembershipCombinationExistsQueryTests
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+    public MembershipCombinationExistsQueryTests()
     {
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+    }
 
-        public MembershipCombinationExistsQueryTests()
+    [Fact]
+    public async Task MembershipCombinationExistsQueryHandler_ShouldReturnTrue_WhenCombinationExists()
+    {
+        // Arrange
+        MembershipCombinationExistsQuery request = new MembershipCombinationExistsQuery
         {
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
-        }
+            UserId = 1,
+            GroupId = 1,
+        };
 
-        [Fact]
-        public async Task MembershipCombinationExistsQueryHandler_ShouldReturnTrue_WhenCombinationExists()
+        _unitOfWorkMock
+            .Setup(m => m.GroupMemberships.CombinationExists(request.GroupId, request.UserId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+
+        MembershipCombinationExistsQuery.Handler handler = new MembershipCombinationExistsQuery.Handler(_unitOfWorkMock.Object);
+
+        // Act
+        bool exists = await handler.Handle(request);
+
+        // Assert
+        Assert.True(exists);
+    }
+
+    [Fact]
+    public async Task MembershipCombinationExistsQueryHandler_ShouldReturnFalse_WhenCombinationDoesNotExist()
+    {
+        // Arrange
+        MembershipCombinationExistsQuery request = new MembershipCombinationExistsQuery
         {
-            // Arrange
-            MembershipCombinationExistsQuery request = new MembershipCombinationExistsQuery
-            {
-                UserId = 1,
-                GroupId = 1,
-            };
+            UserId = 124,
+            GroupId = 421,
+        };
 
-            _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.CombinationExists(request.GroupId, request.UserId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
+        _unitOfWorkMock
+            .Setup(m => m.GroupMemberships.CombinationExists(request.GroupId, request.UserId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
 
-            MembershipCombinationExistsQuery.Handler handler = new MembershipCombinationExistsQuery.Handler(_unitOfWorkMock.Object);
+        MembershipCombinationExistsQuery.Handler handler = new MembershipCombinationExistsQuery.Handler(_unitOfWorkMock.Object);
 
-            // Act
-            bool exists = await handler.Handle(request);
+        // Act
+        bool exists = await handler.Handle(request);
 
-            // Assert
-            Assert.True(exists);
-        }
-
-        [Fact]
-        public async Task MembershipCombinationExistsQueryHandler_ShouldReturnFalse_WhenCombinationDoesNotExist()
-        {
-            // Arrange
-            MembershipCombinationExistsQuery request = new MembershipCombinationExistsQuery
-            {
-                UserId = 124,
-                GroupId = 421,
-            };
-
-            _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.CombinationExists(request.GroupId, request.UserId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
-
-            MembershipCombinationExistsQuery.Handler handler = new MembershipCombinationExistsQuery.Handler(_unitOfWorkMock.Object);
-
-            // Act
-            bool exists = await handler.Handle(request);
-
-            // Assert
-            Assert.False(exists);
-        }
+        // Assert
+        Assert.False(exists);
     }
 }

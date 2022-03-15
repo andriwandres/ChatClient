@@ -6,13 +6,12 @@ using AutoMapper;
 using Core.Application.Requests.Session.Commands;
 using Core.Domain.Dtos.Session;
 
-namespace Presentation.Api.Mapping
+namespace Presentation.Api.Mapping;
+
+public class SessionMappingProfile : Profile
 {
-    public class SessionMappingProfile : Profile
+    public SessionMappingProfile()
     {
-        public SessionMappingProfile()
-        {
-            CreateMap<LoginBody, LoginCommand>();
-        }
+        CreateMap<LoginBody, LoginCommand>();
     }
 }

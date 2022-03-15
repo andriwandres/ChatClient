@@ -8,64 +8,63 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.GroupMemberships.Commands
+namespace Core.Application.Requests.GroupMemberships.Commands;
+
+public class DeleteMembershipCommand : IRequest
 {
-    public class DeleteMembershipCommand : IRequest
+    public int GroupMembershipId { get; set; }
+
+    public class Handler : IRequestHandler<DeleteMembershipCommand, Unit>
     {
-        public int GroupMembershipId { get; set; }
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserProvider _userProvider;
 
-        public class Handler : IRequestHandler<DeleteMembershipCommand, Unit>
+        public Handler(IUnitOfWork unitOfWork, IUserProvider userProvider)
         {
-            private readonly IUnitOfWork _unitOfWork;
-            private readonly IUserProvider _userProvider;
+            _unitOfWork = unitOfWork;
+            _userProvider = userProvider;
+        }
 
-            public Handler(IUnitOfWork unitOfWork, IUserProvider userProvider)
+        public async Task<Unit> Handle(DeleteMembershipCommand request, CancellationToken cancellationToken = default)
+        {
+            int userId = _userProvider.GetCurrentUserId();
+
+            GroupMembership membership = await _unitOfWork.GroupMemberships.GetByIdAsync(request.GroupMembershipId);
+
+            // If the user leaves the group himself
+            if (membership.UserId == userId)
             {
-                _unitOfWork = unitOfWork;
-                _userProvider = userProvider;
-            }
+                List<GroupMembership> members = await _unitOfWork.GroupMemberships.GetByGroup(membership.GroupId, cancellationToken);
+                List<GroupMembership> otherMembers = members.Where(gm => gm.UserId != userId).ToList();
 
-            public async Task<Unit> Handle(DeleteMembershipCommand request, CancellationToken cancellationToken = default)
-            {
-                int userId = _userProvider.GetCurrentUserId();
-
-                GroupMembership membership = await _unitOfWork.GroupMemberships.GetByIdAsync(request.GroupMembershipId);
-
-                // If the user leaves the group himself
-                if (membership.UserId == userId)
+                // When there are no members left, soft-delete the group
+                if (!otherMembers.Any())
                 {
-                    List<GroupMembership> members = await _unitOfWork.GroupMemberships.GetByGroup(membership.GroupId, cancellationToken);
-                    List<GroupMembership> otherMembers = members.Where(gm => gm.UserId != userId).ToList();
+                    Group group = await _unitOfWork.Groups.GetByIdAsync(membership.GroupId);
 
-                    // When there are no members left, soft-delete the group
-                    if (!otherMembers.Any())
-                    {
-                        Group group = await _unitOfWork.Groups.GetByIdAsync(membership.GroupId);
+                    group.IsDeleted = true;
 
-                        group.IsDeleted = true;
-
-                        _unitOfWork.Groups.Update(group);
-                    }
-
-                    // Make sure there is still at least one administrator
-                    else if (!otherMembers.Any(member => member.IsAdmin))
-                    {
-                        GroupMembership newAdmin = otherMembers
-                            .OrderBy(member => member.Created)
-                            .First();
-
-                        newAdmin.IsAdmin = true;
-
-                        _unitOfWork.GroupMemberships.Update(newAdmin);
-                    }
+                    _unitOfWork.Groups.Update(group);
                 }
 
-                // Remove the membership
-                _unitOfWork.GroupMemberships.Delete(membership);
-                await _unitOfWork.CommitAsync(cancellationToken);
+                // Make sure there is still at least one administrator
+                else if (!otherMembers.Any(member => member.IsAdmin))
+                {
+                    GroupMembership newAdmin = otherMembers
+                        .OrderBy(member => member.Created)
+                        .First();
 
-                return Unit.Value;
+                    newAdmin.IsAdmin = true;
+
+                    _unitOfWork.GroupMemberships.Update(newAdmin);
+                }
             }
+
+            // Remove the membership
+            _unitOfWork.GroupMemberships.Delete(membership);
+            await _unitOfWork.CommitAsync(cancellationToken);
+
+            return Unit.Value;
         }
     }
 }

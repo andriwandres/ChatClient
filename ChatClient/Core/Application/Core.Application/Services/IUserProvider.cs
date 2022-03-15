@@ -1,7 +1,6 @@
-﻿namespace Core.Application.Services
+﻿namespace Core.Application.Services;
+
+public interface IUserProvider
 {
-    public interface IUserProvider
-    {
-        int GetCurrentUserId();
-    }
+    int GetCurrentUserId();
 }

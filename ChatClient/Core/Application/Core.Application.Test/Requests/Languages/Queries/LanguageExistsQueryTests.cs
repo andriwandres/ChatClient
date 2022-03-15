@@ -5,55 +5,54 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.Languages.Queries
+namespace Core.Application.Test.Requests.Languages.Queries;
+
+public class LanguageExistsQueryTests
 {
-    public class LanguageExistsQueryTests
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+    public LanguageExistsQueryTests()
     {
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+    }
 
-        public LanguageExistsQueryTests()
-        {
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
-        }
+    [Fact]
+    public async Task LanguageExistsQueryHandler_ShouldReturnTrue_WhenLanguageExists()
+    {
+        // Arrange
+        LanguageExistsQuery request = new LanguageExistsQuery {LanguageId = 1};
 
-        [Fact]
-        public async Task LanguageExistsQueryHandler_ShouldReturnTrue_WhenLanguageExists()
-        {
-            // Arrange
-            LanguageExistsQuery request = new LanguageExistsQuery {LanguageId = 1};
+        _unitOfWorkMock
+            .Setup(m => m.Languages.Exists(1, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
 
-            _unitOfWorkMock
-                .Setup(m => m.Languages.Exists(1, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
+        LanguageExistsQuery.Handler handler =
+            new LanguageExistsQuery.Handler(_unitOfWorkMock.Object);
 
-            LanguageExistsQuery.Handler handler =
-                new LanguageExistsQuery.Handler(_unitOfWorkMock.Object);
+        // Act
+        bool exists = await handler.Handle(request);
 
-            // Act
-            bool exists = await handler.Handle(request);
+        // Assert
+        Assert.True(exists);
+    }
 
-            // Assert
-            Assert.True(exists);
-        }
+    [Fact]
+    public async Task LanguageExistsQueryHandler_ShouldReturnFalse_WhenLanguageDoesNotExists()
+    {
+        // Arrange
+        LanguageExistsQuery request = new LanguageExistsQuery { LanguageId = 1213 };
 
-        [Fact]
-        public async Task LanguageExistsQueryHandler_ShouldReturnFalse_WhenLanguageDoesNotExists()
-        {
-            // Arrange
-            LanguageExistsQuery request = new LanguageExistsQuery { LanguageId = 1213 };
+        _unitOfWorkMock
+            .Setup(m => m.Languages.Exists(request.LanguageId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
 
-            _unitOfWorkMock
-                .Setup(m => m.Languages.Exists(request.LanguageId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
+        LanguageExistsQuery.Handler handler =
+            new LanguageExistsQuery.Handler(_unitOfWorkMock.Object);
 
-            LanguageExistsQuery.Handler handler =
-                new LanguageExistsQuery.Handler(_unitOfWorkMock.Object);
+        // Act
+        bool exists = await handler.Handle(request);
 
-            // Act
-            bool exists = await handler.Handle(request);
-
-            // Assert
-            Assert.False(exists);
-        }
+        // Assert
+        Assert.False(exists);
     }
 }

@@ -4,31 +4,30 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.GroupMemberships.Queries
+namespace Core.Application.Requests.GroupMemberships.Queries;
+
+public class CanUpdateMembershipQuery : IRequest<bool>
 {
-    public class CanUpdateMembershipQuery : IRequest<bool>
+    public int GroupMembershipIdToUpdate { get; set; }
+
+    public class Handler : IRequestHandler<CanUpdateMembershipQuery, bool>
     {
-        public int GroupMembershipIdToUpdate { get; set; }
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserProvider _userProvider;
 
-        public class Handler : IRequestHandler<CanUpdateMembershipQuery, bool>
+        public Handler(IUnitOfWork unitOfWork, IUserProvider userProvider)
         {
-            private readonly IUnitOfWork _unitOfWork;
-            private readonly IUserProvider _userProvider;
+            _unitOfWork = unitOfWork;
+            _userProvider = userProvider;
+        }
 
-            public Handler(IUnitOfWork unitOfWork, IUserProvider userProvider)
-            {
-                _unitOfWork = unitOfWork;
-                _userProvider = userProvider;
-            }
+        public async Task<bool> Handle(CanUpdateMembershipQuery request, CancellationToken cancellationToken = default)
+        {
+            int userId = _userProvider.GetCurrentUserId();
 
-            public async Task<bool> Handle(CanUpdateMembershipQuery request, CancellationToken cancellationToken = default)
-            {
-                int userId = _userProvider.GetCurrentUserId();
+            bool canUpdate = await _unitOfWork.GroupMemberships.CanUpdateMembership(userId, request.GroupMembershipIdToUpdate, cancellationToken);
 
-                bool canUpdate = await _unitOfWork.GroupMemberships.CanUpdateMembership(userId, request.GroupMembershipIdToUpdate, cancellationToken);
-
-                return canUpdate;
-            }
+            return canUpdate;
         }
     }
 }

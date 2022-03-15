@@ -5,31 +5,30 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.Recipients.Queries
+namespace Core.Application.Requests.Recipients.Queries;
+
+public class IsOwnRecipientQuery : IRequest<bool>
 {
-    public class IsOwnRecipientQuery : IRequest<bool>
+    public int RecipientId { get; set; }
+
+    public class Handler : IRequestHandler<IsOwnRecipientQuery, bool>
     {
-        public int RecipientId { get; set; }
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserProvider _userProvider;
 
-        public class Handler : IRequestHandler<IsOwnRecipientQuery, bool>
+        public Handler(IUnitOfWork unitOfWork, IUserProvider userProvider)
         {
-            private readonly IUnitOfWork _unitOfWork;
-            private readonly IUserProvider _userProvider;
+            _unitOfWork = unitOfWork;
+            _userProvider = userProvider;
+        }
 
-            public Handler(IUnitOfWork unitOfWork, IUserProvider userProvider)
-            {
-                _unitOfWork = unitOfWork;
-                _userProvider = userProvider;
-            }
+        public async Task<bool> Handle(IsOwnRecipientQuery request, CancellationToken cancellationToken = default)
+        {
+            int userId = _userProvider.GetCurrentUserId();
 
-            public async Task<bool> Handle(IsOwnRecipientQuery request, CancellationToken cancellationToken = default)
-            {
-                int userId = _userProvider.GetCurrentUserId();
+            Recipient recipient = await _unitOfWork.Recipients.GetByIdAsync(request.RecipientId);
 
-                Recipient recipient = await _unitOfWork.Recipients.GetByIdAsync(request.RecipientId);
-
-                return recipient.UserId == userId;
-            }
+            return recipient.UserId == userId;
         }
     }
 }

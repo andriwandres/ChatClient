@@ -1,16 +1,15 @@
 ﻿using Core.Domain.Dtos.Friendships;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Presentation.Api.Examples.Friendships
+namespace Presentation.Api.Examples.Friendships;
+
+public class RequestFriendshipBodyExample : IExamplesProvider<RequestFriendshipBody>
 {
-    public class RequestFriendshipBodyExample : IExamplesProvider<RequestFriendshipBody>
+    public RequestFriendshipBody GetExamples()
     {
-        public RequestFriendshipBody GetExamples()
+        return new RequestFriendshipBody
         {
-            return new RequestFriendshipBody
-            {
-                AddresseeId = 2
-            };
-        }
+            AddresseeId = 2
+        };
     }
 }

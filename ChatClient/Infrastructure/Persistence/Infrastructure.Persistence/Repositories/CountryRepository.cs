@@ -5,12 +5,11 @@ using Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 
-namespace Infrastructure.Persistence.Repositories
+namespace Infrastructure.Persistence.Repositories;
+
+public class CountryRepository : RepositoryBase<Country>, ICountryRepository
 {
-    public class CountryRepository : RepositoryBase<Country>, ICountryRepository
+    public CountryRepository(IChatContext context) : base(context)
     {
-        public CountryRepository(IChatContext context) : base(context)
-        {
-        }
     }
 }

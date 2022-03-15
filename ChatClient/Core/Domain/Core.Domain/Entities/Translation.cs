@@ -1,12 +1,11 @@
-﻿namespace Core.Domain.Entities
-{
-    public class Translation
-    {
-        public int TranslationId { get; set; }
-        public int LanguageId { get; set; }
-        public string Key { get; set; }
-        public string Value { get; set; }
+﻿namespace Core.Domain.Entities;
 
-        public Language Language { get; set; }
-    }
+public class Translation
+{
+    public int TranslationId { get; set; }
+    public int LanguageId { get; set; }
+    public string Key { get; set; }
+    public string Value { get; set; }
+
+    public Language Language { get; set; }
 }

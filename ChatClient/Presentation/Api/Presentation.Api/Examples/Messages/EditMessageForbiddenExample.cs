@@ -2,17 +2,16 @@
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Presentation.Api.Examples.Messages
+namespace Presentation.Api.Examples.Messages;
+
+public class EditMessageForbiddenExample : IExamplesProvider<ErrorResource>
 {
-    public class EditMessageForbiddenExample : IExamplesProvider<ErrorResource>
+    public ErrorResource GetExamples()
     {
-        public ErrorResource GetExamples()
+        return new ErrorResource
         {
-            return new ErrorResource
-            {
-                StatusCode = StatusCodes.Status403Forbidden,
-                Message = "Only the author of a message is allowed to update a message"
-            };
-        }
+            StatusCode = StatusCodes.Status403Forbidden,
+            Message = "Only the author of a message is allowed to update a message"
+        };
     }
 }

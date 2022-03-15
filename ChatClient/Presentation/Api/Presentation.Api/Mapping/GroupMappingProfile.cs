@@ -4,15 +4,14 @@ using Core.Domain.Dtos.Groups;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Groups;
 
-namespace Presentation.Api.Mapping
+namespace Presentation.Api.Mapping;
+
+public class GroupMappingProfile : Profile
 {
-    public class GroupMappingProfile : Profile
+    public GroupMappingProfile()
     {
-        public GroupMappingProfile()
-        {
-            CreateMap<Group, GroupResource>();
-            CreateMap<CreateGroupBody, CreateGroupCommand>();
-            CreateMap<UpdateGroupBody, UpdateGroupCommand>(MemberList.Source);
-        }
+        CreateMap<Group, GroupResource>();
+        CreateMap<CreateGroupBody, CreateGroupCommand>();
+        CreateMap<UpdateGroupBody, UpdateGroupCommand>(MemberList.Source);
     }
 }

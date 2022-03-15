@@ -6,38 +6,37 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.Friendships.Commands
+namespace Core.Application.Requests.Friendships.Commands;
+
+public class UpdateFriendshipStatusCommand : IRequest
 {
-    public class UpdateFriendshipStatusCommand : IRequest
+    public int FriendshipId { get; set; }
+    public FriendshipStatus FriendshipStatus { get; set; }
+
+    public class Handler : IRequestHandler<UpdateFriendshipStatusCommand, Unit>
     {
-        public int FriendshipId { get; set; }
-        public FriendshipStatus FriendshipStatus { get; set; }
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IDateProvider _dateProvider;
 
-        public class Handler : IRequestHandler<UpdateFriendshipStatusCommand, Unit>
+        public Handler(IUnitOfWork unitOfWork, IDateProvider dateProvider)
         {
-            private readonly IUnitOfWork _unitOfWork;
-            private readonly IDateProvider _dateProvider;
+            _unitOfWork = unitOfWork;
+            _dateProvider = dateProvider;
+        }
 
-            public Handler(IUnitOfWork unitOfWork, IDateProvider dateProvider)
+        public async Task<Unit> Handle(UpdateFriendshipStatusCommand request, CancellationToken cancellationToken = default)
+        {
+            FriendshipChange newChange = new FriendshipChange
             {
-                _unitOfWork = unitOfWork;
-                _dateProvider = dateProvider;
-            }
+                FriendshipId = request.FriendshipId,
+                Status = request.FriendshipStatus,
+                Created = _dateProvider.UtcNow()
+            };
 
-            public async Task<Unit> Handle(UpdateFriendshipStatusCommand request, CancellationToken cancellationToken = default)
-            {
-                FriendshipChange newChange = new FriendshipChange
-                {
-                    FriendshipId = request.FriendshipId,
-                    Status = request.FriendshipStatus,
-                    Created = _dateProvider.UtcNow()
-                };
+            await _unitOfWork.FriendshipChanges.Add(newChange, cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
 
-                await _unitOfWork.FriendshipChanges.Add(newChange, cancellationToken);
-                await _unitOfWork.CommitAsync(cancellationToken);
-
-                return Unit.Value;
-            }
+            return Unit.Value;
         }
     }
 }

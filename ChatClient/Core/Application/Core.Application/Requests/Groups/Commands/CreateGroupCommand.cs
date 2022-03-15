@@ -7,60 +7,59 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.Groups.Commands
+namespace Core.Application.Requests.Groups.Commands;
+
+public class CreateGroupCommand : IRequest<GroupResource>
 {
-    public class CreateGroupCommand : IRequest<GroupResource>
+    public string Name { get; set; }
+    public string Description { get; set; }
+
+    public class Handler : IRequestHandler<CreateGroupCommand, GroupResource>
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IDateProvider _dateProvider;
+        private readonly IUserProvider _userProvider;
 
-        public class Handler : IRequestHandler<CreateGroupCommand, GroupResource>
+        public Handler(IMapper mapper, IUnitOfWork unitOfWork, IDateProvider dateProvider, IUserProvider userProvider)
         {
-            private readonly IMapper _mapper;
-            private readonly IUnitOfWork _unitOfWork;
-            private readonly IDateProvider _dateProvider;
-            private readonly IUserProvider _userProvider;
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
+            _dateProvider = dateProvider;
+            _userProvider = userProvider;
+        }
 
-            public Handler(IMapper mapper, IUnitOfWork unitOfWork, IDateProvider dateProvider, IUserProvider userProvider)
+        public async Task<GroupResource> Handle(CreateGroupCommand request, CancellationToken cancellationToken = default)
+        {
+            int userId = _userProvider.GetCurrentUserId();
+
+            Group group = new Group
             {
-                _mapper = mapper;
-                _unitOfWork = unitOfWork;
-                _dateProvider = dateProvider;
-                _userProvider = userProvider;
-            }
+                Name = request.Name,
+                Description = request.Description,
+                Created = _dateProvider.UtcNow(),
+            };
 
-            public async Task<GroupResource> Handle(CreateGroupCommand request, CancellationToken cancellationToken = default)
+            GroupMembership membership = new GroupMembership
             {
-                int userId = _userProvider.GetCurrentUserId();
+                Group = group,
+                UserId = userId,
+                IsAdmin = true,
+                Created = _dateProvider.UtcNow()
+            };
 
-                Group group = new Group
-                {
-                    Name = request.Name,
-                    Description = request.Description,
-                    Created = _dateProvider.UtcNow(),
-                };
+            Recipient recipient = new Recipient
+            {
+                GroupMembership = membership
+            };
 
-                GroupMembership membership = new GroupMembership
-                {
-                    Group = group,
-                    UserId = userId,
-                    IsAdmin = true,
-                    Created = _dateProvider.UtcNow()
-                };
+            await _unitOfWork.Groups.Add(group, cancellationToken);
+            await _unitOfWork.GroupMemberships.Add(membership, cancellationToken);
+            await _unitOfWork.Recipients.Add(recipient, cancellationToken);
 
-                Recipient recipient = new Recipient
-                {
-                    GroupMembership = membership
-                };
+            await _unitOfWork.CommitAsync(cancellationToken);
 
-                await _unitOfWork.Groups.Add(group, cancellationToken);
-                await _unitOfWork.GroupMemberships.Add(membership, cancellationToken);
-                await _unitOfWork.Recipients.Add(recipient, cancellationToken);
-
-                await _unitOfWork.CommitAsync(cancellationToken);
-
-                return _mapper.Map<Group, GroupResource>(group);
-            }
+            return _mapper.Map<Group, GroupResource>(group);
         }
     }
 }

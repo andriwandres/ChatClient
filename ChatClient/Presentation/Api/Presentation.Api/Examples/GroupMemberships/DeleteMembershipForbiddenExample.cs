@@ -2,17 +2,16 @@
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Presentation.Api.Examples.GroupMemberships
+namespace Presentation.Api.Examples.GroupMemberships;
+
+public class DeleteMembershipForbiddenExample : IExamplesProvider<ErrorResource>
 {
-    public class DeleteMembershipForbiddenExample : IExamplesProvider<ErrorResource>
+    public ErrorResource GetExamples()
     {
-        public ErrorResource GetExamples()
+        return new ErrorResource
         {
-            return new ErrorResource
-            {
-                StatusCode = StatusCodes.Status403Forbidden,
-                Message = "You are not permitted to delete users from this group. This privilege is only granted to administrators of the group"
-            };
-        }
+            StatusCode = StatusCodes.Status403Forbidden,
+            Message = "You are not permitted to delete users from this group. This privilege is only granted to administrators of the group"
+        };
     }
 }

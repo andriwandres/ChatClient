@@ -9,48 +9,47 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.Languages.Queries
+namespace Core.Application.Test.Requests.Languages.Queries;
+
+public class GetAllLanguagesQueryTests
 {
-    public class GetAllLanguagesQueryTests
+    private readonly IMapper _mapperMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+    public GetAllLanguagesQueryTests()
     {
-        private readonly IMapper _mapperMock;
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
 
-        public GetAllLanguagesQueryTests()
+        MapperConfiguration mapperConfiguration = new(config =>
         {
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
+            config.CreateMap<Language, LanguageResource>()
+                .ForMember(d => d.CountryFlagImage, c => c.Ignore());
+        });
 
-            MapperConfiguration mapperConfiguration = new(config =>
-            {
-                config.CreateMap<Language, LanguageResource>()
-                    .ForMember(d => d.CountryFlagImage, c => c.Ignore());
-            });
+        _mapperMock = mapperConfiguration.CreateMapper();
+    }
 
-            _mapperMock = mapperConfiguration.CreateMapper();
-        }
-
-        [Fact]
-        public async Task GetAllLanguagesQueryHandler_ShouldReturnLanguages()
+    [Fact]
+    public async Task GetAllLanguagesQueryHandler_ShouldReturnLanguages()
+    {
+        // Arrange
+        List<Language> expectedLanguages = new()
         {
-            // Arrange
-            List<Language> expectedLanguages = new()
-            {
-                new Language { LanguageId = 1 },
-                new Language { LanguageId = 2 },
-            };
+            new Language { LanguageId = 1 },
+            new Language { LanguageId = 2 },
+        };
 
-            _unitOfWorkMock
-                .Setup(m => m.Languages.GetAllAsync())
-                .ReturnsAsync(expectedLanguages);
+        _unitOfWorkMock
+            .Setup(m => m.Languages.GetAllAsync())
+            .ReturnsAsync(expectedLanguages);
 
-            GetAllLanguagesQuery.Handler handler = new(_unitOfWorkMock.Object, _mapperMock);
+        GetAllLanguagesQuery.Handler handler = new(_unitOfWorkMock.Object, _mapperMock);
 
-            // Act
-            IEnumerable<LanguageResource> languages = await handler.Handle(new GetAllLanguagesQuery());
+        // Act
+        IEnumerable<LanguageResource> languages = await handler.Handle(new GetAllLanguagesQuery());
 
-            // Assert
-            Assert.NotNull(languages);
-            Assert.Equal(2, languages.Count());
-        }
+        // Assert
+        Assert.NotNull(languages);
+        Assert.Equal(2, languages.Count());
     }
 }

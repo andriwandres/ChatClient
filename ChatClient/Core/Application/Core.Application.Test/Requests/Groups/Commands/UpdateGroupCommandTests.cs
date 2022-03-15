@@ -6,42 +6,41 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.Groups.Commands
+namespace Core.Application.Test.Requests.Groups.Commands;
+
+public class UpdateGroupCommandTests
 {
-    public class UpdateGroupCommandTests
+    private readonly Mock<IUnitOfWork> _unitOfWork;
+
+    public UpdateGroupCommandTests()
     {
-        private readonly Mock<IUnitOfWork> _unitOfWork;
+        _unitOfWork = new Mock<IUnitOfWork>();
+    }
 
-        public UpdateGroupCommandTests()
+    [Fact]
+    public async Task UpdateGroupCommandHandler_ShouldUpdateGroup()
+    {
+        // Arrange
+        UpdateGroupCommand request = new()
         {
-            _unitOfWork = new Mock<IUnitOfWork>();
-        }
+            GroupId = 1,
+            Name = "Some updated name",
+            Description = "Some updated description"
+        };
 
-        [Fact]
-        public async Task UpdateGroupCommandHandler_ShouldUpdateGroup()
-        {
-            // Arrange
-            UpdateGroupCommand request = new()
-            {
-                GroupId = 1,
-                Name = "Some updated name",
-                Description = "Some updated description"
-            };
+        Group expectedGroup = new() { GroupId = 1 };
 
-            Group expectedGroup = new() { GroupId = 1 };
+        _unitOfWork
+            .Setup(m => m.Groups.GetByIdAsync(request.GroupId))
+            .ReturnsAsync(expectedGroup);
 
-            _unitOfWork
-                .Setup(m => m.Groups.GetByIdAsync(request.GroupId))
-                .ReturnsAsync(expectedGroup);
+        UpdateGroupCommand.Handler handler = new(_unitOfWork.Object);
 
-            UpdateGroupCommand.Handler handler = new(_unitOfWork.Object);
+        // Act
+        await handler.Handle(request);
 
-            // Act
-            await handler.Handle(request);
-
-            // Assert
-            _unitOfWork.Verify(m => m.Groups.Update(It.IsAny<Group>()), Times.Once);
-            _unitOfWork.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
-        }
+        // Assert
+        _unitOfWork.Verify(m => m.Groups.Update(It.IsAny<Group>()), Times.Once);
+        _unitOfWork.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()), Times.Once);
     }
 }

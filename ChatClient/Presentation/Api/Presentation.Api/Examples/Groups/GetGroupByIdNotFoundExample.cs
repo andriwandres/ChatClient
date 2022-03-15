@@ -2,17 +2,16 @@
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Presentation.Api.Examples.Groups
+namespace Presentation.Api.Examples.Groups;
+
+public class GetGroupByIdNotFoundExample : IExamplesProvider<ErrorResource>
 {
-    public class GetGroupByIdNotFoundExample : IExamplesProvider<ErrorResource>
+    public ErrorResource GetExamples()
     {
-        public ErrorResource GetExamples()
+        return new ErrorResource
         {
-            return new ErrorResource
-            {
-                StatusCode = StatusCodes.Status404NotFound,
-                Message = "Group with ID 'xxx' does not exist"
-            };
-        }
+            StatusCode = StatusCodes.Status404NotFound,
+            Message = "Group with ID 'xxx' does not exist"
+        };
     }
 }

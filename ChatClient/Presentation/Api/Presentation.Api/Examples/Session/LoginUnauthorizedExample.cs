@@ -2,17 +2,16 @@
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Presentation.Api.Examples.Session
+namespace Presentation.Api.Examples.Session;
+
+public class LoginUnauthorizedExample : IExamplesProvider<ErrorResource>
 {
-    public class LoginUnauthorizedExample : IExamplesProvider<ErrorResource>
+    public ErrorResource GetExamples()
     {
-        public ErrorResource GetExamples()
+        return new ErrorResource
         {
-            return new ErrorResource
-            {
-                StatusCode = StatusCodes.Status401Unauthorized,
-                Message = "UserName, e-mail and/or password are incorrect"
-            };
-        }
+            StatusCode = StatusCodes.Status401Unauthorized,
+            Message = "UserName, e-mail and/or password are incorrect"
+        };
     }
 }

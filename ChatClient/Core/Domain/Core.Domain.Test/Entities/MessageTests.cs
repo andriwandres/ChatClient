@@ -1,28 +1,27 @@
 ﻿using Core.Domain.Entities;
 using Xunit;
 
-namespace Core.Domain.Test.Entities
+namespace Core.Domain.Test.Entities;
+
+public class MessageTests
 {
-    public class MessageTests
+    [Fact]
+    public void MessageConstructor_ShouldInitializeReactionsNavigationProperty_WithEmptyCollection()
     {
-        [Fact]
-        public void MessageConstructor_ShouldInitializeReactionsNavigationProperty_WithEmptyCollection()
-        {
-            // Act
-            Message message = new Message();
+        // Act
+        Message message = new Message();
 
-            // Assert
-            Assert.Empty(message.Reactions);
-        }
+        // Assert
+        Assert.Empty(message.Reactions);
+    }
 
-        [Fact]
-        public void MessageConstructor_ShouldInitializeMessageRecipientsNavigationProperty_WithEmptyCollection()
-        {
-            // Act
-            Message message = new Message();
+    [Fact]
+    public void MessageConstructor_ShouldInitializeMessageRecipientsNavigationProperty_WithEmptyCollection()
+    {
+        // Act
+        Message message = new Message();
 
-            // Assert
-            Assert.Empty(message.MessageRecipients);
-        }
+        // Assert
+        Assert.Empty(message.MessageRecipients);
     }
 }

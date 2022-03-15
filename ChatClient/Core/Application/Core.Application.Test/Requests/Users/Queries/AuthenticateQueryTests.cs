@@ -10,100 +10,98 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.Users.Queries
+namespace Core.Application.Test.Requests.Users.Queries;
+
+public class AuthenticateQueryTests
 {
-    public class AuthenticateQueryTests
+    private readonly IMapper _mapperMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<IUserProvider> _userProviderMock;
+    private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
+
+    public AuthenticateQueryTests()
     {
-        private readonly IMapper _mapperMock;
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly Mock<IUserProvider> _userProviderMock;
-        private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _userProviderMock = new Mock<IUserProvider>();
+        _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
 
-        public AuthenticateQueryTests()
+        _userProviderMock
+            .Setup(m => m.GetCurrentUserId())
+            .Returns(1);
+
+        MapperConfiguration mapperConfiguration = new(config =>
         {
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
-            _userProviderMock = new Mock<IUserProvider>();
-            _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+            config.CreateMap<User, AuthenticatedUserResource>();
+        });
 
-            _userProviderMock
-                .Setup(m => m.GetCurrentUserId())
-                .Returns(1);
+        _mapperMock = mapperConfiguration.CreateMapper();
+    }
 
-            MapperConfiguration mapperConfiguration = new(config =>
-            {
-                config.CreateMap<User, AuthenticatedUserResource>();
-            });
+    [Fact]
+    public async Task AuthenticateQueryHandler_ShouldReturnUser_WhenTokenIsValid()
+    {
+        // Arrange
+        const string expectedToken = "some.access.token";
 
-            _mapperMock = mapperConfiguration.CreateMapper();
-        }
-
-        [Fact]
-        public async Task AuthenticateQueryHandler_ShouldReturnUser_WhenTokenIsValid()
+        IHeaderDictionary headers = new HeaderDictionary
         {
-            // Arrange
-            const string expectedToken = "some.access.token";
+            { "Authorization", expectedToken }
+        };
 
-            IHeaderDictionary headers = new HeaderDictionary
-            {
-                { "Authorization", expectedToken }
-            };
+        User expectedUser = new() { UserId = 1 };
 
-            User expectedUser = new() { UserId = 1 };
+        _httpContextAccessorMock
+            .Setup(m => m.HttpContext.Request.Headers)
+            .Returns(headers);
 
-            _httpContextAccessorMock
-                .Setup(m => m.HttpContext.Request.Headers)
-                .Returns(headers);
+        _unitOfWorkMock
+            .Setup(m => m.Users.GetByIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(expectedUser);
 
-            _unitOfWorkMock
-                .Setup(m => m.Users.GetByIdAsync(It.IsAny<int>()))
-                .ReturnsAsync(expectedUser);
+        AuthenticateQuery.Handler handler = 
+            new(_unitOfWorkMock.Object, _mapperMock, _httpContextAccessorMock.Object, _userProviderMock.Object);
 
-            AuthenticateQuery.Handler handler = 
-                new(_unitOfWorkMock.Object, _mapperMock, _httpContextAccessorMock.Object, _userProviderMock.Object);
+        // Act
+        AuthenticatedUserResource user = await handler.Handle(new AuthenticateQuery());
 
-            // Act
-            AuthenticatedUserResource user = await handler.Handle(new AuthenticateQuery());
+        // Assert
+        Assert.NotNull(user);
+        Assert.Equal(1, user.UserId);
+        Assert.Equal(expectedToken, user.Token);
+    }
 
-            // Assert
-            Assert.NotNull(user);
-            Assert.Equal(1, user.UserId);
-            Assert.Equal(expectedToken, user.Token);
-        }
+    [Fact]
+    public async Task AuthenticateQueryHandler_ShouldReturnNull_WhenNameIdentifierClaimIsInvalid()
+    {
+        // Arrange
+        const string expectedToken = "some.access.token";
 
-        [Fact]
-        public async Task AuthenticateQueryHandler_ShouldReturnNull_WhenNameIdentifierClaimIsInvalid()
+        Claim expectedNameIdentifierClaim = new(ClaimTypes.NameIdentifier, "8979");
+
+        IHeaderDictionary headers = new HeaderDictionary
         {
-            // Arrange
-            const string expectedToken = "some.access.token";
+            { "Authorization", expectedToken }
+        };
 
-            Claim expectedNameIdentifierClaim = new(ClaimTypes.NameIdentifier, "8979");
+        _httpContextAccessorMock
+            .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
+            .Returns(expectedNameIdentifierClaim);
 
-            IHeaderDictionary headers = new HeaderDictionary
-            {
-                { "Authorization", expectedToken }
-            };
+        _httpContextAccessorMock
+            .Setup(m => m.HttpContext.Request.Headers)
+            .Returns(headers);
 
-            _httpContextAccessorMock
-                .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
-                .Returns(expectedNameIdentifierClaim);
+        _unitOfWorkMock
+            .Setup(m => m.Users.GetByIdAsync(It.IsAny<int>()))
+            .ReturnsAsync(null as User);
 
-            _httpContextAccessorMock
-                .Setup(m => m.HttpContext.Request.Headers)
-                .Returns(headers);
+        AuthenticateQuery.Handler handler =
+            new(_unitOfWorkMock.Object, _mapperMock, _httpContextAccessorMock.Object, _userProviderMock.Object);
 
-            _unitOfWorkMock
-                .Setup(m => m.Users.GetByIdAsync(It.IsAny<int>()))
-                .ReturnsAsync(null as User);
+        // Act
+        AuthenticatedUserResource user = await handler.Handle(new AuthenticateQuery());
 
-            AuthenticateQuery.Handler handler =
-                new(_unitOfWorkMock.Object, _mapperMock, _httpContextAccessorMock.Object, _userProviderMock.Object);
-
-            // Act
-            AuthenticatedUserResource user = await handler.Handle(new AuthenticateQuery());
-
-            // Assert
-            Assert.Null(user);
-        }
+        // Assert
+        Assert.Null(user);
     }
 }
-

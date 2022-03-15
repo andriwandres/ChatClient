@@ -10,49 +10,48 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.GroupMemberships.Queries
+namespace Core.Application.Test.Requests.GroupMemberships.Queries;
+
+public class GetMembershipsByGroupQueryTests
 {
-    public class GetMembershipsByGroupQueryTests
+    private readonly IMapper _mapperMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+    public GetMembershipsByGroupQueryTests()
     {
-        private readonly IMapper _mapperMock;
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
 
-        public GetMembershipsByGroupQueryTests()
+        MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
         {
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
+            config.CreateMap<GroupMembership, GroupMembershipResource>();
+        });
 
-            MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
-            {
-                config.CreateMap<GroupMembership, GroupMembershipResource>();
-            });
+        _mapperMock = mapperConfiguration.CreateMapper();
+    }
 
-            _mapperMock = mapperConfiguration.CreateMapper();
-        }
+    [Fact]
+    public async Task GetMembershipByGroupQueryHandler_ShouldMemberships()
+    {
+        // Arrange
+        GetMembershipsByGroupQuery request = new GetMembershipsByGroupQuery { GroupId = 1 };
 
-        [Fact]
-        public async Task GetMembershipByGroupQueryHandler_ShouldMemberships()
+        List<GroupMembership> expectedMemberships = new ()
         {
-            // Arrange
-            GetMembershipsByGroupQuery request = new GetMembershipsByGroupQuery { GroupId = 1 };
+            new GroupMembership { GroupMembershipId = 1, GroupId = 1 },
+            new GroupMembership { GroupMembershipId = 2, GroupId = 1 },
+        };
 
-            List<GroupMembership> expectedMemberships = new ()
-            {
-                new GroupMembership { GroupMembershipId = 1, GroupId = 1 },
-                new GroupMembership { GroupMembershipId = 2, GroupId = 1 },
-            };
+        _unitOfWorkMock
+            .Setup(m => m.GroupMemberships.GetByGroup(request.GroupId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(expectedMemberships);
 
-            _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.GetByGroup(request.GroupId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(expectedMemberships);
+        GetMembershipsByGroupQuery.Handler handler = new GetMembershipsByGroupQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
 
-            GetMembershipsByGroupQuery.Handler handler = new GetMembershipsByGroupQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
+        // Act
+        IEnumerable<GroupMembershipResource> actualMemberships = await handler.Handle(request);
 
-            // Act
-            IEnumerable<GroupMembershipResource> actualMemberships = await handler.Handle(request);
-
-            // Assert
-            Assert.NotNull(actualMemberships);
-            Assert.Equal(2, actualMemberships.Count());
-        }
+        // Assert
+        Assert.NotNull(actualMemberships);
+        Assert.Equal(2, actualMemberships.Count());
     }
 }

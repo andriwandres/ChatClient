@@ -8,89 +8,88 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Infrastructure.Persistence.Test.Repositories
+namespace Infrastructure.Persistence.Test.Repositories;
+
+public class LanguageRepositoryTests
 {
-    public class LanguageRepositoryTests
+    private readonly IChatContext _context;
+
+    public LanguageRepositoryTests()
     {
-        private readonly IChatContext _context;
+        _context = TestContextFactory.Create();
+    }
 
-        public LanguageRepositoryTests()
+    [Fact]
+    public async Task GetAll_ShouldReturnAllLanguages()
+    {
+        // Arrange
+        IEnumerable<Language> languages = new []
         {
-            _context = TestContextFactory.Create();
-        }
+            new Language { LanguageId = 1, Code = "EN", Name = "Language.English" },
+            new Language { LanguageId = 2, Code = "DE", Name = "Language.German" },
+            new Language { LanguageId = 3, Code = "FR", Name = "Language.French" },
+        };
 
-        [Fact]
-        public async Task GetAll_ShouldReturnAllLanguages()
+        await _context.Languages.AddRangeAsync(languages);
+        await _context.SaveChangesAsync();
+
+        ILanguageRepository languageRepository = new LanguageRepository(_context);
+
+        // Act
+        IEnumerable<Language> actualLanguages = await languageRepository.GetAllAsync();
+
+        // Assert
+        Assert.NotEmpty(actualLanguages);
+        Assert.Equal(3, actualLanguages.Count());
+    }
+
+    [Fact]
+    public async Task Exists_ShouldReturnTrue_WhenLanguageExists()
+    {
+        // Arrange
+        const int languageId = 1;
+
+        IEnumerable<Language> languages = new[]
         {
-            // Arrange
-            IEnumerable<Language> languages = new []
-            {
-                new Language { LanguageId = 1, Code = "EN", Name = "Language.English" },
-                new Language { LanguageId = 2, Code = "DE", Name = "Language.German" },
-                new Language { LanguageId = 3, Code = "FR", Name = "Language.French" },
-            };
+            new Language { LanguageId = 1, Code = "EN", Name = "Language.English" },
+            new Language { LanguageId = 2, Code = "DE", Name = "Language.German" },
+            new Language { LanguageId = 3, Code = "FR", Name = "Language.French" },
+        };
 
-            await _context.Languages.AddRangeAsync(languages);
-            await _context.SaveChangesAsync();
+        await _context.Languages.AddRangeAsync(languages);
+        await _context.SaveChangesAsync();
 
-            ILanguageRepository languageRepository = new LanguageRepository(_context);
+        ILanguageRepository languageRepository = new LanguageRepository(_context);
 
-            // Act
-            IEnumerable<Language> actualLanguages = await languageRepository.GetAllAsync();
+        // Act
+        bool exists = await languageRepository.Exists(languageId);
 
-            // Assert
-            Assert.NotEmpty(actualLanguages);
-            Assert.Equal(3, actualLanguages.Count());
-        }
+        // Assert
+        Assert.True(exists);
+    }
 
-        [Fact]
-        public async Task Exists_ShouldReturnTrue_WhenLanguageExists()
+    [Fact]
+    public async Task Exists_ShouldReturnFalse_WhenLanguageDoesNotExist()
+    {
+        // Arrange
+        const int languageId = 51;
+
+        IEnumerable<Language> languages = new[]
         {
-            // Arrange
-            const int languageId = 1;
+            new Language { LanguageId = 1, Code = "EN", Name = "Language.English" },
+            new Language { LanguageId = 2, Code = "DE", Name = "Language.German" },
+            new Language { LanguageId = 3, Code = "FR", Name = "Language.French" },
+        };
 
-            IEnumerable<Language> languages = new[]
-            {
-                new Language { LanguageId = 1, Code = "EN", Name = "Language.English" },
-                new Language { LanguageId = 2, Code = "DE", Name = "Language.German" },
-                new Language { LanguageId = 3, Code = "FR", Name = "Language.French" },
-            };
+        await _context.Languages.AddRangeAsync(languages);
+        await _context.SaveChangesAsync();
 
-            await _context.Languages.AddRangeAsync(languages);
-            await _context.SaveChangesAsync();
+        ILanguageRepository languageRepository = new LanguageRepository(_context);
 
-            ILanguageRepository languageRepository = new LanguageRepository(_context);
+        // Act
+        bool exists = await languageRepository.Exists(languageId);
 
-            // Act
-            bool exists = await languageRepository.Exists(languageId);
-
-            // Assert
-            Assert.True(exists);
-        }
-
-        [Fact]
-        public async Task Exists_ShouldReturnFalse_WhenLanguageDoesNotExist()
-        {
-            // Arrange
-            const int languageId = 51;
-
-            IEnumerable<Language> languages = new[]
-            {
-                new Language { LanguageId = 1, Code = "EN", Name = "Language.English" },
-                new Language { LanguageId = 2, Code = "DE", Name = "Language.German" },
-                new Language { LanguageId = 3, Code = "FR", Name = "Language.French" },
-            };
-
-            await _context.Languages.AddRangeAsync(languages);
-            await _context.SaveChangesAsync();
-
-            ILanguageRepository languageRepository = new LanguageRepository(_context);
-
-            // Act
-            bool exists = await languageRepository.Exists(languageId);
-
-            // Assert
-            Assert.False(exists);
-        }
+        // Assert
+        Assert.False(exists);
     }
 }

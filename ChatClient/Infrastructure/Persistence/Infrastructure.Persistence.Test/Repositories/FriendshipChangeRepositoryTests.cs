@@ -9,60 +9,59 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Infrastructure.Persistence.Test.Repositories
+namespace Infrastructure.Persistence.Test.Repositories;
+
+public class FriendshipChangeRepositoryTests
 {
-    public class FriendshipChangeRepositoryTests
+    private readonly IChatContext _context;
+
+    public FriendshipChangeRepositoryTests()
     {
-        private readonly IChatContext _context;
+        _context = TestContextFactory.Create();
+    }
 
-        public FriendshipChangeRepositoryTests()
+    [Fact]
+    public async Task Add_ShouldAddFriendshipChange()
+    {
+        // Arrange
+        FriendshipChange change = new();
+
+        IFriendshipChangeRepository repository = new FriendshipChangeRepository(_context);
+
+        // Act
+        await repository.Add(change);
+
+        // Assert
+        Assert.NotEqual(0, change.FriendshipChangeId);
+        FriendshipChange addedChange = await _context.FriendshipChanges.FindAsync(change.FriendshipChangeId);
+
+        Assert.NotNull(addedChange);
+    }
+
+    [Fact]
+    public async Task GetByFriendship_ShouldGetFriendships()
+    {
+        // Arrange
+        const int friendshipId = 1;
+
+        IEnumerable<FriendshipChange> changes = new[]
         {
-            _context = TestContextFactory.Create();
-        }
+            new FriendshipChange { FriendshipChangeId = 1, FriendshipId = 1 },
+            new FriendshipChange { FriendshipChangeId = 2, FriendshipId = 1 },
+            new FriendshipChange { FriendshipChangeId = 3, FriendshipId = 2 },
+            new FriendshipChange { FriendshipChangeId = 4, FriendshipId = 2 },
+        };
 
-        [Fact]
-        public async Task Add_ShouldAddFriendshipChange()
-        {
-            // Arrange
-            FriendshipChange change = new();
+        await _context.FriendshipChanges.AddRangeAsync(changes);
+        await _context.SaveChangesAsync();
 
-            IFriendshipChangeRepository repository = new FriendshipChangeRepository(_context);
+        IFriendshipChangeRepository repository = new FriendshipChangeRepository(_context);
 
-            // Act
-            await repository.Add(change);
+        // Act
+        IEnumerable<FriendshipChange> actualChanges = await repository.GetByFriendship(friendshipId);
 
-            // Assert
-            Assert.NotEqual(0, change.FriendshipChangeId);
-            FriendshipChange addedChange = await _context.FriendshipChanges.FindAsync(change.FriendshipChangeId);
-
-            Assert.NotNull(addedChange);
-        }
-
-        [Fact]
-        public async Task GetByFriendship_ShouldGetFriendships()
-        {
-            // Arrange
-            const int friendshipId = 1;
-
-            IEnumerable<FriendshipChange> changes = new[]
-            {
-                new FriendshipChange { FriendshipChangeId = 1, FriendshipId = 1 },
-                new FriendshipChange { FriendshipChangeId = 2, FriendshipId = 1 },
-                new FriendshipChange { FriendshipChangeId = 3, FriendshipId = 2 },
-                new FriendshipChange { FriendshipChangeId = 4, FriendshipId = 2 },
-            };
-
-            await _context.FriendshipChanges.AddRangeAsync(changes);
-            await _context.SaveChangesAsync();
-
-            IFriendshipChangeRepository repository = new FriendshipChangeRepository(_context);
-
-            // Act
-            IEnumerable<FriendshipChange> actualChanges = await repository.GetByFriendship(friendshipId);
-
-            // Assert
-            Assert.Equal(2, actualChanges.Count());
-            Assert.All(actualChanges, change => Assert.Equal(friendshipId, change.FriendshipId));
-        }
+        // Assert
+        Assert.Equal(2, actualChanges.Count());
+        Assert.All(actualChanges, change => Assert.Equal(friendshipId, change.FriendshipId));
     }
 }

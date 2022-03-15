@@ -7,28 +7,27 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.GroupMemberships.Queries
+namespace Core.Application.Requests.GroupMemberships.Queries;
+
+public class GetMembershipsByGroupQuery : IRequest<IEnumerable<GroupMembershipResource>>
 {
-    public class GetMembershipsByGroupQuery : IRequest<IEnumerable<GroupMembershipResource>>
+    public int GroupId { get; set; }
+
+    public class Handler : IRequestHandler<GetMembershipsByGroupQuery, IEnumerable<GroupMembershipResource>>
     {
-        public int GroupId { get; set; }
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public class Handler : IRequestHandler<GetMembershipsByGroupQuery, IEnumerable<GroupMembershipResource>>
+        public Handler(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            private readonly IMapper _mapper;
-            private readonly IUnitOfWork _unitOfWork;
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
+        }
 
-            public Handler(IMapper mapper, IUnitOfWork unitOfWork)
-            {
-                _mapper = mapper;
-                _unitOfWork = unitOfWork;
-            }
-
-            public async Task<IEnumerable<GroupMembershipResource>> Handle(GetMembershipsByGroupQuery request, CancellationToken cancellationToken = default)
-            {
-                List<GroupMembership> memberships = await _unitOfWork.GroupMemberships.GetByGroup(request.GroupId, cancellationToken);
-                return _mapper.Map<List<GroupMembership>, List<GroupMembershipResource>>(memberships);
-            }
+        public async Task<IEnumerable<GroupMembershipResource>> Handle(GetMembershipsByGroupQuery request, CancellationToken cancellationToken = default)
+        {
+            List<GroupMembership> memberships = await _unitOfWork.GroupMemberships.GetByGroup(request.GroupId, cancellationToken);
+            return _mapper.Map<List<GroupMembership>, List<GroupMembershipResource>>(memberships);
         }
     }
 }

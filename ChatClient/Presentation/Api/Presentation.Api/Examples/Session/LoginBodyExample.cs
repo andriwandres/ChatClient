@@ -2,35 +2,34 @@
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 
-namespace Presentation.Api.Examples.Session
+namespace Presentation.Api.Examples.Session;
+
+public class LoginBodyExample : IMultipleExamplesProvider<LoginBody>
 {
-    public class LoginBodyExample : IMultipleExamplesProvider<LoginBody>
+    public IEnumerable<SwaggerExample<LoginBody>> GetExamples()
     {
-        public IEnumerable<SwaggerExample<LoginBody>> GetExamples()
+        return new[]
         {
-            return new[]
+            new SwaggerExample<LoginBody>
             {
-                new SwaggerExample<LoginBody>
+                Name = "UserName",
+                Summary = "Log in by user name",
+                Value = new LoginBody
                 {
-                    Name = "UserName",
-                    Summary = "Log in by user name",
-                    Value = new LoginBody
-                    {
-                        UserNameOrEmail = "alfred_miller",
-                        Password = "p4ssw0rd"
-                    }
-                },
-                new SwaggerExample<LoginBody>
+                    UserNameOrEmail = "alfred_miller",
+                    Password = "p4ssw0rd"
+                }
+            },
+            new SwaggerExample<LoginBody>
+            {
+                Name = "Email",
+                Summary = "Log in by email address",
+                Value = new LoginBody
                 {
-                    Name = "Email",
-                    Summary = "Log in by email address",
-                    Value = new LoginBody
-                    {
-                        UserNameOrEmail = "alfred.miller@gmail.com",
-                        Password = "p4ssw0rd"
-                    }
-                },
-            };
-        }
+                    UserNameOrEmail = "alfred.miller@gmail.com",
+                    Password = "p4ssw0rd"
+                }
+            },
+        };
     }
 }

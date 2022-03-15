@@ -2,19 +2,18 @@
 using Swashbuckle.AspNetCore.Filters;
 using System;
 
-namespace Presentation.Api.Examples.Groups
+namespace Presentation.Api.Examples.Groups;
+
+public class GetGroupByIdOkExample : IExamplesProvider<GroupResource>
 {
-    public class GetGroupByIdOkExample : IExamplesProvider<GroupResource>
+    public GroupResource GetExamples()
     {
-        public GroupResource GetExamples()
+        return new GroupResource
         {
-            return new GroupResource
-            {
-                GroupId = 1,
-                Name = "Saturday night with friends",
-                Description = "This group chat is for planning the upcoming saturday night",
-                Created = new DateTime(2020, 4, 15, 14, 31, 58)
-            };
-        }
+            GroupId = 1,
+            Name = "Saturday night with friends",
+            Description = "This group chat is for planning the upcoming saturday night",
+            Created = new DateTime(2020, 4, 15, 14, 31, 58)
+        };
     }
 }

@@ -2,34 +2,33 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Persistence.Configurations
+namespace Infrastructure.Persistence.Configurations;
+
+public class LanguageConfiguration : IEntityTypeConfiguration<Language>
 {
-    public class LanguageConfiguration : IEntityTypeConfiguration<Language>
+    public void Configure(EntityTypeBuilder<Language> builder)
     {
-        public void Configure(EntityTypeBuilder<Language> builder)
-        {
-            // Keys
-            builder.HasKey(language => language.LanguageId);
+        // Keys
+        builder.HasKey(language => language.LanguageId);
 
-            // Indexes
-            builder.HasIndex(language => language.Code)
-                .IsUnique();
+        // Indexes
+        builder.HasIndex(language => language.Code)
+            .IsUnique();
 
-            // Properties
-            builder.Property(language => language.Code)
-                .IsRequired()
-                .HasMaxLength(2);
+        // Properties
+        builder.Property(language => language.Code)
+            .IsRequired()
+            .HasMaxLength(2);
 
-            builder.Property(language => language.Name)
-                .IsRequired();
+        builder.Property(language => language.Name)
+            .IsRequired();
 
-            // Relationships
-            builder.HasMany(language => language.Translations)
-                .WithOne(translation => translation.Language);
+        // Relationships
+        builder.HasMany(language => language.Translations)
+            .WithOne(translation => translation.Language);
 
-            builder.HasOne(language => language.Country)
-                .WithOne(country => country.Language)
-                .HasForeignKey<Language>(language => language.CountryId);
-        }
+        builder.HasOne(language => language.Country)
+            .WithOne(country => country.Language)
+            .HasForeignKey<Language>(language => language.CountryId);
     }
 }

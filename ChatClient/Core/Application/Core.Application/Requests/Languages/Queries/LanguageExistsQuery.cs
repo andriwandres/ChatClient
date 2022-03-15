@@ -3,25 +3,24 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.Languages.Queries
+namespace Core.Application.Requests.Languages.Queries;
+
+public class LanguageExistsQuery : IRequest<bool>
 {
-    public class LanguageExistsQuery : IRequest<bool>
+    public int LanguageId { get; set; }
+
+    public class Handler : IRequestHandler<LanguageExistsQuery, bool>
     {
-        public int LanguageId { get; set; }
+        private readonly IUnitOfWork _unitOfWork;
 
-        public class Handler : IRequestHandler<LanguageExistsQuery, bool>
+        public Handler(IUnitOfWork unitOfWork)
         {
-            private readonly IUnitOfWork _unitOfWork;
+            _unitOfWork = unitOfWork;
+        }
 
-            public Handler(IUnitOfWork unitOfWork)
-            {
-                _unitOfWork = unitOfWork;
-            }
-
-            public async Task<bool> Handle(LanguageExistsQuery request, CancellationToken cancellationToken = default)
-            {
-                return await _unitOfWork.Languages.Exists(request.LanguageId, cancellationToken);
-            }
+        public async Task<bool> Handle(LanguageExistsQuery request, CancellationToken cancellationToken = default)
+        {
+            return await _unitOfWork.Languages.Exists(request.LanguageId, cancellationToken);
         }
     }
 }

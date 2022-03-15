@@ -5,24 +5,23 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Presentation.Api.Validation.Availability
+namespace Presentation.Api.Validation.Availability;
+
+public class UpdateAvailabilityBodyValidator : AbstractValidator<UpdateAvailabilityBody>
 {
-    public class UpdateAvailabilityBodyValidator : AbstractValidator<UpdateAvailabilityBody>
+    public UpdateAvailabilityBodyValidator()
     {
-        public UpdateAvailabilityBodyValidator()
-        {
-            const string availabilityStatusName = nameof(UpdateAvailabilityBody.AvailabilityStatus);
-            IEnumerable<int> values = Enum
-                .GetValues(typeof(AvailabilityStatus))
-                .Cast<int>();
+        const string availabilityStatusName = nameof(UpdateAvailabilityBody.AvailabilityStatus);
+        IEnumerable<int> values = Enum
+            .GetValues(typeof(AvailabilityStatus))
+            .Cast<int>();
 
-            string valuesString = string.Join(", ", values);
+        string valuesString = string.Join(", ", values);
 
-            RuleFor(body => body.AvailabilityStatus)
-                .NotEmpty()
-                .WithMessage($"'{availabilityStatusName}' must not be empty")
-                .IsInEnum()
-                .WithMessage($"'{availabilityStatusName}' must be one of the following values: {valuesString}");
-        }
+        RuleFor(body => body.AvailabilityStatus)
+            .NotEmpty()
+            .WithMessage($"'{availabilityStatusName}' must not be empty")
+            .IsInEnum()
+            .WithMessage($"'{availabilityStatusName}' must be one of the following values: {valuesString}");
     }
 }

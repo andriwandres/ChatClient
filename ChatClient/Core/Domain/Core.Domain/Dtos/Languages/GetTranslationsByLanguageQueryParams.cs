@@ -1,7 +1,6 @@
-﻿namespace Core.Domain.Dtos.Languages
+﻿namespace Core.Domain.Dtos.Languages;
+
+public class GetTranslationsByLanguageQueryParams
 {
-    public class GetTranslationsByLanguageQueryParams
-    {
-        public string Pattern { get; set; }
-    }
+    public string Pattern { get; set; }
 }

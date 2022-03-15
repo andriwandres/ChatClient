@@ -1,11 +1,10 @@
 ﻿using Core.Domain.Enums;
 
-namespace Core.Domain.Resources.Users
+namespace Core.Domain.Resources.Users;
+
+public class UserProfileResource
 {
-    public class UserProfileResource
-    {
-        public int UserId { get; set; }
-        public string UserName { get; set; }
-        public AvailabilityStatus AvailabilityStatus { get; set; }
-    }
+    public int UserId { get; set; }
+    public string UserName { get; set; }
+    public AvailabilityStatus AvailabilityStatus { get; set; }
 }

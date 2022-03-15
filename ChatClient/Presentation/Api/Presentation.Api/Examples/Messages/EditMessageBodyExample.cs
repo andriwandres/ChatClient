@@ -1,16 +1,15 @@
 ﻿using Core.Domain.Dtos.Messages;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Presentation.Api.Examples.Messages
+namespace Presentation.Api.Examples.Messages;
+
+public class EditMessageBodyExample : IExamplesProvider<EditMessageBody>
 {
-    public class EditMessageBodyExample : IExamplesProvider<EditMessageBody>
+    public EditMessageBody GetExamples()
     {
-        public EditMessageBody GetExamples()
+        return new EditMessageBody
         {
-            return new EditMessageBody
-            {
-                HtmlContent = "<p>Hello World!</p>"
-            };
-        }
+            HtmlContent = "<p>Hello World!</p>"
+        };
     }
 }

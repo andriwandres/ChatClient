@@ -2,27 +2,26 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Persistence.Configurations
+namespace Infrastructure.Persistence.Configurations;
+
+public class EmojiConfiguration : IEntityTypeConfiguration<Emoji>
 {
-    public class EmojiConfiguration : IEntityTypeConfiguration<Emoji>
+    public void Configure(EntityTypeBuilder<Emoji> builder)
     {
-        public void Configure(EntityTypeBuilder<Emoji> builder)
-        {
-            // Keys
-            builder.HasKey(emoji => emoji.EmojiId);
+        // Keys
+        builder.HasKey(emoji => emoji.EmojiId);
 
-            // Properties
-            builder.Property(emoji => emoji.Value)
-                .IsRequired();
+        // Properties
+        builder.Property(emoji => emoji.Value)
+            .IsRequired();
 
-            builder.Property(emoji => emoji.Label)
-                .IsRequired();
+        builder.Property(emoji => emoji.Label)
+            .IsRequired();
 
-            builder.Property(emoji => emoji.Shortcut);
+        builder.Property(emoji => emoji.Shortcut);
 
-            // Relationships
-            builder.HasMany(emoji => emoji.Reactions)
-                .WithOne(reaction => reaction.Emoji);
-        }
+        // Relationships
+        builder.HasMany(emoji => emoji.Reactions)
+            .WithOne(reaction => reaction.Emoji);
     }
 }

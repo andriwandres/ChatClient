@@ -8,161 +8,160 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Infrastructure.Persistence.Test.Repositories
+namespace Infrastructure.Persistence.Test.Repositories;
+
+public class TranslationRepositoryTests
 {
-    public class TranslationRepositoryTests
+    private readonly IChatContext _context;
+    private readonly IEnumerable<Translation> _translations = new[]
     {
-        private readonly IChatContext _context;
-        private readonly IEnumerable<Translation> _translations = new[]
-        {
-            new Translation { TranslationId = 1, LanguageId = 1, Key = "Page.Group.LabelOne", Value = "Label 1" },
-            new Translation { TranslationId = 2, LanguageId = 1, Key = "Page.Group.LabelTwo", Value = "Label 1" },
-            new Translation { TranslationId = 3, LanguageId = 2, Key = "Page.Group.LabelOne", Value = "Text 1" },
-            new Translation { TranslationId = 4, LanguageId = 2, Key = "Page.Group.LabelTwo", Value = "Text 1" },
-        };
+        new Translation { TranslationId = 1, LanguageId = 1, Key = "Page.Group.LabelOne", Value = "Label 1" },
+        new Translation { TranslationId = 2, LanguageId = 1, Key = "Page.Group.LabelTwo", Value = "Label 1" },
+        new Translation { TranslationId = 3, LanguageId = 2, Key = "Page.Group.LabelOne", Value = "Text 1" },
+        new Translation { TranslationId = 4, LanguageId = 2, Key = "Page.Group.LabelTwo", Value = "Text 1" },
+    };
 
-        public TranslationRepositoryTests()
-        {
-            _context = TestContextFactory.Create();
-        }
+    public TranslationRepositoryTests()
+    {
+        _context = TestContextFactory.Create();
+    }
 
-        [Fact]
-        public async Task GetByLanguage_ShouldReturnAllTranslations_InEnglish()
-        {
-            // Arrange
-            const int languageId = 1;
+    [Fact]
+    public async Task GetByLanguage_ShouldReturnAllTranslations_InEnglish()
+    {
+        // Arrange
+        const int languageId = 1;
 
-            await _context.Translations.AddRangeAsync(_translations);
-            await _context.SaveChangesAsync();
+        await _context.Translations.AddRangeAsync(_translations);
+        await _context.SaveChangesAsync();
 
-            ITranslationRepository translationRepository = new TranslationRepository(_context);
+        ITranslationRepository translationRepository = new TranslationRepository(_context);
 
-            // Act
-            IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId);
+        // Act
+        IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId);
 
-            // Assert
-            Assert.NotNull(actualTranslations);
-            Assert.NotEmpty(actualTranslations);
+        // Assert
+        Assert.NotNull(actualTranslations);
+        Assert.NotEmpty(actualTranslations);
 
-            Assert.Equal(2, actualTranslations.Count());
-            Assert.All(actualTranslations, translation => Assert.Equal(1, translation.LanguageId));
-        }
+        Assert.Equal(2, actualTranslations.Count());
+        Assert.All(actualTranslations, translation => Assert.Equal(1, translation.LanguageId));
+    }
 
-        [Fact]
-        public async Task GetByLanguage_ShouldReturnEmptyList_WhenLanguageIdDoesNotExist()
-        {
-            // Arrange
-            const int languageId = 1817;
+    [Fact]
+    public async Task GetByLanguage_ShouldReturnEmptyList_WhenLanguageIdDoesNotExist()
+    {
+        // Arrange
+        const int languageId = 1817;
 
-            await _context.Translations.AddRangeAsync(_translations);
-            await _context.SaveChangesAsync();
+        await _context.Translations.AddRangeAsync(_translations);
+        await _context.SaveChangesAsync();
 
-            ITranslationRepository translationRepository = new TranslationRepository(_context);
+        ITranslationRepository translationRepository = new TranslationRepository(_context);
 
-            // Act
-            IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId);
+        // Act
+        IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId);
 
-            // Assert
-            Assert.Empty(actualTranslations);
-        }
+        // Assert
+        Assert.Empty(actualTranslations);
+    }
 
-        [Fact]
-        public async Task GetByLanguage_ShouldReturnFilteredLanguages_WhenPatternIsProvided()
-        {
-            // Arrange
-            const int languageId = 1;
-            const string pattern = "Page.Group.LabelTwo";
+    [Fact]
+    public async Task GetByLanguage_ShouldReturnFilteredLanguages_WhenPatternIsProvided()
+    {
+        // Arrange
+        const int languageId = 1;
+        const string pattern = "Page.Group.LabelTwo";
 
-            await _context.Translations.AddRangeAsync(_translations);
-            await _context.SaveChangesAsync();
+        await _context.Translations.AddRangeAsync(_translations);
+        await _context.SaveChangesAsync();
 
-            ITranslationRepository translationRepository = new TranslationRepository(_context);
+        ITranslationRepository translationRepository = new TranslationRepository(_context);
 
-            // Act
-            IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId, pattern);
+        // Act
+        IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId, pattern);
 
-            // Assert
-            Assert.NotEmpty(actualTranslations);
-            Assert.Single(actualTranslations);
-        }
+        // Assert
+        Assert.NotEmpty(actualTranslations);
+        Assert.Single(actualTranslations);
+    }
 
-        [Fact]
-        public async Task GetByLanguage_ShouldReturnFilteredLanguages_WhenPatternContainsWildcardAtBeginning()
-        {
-            // Arrange
-            const int languageId = 1;
-            const string pattern = "%LabelTwo";
+    [Fact]
+    public async Task GetByLanguage_ShouldReturnFilteredLanguages_WhenPatternContainsWildcardAtBeginning()
+    {
+        // Arrange
+        const int languageId = 1;
+        const string pattern = "%LabelTwo";
 
-            await _context.Translations.AddRangeAsync(_translations);
-            await _context.SaveChangesAsync();
+        await _context.Translations.AddRangeAsync(_translations);
+        await _context.SaveChangesAsync();
 
-            ITranslationRepository translationRepository = new TranslationRepository(_context);
+        ITranslationRepository translationRepository = new TranslationRepository(_context);
 
-            // Act
-            IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId, pattern);
+        // Act
+        IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId, pattern);
 
-            // Assert
-            Assert.NotEmpty(actualTranslations);
-            Assert.Single(actualTranslations);
-        }
+        // Assert
+        Assert.NotEmpty(actualTranslations);
+        Assert.Single(actualTranslations);
+    }
 
-        [Fact]
-        public async Task GetByLanguage_ShouldReturnFilteredLanguages_WhenPatternContainsWildcardAtTheEnd()
-        {
-            // Arrange
-            const int languageId = 1;
-            const string pattern = "Page.Group.Label%";
+    [Fact]
+    public async Task GetByLanguage_ShouldReturnFilteredLanguages_WhenPatternContainsWildcardAtTheEnd()
+    {
+        // Arrange
+        const int languageId = 1;
+        const string pattern = "Page.Group.Label%";
 
-            await _context.Translations.AddRangeAsync(_translations);
-            await _context.SaveChangesAsync();
+        await _context.Translations.AddRangeAsync(_translations);
+        await _context.SaveChangesAsync();
 
-            ITranslationRepository translationRepository = new TranslationRepository(_context);
+        ITranslationRepository translationRepository = new TranslationRepository(_context);
 
-            // Act
-            IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId, pattern);
+        // Act
+        IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId, pattern);
 
-            // Assert
-            Assert.NotEmpty(actualTranslations);
-            Assert.Equal(2, actualTranslations.Count());
-        }
+        // Assert
+        Assert.NotEmpty(actualTranslations);
+        Assert.Equal(2, actualTranslations.Count());
+    }
 
-        [Fact]
-        public async Task GetByLanguage_ShouldReturnFilteredLanguages_WhenPatternContainsWildcardInBetween()
-        {
-            // Arrange
-            const int languageId = 1;
-            const string pattern = "Page.%.LabelTwo";
+    [Fact]
+    public async Task GetByLanguage_ShouldReturnFilteredLanguages_WhenPatternContainsWildcardInBetween()
+    {
+        // Arrange
+        const int languageId = 1;
+        const string pattern = "Page.%.LabelTwo";
 
-            await _context.Translations.AddRangeAsync(_translations);
-            await _context.SaveChangesAsync();
+        await _context.Translations.AddRangeAsync(_translations);
+        await _context.SaveChangesAsync();
 
-            ITranslationRepository translationRepository = new TranslationRepository(_context);
+        ITranslationRepository translationRepository = new TranslationRepository(_context);
 
-            // Act
-            IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId, pattern);
+        // Act
+        IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId, pattern);
 
-            // Assert
-            Assert.NotEmpty(actualTranslations);
-            Assert.Single(actualTranslations);
-        }
+        // Assert
+        Assert.NotEmpty(actualTranslations);
+        Assert.Single(actualTranslations);
+    }
 
-        [Fact]
-        public async Task GetByLanguage_ShouldReturnEmptyList_WhenPatternDoesNotMatch()
-        {
-            // Arrange
-            const int languageId = 1;
-            const string pattern = "unmatchable_pattern";
+    [Fact]
+    public async Task GetByLanguage_ShouldReturnEmptyList_WhenPatternDoesNotMatch()
+    {
+        // Arrange
+        const int languageId = 1;
+        const string pattern = "unmatchable_pattern";
 
-            await _context.Translations.AddRangeAsync(_translations);
-            await _context.SaveChangesAsync();
+        await _context.Translations.AddRangeAsync(_translations);
+        await _context.SaveChangesAsync();
 
-            ITranslationRepository translationRepository = new TranslationRepository(_context);
+        ITranslationRepository translationRepository = new TranslationRepository(_context);
 
-            // Act
-            IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId, pattern);
+        // Act
+        IEnumerable<Translation> actualTranslations = await translationRepository.GetByLanguage(languageId, pattern);
 
-            // Assert
-            Assert.Empty(actualTranslations);
-        }
+        // Assert
+        Assert.Empty(actualTranslations);
     }
 }

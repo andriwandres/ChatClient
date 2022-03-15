@@ -1,10 +1,9 @@
-﻿namespace Core.Domain.Resources.Languages
+﻿namespace Core.Domain.Resources.Languages;
+
+public class LanguageResource
 {
-    public class LanguageResource
-    {
-        public int LanguageId { get; set; }
-        public string Code { get; set; }
-        public string Name { get; set; }
-        public string CountryFlagImage { get; set; }
-    }
+    public int LanguageId { get; set; }
+    public string Code { get; set; }
+    public string Name { get; set; }
+    public string CountryFlagImage { get; set; }
 }

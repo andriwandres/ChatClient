@@ -5,31 +5,30 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.GroupMemberships.Queries
+namespace Core.Application.Requests.GroupMemberships.Queries;
+
+public class IsOwnMembershipQuery : IRequest<bool>
 {
-    public class IsOwnMembershipQuery : IRequest<bool>
+    public int GroupMembershipId { get; set; }
+
+    public class Handler : IRequestHandler<IsOwnMembershipQuery, bool>
     {
-        public int GroupMembershipId { get; set; }
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IUserProvider _userProvider;
 
-        public class Handler : IRequestHandler<IsOwnMembershipQuery, bool>
+        public Handler(IUnitOfWork unitOfWork, IUserProvider userProvider)
         {
-            private readonly IUnitOfWork _unitOfWork;
-            private readonly IUserProvider _userProvider;
+            _unitOfWork = unitOfWork;
+            _userProvider = userProvider;
+        }
 
-            public Handler(IUnitOfWork unitOfWork, IUserProvider userProvider)
-            {
-                _unitOfWork = unitOfWork;
-                _userProvider = userProvider;
-            }
+        public async Task<bool> Handle(IsOwnMembershipQuery request, CancellationToken cancellationToken = default)
+        {
+            int currentUserId = _userProvider.GetCurrentUserId();
 
-            public async Task<bool> Handle(IsOwnMembershipQuery request, CancellationToken cancellationToken = default)
-            {
-                int currentUserId = _userProvider.GetCurrentUserId();
+            GroupMembership membership = await _unitOfWork.GroupMemberships.GetByIdAsync(request.GroupMembershipId);
 
-                GroupMembership membership = await _unitOfWork.GroupMemberships.GetByIdAsync(request.GroupMembershipId);
-
-                return membership.UserId == currentUserId;
-            }
+            return membership.UserId == currentUserId;
         }
     }
 }

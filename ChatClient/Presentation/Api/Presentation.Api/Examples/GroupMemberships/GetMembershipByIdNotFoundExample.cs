@@ -2,17 +2,16 @@
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Presentation.Api.Examples.GroupMemberships
+namespace Presentation.Api.Examples.GroupMemberships;
+
+public class GetMembershipByIdNotFoundExample : IExamplesProvider<ErrorResource>
 {
-    public class GetMembershipByIdNotFoundExample : IExamplesProvider<ErrorResource>
+    public ErrorResource GetExamples()
     {
-        public ErrorResource GetExamples()
+        return new ErrorResource
         {
-            return new ErrorResource
-            {
-                StatusCode = StatusCodes.Status404NotFound,
-                Message = "Membership with ID 'xxx' does not exist"
-            };
-        }
+            StatusCode = StatusCodes.Status404NotFound,
+            Message = "Membership with ID 'xxx' does not exist"
+        };
     }
 }

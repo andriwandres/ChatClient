@@ -3,10 +3,9 @@ using System.Threading.Tasks;
 using Core.Application.Common;
 using Core.Domain.Entities;
 
-namespace Core.Application.Repositories
+namespace Core.Application.Repositories;
+
+public interface ILanguageRepository : IRepository<Language>
 {
-    public interface ILanguageRepository : IRepository<Language>
-    {
-        Task<bool> Exists(int languageId, CancellationToken cancellationToken = default);
-    }
+    Task<bool> Exists(int languageId, CancellationToken cancellationToken = default);
 }

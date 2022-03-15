@@ -1,17 +1,16 @@
 ﻿using Core.Domain.Dtos.Groups;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Presentation.Api.Examples.Groups
+namespace Presentation.Api.Examples.Groups;
+
+public class UpdateGroupBodyExample : IExamplesProvider<UpdateGroupBody>
 {
-    public class UpdateGroupBodyExample : IExamplesProvider<UpdateGroupBody>
+    public UpdateGroupBody GetExamples()
     {
-        public UpdateGroupBody GetExamples()
+        return new UpdateGroupBody
         {
-            return new UpdateGroupBody
-            {
-                Name = "Saturday night with friends",
-                Description = "This group chat is for planning the upcoming saturday night"
-            };
-        }
+            Name = "Saturday night with friends",
+            Description = "This group chat is for planning the upcoming saturday night"
+        };
     }
 }

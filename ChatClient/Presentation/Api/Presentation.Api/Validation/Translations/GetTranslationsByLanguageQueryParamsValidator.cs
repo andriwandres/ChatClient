@@ -2,16 +2,15 @@
 using FluentValidation;
 using System.Text.RegularExpressions;
 
-namespace Presentation.Api.Validation.Translations
+namespace Presentation.Api.Validation.Translations;
+
+public class GetTranslationsByLanguageQueryParamsValidator : AbstractValidator<GetTranslationsByLanguageQueryParams>
 {
-    public class GetTranslationsByLanguageQueryParamsValidator : AbstractValidator<GetTranslationsByLanguageQueryParams>
+    public GetTranslationsByLanguageQueryParamsValidator()
     {
-        public GetTranslationsByLanguageQueryParamsValidator()
-        {
-            const string patternName = nameof(GetTranslationsByLanguageQueryParams.Pattern);
-            RuleFor(model => model.Pattern)
-                .Matches(new Regex(@"^[A-Za-z0-9.*]+?$"))
-                .WithMessage($"'{patternName}' contains illegal characters. It must only contain alphanumeric characters including punctuation (.) and wildcard characters (*)");
-        }
+        const string patternName = nameof(GetTranslationsByLanguageQueryParams.Pattern);
+        RuleFor(model => model.Pattern)
+            .Matches(new Regex(@"^[A-Za-z0-9.*]+?$"))
+            .WithMessage($"'{patternName}' contains illegal characters. It must only contain alphanumeric characters including punctuation (.) and wildcard characters (*)");
     }
 }
