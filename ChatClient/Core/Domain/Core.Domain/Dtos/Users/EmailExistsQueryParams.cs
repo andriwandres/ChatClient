@@ -1,7 +1,6 @@
-﻿namespace Core.Domain.Dtos.Users
+﻿namespace Core.Domain.Dtos.Users;
+
+public class EmailExistsQueryParams
 {
-    public class EmailExistsQueryParams
-    {
-        public string Email { get; set; }
-    }
+    public string Email { get; set; }
 }

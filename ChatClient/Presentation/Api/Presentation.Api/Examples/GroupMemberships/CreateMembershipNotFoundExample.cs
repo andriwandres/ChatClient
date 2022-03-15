@@ -3,35 +3,34 @@ using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 
-namespace Presentation.Api.Examples.GroupMemberships
+namespace Presentation.Api.Examples.GroupMemberships;
+
+public class CreateMembershipNotFoundExample : IMultipleExamplesProvider<ErrorResource>
 {
-    public class CreateMembershipNotFoundExample : IMultipleExamplesProvider<ErrorResource>
+    public IEnumerable<SwaggerExample<ErrorResource>> GetExamples()
     {
-        public IEnumerable<SwaggerExample<ErrorResource>> GetExamples()
+        return new[]
         {
-            return new[]
+            new SwaggerExample<ErrorResource>
             {
-                new SwaggerExample<ErrorResource>
+                Name = $"UserNotFound",
+                Summary = $"User not found",
+                Value = new ErrorResource
                 {
-                    Name = $"UserNotFound",
-                    Summary = $"User not found",
-                    Value = new ErrorResource
-                    {
-                        StatusCode = StatusCodes.Status404NotFound,
-                        Message = $"User with ID 'xxx' does not exist"
-                    }
-                },
-                new SwaggerExample<ErrorResource>
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = $"User with ID 'xxx' does not exist"
+                }
+            },
+            new SwaggerExample<ErrorResource>
+            {
+                Name = $"GroupNotFound",
+                Summary = $"Group not found",
+                Value = new ErrorResource
                 {
-                    Name = $"GroupNotFound",
-                    Summary = $"Group not found",
-                    Value = new ErrorResource
-                    {
-                        StatusCode = StatusCodes.Status404NotFound,
-                        Message = $"Group with ID 'xxx' does not exist"
-                    }
-                },
-            };
-        }
+                    StatusCode = StatusCodes.Status404NotFound,
+                    Message = $"Group with ID 'xxx' does not exist"
+                }
+            },
+        };
     }
 }

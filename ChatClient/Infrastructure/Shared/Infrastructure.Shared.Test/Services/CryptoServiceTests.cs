@@ -10,204 +10,203 @@ using Core.Domain.Options;
 using Microsoft.Extensions.Options;
 using Xunit;
 
-namespace Infrastructure.Shared.Test.Services
+namespace Infrastructure.Shared.Test.Services;
+
+public class CryptoServiceTests
 {
-    public class CryptoServiceTests
+    [Fact]
+    public void GenerateToken_ShouldGenerateSameToken_GivenTheSamePayload()
     {
-        [Fact]
-        public void GenerateToken_ShouldGenerateSameToken_GivenTheSamePayload()
+        // Arrange
+        DateTime expectedDate = DateTime.UtcNow;
+
+        User user = new User
         {
-            // Arrange
-            DateTime expectedDate = DateTime.UtcNow;
+            UserId = 1,
+            Email = "test@test.test",
+            UserName = "testusername",
+        };
 
-            User user = new User
-            {
-                UserId = 1,
-                Email = "test@test.test",
-                UserName = "testusername",
-            };
-
-            IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions
-            {
-                Secret = "super_secret_string"
-            });
-
-            Mock<IDateProvider> dateProviderMock = new Mock<IDateProvider>();
-            dateProviderMock
-                .Setup(m => m.UtcNow())
-                .Returns(expectedDate);
-
-            ICryptoService cryptoService = new CryptoService(dateProviderMock.Object, jwtOptionsMock);
-
-            // Act
-            string firstToken = cryptoService.GenerateToken(user);
-            string secondToken = cryptoService.GenerateToken(user);
-
-            // Assert
-            Assert.NotNull(firstToken);
-            Assert.NotNull(secondToken);
-
-            // Decode each token and assert on claim values
-            JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
-
-            JwtSecurityToken firstTokenDecoded = tokenHandler.ReadJwtToken(firstToken);
-            JwtSecurityToken secondTokenDecoded = tokenHandler.ReadJwtToken(secondToken);
-
-            string[] claimTypes = { "email", "name", "unique_name" };
-
-            IEnumerable<string> firstTokenClaims = firstTokenDecoded.Claims
-                .Where(claim => claimTypes.Contains(claim.Type))
-                .Select(claim => claim.Value);
-
-            IEnumerable<string> secondTokenClaims = secondTokenDecoded.Claims
-                .Where(claim => claimTypes.Contains(claim.Type))
-                .Select(claim => claim.Value);
-
-            bool isEqual = firstTokenClaims.SequenceEqual(secondTokenClaims);
-
-            Assert.True(isEqual);
-        }
-
-        [Fact]
-        public void GenerateToken_ShouldNotGenerateSameToken_GivenDifferentPayloads()
+        IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions
         {
-            // Arrange
-            IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions
-            {
-                Secret = "super_secret_string"
-            });
+            Secret = "super_secret_string"
+        });
 
-            DateTime expectedDate = DateTime.UtcNow;
+        Mock<IDateProvider> dateProviderMock = new Mock<IDateProvider>();
+        dateProviderMock
+            .Setup(m => m.UtcNow())
+            .Returns(expectedDate);
 
-            User user = new User
-            {
-                UserId = 1,
-                Email = "test@test.test",
-                UserName = "testusername",
-            };
+        ICryptoService cryptoService = new CryptoService(dateProviderMock.Object, jwtOptionsMock);
 
-            Mock<IDateProvider> dateProviderMock = new Mock<IDateProvider>();
-            dateProviderMock
-                .Setup(m => m.UtcNow())
-                .Returns(expectedDate);
+        // Act
+        string firstToken = cryptoService.GenerateToken(user);
+        string secondToken = cryptoService.GenerateToken(user);
 
-            ICryptoService cryptoService = new CryptoService(dateProviderMock.Object, jwtOptionsMock);
+        // Assert
+        Assert.NotNull(firstToken);
+        Assert.NotNull(secondToken);
 
-            // Act
-            string firstToken = cryptoService.GenerateToken(user);
+        // Decode each token and assert on claim values
+        JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
 
-            user.Email = "different@email.address";
+        JwtSecurityToken firstTokenDecoded = tokenHandler.ReadJwtToken(firstToken);
+        JwtSecurityToken secondTokenDecoded = tokenHandler.ReadJwtToken(secondToken);
 
-            string secondToken = cryptoService.GenerateToken(user);
+        string[] claimTypes = { "email", "name", "unique_name" };
 
-            // Assert
-            Assert.NotNull(firstToken);
-            Assert.NotNull(secondToken);
+        IEnumerable<string> firstTokenClaims = firstTokenDecoded.Claims
+            .Where(claim => claimTypes.Contains(claim.Type))
+            .Select(claim => claim.Value);
 
-            Assert.NotEqual(firstToken, secondToken);
-        }
+        IEnumerable<string> secondTokenClaims = secondTokenDecoded.Claims
+            .Where(claim => claimTypes.Contains(claim.Type))
+            .Select(claim => claim.Value);
 
-        [Fact]
-        public void GenerateSalt_ShouldNotGenerateSameSaltTwice()
+        bool isEqual = firstTokenClaims.SequenceEqual(secondTokenClaims);
+
+        Assert.True(isEqual);
+    }
+
+    [Fact]
+    public void GenerateToken_ShouldNotGenerateSameToken_GivenDifferentPayloads()
+    {
+        // Arrange
+        IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions
         {
-            // Arrange
-            IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions());
+            Secret = "super_secret_string"
+        });
 
-            ICryptoService cryptoService = new CryptoService(null, jwtOptionsMock);
+        DateTime expectedDate = DateTime.UtcNow;
 
-            // Act
-            byte[] firstSalt = cryptoService.GenerateSalt();
-            byte[] secondSalt = cryptoService.GenerateSalt();
-
-            // Assert
-            Assert.NotNull(firstSalt);
-            Assert.NotNull(secondSalt);
-
-            Assert.NotEqual(firstSalt, secondSalt);
-        }
-
-        [Fact]
-        public void HashPassword_ShouldGenerateSamePassword_GivenTheSamePayload()
+        User user = new User
         {
-            // Arrange
-            const string password = "str0ngP4ssw0rd!";
-            byte[] salt = new byte[16];
+            UserId = 1,
+            Email = "test@test.test",
+            UserName = "testusername",
+        };
 
-            IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions());
+        Mock<IDateProvider> dateProviderMock = new Mock<IDateProvider>();
+        dateProviderMock
+            .Setup(m => m.UtcNow())
+            .Returns(expectedDate);
 
-            ICryptoService cryptoService = new CryptoService(null, jwtOptionsMock);
+        ICryptoService cryptoService = new CryptoService(dateProviderMock.Object, jwtOptionsMock);
 
-            // Act
-            byte[] firstHash = cryptoService.HashPassword(password, salt);
-            byte[] secondHash = cryptoService.HashPassword(password, salt);
+        // Act
+        string firstToken = cryptoService.GenerateToken(user);
 
-            // Assert
-            Assert.NotNull(firstHash);
-            Assert.NotNull(secondHash);
+        user.Email = "different@email.address";
 
-            Assert.Equal(firstHash, secondHash);
-        }
+        string secondToken = cryptoService.GenerateToken(user);
 
-        [Fact]
-        public void HashPassword_ShouldNotGenerateSamePassword_GivenDifferentPayloads()
-        {
-            // Arrange
-            const string firstPassword = "str0ngP4ssw0rd!";
-            const string secondPassword = "!d1ff3rentP4ssw0rd";
+        // Assert
+        Assert.NotNull(firstToken);
+        Assert.NotNull(secondToken);
 
-            byte[] salt = new byte[16];
+        Assert.NotEqual(firstToken, secondToken);
+    }
 
-            IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions());
+    [Fact]
+    public void GenerateSalt_ShouldNotGenerateSameSaltTwice()
+    {
+        // Arrange
+        IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions());
 
-            ICryptoService cryptoService = new CryptoService(null, jwtOptionsMock);
+        ICryptoService cryptoService = new CryptoService(null, jwtOptionsMock);
 
-            // Act
-            byte[] firstHash = cryptoService.HashPassword(firstPassword, salt);
-            byte[] secondHash = cryptoService.HashPassword(secondPassword, salt);
+        // Act
+        byte[] firstSalt = cryptoService.GenerateSalt();
+        byte[] secondSalt = cryptoService.GenerateSalt();
 
-            // Assert
-            Assert.NotNull(firstHash);
-            Assert.NotNull(secondHash);
+        // Assert
+        Assert.NotNull(firstSalt);
+        Assert.NotNull(secondSalt);
 
-            Assert.NotEqual(firstHash, secondHash);
-        }
+        Assert.NotEqual(firstSalt, secondSalt);
+    }
 
-        [Fact]
-        public void VerifyPassword_ShouldReturnTrue_GivenTheSamePayload()
-        {
-            // Arrange
-            const string password = "str0ngP4ssw0rd!";
-            byte[] salt = new byte[16];
-            byte[] hash = Convert.FromBase64String("2VxiBg7W1G3EQVlOucLRTQKLe0sTEBXt6QZVlfkfokQ=");
+    [Fact]
+    public void HashPassword_ShouldGenerateSamePassword_GivenTheSamePayload()
+    {
+        // Arrange
+        const string password = "str0ngP4ssw0rd!";
+        byte[] salt = new byte[16];
 
-            IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions());
+        IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions());
 
-            ICryptoService cryptoService = new CryptoService(null, jwtOptionsMock);
+        ICryptoService cryptoService = new CryptoService(null, jwtOptionsMock);
 
-            // Act
-            bool result = cryptoService.VerifyPassword(hash, salt, password);
+        // Act
+        byte[] firstHash = cryptoService.HashPassword(password, salt);
+        byte[] secondHash = cryptoService.HashPassword(password, salt);
 
-            // Assert
-            Assert.True(result);
-        }
+        // Assert
+        Assert.NotNull(firstHash);
+        Assert.NotNull(secondHash);
 
-        [Fact]
-        public void VerifyPassword_ShouldReturnFalse_GivenDifferentPayloads()
-        {
-            // Arrange
-            const string password = "wr0ngP4ssw0rd!";
-            byte[] salt = new byte[16];
-            byte[] hash = Convert.FromBase64String("2VxiBg7W1G3EQVlOucLRTQKLe0sTEBXt6QZVlfkfokQ=");
+        Assert.Equal(firstHash, secondHash);
+    }
 
-            IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions());
+    [Fact]
+    public void HashPassword_ShouldNotGenerateSamePassword_GivenDifferentPayloads()
+    {
+        // Arrange
+        const string firstPassword = "str0ngP4ssw0rd!";
+        const string secondPassword = "!d1ff3rentP4ssw0rd";
 
-            ICryptoService cryptoService = new CryptoService(null, jwtOptionsMock);
+        byte[] salt = new byte[16];
 
-            // Act
-            bool result = cryptoService.VerifyPassword(hash, salt, password);
+        IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions());
 
-            // Assert
-            Assert.False(result);
-        }
+        ICryptoService cryptoService = new CryptoService(null, jwtOptionsMock);
+
+        // Act
+        byte[] firstHash = cryptoService.HashPassword(firstPassword, salt);
+        byte[] secondHash = cryptoService.HashPassword(secondPassword, salt);
+
+        // Assert
+        Assert.NotNull(firstHash);
+        Assert.NotNull(secondHash);
+
+        Assert.NotEqual(firstHash, secondHash);
+    }
+
+    [Fact]
+    public void VerifyPassword_ShouldReturnTrue_GivenTheSamePayload()
+    {
+        // Arrange
+        const string password = "str0ngP4ssw0rd!";
+        byte[] salt = new byte[16];
+        byte[] hash = Convert.FromBase64String("2VxiBg7W1G3EQVlOucLRTQKLe0sTEBXt6QZVlfkfokQ=");
+
+        IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions());
+
+        ICryptoService cryptoService = new CryptoService(null, jwtOptionsMock);
+
+        // Act
+        bool result = cryptoService.VerifyPassword(hash, salt, password);
+
+        // Assert
+        Assert.True(result);
+    }
+
+    [Fact]
+    public void VerifyPassword_ShouldReturnFalse_GivenDifferentPayloads()
+    {
+        // Arrange
+        const string password = "wr0ngP4ssw0rd!";
+        byte[] salt = new byte[16];
+        byte[] hash = Convert.FromBase64String("2VxiBg7W1G3EQVlOucLRTQKLe0sTEBXt6QZVlfkfokQ=");
+
+        IOptions<JwtOptions> jwtOptionsMock = Options.Create<JwtOptions>(new JwtOptions());
+
+        ICryptoService cryptoService = new CryptoService(null, jwtOptionsMock);
+
+        // Act
+        bool result = cryptoService.VerifyPassword(hash, salt, password);
+
+        // Assert
+        Assert.False(result);
     }
 }

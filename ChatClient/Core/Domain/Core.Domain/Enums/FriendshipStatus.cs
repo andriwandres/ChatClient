@@ -1,10 +1,9 @@
-﻿namespace Core.Domain.Enums
+﻿namespace Core.Domain.Enums;
+
+public enum FriendshipStatus
 {
-    public enum FriendshipStatus
-    {
-        Pending = 1,
-        Accepted = 2,
-        Ignored = 3,
-        Blocked = 4
-    }
+    Pending = 1,
+    Accepted = 2,
+    Ignored = 3,
+    Blocked = 4
 }

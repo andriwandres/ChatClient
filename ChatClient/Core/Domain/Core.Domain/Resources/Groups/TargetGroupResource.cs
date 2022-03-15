@@ -1,8 +1,7 @@
-﻿namespace Core.Domain.Resources.Groups
+﻿namespace Core.Domain.Resources.Groups;
+
+public class TargetGroupResource
 {
-    public class TargetGroupResource
-    {
-        public int GroupId { get; set; }
-        public string Name { get; set; }
-    }
+    public int GroupId { get; set; }
+    public string Name { get; set; }
 }

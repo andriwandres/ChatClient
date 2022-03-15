@@ -2,31 +2,30 @@
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 
-namespace Presentation.Api.Examples.GroupMemberships
+namespace Presentation.Api.Examples.GroupMemberships;
+
+public class GetMembershipsByGroupOkExample : IExamplesProvider<IEnumerable<GroupMembershipResource>>
 {
-    public class GetMembershipsByGroupOkExample : IExamplesProvider<IEnumerable<GroupMembershipResource>>
+    public IEnumerable<GroupMembershipResource> GetExamples()
     {
-        public IEnumerable<GroupMembershipResource> GetExamples()
+        return new[]
         {
-            return new[]
+            new GroupMembershipResource
             {
-                new GroupMembershipResource
-                {
-                    GroupMembershipId = 1,
-                    GroupId = 1,
-                    UserId = 1,
-                    UserName = "alfred_miller",
-                    IsAdmin = true
-                },
-                new GroupMembershipResource
-                {
-                    GroupMembershipId = 2,
-                    GroupId = 1,
-                    UserId = 2,
-                    UserName = "joseph_bogard",
-                    IsAdmin = false
-                },
-            };
-        }
+                GroupMembershipId = 1,
+                GroupId = 1,
+                UserId = 1,
+                UserName = "alfred_miller",
+                IsAdmin = true
+            },
+            new GroupMembershipResource
+            {
+                GroupMembershipId = 2,
+                GroupId = 1,
+                UserId = 2,
+                UserName = "joseph_bogard",
+                IsAdmin = false
+            },
+        };
     }
 }

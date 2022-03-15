@@ -6,13 +6,12 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Repositories
+namespace Core.Application.Repositories;
+
+public interface IMessageRecipientRepository : IRepository<MessageRecipient>
 {
-    public interface IMessageRecipientRepository : IRepository<MessageRecipient>
-    {
-        Task<List<MessageRecipient>> GetMessagesWithRecipient(int userId, int recipientId, MessageBoundaries boundaries);
-        Task<List<MessageRecipient>> GetLatestGroupedByRecipients(int userId);
-        Task Add(MessageRecipient messageRecipient, CancellationToken cancellationToken = default);
-        Task AddRange(IEnumerable<MessageRecipient> messageRecipients, CancellationToken cancellationToken = default);
-    }
+    Task<List<MessageRecipient>> GetMessagesWithRecipient(int userId, int recipientId, MessageBoundaries boundaries);
+    Task<List<MessageRecipient>> GetLatestGroupedByRecipients(int userId);
+    Task Add(MessageRecipient messageRecipient, CancellationToken cancellationToken = default);
+    Task AddRange(IEnumerable<MessageRecipient> messageRecipients, CancellationToken cancellationToken = default);
 }

@@ -1,9 +1,8 @@
-﻿namespace Core.Domain.Dtos.GroupMemberships
+﻿namespace Core.Domain.Dtos.GroupMemberships;
+
+public class CreateMembershipBody
 {
-    public class CreateMembershipBody
-    {
-        public int UserId { get; set; }
-        public int GroupId { get; set; }
-        public bool IsAdmin { get; set; }
-    }
+    public int UserId { get; set; }
+    public int GroupId { get; set; }
+    public bool IsAdmin { get; set; }
 }

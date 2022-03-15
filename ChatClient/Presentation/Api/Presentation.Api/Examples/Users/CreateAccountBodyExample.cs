@@ -1,18 +1,17 @@
 ﻿using Core.Domain.Dtos.Users;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Presentation.Api.Examples.Users
+namespace Presentation.Api.Examples.Users;
+
+public class CreateAccountBodyExample : IExamplesProvider<CreateAccountBody>
 {
-    public class CreateAccountBodyExample : IExamplesProvider<CreateAccountBody>
+    public CreateAccountBody GetExamples()
     {
-        public CreateAccountBody GetExamples()
+        return new CreateAccountBody
         {
-            return new CreateAccountBody
-            {
-                UserName = "alfred_miller",
-                Email = "alfred.miller@gmail.com",
-                Password = "p4ssw0rd",
-            };
-        }
+            UserName = "alfred_miller",
+            Email = "alfred.miller@gmail.com",
+            Password = "p4ssw0rd",
+        };
     }
 }

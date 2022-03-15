@@ -2,23 +2,22 @@
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
-namespace Infrastructure.Shared.Services
+namespace Infrastructure.Shared.Services;
+
+public class UserProvider : IUserProvider
 {
-    public class UserProvider : IUserProvider
+    private readonly IHttpContextAccessor _httpContextAccessor;
+
+    public UserProvider(IHttpContextAccessor httpContextAccessor)
     {
-        private readonly IHttpContextAccessor _httpContextAccessor;
-
-        public UserProvider(IHttpContextAccessor httpContextAccessor)
-        {
-            _httpContextAccessor = httpContextAccessor;
-        }
+        _httpContextAccessor = httpContextAccessor;
+    }
 
 
-        public int GetCurrentUserId()
-        {
-            Claim claim = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
+    public int GetCurrentUserId()
+    {
+        Claim claim = _httpContextAccessor.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier);
 
-            return int.Parse(claim.Value);
-        }
+        return int.Parse(claim.Value);
     }
 }

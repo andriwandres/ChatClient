@@ -1,17 +1,16 @@
 ﻿using Core.Domain.Dtos.GroupMemberships;
 using Swashbuckle.AspNetCore.Filters;
 
-namespace Presentation.Api.Examples.GroupMemberships
+namespace Presentation.Api.Examples.GroupMemberships;
+
+public class CreateMembershipBodyExample : IExamplesProvider<CreateMembershipBody>
 {
-    public class CreateMembershipBodyExample : IExamplesProvider<CreateMembershipBody>
+    public CreateMembershipBody GetExamples()
     {
-        public CreateMembershipBody GetExamples()
+        return new CreateMembershipBody
         {
-            return new CreateMembershipBody
-            {
-                UserId = 1,
-                GroupId = 1
-            };
-        }
+            UserId = 1,
+            GroupId = 1
+        };
     }
 }

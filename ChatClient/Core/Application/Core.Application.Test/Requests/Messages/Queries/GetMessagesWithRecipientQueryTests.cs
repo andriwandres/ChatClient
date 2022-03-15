@@ -12,94 +12,93 @@ using System.Linq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.Messages.Queries
+namespace Core.Application.Test.Requests.Messages.Queries;
+
+public class GetMessagesWithRecipientQueryTests
 {
-    public class GetMessagesWithRecipientQueryTests
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<IUserProvider> _userProviderMock;
+    private readonly IMapper _mapperMock;
+
+    public GetMessagesWithRecipientQueryTests()
     {
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly Mock<IUserProvider> _userProviderMock;
-        private readonly IMapper _mapperMock;
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _userProviderMock = new Mock<IUserProvider>();
+        _userProviderMock
+            .Setup(m => m.GetCurrentUserId())
+            .Returns(1);
 
-        public GetMessagesWithRecipientQueryTests()
+        MapperConfiguration configuration = new MapperConfiguration(config =>
         {
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
-            _userProviderMock = new Mock<IUserProvider>();
-            _userProviderMock
-                .Setup(m => m.GetCurrentUserId())
-                .Returns(1);
+            config.CreateMap<GetMessagesWithRecipientQuery, MessageBoundaries>();
+        });
 
-            MapperConfiguration configuration = new MapperConfiguration(config =>
-            {
-                config.CreateMap<GetMessagesWithRecipientQuery, MessageBoundaries>();
-            });
+        _mapperMock = configuration.CreateMapper();
+    }
 
-            _mapperMock = configuration.CreateMapper();
-        }
+    [Fact]
+    public async Task GetMessagesWithRecipientQueryHandler_ShouldReturnMessages()
+    {
+        // Arrange
+        GetMessagesWithRecipientQuery request = new GetMessagesWithRecipientQuery { RecipientId = 1, Limit = 50, Before = null, After = null };
 
-        [Fact]
-        public async Task GetMessagesWithRecipientQueryHandler_ShouldReturnMessages()
+        List<MessageRecipient> expectedMessageRecipients = new()
         {
-            // Arrange
-            GetMessagesWithRecipientQuery request = new GetMessagesWithRecipientQuery { RecipientId = 1, Limit = 50, Before = null, After = null };
-
-            List<MessageRecipient> expectedMessageRecipients = new()
+            new MessageRecipient
             {
-                new MessageRecipient
+                MessageRecipientId = 1,
+                MessageId = 1,
+                Message = new Message
                 {
-                    MessageRecipientId = 1,
                     MessageId = 1,
-                    Message = new Message
+                    AuthorId = 1,
+                    HtmlContent = "messageContent1",
+                    Created = new DateTime(2020, 2, 8, 15, 0, 0),
+                    Author = new User
                     {
-                        MessageId = 1,
-                        AuthorId = 1,
-                        HtmlContent = "messageContent1",
-                        Created = new DateTime(2020, 2, 8, 15, 0, 0),
-                        Author = new User
-                        {
-                            UserId = 1,
-                            UserName = "someUsername"
-                        },
-                        MessageRecipients = new List<MessageRecipient>
-                        {
-                            new MessageRecipient { IsRead = true },
-                        }
+                        UserId = 1,
+                        UserName = "someUsername"
+                    },
+                    MessageRecipients = new List<MessageRecipient>
+                    {
+                        new MessageRecipient { IsRead = true },
                     }
-                },
-                new MessageRecipient
+                }
+            },
+            new MessageRecipient
+            {
+                MessageRecipientId = 2,
+                MessageId = 2,
+                Message = new Message
                 {
-                    MessageRecipientId = 2,
                     MessageId = 2,
-                    Message = new Message
+                    AuthorId = 2,
+                    HtmlContent = "messageContent2",
+                    Created = new DateTime(2020, 2, 8, 15, 3, 0),
+                    Author = new User
                     {
-                        MessageId = 2,
-                        AuthorId = 2,
-                        HtmlContent = "messageContent2",
-                        Created = new DateTime(2020, 2, 8, 15, 3, 0),
-                        Author = new User
-                        {
-                            UserId = 2,
-                            UserName = "someOtherUsername"
-                        },
-                        MessageRecipients = new List<MessageRecipient>
-                        {
-                            new MessageRecipient { IsRead = true },
-                        }
+                        UserId = 2,
+                        UserName = "someOtherUsername"
+                    },
+                    MessageRecipients = new List<MessageRecipient>
+                    {
+                        new MessageRecipient { IsRead = true },
                     }
-                },
-            };
+                }
+            },
+        };
 
-            _unitOfWorkMock
-                .Setup(m => m.MessageRecipients.GetMessagesWithRecipient(1, request.RecipientId, It.IsAny<MessageBoundaries>()))
-                .ReturnsAsync(expectedMessageRecipients);
+        _unitOfWorkMock
+            .Setup(m => m.MessageRecipients.GetMessagesWithRecipient(1, request.RecipientId, It.IsAny<MessageBoundaries>()))
+            .ReturnsAsync(expectedMessageRecipients);
 
-            GetMessagesWithRecipientQuery.Handler handler = new GetMessagesWithRecipientQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object, _mapperMock);
+        GetMessagesWithRecipientQuery.Handler handler = new GetMessagesWithRecipientQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object, _mapperMock);
 
-            // Act
-            IEnumerable<ChatMessageResource> result = await handler.Handle(request);
+        // Act
+        IEnumerable<ChatMessageResource> result = await handler.Handle(request);
 
-            // Assert
-            Assert.NotNull(result);
-            Assert.Equal(2, result.Count());
-        }
+        // Assert
+        Assert.NotNull(result);
+        Assert.Equal(2, result.Count());
     }
 }

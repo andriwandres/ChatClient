@@ -2,13 +2,12 @@
 using Core.Domain.Entities;
 using Core.Domain.Resources;
 
-namespace Presentation.Api.Mapping
+namespace Presentation.Api.Mapping;
+
+public class CountryMappingProfile : Profile
 {
-    public class CountryMappingProfile : Profile
+    public CountryMappingProfile()
     {
-        public CountryMappingProfile()
-        {
-            CreateMap<Country, CountryResource>();
-        }
+        CreateMap<Country, CountryResource>();
     }
 }

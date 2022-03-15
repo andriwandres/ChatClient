@@ -1,10 +1,9 @@
 ﻿using Core.Domain.Dtos.Messages;
 using System.Threading.Tasks;
 
-namespace Core.Application.Hubs
+namespace Core.Application.Hubs;
+
+public interface IHubClient
 {
-    public interface IHubClient
-    {
-        Task ReceiveMessage(ReceiveMessagePayload payload);
-    }
+    Task ReceiveMessage(ReceiveMessagePayload payload);
 }

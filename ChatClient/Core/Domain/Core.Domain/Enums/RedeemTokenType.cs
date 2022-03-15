@@ -1,8 +1,7 @@
-﻿namespace Core.Domain.Enums
+﻿namespace Core.Domain.Enums;
+
+public enum RedeemTokenType
 {
-    public enum RedeemTokenType
-    {
-        EmailConfirmation = 1,
-        PasswordRecovery = 2,
-    }
+    EmailConfirmation = 1,
+    PasswordRecovery = 2,
 }

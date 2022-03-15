@@ -6,64 +6,63 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.GroupMemberships.Queries
+namespace Core.Application.Test.Requests.GroupMemberships.Queries;
+
+public class CanUpdateMembershipQueryTests
 {
-    public class CanUpdateMembershipQueryTests
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<IUserProvider> _userProviderMock;
+
+    public CanUpdateMembershipQueryTests()
     {
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly Mock<IUserProvider> _userProviderMock;
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _userProviderMock = new Mock<IUserProvider>();
+        _userProviderMock
+            .Setup(m => m.GetCurrentUserId())
+            .Returns(1);
+    }
 
-        public CanUpdateMembershipQueryTests()
+    [Fact]
+    public async Task CanUpdateMembershipQueryHandler_ShouldReturnTrue_WhenUserIsPermitted()
+    {
+        // Arrange
+        CanUpdateMembershipQuery request = new CanUpdateMembershipQuery
         {
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
-            _userProviderMock = new Mock<IUserProvider>();
-            _userProviderMock
-                .Setup(m => m.GetCurrentUserId())
-                .Returns(1);
-        }
+            GroupMembershipIdToUpdate = 1
+        };
 
-        [Fact]
-        public async Task CanUpdateMembershipQueryHandler_ShouldReturnTrue_WhenUserIsPermitted()
+        _unitOfWorkMock
+            .Setup(m => m.GroupMemberships.CanUpdateMembership(1, request.GroupMembershipIdToUpdate, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+
+        CanUpdateMembershipQuery.Handler handler = new CanUpdateMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+
+        // Act
+        bool canUpdate = await handler.Handle(request);
+
+        // Assert
+        Assert.True(canUpdate);
+    }
+
+    [Fact]
+    public async Task CanUpdateMembershipQueryHandler_ShouldReturnFalse_WhenUserIsNotPermitted()
+    {
+        // Arrange
+        CanUpdateMembershipQuery request = new CanUpdateMembershipQuery
         {
-            // Arrange
-            CanUpdateMembershipQuery request = new CanUpdateMembershipQuery
-            {
-                GroupMembershipIdToUpdate = 1
-            };
+            GroupMembershipIdToUpdate = 1
+        };
 
-            _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.CanUpdateMembership(1, request.GroupMembershipIdToUpdate, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
+        _unitOfWorkMock
+            .Setup(m => m.GroupMemberships.CanUpdateMembership(1, request.GroupMembershipIdToUpdate, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
 
-            CanUpdateMembershipQuery.Handler handler = new CanUpdateMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+        CanUpdateMembershipQuery.Handler handler = new CanUpdateMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
-            // Act
-            bool canUpdate = await handler.Handle(request);
+        // Act
+        bool canUpdate = await handler.Handle(request);
 
-            // Assert
-            Assert.True(canUpdate);
-        }
-
-        [Fact]
-        public async Task CanUpdateMembershipQueryHandler_ShouldReturnFalse_WhenUserIsNotPermitted()
-        {
-            // Arrange
-            CanUpdateMembershipQuery request = new CanUpdateMembershipQuery
-            {
-                GroupMembershipIdToUpdate = 1
-            };
-
-            _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.CanUpdateMembership(1, request.GroupMembershipIdToUpdate, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
-
-            CanUpdateMembershipQuery.Handler handler = new CanUpdateMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
-
-            // Act
-            bool canUpdate = await handler.Handle(request);
-
-            // Assert
-            Assert.False(canUpdate);
-        }
+        // Assert
+        Assert.False(canUpdate);
     }
 }

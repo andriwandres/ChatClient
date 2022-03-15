@@ -4,37 +4,36 @@ using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 
-namespace Presentation.Api.Examples.GroupMemberships
-{
-    public class UpdateMembershipBadRequestExample : IMultipleExamplesProvider<ValidationErrorResource>
-    {
-        public IEnumerable<SwaggerExample<ValidationErrorResource>> GetExamples()
-        {
-            const string isAdminName = nameof(UpdateMembershipBody.IsAdmin);
+namespace Presentation.Api.Examples.GroupMemberships;
 
-            return new[]
+public class UpdateMembershipBadRequestExample : IMultipleExamplesProvider<ValidationErrorResource>
+{
+    public IEnumerable<SwaggerExample<ValidationErrorResource>> GetExamples()
+    {
+        const string isAdminName = nameof(UpdateMembershipBody.IsAdmin);
+
+        return new[]
+        {
+            new SwaggerExample<ValidationErrorResource>
             {
-                new SwaggerExample<ValidationErrorResource>
+                Name = $"{isAdminName}Null",
+                Summary = $"'{isAdminName}' is null",
+                Value = new ValidationErrorResource
                 {
-                    Name = $"{isAdminName}Null",
-                    Summary = $"'{isAdminName}' is null",
-                    Value = new ValidationErrorResource
+                    StatusCode = StatusCodes.Status400BadRequest,
+                    Message = "One or multiple validation errors occurred",
+                    Errors = new Dictionary<string, IEnumerable<string>>
                     {
-                        StatusCode = StatusCodes.Status400BadRequest,
-                        Message = "One or multiple validation errors occurred",
-                        Errors = new Dictionary<string, IEnumerable<string>>
                         {
+                            isAdminName,
+                            new[]
                             {
-                                isAdminName,
-                                new[]
-                                {
-                                    $"'{isAdminName}' must not be null"
-                                }
+                                $"'{isAdminName}' must not be null"
                             }
                         }
                     }
                 }
-            };
-        }
+            }
+        };
     }
 }

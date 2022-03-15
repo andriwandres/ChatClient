@@ -5,53 +5,52 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.GroupMemberships.Queries
+namespace Core.Application.Test.Requests.GroupMemberships.Queries;
+
+public class MembershipExistsQueryTests
 {
-    public class MembershipExistsQueryTests
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+    public MembershipExistsQueryTests()
     {
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+    }
 
-        public MembershipExistsQueryTests()
-        {
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
-        }
+    [Fact]
+    public async Task MembershipExistsQuery_ShouldReturnTrue_WhenMembeshipExists()
+    {
+        // Arrange
+        MembershipExistsQuery request = new MembershipExistsQuery {GroupMembershipId = 1};
 
-        [Fact]
-        public async Task MembershipExistsQuery_ShouldReturnTrue_WhenMembeshipExists()
-        {
-            // Arrange
-            MembershipExistsQuery request = new MembershipExistsQuery {GroupMembershipId = 1};
+        _unitOfWorkMock
+            .Setup(m => m.GroupMemberships.Exists(request.GroupMembershipId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
 
-            _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.Exists(request.GroupMembershipId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
+        MembershipExistsQuery.Handler handler = new MembershipExistsQuery.Handler(_unitOfWorkMock.Object);
 
-            MembershipExistsQuery.Handler handler = new MembershipExistsQuery.Handler(_unitOfWorkMock.Object);
+        // Act
+        bool exists = await handler.Handle(request);
 
-            // Act
-            bool exists = await handler.Handle(request);
+        // Assert
+        Assert.True(exists);
+    }
 
-            // Assert
-            Assert.True(exists);
-        }
+    [Fact]
+    public async Task MembershipExistsQuery_ShouldReturnFalse_WhenMembeshipDoesNotExist()
+    {
+        // Arrange
+        MembershipExistsQuery request = new MembershipExistsQuery { GroupMembershipId = 411 };
 
-        [Fact]
-        public async Task MembershipExistsQuery_ShouldReturnFalse_WhenMembeshipDoesNotExist()
-        {
-            // Arrange
-            MembershipExistsQuery request = new MembershipExistsQuery { GroupMembershipId = 411 };
+        _unitOfWorkMock
+            .Setup(m => m.GroupMemberships.Exists(request.GroupMembershipId, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
 
-            _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.Exists(request.GroupMembershipId, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
+        MembershipExistsQuery.Handler handler = new MembershipExistsQuery.Handler(_unitOfWorkMock.Object);
 
-            MembershipExistsQuery.Handler handler = new MembershipExistsQuery.Handler(_unitOfWorkMock.Object);
+        // Act
+        bool exists = await handler.Handle(request);
 
-            // Act
-            bool exists = await handler.Handle(request);
-
-            // Assert
-            Assert.False(exists);
-        }
+        // Assert
+        Assert.False(exists);
     }
 }

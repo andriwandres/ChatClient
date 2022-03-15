@@ -1,10 +1,9 @@
 ﻿using System;
 
-namespace Core.Application.Services
+namespace Core.Application.Services;
+
+public interface IDateProvider
 {
-    public interface IDateProvider
-    {
-        DateTime Now();
-        DateTime UtcNow();
-    }
+    DateTime Now();
+    DateTime UtcNow();
 }

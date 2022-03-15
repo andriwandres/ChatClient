@@ -1,11 +1,10 @@
 ﻿using System;
 
-namespace Core.Domain.Dtos.Messages
+namespace Core.Domain.Dtos.Messages;
+
+public class MessageBoundaries
 {
-    public class MessageBoundaries
-    {
-        public int? Limit { get; set; }
-        public DateTime? Before { get; set; }
-        public DateTime? After { get; set; }
-    }
+    public int? Limit { get; set; }
+    public DateTime? Before { get; set; }
+    public DateTime? After { get; set; }
 }

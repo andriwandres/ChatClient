@@ -4,35 +4,34 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.Messages.Commands
+namespace Core.Application.Requests.Messages.Commands;
+
+public class EditMessageCommand : IRequest
 {
-    public class EditMessageCommand : IRequest
+    public int MessageId { get; set; }
+    public string HtmlContent { get; set; }
+
+    public class Handler : IRequestHandler<EditMessageCommand, Unit>
     {
-        public int MessageId { get; set; }
-        public string HtmlContent { get; set; }
+        private readonly IUnitOfWork _unitOfWork;
 
-        public class Handler : IRequestHandler<EditMessageCommand, Unit>
+        public Handler(IUnitOfWork unitOfWork)
         {
-            private readonly IUnitOfWork _unitOfWork;
+            _unitOfWork = unitOfWork;
+        }
 
-            public Handler(IUnitOfWork unitOfWork)
-            {
-                _unitOfWork = unitOfWork;
-            }
+        public async Task<Unit> Handle(EditMessageCommand request, CancellationToken cancellationToken = default)
+        {
+            Message message = await _unitOfWork.Messages.GetByIdAsync(request.MessageId);
 
-            public async Task<Unit> Handle(EditMessageCommand request, CancellationToken cancellationToken = default)
-            {
-                Message message = await _unitOfWork.Messages.GetByIdAsync(request.MessageId);
+            message.HtmlContent = request.HtmlContent;
+            message.IsEdited = true;
 
-                message.HtmlContent = request.HtmlContent;
-                message.IsEdited = true;
+            _unitOfWork.Messages.Update(message);
 
-                _unitOfWork.Messages.Update(message);
+            await _unitOfWork.CommitAsync(cancellationToken);
 
-                await _unitOfWork.CommitAsync(cancellationToken);
-
-                return Unit.Value;
-            }
+            return Unit.Value;
         }
     }
 }

@@ -2,28 +2,27 @@
 using FluentValidation;
 using System.Text.RegularExpressions;
 
-namespace Presentation.Api.Validation.Users
+namespace Presentation.Api.Validation.Users;
+
+public class AuthenticatedUserResourceValidator : AbstractValidator<AuthenticatedUserResource>
 {
-    public class AuthenticatedUserResourceValidator : AbstractValidator<AuthenticatedUserResource>
+    public AuthenticatedUserResourceValidator()
     {
-        public AuthenticatedUserResourceValidator()
-        {
-            RuleFor(model => model.UserId)
-                .NotEmpty()
-                .GreaterThan(0);
+        RuleFor(model => model.UserId)
+            .NotEmpty()
+            .GreaterThan(0);
 
-            RuleFor(model => model.Token)
-                .NotEmpty()
-                .Matches(new Regex(@"(?:\w+\.){2}\w+"));
+        RuleFor(model => model.Token)
+            .NotEmpty()
+            .Matches(new Regex(@"(?:\w+\.){2}\w+"));
 
-            RuleFor(model => model.Email)
-                .NotEmpty()
-                .EmailAddress();
+        RuleFor(model => model.Email)
+            .NotEmpty()
+            .EmailAddress();
 
-            RuleFor(model => model.UserName)
-                .NotEmpty()
-                .MinimumLength(2)
-                .Matches(new Regex(@"\w{2,}"));
-        }
+        RuleFor(model => model.UserName)
+            .NotEmpty()
+            .MinimumLength(2)
+            .Matches(new Regex(@"\w{2,}"));
     }
 }

@@ -2,37 +2,36 @@
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
 
-namespace Presentation.Api.Examples.Messages
+namespace Presentation.Api.Examples.Messages;
+
+public class SendMessageBodyExample : IMultipleExamplesProvider<SendMessageBody>
 {
-    public class SendMessageBodyExample : IMultipleExamplesProvider<SendMessageBody>
+    public IEnumerable<SwaggerExample<SendMessageBody>> GetExamples()
     {
-        public IEnumerable<SwaggerExample<SendMessageBody>> GetExamples()
+        return new[]
         {
-            return new[]
+            new SwaggerExample<SendMessageBody>
             {
-                new SwaggerExample<SendMessageBody>
+                Name = "SendMessage",
+                Summary = "Send message",
+                Value = new SendMessageBody
                 {
-                    Name = "SendMessage",
-                    Summary = "Send message",
-                    Value = new SendMessageBody
-                    {
-                        RecipientId = 1,
-                        ParentId = null,
-                        HtmlContent = "<p>Hello World!</p>"
-                    }
-                },
-                new SwaggerExample<SendMessageBody>
-                {
-                    Name = "AnswerMessage",
-                    Summary = "Answer message",
-                    Value = new SendMessageBody
-                    {
-                        RecipientId = 1,
-                        ParentId = 1,
-                        HtmlContent = "<p>Hello World!</p>"
-                    }
+                    RecipientId = 1,
+                    ParentId = null,
+                    HtmlContent = "<p>Hello World!</p>"
                 }
-            };
-        }
+            },
+            new SwaggerExample<SendMessageBody>
+            {
+                Name = "AnswerMessage",
+                Summary = "Answer message",
+                Value = new SendMessageBody
+                {
+                    RecipientId = 1,
+                    ParentId = 1,
+                    HtmlContent = "<p>Hello World!</p>"
+                }
+            }
+        };
     }
 }

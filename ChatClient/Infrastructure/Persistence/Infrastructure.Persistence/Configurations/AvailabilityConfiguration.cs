@@ -2,37 +2,36 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Persistence.Configurations
+namespace Infrastructure.Persistence.Configurations;
+
+public class AvailabilityConfiguration : IEntityTypeConfiguration<Availability>
 {
-    public class AvailabilityConfiguration : IEntityTypeConfiguration<Availability>
+    public void Configure(EntityTypeBuilder<Availability> builder)
     {
-        public void Configure(EntityTypeBuilder<Availability> builder)
-        {
-            // Keys
-            builder.HasKey(availability => availability.AvailabilityId);
+        // Keys
+        builder.HasKey(availability => availability.AvailabilityId);
 
-            // Indexes
-            builder.HasIndex(availability => availability.UserId)
-                .IsUnique();
+        // Indexes
+        builder.HasIndex(availability => availability.UserId)
+            .IsUnique();
 
-            // Properties
-            builder.Property(availability => availability.UserId);
+        // Properties
+        builder.Property(availability => availability.UserId);
 
-            builder.Property(availability => availability.Status);
+        builder.Property(availability => availability.Status);
 
-            builder.Property(availability => availability.StatusMessage);
+        builder.Property(availability => availability.StatusMessage);
 
-            builder.Property(availability => availability.Modified)
-                .IsRequired();
+        builder.Property(availability => availability.Modified)
+            .IsRequired();
 
-            builder.Property(availability => availability.ModifiedManually)
-                .IsRequired()
-                .HasDefaultValue(false);
+        builder.Property(availability => availability.ModifiedManually)
+            .IsRequired()
+            .HasDefaultValue(false);
 
-            // Relationships
-            builder.HasOne(availability => availability.User)
-                .WithOne(user => user.Availability)
-                .HasForeignKey<Availability>(availability => availability.UserId);
-        }
+        // Relationships
+        builder.HasOne(availability => availability.User)
+            .WithOne(user => user.Availability)
+            .HasForeignKey<Availability>(availability => availability.UserId);
     }
 }

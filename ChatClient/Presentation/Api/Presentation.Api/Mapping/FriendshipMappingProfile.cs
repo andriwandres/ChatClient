@@ -4,14 +4,13 @@ using Core.Domain.Dtos.Friendships;
 using Core.Domain.Entities;
 using Core.Domain.Resources.Friendships;
 
-namespace Presentation.Api.Mapping
+namespace Presentation.Api.Mapping;
+
+public class FriendshipMappingProfile : Profile
 {
-    public class FriendshipMappingProfile : Profile
+    public FriendshipMappingProfile()
     {
-        public FriendshipMappingProfile()
-        {
-            CreateMap<Friendship, FriendshipResource>();
-            CreateMap<RequestFriendshipBody, RequestFriendshipCommand>();
-        }
+        CreateMap<Friendship, FriendshipResource>();
+        CreateMap<RequestFriendshipBody, RequestFriendshipCommand>();
     }
 }

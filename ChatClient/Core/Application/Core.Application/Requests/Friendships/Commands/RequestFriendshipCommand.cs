@@ -8,52 +8,51 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.Friendships.Commands
+namespace Core.Application.Requests.Friendships.Commands;
+
+public class RequestFriendshipCommand : IRequest<FriendshipResource>
 {
-    public class RequestFriendshipCommand : IRequest<FriendshipResource>
+    public int AddresseeId { get; set; }
+
+    public class Handler : IRequestHandler<RequestFriendshipCommand, FriendshipResource>
     {
-        public int AddresseeId { get; set; }
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IDateProvider _dateProvider;
+        private readonly IUserProvider _userProvider;
 
-        public class Handler : IRequestHandler<RequestFriendshipCommand, FriendshipResource>
+        public Handler(IUserProvider userProvider, IUnitOfWork unitOfWork, IDateProvider dateProvider, IMapper mapper)
         {
-            private readonly IMapper _mapper;
-            private readonly IUnitOfWork _unitOfWork;
-            private readonly IDateProvider _dateProvider;
-            private readonly IUserProvider _userProvider;
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
+            _dateProvider = dateProvider;
+            _userProvider = userProvider;
+        }
 
-            public Handler(IUserProvider userProvider, IUnitOfWork unitOfWork, IDateProvider dateProvider, IMapper mapper)
+        public async Task<FriendshipResource> Handle(RequestFriendshipCommand request, CancellationToken cancellationToken = default)
+        {
+            int userId = _userProvider.GetCurrentUserId();
+
+            Friendship friendship = new Friendship
             {
-                _mapper = mapper;
-                _unitOfWork = unitOfWork;
-                _dateProvider = dateProvider;
-                _userProvider = userProvider;
-            }
+                RequesterId = userId,
+                AddresseeId = request.AddresseeId
+            };
 
-            public async Task<FriendshipResource> Handle(RequestFriendshipCommand request, CancellationToken cancellationToken = default)
+            FriendshipChange change = new FriendshipChange
             {
-                int userId = _userProvider.GetCurrentUserId();
+                Created = _dateProvider.UtcNow(),
+                Status = FriendshipStatus.Pending,
+            };
 
-                Friendship friendship = new Friendship
-                {
-                    RequesterId = userId,
-                    AddresseeId = request.AddresseeId
-                };
-
-                FriendshipChange change = new FriendshipChange
-                {
-                    Created = _dateProvider.UtcNow(),
-                    Status = FriendshipStatus.Pending,
-                };
-
-                friendship.StatusChanges.Add(change);
+            friendship.StatusChanges.Add(change);
                 
-                await _unitOfWork.Friendships.Add(friendship, cancellationToken);
-                await _unitOfWork.CommitAsync(cancellationToken);
+            await _unitOfWork.Friendships.Add(friendship, cancellationToken);
+            await _unitOfWork.CommitAsync(cancellationToken);
 
-                FriendshipResource resource = _mapper.Map<Friendship, FriendshipResource>(friendship);
+            FriendshipResource resource = _mapper.Map<Friendship, FriendshipResource>(friendship);
 
-                return resource;
-            }
+            return resource;
         }
     }
 }

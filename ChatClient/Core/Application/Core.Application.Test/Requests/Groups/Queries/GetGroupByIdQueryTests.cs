@@ -7,64 +7,63 @@ using Moq;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.Groups.Queries
+namespace Core.Application.Test.Requests.Groups.Queries;
+
+public class GetGroupByIdQueryTests
 {
-    public class GetGroupByIdQueryTests
+    private readonly IMapper _mapperMock;
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+
+    public GetGroupByIdQueryTests()
     {
-        private readonly IMapper _mapperMock;
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
 
-        public GetGroupByIdQueryTests()
+        MapperConfiguration mapperConfiguration = new(config =>
         {
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
+            config.CreateMap<Group, GroupResource>();
+        });
 
-            MapperConfiguration mapperConfiguration = new(config =>
-            {
-                config.CreateMap<Group, GroupResource>();
-            });
+        _mapperMock = mapperConfiguration.CreateMapper();
+    }
 
-            _mapperMock = mapperConfiguration.CreateMapper();
-        }
+    [Fact]
+    public async Task GetGroupByIdHandler_ShouldReturnNull_WhenGroupDoesNotExist()
+    {
+        // Arrange
+        GetGroupByIdQuery request = new() {GroupId = 3891};
 
-        [Fact]
-        public async Task GetGroupByIdHandler_ShouldReturnNull_WhenGroupDoesNotExist()
-        {
-            // Arrange
-            GetGroupByIdQuery request = new() {GroupId = 3891};
+        _unitOfWorkMock
+            .Setup(m => m.Groups.GetByIdAsync(request.GroupId))
+            .ReturnsAsync(null as Group);
 
-            _unitOfWorkMock
-                .Setup(m => m.Groups.GetByIdAsync(request.GroupId))
-                .ReturnsAsync(null as Group);
+        GetGroupByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object);
 
-            GetGroupByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object);
+        // Act
+        GroupResource group = await handler.Handle(request);
 
-            // Act
-            GroupResource group = await handler.Handle(request);
+        // Assert
+        Assert.Null(group);
+    }
 
-            // Assert
-            Assert.Null(group);
-        }
+    [Fact]
+    public async Task GetGroupByIdHandler_ShouldReturnGroup_WhenGroupExists()
+    {
+        // Arrange
+        GetGroupByIdQuery request = new() { GroupId = 1 };
 
-        [Fact]
-        public async Task GetGroupByIdHandler_ShouldReturnGroup_WhenGroupExists()
-        {
-            // Arrange
-            GetGroupByIdQuery request = new() { GroupId = 1 };
+        Group expectedGroups = new() { GroupId = 1 };
 
-            Group expectedGroups = new() { GroupId = 1 };
+        _unitOfWorkMock
+            .Setup(m => m.Groups.GetByIdAsync(request.GroupId))
+            .ReturnsAsync(expectedGroups);
 
-            _unitOfWorkMock
-                .Setup(m => m.Groups.GetByIdAsync(request.GroupId))
-                .ReturnsAsync(expectedGroups);
+        GetGroupByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object);
 
-            GetGroupByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object);
+        // Act
+        GroupResource group = await handler.Handle(request);
 
-            // Act
-            GroupResource group = await handler.Handle(request);
-
-            // Assert
-            Assert.NotNull(group);
-            Assert.Equal(request.GroupId, group.GroupId);
-        }
+        // Assert
+        Assert.NotNull(group);
+        Assert.Equal(request.GroupId, group.GroupId);
     }
 }

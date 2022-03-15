@@ -6,29 +6,28 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Core.Application.Requests.Users.Queries
+namespace Core.Application.Requests.Users.Queries;
+
+public class GetUserProfileQuery : IRequest<UserProfileResource>
 {
-    public class GetUserProfileQuery : IRequest<UserProfileResource>
+    public int UserId { get; set; }
+
+    public class Handler : IRequestHandler<GetUserProfileQuery, UserProfileResource>
     {
-        public int UserId { get; set; }
+        private readonly IMapper _mapper;
+        private readonly IUnitOfWork _unitOfWork;
 
-        public class Handler : IRequestHandler<GetUserProfileQuery, UserProfileResource>
+        public Handler(IMapper mapper, IUnitOfWork unitOfWork)
         {
-            private readonly IMapper _mapper;
-            private readonly IUnitOfWork _unitOfWork;
+            _mapper = mapper;
+            _unitOfWork = unitOfWork;
+        }
 
-            public Handler(IMapper mapper, IUnitOfWork unitOfWork)
-            {
-                _mapper = mapper;
-                _unitOfWork = unitOfWork;
-            }
+        public async Task<UserProfileResource> Handle(GetUserProfileQuery request, CancellationToken cancellationToken = default)
+        {
+            User user = await _unitOfWork.Users.GetByIdAsync(request.UserId);
 
-            public async Task<UserProfileResource> Handle(GetUserProfileQuery request, CancellationToken cancellationToken = default)
-            {
-                User user = await _unitOfWork.Users.GetByIdAsync(request.UserId);
-
-                return _mapper.Map<User, UserProfileResource>(user);
-            }
+            return _mapper.Map<User, UserProfileResource>(user);
         }
     }
 }

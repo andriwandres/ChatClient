@@ -6,64 +6,63 @@ using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
 
-namespace Core.Application.Test.Requests.GroupMemberships.Queries
+namespace Core.Application.Test.Requests.GroupMemberships.Queries;
+
+public class CanDeleteMembershipQueryTests
 {
-    public class CanDeleteMembershipQueryTests
+    private readonly Mock<IUnitOfWork> _unitOfWorkMock;
+    private readonly Mock<IUserProvider> _userProviderMock;
+
+    public CanDeleteMembershipQueryTests()
     {
-        private readonly Mock<IUnitOfWork> _unitOfWorkMock;
-        private readonly Mock<IUserProvider> _userProviderMock;
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        _userProviderMock = new Mock<IUserProvider>();
+        _userProviderMock
+            .Setup(m => m.GetCurrentUserId())
+            .Returns(1);
+    }
 
-        public CanDeleteMembershipQueryTests()
+    [Fact]
+    public async Task CanDeleteMembershipQueryHandler_ShouldReturnTrue_WhenUserIsPermitted()
+    {
+        // Arrange
+        CanDeleteMembershipQuery request = new CanDeleteMembershipQuery
         {
-            _unitOfWorkMock = new Mock<IUnitOfWork>();
-            _userProviderMock = new Mock<IUserProvider>();
-            _userProviderMock
-                .Setup(m => m.GetCurrentUserId())
-                .Returns(1);
-        }
+            GroupMembershipIdToDelete = 1
+        };
 
-        [Fact]
-        public async Task CanDeleteMembershipQueryHandler_ShouldReturnTrue_WhenUserIsPermitted()
+        _unitOfWorkMock
+            .Setup(m => m.GroupMemberships.CanDeleteMembership(1, request.GroupMembershipIdToDelete, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(true);
+
+        CanDeleteMembershipQuery.Handler handler = new CanDeleteMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+
+        // Act
+        bool canDelete = await handler.Handle(request);
+
+        // Assert
+        Assert.True(canDelete);
+    }
+
+    [Fact]
+    public async Task CanDeleteMembershipQueryHandler_ShouldReturnFalse_WhenUserIsNotPermitted()
+    {
+        // Arrange
+        CanDeleteMembershipQuery request = new CanDeleteMembershipQuery
         {
-            // Arrange
-            CanDeleteMembershipQuery request = new CanDeleteMembershipQuery
-            {
-                GroupMembershipIdToDelete = 1
-            };
+            GroupMembershipIdToDelete = 1
+        };
 
-            _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.CanDeleteMembership(1, request.GroupMembershipIdToDelete, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(true);
+        _unitOfWorkMock
+            .Setup(m => m.GroupMemberships.CanDeleteMembership(1, request.GroupMembershipIdToDelete, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(false);
 
-            CanDeleteMembershipQuery.Handler handler = new CanDeleteMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
+        CanDeleteMembershipQuery.Handler handler = new CanDeleteMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
-            // Act
-            bool canDelete = await handler.Handle(request);
+        // Act
+        bool canDelete = await handler.Handle(request);
 
-            // Assert
-            Assert.True(canDelete);
-        }
-
-        [Fact]
-        public async Task CanDeleteMembershipQueryHandler_ShouldReturnFalse_WhenUserIsNotPermitted()
-        {
-            // Arrange
-            CanDeleteMembershipQuery request = new CanDeleteMembershipQuery
-            {
-                GroupMembershipIdToDelete = 1
-            };
-
-            _unitOfWorkMock
-                .Setup(m => m.GroupMemberships.CanDeleteMembership(1, request.GroupMembershipIdToDelete, It.IsAny<CancellationToken>()))
-                .ReturnsAsync(false);
-
-            CanDeleteMembershipQuery.Handler handler = new CanDeleteMembershipQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
-
-            // Act
-            bool canDelete = await handler.Handle(request);
-
-            // Assert
-            Assert.False(canDelete);
-        }
+        // Assert
+        Assert.False(canDelete);
     }
 }

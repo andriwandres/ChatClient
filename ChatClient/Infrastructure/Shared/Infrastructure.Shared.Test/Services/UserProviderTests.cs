@@ -4,34 +4,33 @@ using Moq;
 using System.Security.Claims;
 using Xunit;
 
-namespace Infrastructure.Shared.Test.Services
+namespace Infrastructure.Shared.Test.Services;
+
+public class UserProviderTests
 {
-    public class UserProviderTests
+    private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
+
+    public UserProviderTests()
     {
-        private readonly Mock<IHttpContextAccessor> _httpContextAccessorMock;
+        _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
+    }
 
-        public UserProviderTests()
-        {
-            _httpContextAccessorMock = new Mock<IHttpContextAccessor>();
-        }
+    [Fact]
+    public void GetCurrentUserId_ShouldReturnTheCurrentUsersId()
+    {
+        // Arrange
+        const int userId = 1;
 
-        [Fact]
-        public void GetCurrentUserId_ShouldReturnTheCurrentUsersId()
-        {
-            // Arrange
-            const int userId = 1;
+        _httpContextAccessorMock
+            .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
+            .Returns(new Claim(ClaimTypes.NameIdentifier, userId.ToString()));
 
-            _httpContextAccessorMock
-                .Setup(m => m.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier))
-                .Returns(new Claim(ClaimTypes.NameIdentifier, userId.ToString()));
+        UserProvider provider = new UserProvider(_httpContextAccessorMock.Object);
 
-            UserProvider provider = new UserProvider(_httpContextAccessorMock.Object);
+        // Act
+        int actualUserId = provider.GetCurrentUserId();
 
-            // Act
-            int actualUserId = provider.GetCurrentUserId();
-
-            // Assert
-            Assert.Equal(userId, actualUserId);
-        }
+        // Assert
+        Assert.Equal(userId, actualUserId);
     }
 }
