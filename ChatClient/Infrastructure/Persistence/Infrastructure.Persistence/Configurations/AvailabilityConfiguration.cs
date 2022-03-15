@@ -20,6 +20,8 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.Property(availability => availability.Status);
 
+            builder.Property(availability => availability.StatusMessage);
+
             builder.Property(availability => availability.Modified)
                 .IsRequired();
 

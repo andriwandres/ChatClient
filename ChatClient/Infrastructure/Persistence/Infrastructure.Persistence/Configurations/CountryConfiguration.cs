@@ -25,10 +25,6 @@ namespace Infrastructure.Persistence.Configurations
 
             builder.Property(country => country.FlagImage)
                 .IsRequired(false);
-
-            // Relationships
-            builder.HasOne(country => country.Language)
-                .WithOne(language => language.Country);
         }
     }
 }

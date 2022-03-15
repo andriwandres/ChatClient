@@ -9,7 +9,6 @@ namespace Core.Domain.Entities
         public string Name { get; set; }
         public string FlagImage { get; set; }
 
-        public Language Language { get; set; }
         public ICollection<User> Users { get; set; }
 
         public Country()

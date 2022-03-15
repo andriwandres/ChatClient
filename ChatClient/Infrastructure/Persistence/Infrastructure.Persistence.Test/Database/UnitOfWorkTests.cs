@@ -151,22 +151,6 @@ namespace Infrastructure.Persistence.Test.Database
         }
 
         [Fact]
-        public void Languages_ShouldLazyLoadRepository()
-        {
-            // Arrange
-            IUnitOfWork unitOfWork = new UnitOfWork(null);
-
-            // Act
-            ILanguageRepository firstRepository = unitOfWork.Languages;
-            ILanguageRepository secondRepository = unitOfWork.Languages;
-
-            // Assert
-            Assert.NotNull(firstRepository);
-            Assert.NotNull(secondRepository);
-            Assert.Equal(firstRepository, secondRepository);
-        }
-
-        [Fact]
         public void Recipients_ShouldLazyLoadRepository()
         {
             // Arrange
@@ -175,22 +159,6 @@ namespace Infrastructure.Persistence.Test.Database
             // Act
             IRecipientRepository firstRepository = unitOfWork.Recipients;
             IRecipientRepository secondRepository = unitOfWork.Recipients;
-
-            // Assert
-            Assert.NotNull(firstRepository);
-            Assert.NotNull(secondRepository);
-            Assert.Equal(firstRepository, secondRepository);
-        }
-
-        [Fact]
-        public void Translations_ShouldLazyLoadRepository()
-        {
-            // Arrange
-            IUnitOfWork unitOfWork = new UnitOfWork(null);
-
-            // Act
-            ITranslationRepository firstRepository = unitOfWork.Translations;
-            ITranslationRepository secondRepository = unitOfWork.Translations;
 
             // Assert
             Assert.NotNull(firstRepository);
