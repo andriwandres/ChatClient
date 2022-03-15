@@ -11,7 +11,6 @@ namespace Infrastructure.Persistence.Database
         private readonly IChatContext _context;
 
         private AvailabilityRepository _availabilityRepository;
-        private AvailabilityStatusRepository _availabilityStatusRepository;
         private CountryRepository _countryRepository;
         private FriendshipChangeRepository _friendshipChangeRepository;
         private FriendshipRepository _friendshipRepository;
@@ -30,7 +29,6 @@ namespace Infrastructure.Persistence.Database
         }
 
         public IAvailabilityRepository Availabilities => _availabilityRepository ??= new AvailabilityRepository(_context);
-        public IAvailabilityStatusRepository AvailabilityStatuses => _availabilityStatusRepository ??= new AvailabilityStatusRepository(_context);
         public ICountryRepository Countries => _countryRepository ??= new CountryRepository(_context);
         public IFriendshipChangeRepository FriendshipChanges => _friendshipChangeRepository ??= new FriendshipChangeRepository(_context);
         public IFriendshipRepository Friendships => _friendshipRepository ??= new FriendshipRepository(_context);

@@ -2,6 +2,7 @@
 using Core.Application.Requests.Availabilities.Commands;
 using Core.Application.Services;
 using Core.Domain.Entities;
+using Core.Domain.Enums;
 using Moq;
 using System;
 using System.Threading;
@@ -35,7 +36,7 @@ namespace Core.Application.Test.Requests.Availabilities.Commands
         public async Task UpdateAvailabilityCommandHandler_ShouldUpdateAvailabilityStatus()
         {
             // Arrange
-            UpdateAvailabilityCommand request = new() { AvailabilityStatusId = AvailabilityStatusId.Busy };
+            UpdateAvailabilityCommand request = new() { AvailabilityStatus = AvailabilityStatus.Busy };
 
             _unitOfWorkMock
                 .Setup(m => m.Availabilities.GetByUser(1))
@@ -61,7 +62,7 @@ namespace Core.Application.Test.Requests.Availabilities.Commands
             _unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()), Times.AtLeastOnce);
 
             Assert.NotNull(passedAvailability);
-            Assert.Equal(request.AvailabilityStatusId, passedAvailability.StatusId);
+            Assert.Equal(request.AvailabilityStatus, passedAvailability.Status);
         }
     }
 }

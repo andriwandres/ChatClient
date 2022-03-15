@@ -1,9 +1,9 @@
-﻿using Core.Domain.Entities;
+﻿using Core.Domain.Enums;
 
 namespace Core.Domain.Dtos.Availability
 {
     public class UpdateAvailabilityBody
     {
-        public AvailabilityStatusId AvailabilityStatusId { get; set; }
+        public AvailabilityStatus AvailabilityStatus { get; set; }
     }
 }

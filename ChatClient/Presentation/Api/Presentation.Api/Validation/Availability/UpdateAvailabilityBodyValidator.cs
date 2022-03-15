@@ -1,5 +1,5 @@
 ﻿using Core.Domain.Dtos.Availability;
-using Core.Domain.Entities;
+using Core.Domain.Enums;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -11,18 +11,18 @@ namespace Presentation.Api.Validation.Availability
     {
         public UpdateAvailabilityBodyValidator()
         {
-            const string availabilityStatusIdName = nameof(UpdateAvailabilityBody.AvailabilityStatusId);
+            const string availabilityStatusName = nameof(UpdateAvailabilityBody.AvailabilityStatus);
             IEnumerable<int> values = Enum
-                .GetValues(typeof(AvailabilityStatusId))
+                .GetValues(typeof(AvailabilityStatus))
                 .Cast<int>();
 
             string valuesString = string.Join(", ", values);
 
-            RuleFor(body => body.AvailabilityStatusId)
+            RuleFor(body => body.AvailabilityStatus)
                 .NotEmpty()
-                .WithMessage($"'{availabilityStatusIdName}' must not be empty")
+                .WithMessage($"'{availabilityStatusName}' must not be empty")
                 .IsInEnum()
-                .WithMessage($"'{availabilityStatusIdName}' must be one of the following values: {valuesString}");
+                .WithMessage($"'{availabilityStatusName}' must be one of the following values: {valuesString}");
         }
     }
 }

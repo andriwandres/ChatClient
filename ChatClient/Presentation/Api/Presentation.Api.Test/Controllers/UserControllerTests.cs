@@ -6,7 +6,7 @@ using Core.Application.Requests.Users.Commands;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Availability;
 using Core.Domain.Dtos.Users;
-using Core.Domain.Entities;
+using Core.Domain.Enums;
 using Core.Domain.Resources.Errors;
 using Core.Domain.Resources.Friendships;
 using Core.Domain.Resources.Recipients;
@@ -341,7 +341,7 @@ namespace Presentation.Api.Test.Controllers
         [Fact]
         public async Task UpdateAvailability_ShouldUpdateTheUsersAvailabilityStatus()
         {
-            UpdateAvailabilityBody body = new UpdateAvailabilityBody {AvailabilityStatusId = AvailabilityStatusId.Busy};
+            UpdateAvailabilityBody body = new UpdateAvailabilityBody {AvailabilityStatus = AvailabilityStatus.Busy};
 
             // Arrange
             _mediatorMock

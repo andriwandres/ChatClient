@@ -1,5 +1,5 @@
 ﻿using Core.Domain.Dtos.Friendships;
-using Core.Domain.Entities;
+using Core.Domain.Enums;
 using Core.Domain.Resources.Errors;
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Filters;
@@ -13,9 +13,9 @@ namespace Presentation.Api.Examples.Friendships
     {
         public ValidationErrorResource GetExamples()
         {
-            const string friendshipStatusIdName = nameof(UpdateFriendshipStatusBody.FriendshipStatusId);
+            const string friendshipStatusName = nameof(UpdateFriendshipStatusBody.FriendshipStatus);
             IEnumerable<int> values = Enum
-                .GetValues(typeof(FriendshipStatusId))
+                .GetValues(typeof(FriendshipStatus))
                 .Cast<int>();
 
             string valuesString = string.Join(", ", values);
@@ -27,10 +27,10 @@ namespace Presentation.Api.Examples.Friendships
                 Errors = new Dictionary<string, IEnumerable<string>>
                 {
                     {
-                        friendshipStatusIdName,
+                        friendshipStatusName,
                         new[]
                         {
-                            $"'{friendshipStatusIdName}' must be one of the following values: {valuesString}"
+                            $"'{friendshipStatusName}' must be one of the following values: {valuesString}"
                         }
                     }
                 }

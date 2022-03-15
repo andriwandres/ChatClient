@@ -1,4 +1,4 @@
-﻿using Core.Domain.Entities;
+﻿using Core.Domain.Enums;
 using Core.Domain.Resources.AvailabilityStatuses;
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
@@ -13,14 +13,14 @@ namespace Presentation.Api.Examples.AvailabilityStatuses
             {
                 new AvailabilityStatusResource
                 {
-                    AvailabilityStatusId = AvailabilityStatusId.Online,
+                    AvailabilityStatus = AvailabilityStatus.Online,
                     Name = "AvailabilityStatuses.Online",
                     IndicatorColor = "#00CC00",
                     IndicatorOverlay = "check"
                 },
                 new AvailabilityStatusResource
                 {
-                    AvailabilityStatusId = AvailabilityStatusId.Away,
+                    AvailabilityStatus = AvailabilityStatus.Away,
                     Name = "AvailabilityStatuses.Away",
                     IndicatorColor = "#FFBB00",
                     IndicatorOverlay = "remove"

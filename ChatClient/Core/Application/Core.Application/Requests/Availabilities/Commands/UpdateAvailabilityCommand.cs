@@ -2,7 +2,6 @@
 using Core.Application.Services;
 using Core.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,7 +9,7 @@ namespace Core.Application.Requests.Availabilities.Commands
 {
     public class UpdateAvailabilityCommand : IRequest
     {
-        public AvailabilityStatusId AvailabilityStatusId { get; set; }
+        public Domain.Enums.AvailabilityStatus AvailabilityStatus { get; set; }
 
         public class Handler : IRequestHandler<UpdateAvailabilityCommand, Unit>
         {
@@ -31,7 +30,7 @@ namespace Core.Application.Requests.Availabilities.Commands
 
                 Availability availability = await _unitOfWork.Availabilities.GetByUser(userId);
 
-                availability.StatusId = request.AvailabilityStatusId;
+                availability.Status = request.AvailabilityStatus;
                 availability.Modified = _dateProvider.UtcNow();
                 availability.ModifiedManually = true;
 

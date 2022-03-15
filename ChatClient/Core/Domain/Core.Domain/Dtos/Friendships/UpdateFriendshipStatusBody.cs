@@ -1,9 +1,9 @@
-﻿using Core.Domain.Entities;
+﻿using Core.Domain.Enums;
 
 namespace Core.Domain.Dtos.Friendships
 {
     public class UpdateFriendshipStatusBody
     {
-        public FriendshipStatusId FriendshipStatusId { get; set; }
+        public FriendshipStatus FriendshipStatus { get; set; }
     }
 }

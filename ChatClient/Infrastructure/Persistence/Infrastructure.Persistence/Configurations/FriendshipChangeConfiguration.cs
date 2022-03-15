@@ -14,7 +14,7 @@ namespace Infrastructure.Persistence.Configurations
             // Properties
             builder.Property(change => change.FriendshipId);
 
-            builder.Property(change => change.StatusId);
+            builder.Property(change => change.Status);
 
             builder.Property(change => change.Created)
                 .IsRequired();
@@ -23,10 +23,6 @@ namespace Infrastructure.Persistence.Configurations
             builder.HasOne(change => change.Friendship)
                 .WithMany(friendship => friendship.StatusChanges)
                 .HasForeignKey(change => change.FriendshipId);
-
-            builder.HasOne(change => change.Status)
-                .WithMany(status => status.StatusChanges)
-                .HasForeignKey(change => change.StatusId);
         }
     }
 }

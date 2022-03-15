@@ -2,6 +2,7 @@
 using Core.Application.Database;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Entities;
+using Core.Domain.Enums;
 using Core.Domain.Resources.Users;
 using Moq;
 using System.Threading.Tasks;
@@ -35,7 +36,7 @@ namespace Core.Application.Test.Requests.Users.Queries
             User expectedUser = new()
             {
                 UserId = 1,
-                Availability = new Availability { StatusId = AvailabilityStatusId.Online }
+                Availability = new Availability { Status = AvailabilityStatus.Online }
             };
 
             _unitOfWorkMock
