@@ -58,13 +58,13 @@ namespace Core.Application.Test.Requests.Messages.Commands
             };
 
             Recipient databaseRecipient = new()
-                {
+            {
                 RecipientId = request.RecipientId,
                 UserId = 2,
             };
 
             User databaseUser = new()
-                {
+            {
                 UserId = 1,
                 Recipient = new Recipient {RecipientId = 2}
             };
@@ -74,7 +74,7 @@ namespace Core.Application.Test.Requests.Messages.Commands
                 .ReturnsAsync(databaseUser);
 
             _unitOfWorkMock
-                .Setup(m => m.Recipients.GetByIdAsync(2))
+                .Setup(m => m.Recipients.GetByIdIncludingMemberships(2, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(databaseRecipient);
 
             Message passedMessage = null;
@@ -121,7 +121,7 @@ namespace Core.Application.Test.Requests.Messages.Commands
 
             _unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()), Times.AtLeastOnce);
 
-            _hubContextMock.Verify(m => m.Clients.User("1").ReceiveMessage(It.IsAny<ReceiveMessagePayload>()), Times.Once);
+            _hubContextMock.Verify(m => m.Clients.User("2").ReceiveMessage(It.IsAny<ReceiveMessagePayload>()), Times.Once);
 
             Assert.NotNull(result);
             Assert.Equal(1, result.MessageId);
@@ -177,7 +177,7 @@ namespace Core.Application.Test.Requests.Messages.Commands
             };
 
             _unitOfWorkMock
-                .Setup(m => m.Recipients.GetByIdAsync(1))
+                .Setup(m => m.Recipients.GetByIdIncludingMemberships(1, It.IsAny<CancellationToken>()))
                 .ReturnsAsync(databaseRecipient);
 
             _unitOfWorkMock
@@ -224,7 +224,7 @@ namespace Core.Application.Test.Requests.Messages.Commands
 
             _unitOfWorkMock.Verify(m => m.CommitAsync(It.IsAny<CancellationToken>()), Times.AtLeastOnce);
 
-            _hubContextMock.Verify(m => m.Clients.User("1").ReceiveMessage(It.IsAny<ReceiveMessagePayload>()), Times.Exactly(1));
+            _hubContextMock.Verify(m => m.Clients.User("2").ReceiveMessage(It.IsAny<ReceiveMessagePayload>()), Times.Exactly(1));
 
             Assert.NotNull(result);
             Assert.Equal(1, result.MessageId);

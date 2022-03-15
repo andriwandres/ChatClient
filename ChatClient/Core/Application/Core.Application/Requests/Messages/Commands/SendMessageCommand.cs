@@ -177,7 +177,7 @@ namespace Core.Application.Requests.Messages.Commands
             {
                 int currentUserId = _userProvider.GetCurrentUserId();
 
-                User author = await _unitOfWork.Users.GetByIdIncludingRecipient(currentUserId);
+                User author = await _unitOfWork.Users.GetByIdAsync(currentUserId);
 
                 // Map message to a view model
                 ChatMessageResource message = new()
