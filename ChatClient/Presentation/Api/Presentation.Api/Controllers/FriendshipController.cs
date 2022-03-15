@@ -295,7 +295,7 @@ namespace Presentation.Api.Controllers
             UpdateFriendshipStatusCommand updateCommand = new UpdateFriendshipStatusCommand
             {
                 FriendshipId = friendshipId,
-                FriendshipStatusId = model.FriendshipStatusId
+                FriendshipStatus = model.FriendshipStatus
             };
 
             await _mediator.Send(updateCommand, cancellationToken);

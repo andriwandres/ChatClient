@@ -2,6 +2,7 @@
 using Core.Application.Requests.Friendships.Commands;
 using Core.Application.Services;
 using Core.Domain.Entities;
+using Core.Domain.Enums;
 using Moq;
 using System;
 using System.Threading;
@@ -31,7 +32,7 @@ namespace Core.Application.Test.Requests.Friendships.Commands
             UpdateFriendshipStatusCommand request = new UpdateFriendshipStatusCommand
             {
                 FriendshipId = 1,
-                FriendshipStatusId = FriendshipStatusId.Accepted
+                FriendshipStatus = FriendshipStatus.Accepted
             };
 
             _unitOfWorkMock

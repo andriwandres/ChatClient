@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Core.Domain.Enums;
+using System;
 
 namespace Core.Domain.Entities
 {
@@ -6,10 +7,9 @@ namespace Core.Domain.Entities
     {
         public int FriendshipChangeId { get; set; }
         public int FriendshipId { get; set; }
-        public FriendshipStatusId StatusId { get; set; }
+        public FriendshipStatus Status { get; set; }
         public DateTime Created { get; set; }
 
         public Friendship Friendship { get; set; }
-        public FriendshipStatus Status { get; set; }
     }
 }

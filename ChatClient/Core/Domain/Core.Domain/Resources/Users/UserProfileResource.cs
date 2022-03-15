@@ -1,4 +1,4 @@
-﻿using Core.Domain.Entities;
+﻿using Core.Domain.Enums;
 
 namespace Core.Domain.Resources.Users
 {
@@ -6,6 +6,6 @@ namespace Core.Domain.Resources.Users
     {
         public int UserId { get; set; }
         public string UserName { get; set; }
-        public AvailabilityStatusId AvailabilityStatusId { get; set; }
+        public AvailabilityStatus AvailabilityStatus { get; set; }
     }
 }

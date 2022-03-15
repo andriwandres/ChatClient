@@ -14,10 +14,10 @@ namespace Presentation.Api.Mapping
         {
             int userId = default;
             CreateMap<MessageRecipient, RecipientResource>()
-                .ForMember(destination => destination.AvailabilityStatusId, config =>
+                .ForMember(destination => destination.AvailabilityStatus, config =>
                 {
                     config.MapFrom(source =>
-                        source.Recipient.UserId == null ? 0 : source.Recipient.User.Availability.StatusId
+                        source.Recipient.UserId == null ? 0 : source.Recipient.User.Availability.Status
                     );
                 })
                 .ForMember(destination => destination.UnreadMessagesCount, config =>

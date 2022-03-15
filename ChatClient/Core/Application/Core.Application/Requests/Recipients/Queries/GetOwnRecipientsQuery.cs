@@ -73,11 +73,11 @@ namespace Core.Application.Requests.Recipients.Queries
                             IsOwnMessage = source.Message.AuthorId == currentUserId
                         },
 
-                        AvailabilityStatusId = source.Recipient.UserId == null
+                        AvailabilityStatus = source.Recipient.UserId == null
                             ? 0
                             : source.Recipient.UserId == currentUserId
-                                ? source.Message.Author.Availability.StatusId
-                                : source.Recipient.User.Availability.StatusId,
+                                ? source.Message.Author.Availability.Status
+                                : source.Recipient.User.Availability.Status,
 
                         IsPinned = source.Recipient.UserId == currentUserId
                             ? source.Message.Author.Recipient.Pins.Any(pin => pin.UserId == currentUserId)

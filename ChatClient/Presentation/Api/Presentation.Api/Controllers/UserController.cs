@@ -426,7 +426,7 @@ namespace Presentation.Api.Controllers
             }
 
             // Update availability status
-            UpdateAvailabilityCommand updateCommand = new UpdateAvailabilityCommand { AvailabilityStatusId = body.AvailabilityStatusId };
+            UpdateAvailabilityCommand updateCommand = new UpdateAvailabilityCommand { AvailabilityStatus = body.AvailabilityStatus };
 
             await _mediator.Send(updateCommand, cancellationToken);
             

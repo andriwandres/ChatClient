@@ -18,7 +18,7 @@ namespace Infrastructure.Persistence.Configurations
             // Properties
             builder.Property(availability => availability.UserId);
 
-            builder.Property(availability => availability.StatusId);
+            builder.Property(availability => availability.Status);
 
             builder.Property(availability => availability.Modified)
                 .IsRequired();
@@ -28,10 +28,6 @@ namespace Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             // Relationships
-            builder.HasOne(availability => availability.Status)
-                .WithMany(status => status.Availabilities)
-                .HasForeignKey(availability => availability.StatusId);
-
             builder.HasOne(availability => availability.User)
                 .WithOne(user => user.Availability)
                 .HasForeignKey<Availability>(availability => availability.UserId);

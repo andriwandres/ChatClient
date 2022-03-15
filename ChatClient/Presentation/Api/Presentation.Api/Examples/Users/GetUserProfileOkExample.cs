@@ -1,4 +1,4 @@
-﻿using Core.Domain.Entities;
+﻿using Core.Domain.Enums;
 using Core.Domain.Resources.Users;
 using Swashbuckle.AspNetCore.Filters;
 
@@ -12,7 +12,7 @@ namespace Presentation.Api.Examples.Users
             {
                 UserId = 1,
                 UserName = "alfred_miller",
-                AvailabilityStatusId = AvailabilityStatusId.Online
+                AvailabilityStatus = AvailabilityStatus.Online
             };
         }
     }

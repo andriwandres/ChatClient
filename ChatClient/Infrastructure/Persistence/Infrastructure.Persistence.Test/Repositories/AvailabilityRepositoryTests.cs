@@ -1,5 +1,6 @@
 ﻿using Core.Application.Database;
 using Core.Domain.Entities;
+using Core.Domain.Enums;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Persistence.Test.Helpers;
 using System;
@@ -23,7 +24,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                 {
                     AvailabilityId = index,
                     UserId = index,
-                    StatusId = AvailabilityStatusId.Online,
+                    Status = AvailabilityStatus.Online,
                     Modified = DateTime.Now,
                     ModifiedManually = false,
                 });

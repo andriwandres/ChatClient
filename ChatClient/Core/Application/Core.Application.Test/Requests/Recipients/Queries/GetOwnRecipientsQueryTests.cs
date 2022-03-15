@@ -2,6 +2,7 @@
 using Core.Application.Requests.Recipients.Queries;
 using Core.Application.Services;
 using Core.Domain.Entities;
+using Core.Domain.Enums;
 using Core.Domain.Resources.Recipients;
 using Moq;
 using System;
@@ -114,9 +115,9 @@ namespace Core.Application.Test.Requests.Recipients.Queries
             // Assert
             Assert.Equal(3, recipients.Count);
 
-            Assert.Equal(AvailabilityStatusId.Offline, recipients.ElementAt(0).AvailabilityStatusId);
-            Assert.Equal(AvailabilityStatusId.Online, recipients.ElementAt(1).AvailabilityStatusId);
-            Assert.Equal((AvailabilityStatusId) 0, recipients.ElementAt(2).AvailabilityStatusId);
+            Assert.Equal(AvailabilityStatus.Offline, recipients.ElementAt(0).AvailabilityStatus);
+            Assert.Equal(AvailabilityStatus.Online, recipients.ElementAt(1).AvailabilityStatus);
+            Assert.Equal((AvailabilityStatus) 0, recipients.ElementAt(2).AvailabilityStatus);
         }
 
         [Fact]
@@ -184,7 +185,7 @@ namespace Core.Application.Test.Requests.Recipients.Queries
                         },
                         Availability =  new Availability
                         {
-                            StatusId = AvailabilityStatusId.Offline
+                            Status = AvailabilityStatus.Offline
                         }
                     },
                     HtmlContent = "messageContent",
@@ -200,7 +201,7 @@ namespace Core.Application.Test.Requests.Recipients.Queries
                         UserName = "user1",
                         Availability = new Availability
                         {
-                            StatusId = AvailabilityStatusId.Online
+                            Status = AvailabilityStatus.Online
                         }
                     },
                     Pins = new List<PinnedRecipient>
@@ -267,7 +268,7 @@ namespace Core.Application.Test.Requests.Recipients.Queries
                         UserName = "user3",
                         Availability = new Availability
                         {
-                            StatusId = AvailabilityStatusId.Online
+                            Status = AvailabilityStatus.Online
                         }
                     },
                     Pins = new List<PinnedRecipient>

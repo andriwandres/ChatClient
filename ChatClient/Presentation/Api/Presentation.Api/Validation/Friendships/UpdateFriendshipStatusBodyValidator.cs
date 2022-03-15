@@ -1,5 +1,5 @@
 ﻿using Core.Domain.Dtos.Friendships;
-using Core.Domain.Entities;
+using Core.Domain.Enums;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -11,18 +11,18 @@ namespace Presentation.Api.Validation.Friendships
     {
         public UpdateFriendshipStatusBodyValidator()
         {
-            const string friendshipStatusIdName = nameof(UpdateFriendshipStatusBody.FriendshipStatusId);
+            const string friendshipStatusName = nameof(UpdateFriendshipStatusBody.FriendshipStatus);
             IEnumerable<int> values = Enum
-                .GetValues(typeof(FriendshipStatusId))
+                .GetValues(typeof(FriendshipStatus))
                 .Cast<int>();
 
             string valuesString = string.Join(", ", values);
 
-            RuleFor(model => model.FriendshipStatusId)
+            RuleFor(model => model.FriendshipStatus)
                 .NotEmpty()
-                .WithMessage($"'{friendshipStatusIdName}' must be one of the following values: {valuesString}")
+                .WithMessage($"'{friendshipStatusName}' must be one of the following values: {valuesString}")
                 .IsInEnum()
-                .WithMessage($"'{friendshipStatusIdName}' must be one of the following values: {valuesString}");
+                .WithMessage($"'{friendshipStatusName}' must be one of the following values: {valuesString}");
         }
     }
 }

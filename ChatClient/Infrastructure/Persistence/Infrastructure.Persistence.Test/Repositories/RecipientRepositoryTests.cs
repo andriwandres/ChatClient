@@ -1,6 +1,7 @@
 ﻿using Core.Application.Database;
 using Core.Application.Repositories;
 using Core.Domain.Entities;
+using Core.Domain.Enums;
 using Infrastructure.Persistence.Repositories;
 using Infrastructure.Persistence.Test.Helpers;
 using System;
@@ -173,7 +174,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         UserName = "someOtherUsername",
                         Availability = new Availability
                         {
-                            StatusId = AvailabilityStatusId.Online
+                            Status = AvailabilityStatus.Online
                         }
                     },
                     Pins = new List<PinnedRecipient>(),
@@ -210,7 +211,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         UserName = "user1",
                         Availability = new Availability
                         {
-                            StatusId = AvailabilityStatusId.Online
+                            Status = AvailabilityStatus.Online
                         }
                     },
                     Pins = new List<PinnedRecipient>(),
@@ -247,7 +248,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         UserName = "user1",
                         Availability = new Availability
                         {
-                            StatusId = AvailabilityStatusId.Online
+                            Status = AvailabilityStatus.Online
                         }
                     },
                     Pins = new List<PinnedRecipient>(),
@@ -287,7 +288,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         UserName = "user1",
                         Availability = new Availability
                         {
-                            StatusId = AvailabilityStatusId.Online
+                            Status = AvailabilityStatus.Online
                         }
                     },
                     Pins = new List<PinnedRecipient>(),
@@ -324,7 +325,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         UserName = "user3",
                         Availability = new Availability
                         {
-                            StatusId = AvailabilityStatusId.Online
+                            Status = AvailabilityStatus.Online
                         }
                     },
                     Pins = new List<PinnedRecipient>(),
@@ -361,7 +362,7 @@ namespace Infrastructure.Persistence.Test.Repositories
                         UserName = "user3",
                         Availability = new Availability
                         {
-                            StatusId = AvailabilityStatusId.Online
+                            Status = AvailabilityStatus.Online
                         }
                     },
                     Pins = new List<PinnedRecipient>(),
