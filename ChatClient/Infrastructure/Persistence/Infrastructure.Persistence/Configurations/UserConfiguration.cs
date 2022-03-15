@@ -41,9 +41,6 @@ namespace Infrastructure.Persistence.Configurations
                 .HasDefaultValue(false);
 
             // Relationships
-            builder.HasOne(user => user.StatusMessage)
-                .WithOne(statusMessage => statusMessage.User);
-
             builder.HasOne(user => user.Recipient)
                 .WithOne(recipient => recipient.User);
 

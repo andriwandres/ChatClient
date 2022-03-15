@@ -19,7 +19,6 @@ namespace Core.Domain.Entities
         public Recipient Recipient { get; set; }
         public Availability Availability { get; set; }
         public DisplayImage ProfileImage { get; set; }
-        public StatusMessage StatusMessage { get; set; }
 
         public ICollection<RedeemToken> RedeemTokens { get; set; }
         public ICollection<ArchivedRecipient> ArchivedRecipients { get; set; }

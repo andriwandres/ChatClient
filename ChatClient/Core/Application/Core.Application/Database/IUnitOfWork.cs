@@ -13,11 +13,9 @@ namespace Core.Application.Database
         IFriendshipRepository Friendships { get; }
         IGroupMembershipRepository GroupMemberships { get; }
         IGroupRepository Groups { get; }
-        ILanguageRepository Languages { get; }
         IMessageRecipientRepository MessageRecipients { get; }
         IMessageRepository Messages { get; }
         IRecipientRepository Recipients { get; }
-        ITranslationRepository Translations { get; }
         IUserRepository Users { get; }
 
         int Commit();

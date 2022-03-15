@@ -3,9 +3,7 @@ using Presentation.Api.Validation.Errors;
 using Presentation.Api.Validation.Friendships;
 using Presentation.Api.Validation.GroupMemberships;
 using Presentation.Api.Validation.Groups;
-using Presentation.Api.Validation.Languages;
 using Presentation.Api.Validation.Session;
-using Presentation.Api.Validation.Translations;
 using Presentation.Api.Validation.Users;
 using Xunit;
 
@@ -37,14 +35,8 @@ namespace Presentation.Api.Test.Validation
             Assert.NotNull(new UpdateGroupBodyValidator());
             Assert.NotNull(new GroupResourceValidator());
 
-            // Languages
-            Assert.NotNull(new LanguageResourceValidator());
-
             // Session
             Assert.NotNull(new LoginBodyValidator());
-
-            // Translations
-            Assert.NotNull(new GetTranslationsByLanguageQueryParamsValidator());
 
             // Users
             Assert.NotNull(new AuthenticatedUserResourceValidator());
