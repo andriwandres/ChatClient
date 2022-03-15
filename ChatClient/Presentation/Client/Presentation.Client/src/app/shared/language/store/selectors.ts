@@ -4,7 +4,7 @@ import * as languageState from './state';
 
 // Feature selector
 export const selectLanguageFeature =
-  createFeatureSelector<languageState.PartialState, languageState.State>(languageState.LANGUAGE_FEATURE_KEY);
+  createFeatureSelector<languageState.State>(languageState.LANGUAGE_FEATURE_KEY);
 
 // State selectors
 export const selectError = createSelector(
