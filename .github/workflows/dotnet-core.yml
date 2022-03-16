@@ -2,12 +2,12 @@ name: .NET Core
 
 on:
   push:
-    branches: [ master ]
+    branches: [ develop ]
     paths:
       - 'ChatClient/**'
       - '!ChatClient/Presentation/Client/Presentation.Client/**'
   pull_request:
-    branches: [ master ]
+    branches: [ develop ]
     paths:
       - 'ChatClient/**'
       - '!ChatClient/Presentation/Client/Presentation.Client/**'
