@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthFacade } from '@chat-client/shared/auth/store';
+import { AuthFacade } from './shared/store/auth';
 
 @Component({
   selector: 'app-root',

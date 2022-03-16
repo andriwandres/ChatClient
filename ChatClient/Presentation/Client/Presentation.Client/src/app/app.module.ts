@@ -10,7 +10,7 @@ import { AppComponent } from './app.component';
 import { LanguageModule } from './shared/language';
 import { SplashScreenModule } from './shared/splash-screen/splash-screen.module';
 import { TranslationModule } from './shared/translation';
-import { RootStoreModule } from './store/root-store.module';
+import { RootStoreModule } from './shared/store/root-store.module';
 
 @NgModule({
   declarations: [

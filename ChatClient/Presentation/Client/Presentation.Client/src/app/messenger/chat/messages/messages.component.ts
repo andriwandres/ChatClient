@@ -6,8 +6,8 @@ import {
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { RecipientFacade } from '../../sidenav/recipients/store';
-import { MessageFacade } from './store/facade';
+import { MessageFacade } from 'src/app/shared/store/messages';
+import { RecipientFacade } from 'src/app/shared/store/recipients';
 
 @Component({
   selector: 'app-messages',
