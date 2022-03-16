@@ -1,18 +1,28 @@
 
 <!-- Trigger button displaying the current selected language -->
-<button tabindex="0" id="menu-trigger" [matMenuTriggerFor]="menu" *ngIf="selectedLanguage$ | async as language">
-  <span id="language-name">{{ language.name | translate }}</span>
-  <img id="flag" [src]="language.countryFlagImage" height="20px" width="auto"/>
-  <mat-icon>expand_more</mat-icon>
-</button>
+<ng-container *ngrxLet="selectedLanguageIso$ as selectedLanguage">
+  <button tabindex="0" id="menu-trigger" [matMenuTriggerFor]="menu">
+    <span id="language-name">
+      {{ 'Application.Languages.Names.' + selectedLanguage | translate }}
+    </span>
 
-<!-- Menu listing available languages -->
-<mat-menu #menu id="menu" [overlapTrigger]="true" (click)="$event.stopPropagation()">
-  <app-language-item
-    class="language-item"
-    *ngFor="let language of languages$ | async"
-    [language]="language"
-    [isSelected]="language.languageId === (selectedLanguageId$ | async)"
-    (selectLanguage)="selectLanguage(language.languageId)">
-  </app-language-item>
-</mat-menu>
+    <img
+      id="flag"
+      height="auto"
+      width="33px"
+      [src]="'Application.Languages.FlagImages.' + selectedLanguage | translate"
+    />
+    <mat-icon>expand_more</mat-icon>
+  </button>
+
+  <!-- Menu listing available languages -->
+  <mat-menu #menu id="menu" [overlapTrigger]="true" (click)="$event.stopPropagation()" >
+    <app-language-item
+      class="language-item"
+      *ngFor="let language of languages$ | async"
+      [language]="language"
+      [isSelected]="language === selectedLanguage"
+      (selectLanguage)="selectLanguage(language)">
+    </app-language-item>
+  </mat-menu>
+</ng-container>

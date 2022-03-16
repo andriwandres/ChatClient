@@ -1,8 +1,15 @@
 
 <!-- Language item -->
-<div tabindex="0" id="item-container" (click)="selectLanguage.emit()" [class.selected]="isSelected">
-  <span id="language-name">{{ language.name | translate }}</span>
+<div tabindex="0" id="item-container" (click)="onSelectLanguage()" [class.selected]="isSelected">
+  <span id="language-name">
+    {{ 'Application.Languages.Names.' + language | translate }}
+  </span>
 
   <!-- Flag image -->
-  <img id="flag" [src]="language.countryFlagImage" height="20px" width="auto"/>
+  <img
+    id="flag"
+    height="auto"
+    width="33px"
+    [src]="'Application.Languages.FlagImages.' + language | translate"
+  />
 </div>

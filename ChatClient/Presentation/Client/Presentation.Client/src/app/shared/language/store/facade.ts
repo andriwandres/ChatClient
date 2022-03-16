@@ -6,17 +6,12 @@ import { PartialState } from './state';
 
 @Injectable({ providedIn: 'root' })
 export class LanguageFacade {
-  readonly languages$ = this.store.select(languageSelectors.selectAll);
-  readonly selectedLanguage$ = this.store.select(languageSelectors.selectSelectedLanguage);
-  readonly selectedLanguageId$ = this.store.select(languageSelectors.selectSelectedLanguageId);
+  readonly languages$ = this.store.select(languageSelectors.selectAvailableLanguages);
+  readonly selectedLanguageIso$ = this.store.select(languageSelectors.selectSelectedLanguageIso);
 
   constructor(private readonly store: Store<PartialState>) {}
 
-  getLanguages(): void {
-    this.store.dispatch(languageActions.getLanguages());
-  }
-
-  selectLanguage(languageId: number): void {
-    this.store.dispatch(languageActions.selectLanguage({ languageId }));
+  selectLanguage(languageIso: string): void {
+    this.store.dispatch(languageActions.selectLanguage({ languageIso }));
   }
 }

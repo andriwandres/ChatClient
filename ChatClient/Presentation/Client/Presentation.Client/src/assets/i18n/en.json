@@ -1,0 +1,82 @@
+{
+  "Application": {
+    "Title": "ng-messenger",
+
+    "Languages": {
+      "Names": {
+        "en": "English",
+        "de": "German"
+      },
+      "FlagImages": {
+        "en": "https://flagcdn.com/gb.svg",
+        "de": "https://flagcdn.com/de.svg"
+      }
+    }
+  },
+
+  "Home": {
+    "Navigation": {
+      "Features": "Features",
+      "About": "About"
+    },
+    "Landing": {
+      "CallToAction": "Chat now!",
+      "Slogan": {
+        "Part1": "Stay",
+        "Part2": " connected",
+        "Part3": "with "
+      }
+    },
+    "SignIn": {
+      "Heading": "Sign In",
+      "RegistrationRedirect": "Have no account yet?",
+      "ForgotPasswordRedirect": "Forgot your password?",
+      "Submit": "Get Started",
+      "UserNameOrEmail": {
+        "Placeholder": "User name or password"
+      },
+      "Password": {
+        "Placeholder": "Password"
+      }
+    },
+    "CreateAccount": {
+      "Heading": "Create an account",
+      "LoginRedirect": "Already have an account?",
+      "CallToAction": "Continue",
+      "UserName": {
+        "Placeholder": "User name",
+        "ValidationRule": {
+          "Required": "Please provide a user name",
+          "MinLength": "User name must be at least 2 characters long",
+          "Pattern": "User name contains invalid characters",
+          "AlreadyTaken": "User name is already taken"
+        }
+      },
+      "Email": {
+        "Placeholder": "E-Mail",
+        "ValidationRule": {
+          "Required": "Please provide an email adress",
+          "Email": "Email adress contains invalid characters",
+          "AlreadyTaken": "This email adress is already taken by another user"
+        }
+      },
+      "Password": {
+        "Placeholder": "Password",
+        "ValidationRule": {
+          "Required": "Please provide a password",
+          "MinLength": "Password must be at least 8 characters long",
+          "Pattern": "Password must not contain spaces"
+        }
+      },
+      "PasswordConfirm": {
+        "Placeholder": "Confirm password",
+        "ValidationRule": {
+          "Required": "Please provide a password",
+          "MinLength": "Password must be at least 8 characters long",
+          "Pattern": "Password must not contain spaces",
+          "MisMatch": "Passwords do not match"
+        }
+      }
+    }
+  }
+}

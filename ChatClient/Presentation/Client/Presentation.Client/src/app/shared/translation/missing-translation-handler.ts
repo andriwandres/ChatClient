@@ -3,7 +3,7 @@ import { MissingTranslationHandler, MissingTranslationHandlerParams } from '@ngx
 
 @Injectable()
 export class ChatClientMissingTranslationHandler implements MissingTranslationHandler {
-  handle(params: MissingTranslationHandlerParams): string {
-    return ' ';
+  handle(_: MissingTranslationHandlerParams): string {
+    return '';
   }
 }
