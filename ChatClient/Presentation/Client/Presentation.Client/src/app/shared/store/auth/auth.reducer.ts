@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
-import * as authActions from './actions';
-import { AuthActionUnion } from './actions';
-import { initialState, State } from './state';
+import * as authActions from './auth.actions';
+import { AuthActionUnion } from './auth.actions';
+import { initialState, State } from './auth.state';
 
 export function authReducer(state: State | undefined, action: AuthActionUnion): State {
   return reducer(state, action);

@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
-import * as languageActions from './actions';
-import { initialState, State } from './state';
+import * as languageActions from './language.actions';
+import { initialState, State } from './language.state';
 
 const reducer = createReducer(
   initialState,

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
-import * as languageActions from './actions';
-import * as languageSelectors from './selectors';
-import { PartialState } from './state';
+import * as languageActions from './language.actions';
+import * as languageSelectors from './language.selectors';
+import { PartialState } from './language.state';
 
 @Injectable({ providedIn: 'root' })
 export class LanguageFacade {

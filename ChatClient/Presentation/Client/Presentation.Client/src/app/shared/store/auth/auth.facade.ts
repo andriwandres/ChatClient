@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { CreateAccountCredentials, LoginCredentials } from '@chat-client/core/models';
 import { Store } from '@ngrx/store';
-import * as authActions from './actions';
-import * as authSelectors from './selectors';
-import { PartialState } from './state';
+import * as authActions from './auth.actions';
+import * as authSelectors from './auth.selectors';
+import { PartialState } from './auth.state';
 
 @Injectable({ providedIn: 'root' })
 export class AuthFacade {

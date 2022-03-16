@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import * as languageState from './state';
+import * as languageState from './language.state';
 
 // Feature selector
 export const selectLanguageFeature = createFeatureSelector<languageState.State>(languageState.LANGUAGE_FEATURE_KEY);

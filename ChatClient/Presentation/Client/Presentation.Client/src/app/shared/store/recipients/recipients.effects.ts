@@ -5,7 +5,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { RecipientService } from 'src/app/core/services/recipient.service';
-import * as recipientActions from './actions';
+import * as recipientActions from './recipients.actions';
 
 @Injectable()
 export class RecipientEffects {

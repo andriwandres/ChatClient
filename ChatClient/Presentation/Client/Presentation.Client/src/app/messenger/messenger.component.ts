@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { WebSocketFacade } from '../shared/store/messenger/facade';
+import { WebSocketFacade } from '../shared/store/websocket/websocket.facade';
 import { RecipientFacade } from '../shared/store/recipients';
 
 @Component({
