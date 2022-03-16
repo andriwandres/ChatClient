@@ -2,10 +2,10 @@ import { TestBed } from '@angular/core/testing';
 import { ApiError, LoginCredentials, User } from '@chat-client/core/models';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
 import { cold } from 'jasmine-marbles';
-import { AuthFacade } from './facade';
-import * as authSelectors from './selectors';
-import * as authActions from './actions';
-import { PartialState } from './state';
+import { AuthFacade } from './auth.facade';
+import * as authSelectors from './auth.selectors';
+import * as authActions from './auth.actions';
+import { PartialState } from './auth.state';
 import { skip } from 'rxjs/operators';
 
 describe('AuthFacade', () => {

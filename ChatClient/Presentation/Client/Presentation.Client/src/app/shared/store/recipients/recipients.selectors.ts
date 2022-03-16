@@ -1,6 +1,6 @@
 import { Recipient } from '@chat-client/core/models';
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import * as recipientState from './state';
+import * as recipientState from './recipients.state';
 
 // Feature selector
 export const selectRecipientFeature = createFeatureSelector<recipientState.State>(recipientState.RECIPIENTS_FEATURE_KEY);

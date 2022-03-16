@@ -4,7 +4,7 @@ import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, concatMap, exhaustMap, map, switchMap } from 'rxjs/operators';
 import { MessageService } from 'src/app/core/services/message.service';
-import * as messagesActions from './actions';
+import * as messagesActions from './messages.actions';
 
 @Injectable()
 export class MessageEffects {

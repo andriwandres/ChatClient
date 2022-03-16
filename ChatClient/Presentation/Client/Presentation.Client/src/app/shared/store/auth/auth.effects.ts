@@ -6,7 +6,7 @@ import { AuthService } from '@chat-client/core/services';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { of } from 'rxjs';
 import { catchError, map, mergeMap, switchMap, tap } from 'rxjs/operators';
-import * as authActions from './actions';
+import * as authActions from './auth.actions';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SnackBarService } from 'src/app/core/services/snackbar.service';
 

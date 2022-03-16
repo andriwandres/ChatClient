@@ -1,6 +1,6 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { selectRecipientFeature } from 'src/app/shared/store/recipients/selectors';
-import * as messagesState from './state';
+import { selectRecipientFeature } from 'src/app/shared/store/recipients/recipients.selectors';
+import * as messagesState from './messages.state';
 
 export interface SelectMessagesParameter {
   recipientId: number;

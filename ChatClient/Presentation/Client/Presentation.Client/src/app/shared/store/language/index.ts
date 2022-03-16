@@ -1,3 +1,3 @@
-import { LanguageFacade } from './facade';
+import { LanguageFacade } from './language.facade';
 
 export { LanguageFacade };

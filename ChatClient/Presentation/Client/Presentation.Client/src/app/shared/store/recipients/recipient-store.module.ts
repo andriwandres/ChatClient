@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
-import { RecipientEffects } from './effects';
-import { recipientReducer } from './reducer';
-import { RECIPIENTS_FEATURE_KEY } from './state';
+import { RecipientEffects } from './recipients.effects';
+import { recipientReducer } from './recipients.reducer';
+import { RECIPIENTS_FEATURE_KEY } from './recipients.state';
 
 @NgModule({
   declarations: [],

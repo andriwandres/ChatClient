@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
-import * as messagesActions from './actions';
-import { initialState, State } from './state';
+import * as messagesActions from './messages.actions';
+import { initialState, State } from './messages.state';
 
 export function messagesReducer(
   state: State | undefined,

@@ -1,7 +1,7 @@
 import { createReducer, on } from '@ngrx/store';
-import * as recipientActions from './actions';
-import { RecipientsActionUnion } from './actions';
-import { initialState, recipientAdapter, State } from './state';
+import * as recipientActions from './recipients.actions';
+import { RecipientsActionUnion } from './recipients.actions';
+import { initialState, recipientAdapter, State } from './recipients.state';
 
 export function recipientReducer(state: State | undefined, action: RecipientsActionUnion): State {
   return reducer(state, action);
