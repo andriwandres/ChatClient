@@ -15,7 +15,7 @@ export const userNameMappings: ErrorMapping = {
   },
   userNameExists: {
     order: 4,
-    message: 'This user name is already taken by another user'
+    message: 'Home.CreateAccount.UserName.ValidationRule.AlreadyTaken'
   }
 };
 
@@ -30,7 +30,7 @@ export const emailMappings: ErrorMapping = {
   },
   emailExists: {
     order: 3,
-    message: 'This e-mail address is already taken by another user'
+    message: 'Home.CreateAccount.Email.ValidationRule.AlreadyTaken'
   }
 };
 

@@ -1,10 +1,10 @@
-import { ApiError, Language } from '@chat-client/core/models';
-import { createEntityAdapter, EntityState } from '@ngrx/entity';
+import { ApiError } from '@chat-client/core/models';
 
 export const LANGUAGE_FEATURE_KEY = 'languages';
 
-export interface State extends EntityState<Language> {
-  selectedLanguageId: number | null;
+export interface State {
+  availableLanguages: string[];
+  selectedLanguageIso: string | null;
   error: ApiError | null;
 }
 
@@ -12,12 +12,8 @@ export interface PartialState {
   [LANGUAGE_FEATURE_KEY]: State;
 }
 
-export const languageAdapter = createEntityAdapter<Language>({
-  selectId: (language) => language.languageId,
-  sortComparer: (a, b) => a.languageId - b.languageId
-});
-
-export const initialState: State = languageAdapter.getInitialState({
-  selectedLanguageId: +(localStorage.getItem('languageId') || 0) || null,
+export const initialState: State = {
+  availableLanguages: ['en', 'de'],
+  selectedLanguageIso: localStorage.getItem('languageIso') || 'en',
   error: null
-});
+};

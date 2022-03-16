@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Language } from '@chat-client/core/models';
 
 @Component({
   selector: 'app-language-item',
@@ -7,8 +6,12 @@ import { Language } from '@chat-client/core/models';
   styleUrls: ['./language-item.component.scss']
 })
 export class LanguageItemComponent {
-  @Input() language!: Language;
+  @Input() language!: string;
   @Input() isSelected!: boolean;
 
   @Output() selectLanguage = new EventEmitter<void>();
+
+  onSelectLanguage(): void {
+    this.selectLanguage.emit();
+  }
 }

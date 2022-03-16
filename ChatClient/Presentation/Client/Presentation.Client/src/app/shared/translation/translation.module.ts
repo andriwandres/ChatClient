@@ -1,17 +1,21 @@
+import { HttpClient } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { TranslationService } from '@chat-client/core/services';
 import { MissingTranslationHandler, TranslateLoader, TranslateModule } from '@ngx-translate/core';
-import { ChatClientTranslationLoader } from './loader';
+import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { ChatClientMissingTranslationHandler } from './missing-translation-handler';
+
+export function createTranslateLoader(http: HttpClient) {
+  return new TranslateHttpLoader(http, './assets/i18n/', '.json');
+}
 
 @NgModule({
   imports: [
     TranslateModule.forRoot({
-      defaultLanguage: '1',
+      defaultLanguage: 'en',
       loader: {
         provide: TranslateLoader,
-        useClass: ChatClientTranslationLoader,
-        deps: [TranslationService]
+        useFactory: createTranslateLoader,
+        deps: [HttpClient]
       },
       missingTranslationHandler: {
         provide: MissingTranslationHandler,

@@ -1,5 +1,5 @@
 
-export enum AvailabilityStatusId {
+export enum AvailabilityStatus {
   Online = 1,
   Away = 2,
   Busy = 3,
