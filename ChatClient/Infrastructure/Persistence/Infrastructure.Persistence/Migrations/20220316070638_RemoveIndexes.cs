@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
 namespace Infrastructure.Persistence.Migrations
 {
+    [ExcludeFromCodeCoverage]
     public partial class RemoveIndexes : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

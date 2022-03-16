@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
+using System.Diagnostics.CodeAnalysis;
 
 #nullable disable
 
 namespace Infrastructure.Persistence.Migrations
 {
+    [ExcludeFromCodeCoverage]
     public partial class EnumTypes : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)

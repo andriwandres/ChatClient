@@ -11,16 +11,16 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Presentation.Api.Extensions;
+using Swashbuckle.AspNetCore.SwaggerUI;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Net.Mime;
 using System.Text.Json;
-using Microsoft.Extensions.Configuration;
-using Swashbuckle.AspNetCore.SwaggerUI;
- 
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add presentation logic related services

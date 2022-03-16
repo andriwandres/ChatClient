@@ -19,6 +19,58 @@ public class UserRepositoryTests
         _context = TestContextFactory.Create();
     }
 
+    #region GetByIdIncludingRecipient()
+
+    [Fact]
+    public async Task GetByIdIncludingRecipient_ShouldReturnUser_WhenIdMatches()
+    {
+        // Arrange
+        const int userId = 1;
+
+        User expectedUser = new()
+        {
+            UserId = userId,
+            Email = "user1@test.com", 
+            UserName = "User1", 
+            PasswordHash = Array.Empty<byte>(),
+            PasswordSalt = Array.Empty<byte>(),
+            Recipient = new Recipient
+            {
+                RecipientId = 1
+            }
+        };
+
+        await _context.Users.AddAsync(expectedUser);
+        await _context.SaveChangesAsync();
+
+        IUserRepository repository = new UserRepository(_context);
+
+        // Act
+        User user = await repository.GetByIdIncludingRecipient(userId);
+
+        // Assert
+        Assert.NotNull(user);
+        Assert.NotNull(user.Recipient);
+        Assert.Equal(userId, user.UserId);
+    }
+
+    [Fact]
+    public async Task GetByIdIncludingRecipient_ShouldReturnNull_WhenIdDoesNotMatch()
+    {
+        // Arrange
+        const int userId = 1234;
+
+        IUserRepository repository = new UserRepository(_context);
+
+        // Act
+        User user = await repository.GetByIdIncludingRecipient(userId);
+
+        // Assert
+        Assert.Null(user);
+    }
+
+    #endregion
+
     #region GetByUserNameOrEmail()
 
     [Fact]
