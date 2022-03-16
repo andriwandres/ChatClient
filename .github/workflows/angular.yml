@@ -2,12 +2,12 @@ name: Angular
 
 on:
   push:
-    branches: [ master ]
+    branches: [ develop ]
     paths:
       - 'ChatClient/Presentation/Client/Presentation.Client/**'
     
   pull_request:
-    branches: [ master ]
+    branches: [ develop ]
     paths:
       - 'ChatClient/Presentation/Client/Presentation.Client/**'
 
