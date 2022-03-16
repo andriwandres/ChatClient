@@ -11,10 +11,6 @@ public class MessageReactionConfiguration : IEntityTypeConfiguration<MessageReac
         // Keys
         builder.HasKey(reaction => reaction.MessageReactionId);
 
-        // Indexes
-        builder.HasIndex(reaction => new { reaction.UserId, reaction.MessageId, reaction.ReactionValue })
-            .IsUnique();
-
         // Properties
         builder.Property(reaction => reaction.UserId);
 

@@ -11,10 +11,6 @@ public class FriendshipConfiguration : IEntityTypeConfiguration<Friendship>
         // Keys
         builder.HasKey(friendship => friendship.FriendshipId);
 
-        // Indexes
-        builder.HasIndex(friendship => new {friendship.RequesterId, friendship.AddresseeId})
-            .IsUnique();
-
         // Properties
         builder.Property(friendship => friendship.RequesterId);
 

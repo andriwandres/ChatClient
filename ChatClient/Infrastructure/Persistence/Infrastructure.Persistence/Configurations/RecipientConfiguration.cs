@@ -11,9 +11,6 @@ public class RecipientConfiguration : IEntityTypeConfiguration<Recipient>
         // Keys
         builder.HasKey(recipient => recipient.RecipientId);
 
-        builder.HasIndex(recipient => new { recipient.UserId, recipient.GroupMembershipId })
-            .IsUnique();
-
         // Properties
         builder.Property(recipient => recipient.UserId);
 

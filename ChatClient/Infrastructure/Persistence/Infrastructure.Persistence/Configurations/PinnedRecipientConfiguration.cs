@@ -11,10 +11,6 @@ public class PinnedRecipientConfiguration : IEntityTypeConfiguration<PinnedRecip
         // Keys
         builder.HasKey(pin => pin.PinnedRecipientId);
 
-        // Indexes
-        builder.HasIndex(pin => new {pin.UserId, pin.RecipientId})
-            .IsUnique();
-
         // Properties
         builder.Property(pin => pin.UserId);
 

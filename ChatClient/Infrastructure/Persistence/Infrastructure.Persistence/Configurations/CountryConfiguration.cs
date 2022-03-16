@@ -11,10 +11,6 @@ public class CountryConfiguration : IEntityTypeConfiguration<Country>
         // Keys
         builder.HasKey(country => country.CountryId);
 
-        // Indexes
-        builder.HasIndex(country => country.Code)
-            .IsUnique();
-
         // Properties
         builder.Property(country => country.Code)
             .IsRequired()
