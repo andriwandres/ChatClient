@@ -3,7 +3,6 @@ using Core.Application.Database;
 using Core.Application.Repositories;
 using Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 

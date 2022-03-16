@@ -23,7 +23,7 @@ public class RecipientRepositoryTests
     #region GetById()
 
     [Fact]
-    public async Task GetById_ShouldReturnEmptyQueryable_WhenIdDoesNotMatch()
+    public async Task GetByIdIncludingMemberships_ShouldReturnNull_WhenIdDoesNotMatch()
     {
         // Arrange
         const int recipientId = 5431;
@@ -31,22 +31,22 @@ public class RecipientRepositoryTests
         IRecipientRepository repository = new RecipientRepository(_context);
 
         // Act
-        Recipient recipient = await repository.GetByIdAsync(recipientId);
+        Recipient recipient = await repository.GetByIdIncludingMemberships(recipientId);
 
         // Assert
         Assert.Null(recipient);
     }
 
     [Fact]
-    public async Task GetById_ShouldReturnQueryableWithSingleRecipient_WhenIdMatches()
+    public async Task GetByIdIncludingMemberships_ShouldReturnQueryableWithSingleRecipient_WhenIdMatches()
     {
         // Arrange
         const int recipientId = 2;
 
         Recipient[] recipients = 
         {
-            new() { RecipientId = 1 },
-            new() { RecipientId = 2 },
+            new() { RecipientId = 1, GroupMembership = new GroupMembership { GroupMembershipId = 1 } },
+            new() { RecipientId = 2, GroupMembership = new GroupMembership { GroupMembershipId = 2 } },
         };
 
         await _context.Recipients.AddRangeAsync(recipients);
@@ -55,10 +55,11 @@ public class RecipientRepositoryTests
         IRecipientRepository repository = new RecipientRepository(_context);
 
         // Act
-        Recipient recipient = await repository.GetByIdAsync(recipientId);
+        Recipient recipient = await repository.GetByIdIncludingMemberships(recipientId);
 
         // Assert
         Assert.NotNull(recipient);
+        Assert.NotNull(recipient.GroupMembership);
         Assert.Equal(recipientId, recipient.RecipientId);
     }
 
