@@ -1,10 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { CreateAccountCredentials } from '@chat-client/core/models';
-import { AuthFacade } from '@chat-client/shared/auth/store';
-import { Action } from '@ngrx/store';
 import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, filter, skipWhile, takeUntil } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, skipWhile, takeUntil } from 'rxjs/operators';
+import { AuthFacade } from 'src/app/shared/store/auth';
 import { emailValidator } from './email.validator';
 import * as errorMappings from './error-mappings';
 import { minLengthValidator } from './min-length.validator';

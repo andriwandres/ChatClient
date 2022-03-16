@@ -1,5 +1,5 @@
 import { createFeatureSelector, createSelector } from '@ngrx/store';
-import { selectRecipientFeature } from 'src/app/messenger/sidenav/recipients/store/selectors';
+import { selectRecipientFeature } from 'src/app/shared/store/recipients/selectors';
 import * as messagesState from './state';
 
 export interface SelectMessagesParameter {

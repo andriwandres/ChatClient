@@ -5,7 +5,7 @@ import { TypedAction } from '@ngrx/store/src/models';
 import { mergeMapHubToAction, SIGNALR_HUB_UNSTARTED, startSignalRHub } from 'ngrx-signalr-core';
 import { merge, of } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { MessageActions } from '../chat/messages/store';
+import { MessageActions } from '../messages';
 
 interface ActionEventMapping {
   eventName: string;

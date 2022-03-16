@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { LoginCredentials } from '@chat-client/core/models';
-import { AuthFacade } from '@chat-client/shared/auth/store';
 import { Subject } from 'rxjs';
 import { filter, map, takeUntil } from 'rxjs/operators';
+import { AuthFacade } from 'src/app/shared/store/auth';
 import * as errorMappings from './error-mapings';
 
 @Component({

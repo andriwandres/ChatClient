@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Recipient } from '@chat-client/core/models';
-import { RecipientFacade } from './store';
+import { RecipientFacade } from 'src/app/shared/store/recipients';
 
 @Component({
   selector: 'app-recipients',

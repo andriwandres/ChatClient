@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanLoad, Route, Router, RouterStateSnapshot, UrlSegment } from '@angular/router';
-import { AuthFacade } from '@chat-client/shared/auth/store';
 import { Observable } from 'rxjs';
 import { map, skipWhile, switchMapTo, tap } from 'rxjs/operators';
+import { AuthFacade } from 'src/app/shared/store/auth';
 
 @Injectable({ providedIn: 'root' })
 export class SignInGuard implements CanLoad, CanActivate {

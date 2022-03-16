@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { LanguageStoreModule } from '../store/language/language-store.module';
 import { LanguageSelectorModule } from './language-selector/language-selector.module';
-import { LanguageStoreModule } from './store/language-store.module';
 
 @NgModule({
   declarations: [],

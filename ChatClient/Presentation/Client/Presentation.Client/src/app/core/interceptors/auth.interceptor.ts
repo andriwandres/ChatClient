@@ -1,8 +1,8 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { AuthFacade } from '@chat-client/shared/auth/store';
 import { Observable } from 'rxjs';
 import { mergeMap, take } from 'rxjs/operators';
+import { AuthFacade } from 'src/app/shared/store/auth';
 
 @Injectable({ providedIn: 'root' })
 export class AuthInterceptor implements HttpInterceptor {

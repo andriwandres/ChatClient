@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Recipient } from '@chat-client/core/models';
-import { MessageFacade } from './messages/store';
+import { MessageFacade } from 'src/app/shared/store/messages';
 
 @Component({
   selector: 'app-chat',

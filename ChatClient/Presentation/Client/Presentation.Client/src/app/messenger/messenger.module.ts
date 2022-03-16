@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { WebSocketStoreModule } from '@chat-client/messenger/store';
+import { WebSocketStoreModule } from '../shared/store/messenger';
 import { ChatModule } from './chat/chat.module';
 import { MessengerRoutingModule } from './messenger-routing.module';
 import { MessengerComponent } from './messenger.component';

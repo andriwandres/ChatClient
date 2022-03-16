@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { LanguageFacade } from '@chat-client/shared/language/store';
+import { LanguageFacade } from '../../store/language';
 
 @Component({
   selector: 'app-language-selector',

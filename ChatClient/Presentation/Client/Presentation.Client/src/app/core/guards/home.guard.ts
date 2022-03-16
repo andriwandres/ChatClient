@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, CanLoad, Route, RouterStateSnapshot, UrlSegment } from '@angular/router';
-import { AuthFacade } from '@chat-client/shared/auth/store';
+import { AuthFacade } from 'src/app/shared/store/auth';
 
 @Injectable({ providedIn: 'root' })
 export class HomeGuard implements CanLoad, CanActivate {
