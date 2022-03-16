@@ -1,3 +1,16 @@
 {
+  "Application": {
+    "Title": "ng-messenger",
 
+    "Languages": {
+      "Names": {
+        "en": "Englisch",
+        "de": "Deutsch"
+      },
+      "FlagImages": {
+        "en": "https://flagcdn.com/gb.svg",
+        "de": "https://flagcdn.com/de.svg"
+      }
+    }
+  }
 }
