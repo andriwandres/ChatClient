@@ -11,10 +11,6 @@ public class GroupMembershipConfiguration : IEntityTypeConfiguration<GroupMember
         // Keys
         builder.HasKey(membership => membership.GroupMembershipId);
 
-        // Indexes
-        builder.HasIndex(membership => new {membership.UserId, membership.GroupId})
-            .IsUnique();
-
         // Properties
         builder.Property(membership => membership.UserId);
 

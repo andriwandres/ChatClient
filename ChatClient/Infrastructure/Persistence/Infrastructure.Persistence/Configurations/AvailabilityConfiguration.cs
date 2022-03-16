@@ -11,10 +11,6 @@ public class AvailabilityConfiguration : IEntityTypeConfiguration<Availability>
         // Keys
         builder.HasKey(availability => availability.AvailabilityId);
 
-        // Indexes
-        builder.HasIndex(availability => availability.UserId)
-            .IsUnique();
-
         // Properties
         builder.Property(availability => availability.UserId);
 

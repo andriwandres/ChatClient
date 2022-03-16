@@ -11,10 +11,6 @@ public class ArchivedRecipientConfiguration : IEntityTypeConfiguration<ArchivedR
         // Keys
         builder.HasKey(archive => archive.ArchivedRecipientId);
 
-        // Indexes
-        builder.HasIndex(archive => new { archive.UserId, archive.RecipientId })
-            .IsUnique();
-
         // Properties
         builder.Property(archive => archive.UserId);
 

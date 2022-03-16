@@ -11,10 +11,6 @@ public class NicknameAssignmentConfiguration : IEntityTypeConfiguration<Nickname
         // Keys
         builder.HasKey(nicknameAssignment => nicknameAssignment.NicknameAssignmentId);
 
-        // Indexes
-        builder.HasIndex(nicknameAssignment => new { nicknameAssignment.RequesterId, nicknameAssignment.AddresseeId })
-            .IsUnique();
-
         // Properties
         builder.Property(nicknameAssignment => nicknameAssignment.RequesterId);
 
