@@ -14,7 +14,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  build-and-test:
 
     runs-on: ubuntu-latest
     strategy:
@@ -33,6 +33,10 @@ jobs:
     
     - name: Test
       run: npm run test:ci
+      working-directory: ChatClient/Presentation/Client/Presentation.Client
+
+    - name: End-to-end Test
+      run: npm run cy:run
       working-directory: ChatClient/Presentation/Client/Presentation.Client
       
     - name: Build
