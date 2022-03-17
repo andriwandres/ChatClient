@@ -30,7 +30,7 @@ jobs:
         with:
           build: npm run build:ci
           start: npm run start:ci
-        working-directory: ChatClient/Presentation/Client/Presentation.Client
+          working-directory: ChatClient/Presentation/Client/Presentation.Client
     
       
 
