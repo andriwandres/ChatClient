@@ -4,11 +4,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.Friendships;
 
-public class UpdateFriendshipStatusNotFoundExample : IExamplesProvider<ErrorResource>
+public class UpdateFriendshipStatusNotFoundExample : IExamplesProvider<ErrorViewModel>
 {
-    public ErrorResource GetExamples()
+    public ErrorViewModel GetExamples()
     {
-        return new ErrorResource
+        return new ErrorViewModel
         {
             StatusCode = StatusCodes.Status404NotFound,
             Message = "Friendship with ID 'xxx' does not exist"

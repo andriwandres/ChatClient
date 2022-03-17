@@ -63,7 +63,7 @@ public class SessionControllerTests
         // Assert
         UnauthorizedObjectResult result = Assert.IsType<UnauthorizedObjectResult>(response.Result);
 
-        ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+        ErrorViewModel error = Assert.IsType<ErrorViewModel>(result.Value);
 
         Assert.Equal(StatusCodes.Status401Unauthorized, error.StatusCode);
     }

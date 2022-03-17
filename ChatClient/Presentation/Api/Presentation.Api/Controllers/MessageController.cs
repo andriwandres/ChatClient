@@ -84,19 +84,19 @@ public class MessageController : ControllerBase
     [ProducesResponseType(StatusCodes.Status201Created)]
 
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(SendMessageBadRequestExample))]
 
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(SendMessageForbiddenExample))]
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(SendMessageNotFoundExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult<ChatMessageResource>> SendMessage([FromBody] SendMessageBody body, CancellationToken cancellationToken = default)
     {
@@ -112,7 +112,7 @@ public class MessageController : ControllerBase
 
         if (!recipientExists)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"Recipient with ID '{body.RecipientId}' does not exist"
@@ -126,7 +126,7 @@ public class MessageController : ControllerBase
 
         if (isOwnRecipient)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+            return StatusCode(StatusCodes.Status403Forbidden, new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status403Forbidden,
                 Message = "You cannot write messages to yourself"
@@ -142,7 +142,7 @@ public class MessageController : ControllerBase
 
             if (!parentMessageExists)
             {
-                return NotFound(new ErrorResource
+                return NotFound(new ErrorViewModel
                 {
                     StatusCode = StatusCodes.Status404NotFound,
                     Message = $"Parent message with ID '{body.ParentId}' does not exist"
@@ -156,7 +156,7 @@ public class MessageController : ControllerBase
 
             if (!canAccessParentMessage)
             {
-                return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+                return StatusCode(StatusCodes.Status403Forbidden, new ErrorViewModel
                 {
                     StatusCode = StatusCodes.Status403Forbidden,
                     Message = "You cannot answer messages from a foreign chat"
@@ -214,15 +214,15 @@ public class MessageController : ControllerBase
     [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetMessageByIdOkExample))]
 
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(GetMessageByIdForbiddenExample))]
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GetMessageByIdNotFoundExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult<MessageResource>> GetMessageById([FromRoute] int messageId, CancellationToken cancellationToken = default)
     {
@@ -233,7 +233,7 @@ public class MessageController : ControllerBase
 
         if (!exists)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"Message with ID '{messageId}' does not exist"
@@ -247,7 +247,7 @@ public class MessageController : ControllerBase
 
         if (!canAccess)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+            return StatusCode(StatusCodes.Status403Forbidden, new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status403Forbidden,
                 Message = "The user is not permitted to see this message. He may only see messages that he received or wrote himself"
@@ -313,19 +313,19 @@ public class MessageController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
 
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(EditMessageBadRequestExample))]
 
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(EditMessageForbiddenExample))]
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(EditMessageNotFoundExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult> EditMessage([FromRoute] int messageId, [FromBody] EditMessageBody body, CancellationToken cancellationToken = default)
     {
@@ -341,7 +341,7 @@ public class MessageController : ControllerBase
 
         if (!exists)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"Message with ID '{messageId}' does not exist"
@@ -355,7 +355,7 @@ public class MessageController : ControllerBase
 
         if (!isAuthor)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+            return StatusCode(StatusCodes.Status403Forbidden, new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status403Forbidden,
                 Message = "Only the author of a message is allowed to update a message"
@@ -411,15 +411,15 @@ public class MessageController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
 
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(DeleteMessageForbiddenExample))]
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(DeleteMessageNotFoundExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult> DeleteMessage([FromRoute] int messageId, CancellationToken cancellationToken = default)
     {
@@ -430,7 +430,7 @@ public class MessageController : ControllerBase
 
         if (!exists)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"Message with ID '{messageId}' does not exist"
@@ -444,7 +444,7 @@ public class MessageController : ControllerBase
 
         if (!isAuthor)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+            return StatusCode(StatusCodes.Status403Forbidden, new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status403Forbidden,
                 Message = "Only the author of a message is allowed to delete a message"

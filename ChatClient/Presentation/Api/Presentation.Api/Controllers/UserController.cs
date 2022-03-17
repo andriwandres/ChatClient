@@ -86,15 +86,15 @@ public class UserController : ControllerBase
     [SwaggerRequestExample(typeof(CreateAccountBody), typeof(CreateAccountBodyExample))]
 
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(CreateAccountBadRequestExample))]
 
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(CreateAccountForbiddenExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult> CreateAccount([FromBody] CreateAccountBody credentials, CancellationToken cancellationToken = default)
     {
@@ -109,7 +109,7 @@ public class UserController : ControllerBase
 
         if (exists)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+            return StatusCode(StatusCodes.Status403Forbidden, new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status403Forbidden,
                 Message = "A user with the same user name or email already exists. Please use different credentials for creating an account"
@@ -225,11 +225,11 @@ public class UserController : ControllerBase
     [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetUserProfileOkExample))]
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GetUserProfileNotFoundExample))]
         
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult<UserProfileResource>> GetUserProfile([FromRoute] int userId, CancellationToken cancellationToken = default)
     {
@@ -242,7 +242,7 @@ public class UserController : ControllerBase
 
         if (userProfile == null)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"A user with the ID '{userId}' does not exist"
@@ -282,7 +282,7 @@ public class UserController : ControllerBase
     [SwaggerResponseExample(StatusCodes.Status200OK, typeof(AuthenticateOkExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult<AuthenticatedUserResource>> Authenticate(CancellationToken cancellationToken = default)
     {
@@ -323,7 +323,7 @@ public class UserController : ControllerBase
     [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetOwnFriendshipsOkExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult<IEnumerable<FriendshipResource>>> GetOwnFriendships(CancellationToken cancellationToken = default)
     {
@@ -364,7 +364,7 @@ public class UserController : ControllerBase
     [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetOwnRecipientsOkExample))]
         
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult<IEnumerable<RecipientResource>>> GetOwnRecipients(CancellationToken cancellationToken = default)
     {
@@ -412,11 +412,11 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
 
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(UpdateAvailabilityBadRequestExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult> UpdateAvailability([FromBody] UpdateAvailabilityBody body, CancellationToken cancellationToken = default)
     {

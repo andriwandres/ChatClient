@@ -4,11 +4,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.GroupMemberships;
 
-public class UpdateMembershipNotFoundExample : IExamplesProvider<ErrorResource>
+public class UpdateMembershipNotFoundExample : IExamplesProvider<ErrorViewModel>
 {
-    public ErrorResource GetExamples()
+    public ErrorViewModel GetExamples()
     {
-        return new ErrorResource
+        return new ErrorViewModel
         {
             StatusCode = StatusCodes.Status404NotFound,
             Message = "Membership with ID 'xxx' does not exist"

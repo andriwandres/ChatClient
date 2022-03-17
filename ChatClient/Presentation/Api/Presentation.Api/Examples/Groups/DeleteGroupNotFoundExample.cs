@@ -4,11 +4,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.Groups;
 
-public class DeleteGroupNotFoundExample : IExamplesProvider<ErrorResource>
+public class DeleteGroupNotFoundExample : IExamplesProvider<ErrorViewModel>
 {
-    public ErrorResource GetExamples()
+    public ErrorViewModel GetExamples()
     {
-        return new ErrorResource
+        return new ErrorViewModel
         {
             StatusCode = StatusCodes.Status404NotFound,
             Message = "Group with ID 'xxx' does not exist"

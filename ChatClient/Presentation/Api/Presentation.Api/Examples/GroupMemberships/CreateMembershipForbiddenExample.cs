@@ -5,27 +5,27 @@ using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.GroupMemberships;
 
-public class CreateMembershipForbiddenExample : IMultipleExamplesProvider<ErrorResource>
+public class CreateMembershipForbiddenExample : IMultipleExamplesProvider<ErrorViewModel>
 {
-    public IEnumerable<SwaggerExample<ErrorResource>> GetExamples()
+    public IEnumerable<SwaggerExample<ErrorViewModel>> GetExamples()
     {
         return new[]
         {
-            new SwaggerExample<ErrorResource>
+            new SwaggerExample<ErrorViewModel>
             {
                 Name = "AlreadyMember",
                 Summary = "User is already a member of this group",
-                Value = new ErrorResource
+                Value = new ErrorViewModel
                 {
                     StatusCode = StatusCodes.Status403Forbidden,
                     Message = "This user is already a member of this group"
                 }
             },
-            new SwaggerExample<ErrorResource>
+            new SwaggerExample<ErrorViewModel>
             {
                 Name = "NotPermitted",
                 Summary = "Not permitted to create memberships",
-                Value = new ErrorResource
+                Value = new ErrorViewModel
                 {
                     StatusCode = StatusCodes.Status403Forbidden,
                     Message = "You are not permitted to add users to this group. This privilege is only granted to administrators of the group"

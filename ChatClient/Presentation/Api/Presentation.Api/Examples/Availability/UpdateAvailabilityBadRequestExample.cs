@@ -9,9 +9,9 @@ using System.Linq;
 
 namespace Presentation.Api.Examples.Availability;
 
-public class UpdateAvailabilityBadRequestExample : IExamplesProvider<ValidationErrorResource>
+public class UpdateAvailabilityBadRequestExample : IExamplesProvider<ValidationErrorViewModel>
 {
-    public ValidationErrorResource GetExamples()
+    public ValidationErrorViewModel GetExamples()
     {
         const string availabilityStatusName = nameof(UpdateAvailabilityBody.AvailabilityStatus);
 
@@ -21,7 +21,7 @@ public class UpdateAvailabilityBadRequestExample : IExamplesProvider<ValidationE
 
         string valuesString = string.Join(", ", values);
 
-        return new ValidationErrorResource
+        return new ValidationErrorViewModel
         {
             StatusCode = StatusCodes.Status400BadRequest,
             Message = "One or multiple validation errors occurred",

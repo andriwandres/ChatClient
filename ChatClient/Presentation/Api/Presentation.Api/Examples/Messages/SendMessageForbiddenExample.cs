@@ -5,27 +5,27 @@ using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.Messages;
 
-public class SendMessageForbiddenExample : IMultipleExamplesProvider<ErrorResource>
+public class SendMessageForbiddenExample : IMultipleExamplesProvider<ErrorViewModel>
 {
-    public IEnumerable<SwaggerExample<ErrorResource>> GetExamples()
+    public IEnumerable<SwaggerExample<ErrorViewModel>> GetExamples()
     {
         return new[]
         {
-            new SwaggerExample<ErrorResource>
+            new SwaggerExample<ErrorViewModel>
             {
                 Name = "MessageHimself",
                 Summary = "User tried messaging himself",
-                Value = new ErrorResource
+                Value = new ErrorViewModel
                 {
                     StatusCode = StatusCodes.Status403Forbidden,
                     Message = "You cannot write messages to yourself"
                 }
             },
-            new SwaggerExample<ErrorResource>
+            new SwaggerExample<ErrorViewModel>
             {
                 Name = "ForeignMessage",
                 Summary = "User tried answering message from a foreign chat",
-                Value = new ErrorResource
+                Value = new ErrorViewModel
                 {
                     StatusCode = StatusCodes.Status403Forbidden,
                     Message = "You cannot answer messages from a foreign chat"

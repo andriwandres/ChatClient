@@ -49,7 +49,7 @@ application.UseStatusCodePages(async statusCodeContext =>
 {
     statusCodeContext.HttpContext.Response.ContentType = MediaTypeNames.Application.Json;
 
-    ErrorResource details = new()
+    ErrorViewModel details = new()
     {
         StatusCode = statusCodeContext.HttpContext.Response.StatusCode,
         Message = ReasonPhrases.GetReasonPhrase(statusCodeContext.HttpContext.Response.StatusCode),

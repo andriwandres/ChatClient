@@ -6,20 +6,20 @@ using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.Messages;
 
-public class SendMessageBadRequestExample : IMultipleExamplesProvider<ValidationErrorResource>
+public class SendMessageBadRequestExample : IMultipleExamplesProvider<ValidationErrorViewModel>
 {
-    public IEnumerable<SwaggerExample<ValidationErrorResource>> GetExamples()
+    public IEnumerable<SwaggerExample<ValidationErrorViewModel>> GetExamples()
     {
         const string recipientIdName = nameof(SendMessageBody.RecipientId);
         const string htmlContentName = nameof(SendMessageBody.HtmlContent);
 
         return new[]
         {
-            new SwaggerExample<ValidationErrorResource>
+            new SwaggerExample<ValidationErrorViewModel>
             {
                 Name = "RecipientIdEmpty",
                 Summary = $"{recipientIdName} is left empty",
-                Value = new ValidationErrorResource
+                Value = new ValidationErrorViewModel
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
                     Message = "One or multiple validation errors occurred",
@@ -35,11 +35,11 @@ public class SendMessageBadRequestExample : IMultipleExamplesProvider<Validation
                     }
                 }
             },
-            new SwaggerExample<ValidationErrorResource>
+            new SwaggerExample<ValidationErrorViewModel>
             {
                 Name = "HtmlContentEmpty",
                 Summary = $"{htmlContentName} is left empty",
-                Value = new ValidationErrorResource
+                Value = new ValidationErrorViewModel
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
                     Message = "One or multiple validation errors occurred",

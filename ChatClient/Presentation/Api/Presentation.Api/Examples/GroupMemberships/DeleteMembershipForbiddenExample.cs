@@ -4,11 +4,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.GroupMemberships;
 
-public class DeleteMembershipForbiddenExample : IExamplesProvider<ErrorResource>
+public class DeleteMembershipForbiddenExample : IExamplesProvider<ErrorViewModel>
 {
-    public ErrorResource GetExamples()
+    public ErrorViewModel GetExamples()
     {
-        return new ErrorResource
+        return new ErrorViewModel
         {
             StatusCode = StatusCodes.Status403Forbidden,
             Message = "You are not permitted to delete users from this group. This privilege is only granted to administrators of the group"

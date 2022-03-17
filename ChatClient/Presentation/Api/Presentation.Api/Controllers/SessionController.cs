@@ -77,15 +77,15 @@ public class SessionController : ControllerBase
     [SwaggerResponseExample(StatusCodes.Status200OK, typeof(LoginOkExample))]
 
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(LoginBadRequestExample))]
 
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
-    [SwaggerResponse(StatusCodes.Status401Unauthorized, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status401Unauthorized, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status401Unauthorized, typeof(LoginUnauthorizedExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult<AuthenticatedUserResource>> Login([FromBody] LoginBody credentials, CancellationToken cancellationToken = default)
     {
@@ -100,7 +100,7 @@ public class SessionController : ControllerBase
 
         if (user == null)
         {
-            return Unauthorized(new ErrorResource
+            return Unauthorized(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status401Unauthorized,
                 Message = "UserName, e-mail and/or password are incorrect"

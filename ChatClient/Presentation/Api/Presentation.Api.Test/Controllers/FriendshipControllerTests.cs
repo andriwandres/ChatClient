@@ -69,7 +69,7 @@ public class FriendshipControllerTests
         // Assert
         NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
 
-        ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+        ErrorViewModel error = Assert.IsType<ErrorViewModel>(result.Value);
 
         Assert.NotNull(error);
         Assert.Equal(StatusCodes.Status404NotFound, error.StatusCode);
@@ -102,7 +102,7 @@ public class FriendshipControllerTests
         // Assert
         ObjectResult result = Assert.IsType<ObjectResult>(response.Result);
 
-        ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+        ErrorViewModel error = Assert.IsType<ErrorViewModel>(result.Value);
 
         Assert.Equal(StatusCodes.Status403Forbidden, error.StatusCode);
     }
@@ -143,7 +143,7 @@ public class FriendshipControllerTests
         // Assert
         ObjectResult result = Assert.IsType<ObjectResult>(response.Result);
 
-        ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+        ErrorViewModel error = Assert.IsType<ErrorViewModel>(result.Value);
 
         Assert.Equal(StatusCodes.Status403Forbidden, error.StatusCode);
     }
@@ -224,7 +224,7 @@ public class FriendshipControllerTests
         // Assert
         NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
 
-        ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+        ErrorViewModel error = Assert.IsType<ErrorViewModel>(result.Value);
 
         Assert.Equal(StatusCodes.Status404NotFound, error.StatusCode);
     }
@@ -294,7 +294,7 @@ public class FriendshipControllerTests
         // Assert
         NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response);
 
-        ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+        ErrorViewModel error = Assert.IsType<ErrorViewModel>(result.Value);
 
         Assert.Equal(StatusCodes.Status404NotFound, error.StatusCode);
     }

@@ -86,19 +86,19 @@ public class GroupMembershipController : ControllerBase
     [SwaggerResponseExample(StatusCodes.Status201Created, typeof(CreateMembershipCreatedExample))]
 
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(CreateMembershipBadRequestExample))]
 
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(CreateMembershipForbiddenExample))]
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(CreateMembershipNotFoundExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult<GroupMembershipResource>> CreateMembership([FromBody] CreateMembershipBody body, CancellationToken cancellationToken = default)
     {
@@ -114,7 +114,7 @@ public class GroupMembershipController : ControllerBase
 
         if (!groupExists)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"Group with ID '{body.GroupId}' does not exist"
@@ -128,7 +128,7 @@ public class GroupMembershipController : ControllerBase
 
         if (!userExists)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"User with ID '{body.UserId}' does not exist"
@@ -142,7 +142,7 @@ public class GroupMembershipController : ControllerBase
 
         if (!canCreate)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+            return StatusCode(StatusCodes.Status403Forbidden, new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status403Forbidden,
                 Message = "You are not permitted to add users to this group. This privilege is only granted to administrators of the group"
@@ -156,7 +156,7 @@ public class GroupMembershipController : ControllerBase
 
         if (membershipExists)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+            return StatusCode(StatusCodes.Status403Forbidden, new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status403Forbidden,
                 Message = "This user is already a member of this group"
@@ -208,11 +208,11 @@ public class GroupMembershipController : ControllerBase
     [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetMembershipByIdOkExample))]
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GetMembershipByIdNotFoundExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult<GroupMembershipResource>> GetMembershipById([FromRoute] int membershipId, CancellationToken cancellationToken = default)
     {
@@ -222,7 +222,7 @@ public class GroupMembershipController : ControllerBase
 
         if (membership == null)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"Membership with ID '{membershipId}' does not exist"
@@ -284,19 +284,19 @@ public class GroupMembershipController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
 
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(UpdateMembershipBadRequestExample))]
 
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(UpdateMembershipForbiddenExample))]
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(UpdateMembershipNotFoundExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult> UpdateMembership([FromRoute] int membershipId, [FromBody] UpdateMembershipBody body, CancellationToken cancellationToken = default)
     {
@@ -312,7 +312,7 @@ public class GroupMembershipController : ControllerBase
 
         if (!exists)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"Membership with ID '{membershipId}' does not exist"
@@ -326,7 +326,7 @@ public class GroupMembershipController : ControllerBase
 
         if (isOwnMembership)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+            return StatusCode(StatusCodes.Status403Forbidden, new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status403Forbidden,
                 Message = "Cannot update your own membership"
@@ -340,7 +340,7 @@ public class GroupMembershipController : ControllerBase
 
         if (!canUpdate)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+            return StatusCode(StatusCodes.Status403Forbidden, new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status403Forbidden,
                 Message = "You are not permitted to mutate users in this group. This privilege is only granted to administrators of the group"
@@ -400,15 +400,15 @@ public class GroupMembershipController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
 
     [ProducesResponseType(StatusCodes.Status403Forbidden)]
-    [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status403Forbidden, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status403Forbidden, typeof(DeleteMembershipForbiddenExample))]
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(DeleteMembershipNotFoundExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult> DeleteMembership([FromRoute] int membershipId, CancellationToken cancellationToken = default)
     {
@@ -419,7 +419,7 @@ public class GroupMembershipController : ControllerBase
 
         if (!exists)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"Membership with ID '{membershipId}' does not exist"
@@ -432,7 +432,7 @@ public class GroupMembershipController : ControllerBase
 
         if (!canDelete)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+            return StatusCode(StatusCodes.Status403Forbidden, new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status403Forbidden,
                 Message = "You are not permitted to delete users from this group. This privilege is only granted to administrators of the group"

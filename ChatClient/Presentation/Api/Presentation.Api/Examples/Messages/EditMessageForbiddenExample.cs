@@ -4,11 +4,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.Messages;
 
-public class EditMessageForbiddenExample : IExamplesProvider<ErrorResource>
+public class EditMessageForbiddenExample : IExamplesProvider<ErrorViewModel>
 {
-    public ErrorResource GetExamples()
+    public ErrorViewModel GetExamples()
     {
-        return new ErrorResource
+        return new ErrorViewModel
         {
             StatusCode = StatusCodes.Status403Forbidden,
             Message = "Only the author of a message is allowed to update a message"

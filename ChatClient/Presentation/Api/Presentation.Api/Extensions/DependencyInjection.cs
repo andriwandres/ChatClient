@@ -107,7 +107,7 @@ public static class DependencyInjection
                         .Where(pair => pair.Value.Any())
                         .ToDictionary(pair => pair.Key, pair => pair.Value);
 
-                    ValidationErrorResource details = new()
+                    ValidationErrorViewModel details = new()
                     {
                         Errors = errors,
                         StatusCode = StatusCodes.Status400BadRequest,

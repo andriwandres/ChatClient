@@ -6,9 +6,9 @@ using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.Users;
 
-public class CreateAccountBadRequestExample : IMultipleExamplesProvider<ValidationErrorResource>
+public class CreateAccountBadRequestExample : IMultipleExamplesProvider<ValidationErrorViewModel>
 {
-    public IEnumerable<SwaggerExample<ValidationErrorResource>> GetExamples()
+    public IEnumerable<SwaggerExample<ValidationErrorViewModel>> GetExamples()
     {
         const string emailName = nameof(CreateAccountBody.Email);
         const string userNameName = nameof(CreateAccountBody.UserName);
@@ -19,11 +19,11 @@ public class CreateAccountBadRequestExample : IMultipleExamplesProvider<Validati
 
         return new[]
         {
-            new SwaggerExample<ValidationErrorResource>
+            new SwaggerExample<ValidationErrorViewModel>
             {
                 Name = "EmailPattern",
                 Summary = "Email is invalid",
-                Value = new ValidationErrorResource
+                Value = new ValidationErrorViewModel
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
                     Message = "One or multiple validation errors occurred",
@@ -39,11 +39,11 @@ public class CreateAccountBadRequestExample : IMultipleExamplesProvider<Validati
                     }
                 }
             },
-            new SwaggerExample<ValidationErrorResource>
+            new SwaggerExample<ValidationErrorViewModel>
             {
                 Name = "UserNameLength",
                 Summary = "UserName is too short",
-                Value = new ValidationErrorResource
+                Value = new ValidationErrorViewModel
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
                     Message = "One or multiple validation errors occurred",
@@ -59,11 +59,11 @@ public class CreateAccountBadRequestExample : IMultipleExamplesProvider<Validati
                     }
                 }
             },
-            new SwaggerExample<ValidationErrorResource>
+            new SwaggerExample<ValidationErrorViewModel>
             {
                 Name = "UserNamePattern",
                 Summary = "UserName is invalid",
-                Value = new ValidationErrorResource
+                Value = new ValidationErrorViewModel
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
                     Message = "One or multiple validation errors occurred",
@@ -79,11 +79,11 @@ public class CreateAccountBadRequestExample : IMultipleExamplesProvider<Validati
                     }
                 }
             },
-            new SwaggerExample<ValidationErrorResource>
+            new SwaggerExample<ValidationErrorViewModel>
             {
                 Name = "PasswordLength",
                 Summary = "Password is too short",
-                Value = new ValidationErrorResource
+                Value = new ValidationErrorViewModel
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
                     Message = "One or multiple validation errors occurred",

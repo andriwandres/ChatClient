@@ -3,11 +3,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples;
 
-public class InternalServerErrorExample : IExamplesProvider<ErrorResource>
+public class InternalServerErrorExample : IExamplesProvider<ErrorViewModel>
 {
-    public ErrorResource GetExamples()
+    public ErrorViewModel GetExamples()
     {
-        return new ErrorResource
+        return new ErrorViewModel
         {
             StatusCode = 500,
             Message = "An unexpected error has occurred on the server"

@@ -6,20 +6,20 @@ using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.GroupMemberships;
 
-public class CreateMembershipBadRequestExample : IMultipleExamplesProvider<ValidationErrorResource>
+public class CreateMembershipBadRequestExample : IMultipleExamplesProvider<ValidationErrorViewModel>
 {
-    public IEnumerable<SwaggerExample<ValidationErrorResource>> GetExamples()
+    public IEnumerable<SwaggerExample<ValidationErrorViewModel>> GetExamples()
     {
         const string userIdName = nameof(CreateMembershipBody.UserId);
         const string groupIdName = nameof(CreateMembershipBody.GroupId);
 
         return new[]
         {
-            new SwaggerExample<ValidationErrorResource>
+            new SwaggerExample<ValidationErrorViewModel>
             {
                 Name = "GroupIdEmpty",
                 Summary = "Group ID is left empty",
-                Value = new ValidationErrorResource
+                Value = new ValidationErrorViewModel
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
                     Message = "One or multiple validation errors occurred",
@@ -35,11 +35,11 @@ public class CreateMembershipBadRequestExample : IMultipleExamplesProvider<Valid
                     }
                 },
             },
-            new SwaggerExample<ValidationErrorResource>
+            new SwaggerExample<ValidationErrorViewModel>
             {
                 Name = "UserIdEmpty",
                 Summary = "User ID is left empty",
-                Value = new ValidationErrorResource
+                Value = new ValidationErrorViewModel
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
                     Message = "One or multiple validation errors occurred",

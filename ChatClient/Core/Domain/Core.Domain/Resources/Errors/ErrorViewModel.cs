@@ -2,7 +2,7 @@
 
 namespace Core.Domain.Resources.Errors;
 
-public class ErrorResource
+public class ErrorViewModel
 {
     [JsonPropertyName("statusCode")]    
     public int StatusCode { get; set; }

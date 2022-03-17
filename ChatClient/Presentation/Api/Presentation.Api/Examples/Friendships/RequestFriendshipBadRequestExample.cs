@@ -6,13 +6,13 @@ using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.Friendships;
 
-public class RequestFriendshipBadRequestExample : IExamplesProvider<ValidationErrorResource>
+public class RequestFriendshipBadRequestExample : IExamplesProvider<ValidationErrorViewModel>
 {
-    public ValidationErrorResource GetExamples()
+    public ValidationErrorViewModel GetExamples()
     {
         const string addresseeIdName = nameof(RequestFriendshipBody.AddresseeId);
 
-        return new ValidationErrorResource
+        return new ValidationErrorViewModel
         {
             StatusCode = StatusCodes.Status400BadRequest,
             Message = "One or multiple validation errors occurred",

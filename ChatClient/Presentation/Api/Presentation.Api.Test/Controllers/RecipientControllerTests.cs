@@ -62,7 +62,7 @@ public class RecipientControllerTests
         // Assert
         NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
 
-        ErrorResource error = Assert.IsType<ErrorResource>(result.Value);
+        ErrorViewModel error = Assert.IsType<ErrorViewModel>(result.Value);
 
         Assert.NotNull(error);
         Assert.Equal(StatusCodes.Status404NotFound, error.StatusCode);

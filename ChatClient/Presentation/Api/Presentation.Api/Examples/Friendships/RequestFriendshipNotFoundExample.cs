@@ -4,11 +4,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.Friendships;
 
-public class RequestFriendshipNotFoundExample : IExamplesProvider<ErrorResource>
+public class RequestFriendshipNotFoundExample : IExamplesProvider<ErrorViewModel>
 {
-    public ErrorResource GetExamples()
+    public ErrorViewModel GetExamples()
     {
-        return new ErrorResource
+        return new ErrorViewModel
         {
             StatusCode = StatusCodes.Status404NotFound,
             Message = "User with ID 'xxx' does not exist"

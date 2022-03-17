@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace Presentation.Api.Validation.Errors;
 
-public class ErrorResourceValidator : AbstractValidator<ErrorResource>
+public class ErrorResourceValidator : AbstractValidator<ErrorViewModel>
 {
     public ErrorResourceValidator()
     {

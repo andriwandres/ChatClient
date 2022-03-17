@@ -6,19 +6,19 @@ using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.Messages;
 
-public class GetMessagesWithRecipientBadRequestExample : IMultipleExamplesProvider<ValidationErrorResource>
+public class GetMessagesWithRecipientBadRequestExample : IMultipleExamplesProvider<ValidationErrorViewModel>
 {
-    public IEnumerable<SwaggerExample<ValidationErrorResource>> GetExamples()
+    public IEnumerable<SwaggerExample<ValidationErrorViewModel>> GetExamples()
     {
         const string limitName = nameof(GetMessagesWithRecipientQueryParams.Limit);
 
         return new[]
         {
-            new SwaggerExample<ValidationErrorResource>
+            new SwaggerExample<ValidationErrorViewModel>
             {
                 Name = "LimitBelowZero",
                 Summary = "Limit is below zero",
-                Value = new ValidationErrorResource
+                Value = new ValidationErrorViewModel
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
                     Message = "One or multiple validation errors occurred",
@@ -31,11 +31,11 @@ public class GetMessagesWithRecipientBadRequestExample : IMultipleExamplesProvid
                     }
                 }
             },
-            new SwaggerExample<ValidationErrorResource>
+            new SwaggerExample<ValidationErrorViewModel>
             {
                 Name = "BeforeAfterOverlap",
                 Summary = "'Before' is before 'After'",
-                Value = new ValidationErrorResource
+                Value = new ValidationErrorViewModel
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
                     Message = "One or multiple validation errors occurred",

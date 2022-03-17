@@ -80,15 +80,15 @@ public class FriendshipController : ControllerBase
     [SwaggerResponseExample(StatusCodes.Status201Created, typeof(RequestFriendshipCreatedExample))]
 
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(RequestFriendshipBadRequestExample))]
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(RequestFriendshipNotFoundExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult<FriendshipResource>> RequestFriendship([FromBody] RequestFriendshipBody body, CancellationToken cancellationToken = default)
     {
@@ -103,7 +103,7 @@ public class FriendshipController : ControllerBase
         // Check if requester + addressee id are the same
         if (requesterId == body.AddresseeId)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+            return StatusCode(StatusCodes.Status403Forbidden, new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status403Forbidden,
                 Message = "You cannot create a friendship with yourself"
@@ -117,7 +117,7 @@ public class FriendshipController : ControllerBase
 
         if (!userExists)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"User with ID '{body.AddresseeId}' does not exist"
@@ -135,7 +135,7 @@ public class FriendshipController : ControllerBase
 
         if (combinationExists)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, new ErrorResource
+            return StatusCode(StatusCodes.Status403Forbidden, new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status403Forbidden,
                 Message = $"There is already a friendship with user {body.AddresseeId}"
@@ -188,11 +188,11 @@ public class FriendshipController : ControllerBase
     [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetFriendshipByIdOkExample))]
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GetFriendshipByIdNotFoundExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult<FriendshipResource>> GetFriendshipById([FromRoute] int friendshipId, CancellationToken cancellationToken = default)
     {
@@ -205,7 +205,7 @@ public class FriendshipController : ControllerBase
 
         if (friendship == null)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"Friendship with ID '{friendshipId}' does not exist"
@@ -262,15 +262,15 @@ public class FriendshipController : ControllerBase
     [SwaggerRequestExample(typeof(UpdateFriendshipStatusBody), typeof(UpdateFriendshipStatusBodyExample))]
 
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(UpdateFriendshipStatusBadRequestExample))]
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(UpdateFriendshipStatusNotFoundExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult> UpdateFriendshipStatus([FromRoute] int friendshipId, [FromBody] UpdateFriendshipStatusBody model, CancellationToken cancellationToken = default)
     {
@@ -285,7 +285,7 @@ public class FriendshipController : ControllerBase
 
         if (!exists)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"Friendship with ID '{friendshipId}' does not exist"

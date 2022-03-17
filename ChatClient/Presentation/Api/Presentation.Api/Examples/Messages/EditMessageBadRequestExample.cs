@@ -6,13 +6,13 @@ using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.Messages;
 
-public class EditMessageBadRequestExample : IExamplesProvider<ValidationErrorResource>
+public class EditMessageBadRequestExample : IExamplesProvider<ValidationErrorViewModel>
 {
-    public ValidationErrorResource GetExamples()
+    public ValidationErrorViewModel GetExamples()
     {
         const string htmlContentName = nameof(EditMessageBody.HtmlContent);
 
-        return new ValidationErrorResource
+        return new ValidationErrorViewModel
         {
             StatusCode = StatusCodes.Status400BadRequest,
             Message = "One or multiple validation errors occurred",

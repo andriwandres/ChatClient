@@ -9,9 +9,9 @@ using System.Linq;
 
 namespace Presentation.Api.Examples.Friendships;
 
-public class UpdateFriendshipStatusBadRequestExample : IExamplesProvider<ValidationErrorResource>
+public class UpdateFriendshipStatusBadRequestExample : IExamplesProvider<ValidationErrorViewModel>
 {
-    public ValidationErrorResource GetExamples()
+    public ValidationErrorViewModel GetExamples()
     {
         const string friendshipStatusName = nameof(UpdateFriendshipStatusBody.FriendshipStatus);
         IEnumerable<int> values = Enum
@@ -20,7 +20,7 @@ public class UpdateFriendshipStatusBadRequestExample : IExamplesProvider<Validat
 
         string valuesString = string.Join(", ", values);
 
-        return new ValidationErrorResource
+        return new ValidationErrorViewModel
         {
             StatusCode = StatusCodes.Status400BadRequest,
             Message = "One or multiple validation errors occurred",

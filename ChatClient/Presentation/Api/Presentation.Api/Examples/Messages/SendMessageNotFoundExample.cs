@@ -5,27 +5,27 @@ using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.Messages;
 
-public class SendMessageNotFoundExample : IMultipleExamplesProvider<ErrorResource>
+public class SendMessageNotFoundExample : IMultipleExamplesProvider<ErrorViewModel>
 {
-    public IEnumerable<SwaggerExample<ErrorResource>> GetExamples()
+    public IEnumerable<SwaggerExample<ErrorViewModel>> GetExamples()
     {
         return new[]
         {
-            new SwaggerExample<ErrorResource>
+            new SwaggerExample<ErrorViewModel>
             {
                 Name = "RecipientNotFound",
                 Summary = "Recipient does not exist",
-                Value = new ErrorResource
+                Value = new ErrorViewModel
                 {
                     StatusCode = StatusCodes.Status404NotFound,
                     Message = "Recipient with ID 'xxx' does not exist"
                 }
             },
-            new SwaggerExample<ErrorResource>
+            new SwaggerExample<ErrorViewModel>
             {
                 Name = "ParentMessageNotFound",
                 Summary = "Parent message does not exist",
-                Value = new ErrorResource
+                Value = new ErrorViewModel
                 {
                     StatusCode = StatusCodes.Status404NotFound,
                     Message = "Parent message with ID 'xxx' does not exist"

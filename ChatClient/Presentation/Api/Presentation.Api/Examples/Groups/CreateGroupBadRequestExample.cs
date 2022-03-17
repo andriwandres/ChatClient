@@ -6,20 +6,20 @@ using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.Groups;
 
-public class CreateGroupBadRequestExample : IMultipleExamplesProvider<ValidationErrorResource>
+public class CreateGroupBadRequestExample : IMultipleExamplesProvider<ValidationErrorViewModel>
 {
-    public IEnumerable<SwaggerExample<ValidationErrorResource>> GetExamples()
+    public IEnumerable<SwaggerExample<ValidationErrorViewModel>> GetExamples()
     {
         const int nameMinLength = 2;
         const string nameName = nameof(CreateGroupBody.Name);
 
         return new[]
         {
-            new SwaggerExample<ValidationErrorResource>
+            new SwaggerExample<ValidationErrorViewModel>
             {
                 Name = "NameEmpty",
                 Summary = "Name is left empty",
-                Value = new ValidationErrorResource
+                Value = new ValidationErrorViewModel
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
                     Message = "One or multiple validation errors occurred",
@@ -35,11 +35,11 @@ public class CreateGroupBadRequestExample : IMultipleExamplesProvider<Validation
                     }
                 }
             },
-            new SwaggerExample<ValidationErrorResource>
+            new SwaggerExample<ValidationErrorViewModel>
             {
                 Name = "NameTooShort",
                 Summary = "Name is too short",
-                Value = new ValidationErrorResource
+                Value = new ValidationErrorViewModel
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
                     Message = "One or multiple validation errors occurred",

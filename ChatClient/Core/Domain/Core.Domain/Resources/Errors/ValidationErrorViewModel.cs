@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace Core.Domain.Resources.Errors;
 
-public class ValidationErrorResource
+public class ValidationErrorViewModel
 {
     [JsonPropertyName("statusCode")]
     public int StatusCode { get; set; }

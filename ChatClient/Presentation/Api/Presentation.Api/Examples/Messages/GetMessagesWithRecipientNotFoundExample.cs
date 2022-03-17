@@ -4,11 +4,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.Messages;
 
-public class GetMessagesWithRecipientNotFoundExample : IExamplesProvider<ErrorResource>
+public class GetMessagesWithRecipientNotFoundExample : IExamplesProvider<ErrorViewModel>
 {
-    public ErrorResource GetExamples()
+    public ErrorViewModel GetExamples()
     {
-        return new ErrorResource
+        return new ErrorViewModel
         {
             StatusCode = StatusCodes.Status404NotFound,
             Message = "Recipient with ID 'xxx' does not exist"

@@ -4,11 +4,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.Session;
 
-public class LoginUnauthorizedExample : IExamplesProvider<ErrorResource>
+public class LoginUnauthorizedExample : IExamplesProvider<ErrorViewModel>
 {
-    public ErrorResource GetExamples()
+    public ErrorViewModel GetExamples()
     {
-        return new ErrorResource
+        return new ErrorViewModel
         {
             StatusCode = StatusCodes.Status401Unauthorized,
             Message = "UserName, e-mail and/or password are incorrect"

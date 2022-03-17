@@ -6,19 +6,19 @@ using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.GroupMemberships;
 
-public class UpdateMembershipBadRequestExample : IMultipleExamplesProvider<ValidationErrorResource>
+public class UpdateMembershipBadRequestExample : IMultipleExamplesProvider<ValidationErrorViewModel>
 {
-    public IEnumerable<SwaggerExample<ValidationErrorResource>> GetExamples()
+    public IEnumerable<SwaggerExample<ValidationErrorViewModel>> GetExamples()
     {
         const string isAdminName = nameof(UpdateMembershipBody.IsAdmin);
 
         return new[]
         {
-            new SwaggerExample<ValidationErrorResource>
+            new SwaggerExample<ValidationErrorViewModel>
             {
                 Name = $"{isAdminName}Null",
                 Summary = $"'{isAdminName}' is null",
-                Value = new ValidationErrorResource
+                Value = new ValidationErrorViewModel
                 {
                     StatusCode = StatusCodes.Status400BadRequest,
                     Message = "One or multiple validation errors occurred",

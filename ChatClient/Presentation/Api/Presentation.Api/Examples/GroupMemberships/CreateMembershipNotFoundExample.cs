@@ -5,27 +5,27 @@ using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.GroupMemberships;
 
-public class CreateMembershipNotFoundExample : IMultipleExamplesProvider<ErrorResource>
+public class CreateMembershipNotFoundExample : IMultipleExamplesProvider<ErrorViewModel>
 {
-    public IEnumerable<SwaggerExample<ErrorResource>> GetExamples()
+    public IEnumerable<SwaggerExample<ErrorViewModel>> GetExamples()
     {
         return new[]
         {
-            new SwaggerExample<ErrorResource>
+            new SwaggerExample<ErrorViewModel>
             {
                 Name = $"UserNotFound",
                 Summary = $"User not found",
-                Value = new ErrorResource
+                Value = new ErrorViewModel
                 {
                     StatusCode = StatusCodes.Status404NotFound,
                     Message = $"User with ID 'xxx' does not exist"
                 }
             },
-            new SwaggerExample<ErrorResource>
+            new SwaggerExample<ErrorViewModel>
             {
                 Name = $"GroupNotFound",
                 Summary = $"Group not found",
-                Value = new ErrorResource
+                Value = new ErrorViewModel
                 {
                     StatusCode = StatusCodes.Status404NotFound,
                     Message = $"Group with ID 'xxx' does not exist"

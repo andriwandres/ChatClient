@@ -60,7 +60,7 @@ public class CountryController : ControllerBase
     [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetCountriesOkExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult<IEnumerable<CountryResource>>> GetCountries(CancellationToken cancellationToken = default)
     {

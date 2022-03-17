@@ -78,15 +78,15 @@ public class RecipientController : ControllerBase
     [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetMessagesWithRecipientOkExample))]
 
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(GetMessagesWithRecipientBadRequestExample))]
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GetMessagesWithRecipientNotFoundExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult<IEnumerable<ChatMessageResource>>> GetMessagesWithRecipient([FromRoute] int recipientId, [FromQuery] GetMessagesWithRecipientQueryParams boundaries, CancellationToken cancellationToken = default)
     {
@@ -102,7 +102,7 @@ public class RecipientController : ControllerBase
 
         if (!exists)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"Recipient with ID '{recipientId}' does not exist"

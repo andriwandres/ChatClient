@@ -78,11 +78,11 @@ public class GroupController : ControllerBase
     [SwaggerResponseExample(StatusCodes.Status201Created, typeof(CreateGroupCreatedExample))]
 
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorResource))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ValidationErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(CreateGroupBadRequestExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult<GroupResource>> CreateGroup([FromBody] CreateGroupBody model, CancellationToken cancellationToken = default)
     {
@@ -136,11 +136,11 @@ public class GroupController : ControllerBase
     [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetGroupByIdOkExample))]
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GetGroupByIdNotFoundExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult<GroupResource>> GetGroupById([FromRoute] int groupId, CancellationToken cancellationToken = default)
     {
@@ -153,7 +153,7 @@ public class GroupController : ControllerBase
 
         if (group == null)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"Group with ID '{groupId}' does not exist"
@@ -210,15 +210,15 @@ public class GroupController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
 
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status400BadRequest, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status400BadRequest, typeof(UpdateGroupBadRequestExample))]
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(UpdateGroupNotFoundExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult> UpdateGroup([FromRoute] int groupId, [FromBody] UpdateGroupBody model, CancellationToken cancellationToken = default)
     {
@@ -233,7 +233,7 @@ public class GroupController : ControllerBase
 
         if (!exists)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"Group with ID '{groupId}' does not exist"
@@ -289,11 +289,11 @@ public class GroupController : ControllerBase
     [ProducesResponseType(StatusCodes.Status204NoContent)]
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(DeleteGroupNotFoundExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult> DeleteGroup([FromRoute] int groupId, CancellationToken cancellationToken = default)
     {
@@ -303,7 +303,7 @@ public class GroupController : ControllerBase
 
         if (!exists)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"Group with ID '{groupId}' does not exist"
@@ -355,11 +355,11 @@ public class GroupController : ControllerBase
     [SwaggerResponseExample(StatusCodes.Status200OK, typeof(GetMembershipsByGroupOkExample))]
 
     [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status404NotFound, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status404NotFound, typeof(GetMembershipsByGroupNotFoundExample))]
 
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorResource))]
+    [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
     public async Task<ActionResult<IEnumerable<GroupMembershipResource>>> GetMembershipsByGroup([FromRoute] int groupId, CancellationToken cancellationToken = default)
     {
@@ -369,7 +369,7 @@ public class GroupController : ControllerBase
 
         if (!exists)
         {
-            return NotFound(new ErrorResource
+            return NotFound(new ErrorViewModel
             {
                 StatusCode = StatusCodes.Status404NotFound,
                 Message = $"Group with ID '{groupId}' does not exist"
