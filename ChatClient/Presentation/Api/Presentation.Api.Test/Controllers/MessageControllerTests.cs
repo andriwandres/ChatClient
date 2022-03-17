@@ -46,7 +46,7 @@ public class MessageControllerTests
         controller.ModelState.AddModelError("", "");
 
         // Act
-        ActionResult<ChatMessageResource> response = await controller.SendMessage(body);
+        ActionResult<ChatMessageViewModel> response = await controller.SendMessage(body);
 
         // Assert
         Assert.IsType<BadRequestObjectResult>(response.Result);
@@ -68,7 +68,7 @@ public class MessageControllerTests
         MessageController controller = new MessageController(null, _mediatorMock.Object);
 
         // Act
-        ActionResult<ChatMessageResource> response = await controller.SendMessage(body);
+        ActionResult<ChatMessageViewModel> response = await controller.SendMessage(body);
 
         // Assert
         NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
@@ -100,7 +100,7 @@ public class MessageControllerTests
         MessageController controller = new MessageController(null, _mediatorMock.Object);
 
         // Act
-        ActionResult<ChatMessageResource> response = await controller.SendMessage(body);
+        ActionResult<ChatMessageViewModel> response = await controller.SendMessage(body);
 
         // Assert
         ObjectResult result = Assert.IsType<ObjectResult>(response.Result);
@@ -137,7 +137,7 @@ public class MessageControllerTests
         MessageController controller = new MessageController(null, _mediatorMock.Object);
 
         // Act
-        ActionResult<ChatMessageResource> response = await controller.SendMessage(body);
+        ActionResult<ChatMessageViewModel> response = await controller.SendMessage(body);
 
         // Assert
         NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
@@ -178,7 +178,7 @@ public class MessageControllerTests
         MessageController controller = new MessageController(null, _mediatorMock.Object);
 
         // Act
-        ActionResult<ChatMessageResource> response = await controller.SendMessage(body);
+        ActionResult<ChatMessageViewModel> response = await controller.SendMessage(body);
 
         // Assert
         ObjectResult result = Assert.IsType<ObjectResult>(response.Result);
@@ -218,12 +218,12 @@ public class MessageControllerTests
 
         _mediatorMock
             .Setup(m => m.Send(It.IsAny<SendMessageCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new ChatMessageResource());
+            .ReturnsAsync(new ChatMessageViewModel());
 
         MessageController controller = new MessageController(_mapperMock, _mediatorMock.Object);
 
         // Act
-        ActionResult<ChatMessageResource> response = await controller.SendMessage(body);
+        ActionResult<ChatMessageViewModel> response = await controller.SendMessage(body);
 
         // Assert
         Assert.IsType<CreatedAtActionResult>(response.Result);
@@ -246,7 +246,7 @@ public class MessageControllerTests
         MessageController controller = new MessageController(null, _mediatorMock.Object);
 
         // Act
-        ActionResult<MessageResource> response = await controller.GetMessageById(messageId);
+        ActionResult<MessageViewModel> response = await controller.GetMessageById(messageId);
 
         // Assert
         NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
@@ -274,7 +274,7 @@ public class MessageControllerTests
         MessageController controller = new MessageController(null, _mediatorMock.Object);
 
         // Act
-        ActionResult<MessageResource> response = await controller.GetMessageById(messageId);
+        ActionResult<MessageViewModel> response = await controller.GetMessageById(messageId);
 
         // Assert
         ObjectResult result = Assert.IsType<ObjectResult>(response.Result);
@@ -291,7 +291,7 @@ public class MessageControllerTests
         // Arrange
         const int messageId = 1;
 
-        MessageResource expectedMessage = new MessageResource { MessageId = 1 };
+        MessageViewModel expectedMessage = new MessageViewModel { MessageId = 1 };
 
         _mediatorMock
             .Setup(m => m.Send(It.IsAny<MessageExistsQuery>(), It.IsAny<CancellationToken>()))
@@ -308,12 +308,12 @@ public class MessageControllerTests
         MessageController controller = new MessageController(null, _mediatorMock.Object);
 
         // Act
-        ActionResult<MessageResource> response = await controller.GetMessageById(messageId);
+        ActionResult<MessageViewModel> response = await controller.GetMessageById(messageId);
 
         // Assert
         OkObjectResult result = Assert.IsType<OkObjectResult>(response.Result);
 
-        MessageResource message = Assert.IsType<MessageResource>(result.Value);
+        MessageViewModel message = Assert.IsType<MessageViewModel>(result.Value);
 
         Assert.NotNull(message);
         Assert.Equal(messageId, message.MessageId);

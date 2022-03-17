@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace Core.Application.Requests.Friendships.Queries;
 
-public class GetOwnFriendshipsQuery : IRequest<IEnumerable<FriendshipResource>>
+public class GetOwnFriendshipsQuery : IRequest<IEnumerable<FriendshipViewModel>>
 {
-    public class Handler : IRequestHandler<GetOwnFriendshipsQuery, IEnumerable<FriendshipResource>>
+    public class Handler : IRequestHandler<GetOwnFriendshipsQuery, IEnumerable<FriendshipViewModel>>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -25,14 +25,14 @@ public class GetOwnFriendshipsQuery : IRequest<IEnumerable<FriendshipResource>>
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<FriendshipResource>> Handle(GetOwnFriendshipsQuery request, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<FriendshipViewModel>> Handle(GetOwnFriendshipsQuery request, CancellationToken cancellationToken = default)
         {
             // Get the current users id
             int userId = _userProvider.GetCurrentUserId();
 
             List<Friendship> friendships = await _unitOfWork.Friendships.GetByUser(userId);
                 
-            return _mapper.Map<List<Friendship>, List<FriendshipResource>>(friendships);
+            return _mapper.Map<List<Friendship>, List<FriendshipViewModel>>(friendships);
         }
     }
 }

@@ -36,7 +36,7 @@ public class RecipientControllerTests
         controller.ModelState.AddModelError("", "");
 
         // Act
-        ActionResult<IEnumerable<ChatMessageResource>> response = await controller.GetMessagesWithRecipient(recipientId, queryParams);
+        ActionResult<IEnumerable<ChatMessageViewModel>> response = await controller.GetMessagesWithRecipient(recipientId, queryParams);
 
         // Assert
         Assert.IsType<BadRequestObjectResult>(response.Result);
@@ -57,7 +57,7 @@ public class RecipientControllerTests
         RecipientController controller = new RecipientController(_mediatorMock.Object);
 
         // Act
-        ActionResult<IEnumerable<ChatMessageResource>> response = await controller.GetMessagesWithRecipient(recipientId, queryParams);
+        ActionResult<IEnumerable<ChatMessageViewModel>> response = await controller.GetMessagesWithRecipient(recipientId, queryParams);
 
         // Assert
         NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
@@ -82,12 +82,12 @@ public class RecipientControllerTests
 
         _mediatorMock
             .Setup(m => m.Send(It.IsAny<GetMessagesWithRecipientQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<ChatMessageResource>());
+            .ReturnsAsync(new List<ChatMessageViewModel>());
 
         RecipientController controller = new RecipientController(_mediatorMock.Object);
 
         // Act
-        ActionResult<IEnumerable<ChatMessageResource>> response = await controller.GetMessagesWithRecipient(recipientId, queryParams);
+        ActionResult<IEnumerable<ChatMessageViewModel>> response = await controller.GetMessagesWithRecipient(recipientId, queryParams);
 
         // Assert
         Assert.IsType<OkObjectResult>(response.Result);

@@ -88,7 +88,7 @@ public class RecipientController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-    public async Task<ActionResult<IEnumerable<ChatMessageResource>>> GetMessagesWithRecipient([FromRoute] int recipientId, [FromQuery] GetMessagesWithRecipientQueryParams boundaries, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<IEnumerable<ChatMessageViewModel>>> GetMessagesWithRecipient([FromRoute] int recipientId, [FromQuery] GetMessagesWithRecipientQueryParams boundaries, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
         {
@@ -118,7 +118,7 @@ public class RecipientController : ControllerBase
             After = boundaries.After,
         };
 
-        IEnumerable<ChatMessageResource> messages = await _mediator.Send(fetchQuery, cancellationToken);
+        IEnumerable<ChatMessageViewModel> messages = await _mediator.Send(fetchQuery, cancellationToken);
 
         return Ok(messages);
     }

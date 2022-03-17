@@ -4,13 +4,13 @@ using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.GroupMemberships;
 
-public class GetMembershipsByGroupOkExample : IExamplesProvider<IEnumerable<GroupMembershipResource>>
+public class GetMembershipsByGroupOkExample : IExamplesProvider<IEnumerable<GroupMembershipViewModel>>
 {
-    public IEnumerable<GroupMembershipResource> GetExamples()
+    public IEnumerable<GroupMembershipViewModel> GetExamples()
     {
         return new[]
         {
-            new GroupMembershipResource
+            new GroupMembershipViewModel
             {
                 GroupMembershipId = 1,
                 GroupId = 1,
@@ -18,7 +18,7 @@ public class GetMembershipsByGroupOkExample : IExamplesProvider<IEnumerable<Grou
                 UserName = "alfred_miller",
                 IsAdmin = true
             },
-            new GroupMembershipResource
+            new GroupMembershipViewModel
             {
                 GroupMembershipId = 2,
                 GroupId = 1,

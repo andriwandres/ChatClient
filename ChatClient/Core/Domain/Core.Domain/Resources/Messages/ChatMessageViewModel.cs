@@ -2,7 +2,7 @@
 
 namespace Core.Domain.Resources.Messages;
 
-public class ChatMessageResource
+public class ChatMessageViewModel
 {
     public int MessageRecipientId { get; set; }
     public int MessageId { get; set; }

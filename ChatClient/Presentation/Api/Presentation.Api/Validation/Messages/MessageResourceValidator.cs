@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Presentation.Api.Validation.Messages;
 
-public class MessageResourceValidator : AbstractValidator<MessageResource>
+public class MessageResourceValidator : AbstractValidator<MessageViewModel>
 {
     public MessageResourceValidator()
     {

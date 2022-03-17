@@ -105,7 +105,7 @@ public class SendMessageCommandTests
         SendMessageCommand.Handler handler = new SendMessageCommand.Handler(_unitOfWorkMock.Object, _dateProviderMock.Object, _userProviderMock.Object, _hubContextMock.Object);
 
         // Act
-        ChatMessageResource result = await handler.Handle(request);
+        ChatMessageViewModel result = await handler.Handle(request);
 
         // Assert
         _unitOfWorkMock.Verify(m => m.Messages.Add(It.IsAny<Message>(), It.IsAny<CancellationToken>()), Times.Once);
@@ -208,7 +208,7 @@ public class SendMessageCommandTests
         SendMessageCommand.Handler handler = new(_unitOfWorkMock.Object, _dateProviderMock.Object, _userProviderMock.Object, _hubContextMock.Object);
 
         // Act
-        ChatMessageResource result = await handler.Handle(request);
+        ChatMessageViewModel result = await handler.Handle(request);
 
         // Assert
         _unitOfWorkMock.Verify(m => m.Messages.Add(It.IsAny<Message>(), It.IsAny<CancellationToken>()), Times.Once);

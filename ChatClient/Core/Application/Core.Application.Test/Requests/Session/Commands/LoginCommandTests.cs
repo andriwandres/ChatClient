@@ -23,7 +23,7 @@ public class LoginCommandTests
 
         MapperConfiguration mapperConfiguration = new(config =>
         {
-            config.CreateMap<User, AuthenticatedUserResource>();
+            config.CreateMap<User, AuthenticatedUserViewModel>();
         });
 
         _mapperMock = mapperConfiguration.CreateMapper();
@@ -45,7 +45,7 @@ public class LoginCommandTests
         LoginCommand.Handler handler = new(_unitOfWorkMock.Object, null, null);
 
         // Act
-        AuthenticatedUserResource user = await handler.Handle(request);
+        AuthenticatedUserViewModel user = await handler.Handle(request);
 
         // Assert
         Assert.Null(user);
@@ -72,7 +72,7 @@ public class LoginCommandTests
         LoginCommand.Handler handler = new(_unitOfWorkMock.Object, null, _cryptoServiceMock.Object);
 
         // Act
-        AuthenticatedUserResource user = await handler.Handle(request);
+        AuthenticatedUserViewModel user = await handler.Handle(request);
 
         // Assert
         Assert.Null(user);
@@ -107,7 +107,7 @@ public class LoginCommandTests
         LoginCommand.Handler handler = new(_unitOfWorkMock.Object, _mapperMock, _cryptoServiceMock.Object);
 
         // Act
-        AuthenticatedUserResource user = await handler.Handle(request);
+        AuthenticatedUserViewModel user = await handler.Handle(request);
 
         // Assert
         Assert.NotNull(user);

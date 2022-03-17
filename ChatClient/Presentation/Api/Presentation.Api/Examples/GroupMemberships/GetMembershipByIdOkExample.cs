@@ -3,11 +3,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.GroupMemberships;
 
-public class GetMembershipByIdOkExample : IExamplesProvider<GroupMembershipResource>
+public class GetMembershipByIdOkExample : IExamplesProvider<GroupMembershipViewModel>
 {
-    public GroupMembershipResource GetExamples()
+    public GroupMembershipViewModel GetExamples()
     {
-        return new GroupMembershipResource
+        return new GroupMembershipViewModel
         {
             GroupMembershipId = 1,
             GroupId = 1,

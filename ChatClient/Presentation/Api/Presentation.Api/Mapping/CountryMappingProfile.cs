@@ -8,6 +8,6 @@ public class CountryMappingProfile : Profile
 {
     public CountryMappingProfile()
     {
-        CreateMap<Country, CountryResource>();
+        CreateMap<Country, CountryViewModel>();
     }
 }

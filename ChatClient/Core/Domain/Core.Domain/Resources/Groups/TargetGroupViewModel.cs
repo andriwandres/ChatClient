@@ -1,6 +1,6 @@
 ﻿namespace Core.Domain.Resources.Groups;
 
-public class TargetGroupResource
+public class TargetGroupViewModel
 {
     public int GroupId { get; set; }
     public string Name { get; set; }

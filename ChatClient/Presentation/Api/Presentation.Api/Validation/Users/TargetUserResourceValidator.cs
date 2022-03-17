@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Presentation.Api.Validation.Users;
 
-public class TargetUserResourceValidator : AbstractValidator<TargetUserResource>
+public class TargetUserResourceValidator : AbstractValidator<TargetUserViewModel>
 {
     public TargetUserResourceValidator()
     {

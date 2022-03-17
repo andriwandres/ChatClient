@@ -192,12 +192,12 @@ public class UserControllerTests
 
         _mediatorMock
             .Setup(m => m.Send(It.IsAny<GetUserProfileQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((UserProfileResource) null);
+            .ReturnsAsync((UserProfileViewModel) null);
 
         UserController controller = new UserController(_mediatorMock.Object, null);
 
         // Act
-        ActionResult<UserProfileResource> response = await controller.GetUserProfile(userId);
+        ActionResult<UserProfileViewModel> response = await controller.GetUserProfile(userId);
 
         // Assert
         NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
@@ -213,7 +213,7 @@ public class UserControllerTests
         // Arrange
         const int userId = 1;
 
-        UserProfileResource expectedUserProfile = new UserProfileResource { UserId = 1 };
+        UserProfileViewModel expectedUserProfile = new UserProfileViewModel { UserId = 1 };
 
         _mediatorMock
             .Setup(m => m.Send(It.IsAny<GetUserProfileQuery>(), It.IsAny<CancellationToken>()))
@@ -222,12 +222,12 @@ public class UserControllerTests
         UserController controller = new UserController(_mediatorMock.Object, null);
 
         // Act
-        ActionResult<UserProfileResource> response = await controller.GetUserProfile(userId);
+        ActionResult<UserProfileViewModel> response = await controller.GetUserProfile(userId);
 
         // Assert
         OkObjectResult result = Assert.IsType<OkObjectResult>(response.Result);
 
-        UserProfileResource profile = (UserProfileResource) result.Value;
+        UserProfileViewModel profile = (UserProfileViewModel) result.Value;
 
         Assert.Equal(1, profile.UserId);
     }
@@ -240,7 +240,7 @@ public class UserControllerTests
     public async Task Authenticate_ShouldReturnUser_WhenAuthenticationWasSuccessful()
     {
         // Arrange
-        AuthenticatedUserResource expectedUser = new AuthenticatedUserResource()
+        AuthenticatedUserViewModel expectedUser = new AuthenticatedUserViewModel()
         {
             UserId = 1
         };
@@ -252,12 +252,12 @@ public class UserControllerTests
         UserController controller = new UserController(_mediatorMock.Object, null);
 
         // Act
-        ActionResult<AuthenticatedUserResource> response = await controller.Authenticate();
+        ActionResult<AuthenticatedUserViewModel> response = await controller.Authenticate();
 
         // Assert
         OkObjectResult okResult = Assert.IsType<OkObjectResult>(response.Result);
 
-        AuthenticatedUserResource actualUser = (AuthenticatedUserResource) okResult.Value;
+        AuthenticatedUserViewModel actualUser = (AuthenticatedUserViewModel) okResult.Value;
 
         Assert.NotNull(actualUser);
         Assert.Equal(expectedUser.UserId, actualUser.UserId);
@@ -271,9 +271,9 @@ public class UserControllerTests
     public async Task GetOwnFriendships_ShouldReturnFriendships()
     {
         // Arrange
-        IEnumerable<FriendshipResource> expectedFriendships = new[]
+        IEnumerable<FriendshipViewModel> expectedFriendships = new[]
         {
-            new FriendshipResource {FriendshipId = 1}
+            new FriendshipViewModel {FriendshipId = 1}
         };
 
         _mediatorMock
@@ -283,12 +283,12 @@ public class UserControllerTests
         UserController controller = new UserController(_mediatorMock.Object, null);
 
         // Act
-        ActionResult<IEnumerable<FriendshipResource>> response = await controller.GetOwnFriendships();
+        ActionResult<IEnumerable<FriendshipViewModel>> response = await controller.GetOwnFriendships();
 
         // Assert
         OkObjectResult result = Assert.IsType<OkObjectResult>(response.Result);
 
-        IEnumerable<FriendshipResource> actualFriendships = (IEnumerable<FriendshipResource>) result.Value;
+        IEnumerable<FriendshipViewModel> actualFriendships = (IEnumerable<FriendshipViewModel>) result.Value;
 
         Assert.Single(actualFriendships);
     }
@@ -301,9 +301,9 @@ public class UserControllerTests
     public async Task GetOwnRecipients_ShouldReturnRecipients()
     {
         // Arrange
-        IEnumerable<RecipientResource> expectedRecipients = new []
+        IEnumerable<RecipientViewModel> expectedRecipients = new []
         {
-            new RecipientResource { RecipientId = 1}
+            new RecipientViewModel { RecipientId = 1}
         };
 
         _mediatorMock
@@ -313,7 +313,7 @@ public class UserControllerTests
         UserController controller = new UserController(_mediatorMock.Object, _mapperMock);
             
         // Act
-        ActionResult<IEnumerable<RecipientResource>> response = await controller.GetOwnRecipients();
+        ActionResult<IEnumerable<RecipientViewModel>> response = await controller.GetOwnRecipients();
 
         // Assert
         Assert.IsType<OkObjectResult>(response.Result);

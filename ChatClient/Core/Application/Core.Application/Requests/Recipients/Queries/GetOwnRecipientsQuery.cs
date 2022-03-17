@@ -13,9 +13,9 @@ using System.Threading.Tasks;
 
 namespace Core.Application.Requests.Recipients.Queries;
 
-public class GetOwnRecipientsQuery : IRequest<IEnumerable<RecipientResource>>
+public class GetOwnRecipientsQuery : IRequest<IEnumerable<RecipientViewModel>>
 {
-    public class Handler : IRequestHandler<GetOwnRecipientsQuery, IEnumerable<RecipientResource>>
+    public class Handler : IRequestHandler<GetOwnRecipientsQuery, IEnumerable<RecipientViewModel>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserProvider _userProvider;
@@ -26,7 +26,7 @@ public class GetOwnRecipientsQuery : IRequest<IEnumerable<RecipientResource>>
             _userProvider = userProvider;
         }
 
-        public async Task<IEnumerable<RecipientResource>> Handle(GetOwnRecipientsQuery request, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<RecipientViewModel>> Handle(GetOwnRecipientsQuery request, CancellationToken cancellationToken = default)
         {
             int currentUserId = _userProvider.GetCurrentUserId();
 
@@ -34,8 +34,8 @@ public class GetOwnRecipientsQuery : IRequest<IEnumerable<RecipientResource>>
             List<MessageRecipient> latestGroupedByRecipients = await _unitOfWork.MessageRecipients
                 .GetLatestGroupedByRecipients(currentUserId);
 
-            IEnumerable<RecipientResource> recipients = latestGroupedByRecipients
-                .Select(source => new RecipientResource
+            IEnumerable<RecipientViewModel> recipients = latestGroupedByRecipients
+                .Select(source => new RecipientViewModel
                 {
                     RecipientId = source.Recipient.UserId != currentUserId
                         ? source.RecipientId
@@ -43,7 +43,7 @@ public class GetOwnRecipientsQuery : IRequest<IEnumerable<RecipientResource>>
 
                     TargetGroup = source.Recipient.GroupMembershipId == null
                         ? null
-                        : new TargetGroupResource
+                        : new TargetGroupViewModel
                         {
                             GroupId = source.Recipient.GroupMembership.GroupId,
                             Name = source.Recipient.GroupMembership.Group.Name,
@@ -51,7 +51,7 @@ public class GetOwnRecipientsQuery : IRequest<IEnumerable<RecipientResource>>
 
                     TargetUser = source.Recipient.UserId == null
                         ? null
-                        : new TargetUserResource
+                        : new TargetUserViewModel
                         {
                             UserId = source.Recipient.UserId == currentUserId
                                 ? source.Message.AuthorId
@@ -61,7 +61,7 @@ public class GetOwnRecipientsQuery : IRequest<IEnumerable<RecipientResource>>
                                 : source.Recipient.User.UserName
                         },
 
-                    LatestMessage = new LatestMessageResource
+                    LatestMessage = new LatestMessageViewModel
                     {
                         MessageId = source.MessageId,
                         MessageRecipientId = source.MessageRecipientId,

@@ -10,7 +10,7 @@ public class GroupMappingProfile : Profile
 {
     public GroupMappingProfile()
     {
-        CreateMap<Group, GroupResource>();
+        CreateMap<Group, GroupViewModel>();
         CreateMap<CreateGroupBody, CreateGroupCommand>();
         CreateMap<UpdateGroupBody, UpdateGroupCommand>(MemberList.Source);
     }

@@ -84,7 +84,7 @@ public class GroupController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-    public async Task<ActionResult<GroupResource>> CreateGroup([FromBody] CreateGroupBody model, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<GroupViewModel>> CreateGroup([FromBody] CreateGroupBody model, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
         {
@@ -93,7 +93,7 @@ public class GroupController : ControllerBase
 
         CreateGroupCommand command = _mapper.Map<CreateGroupBody, CreateGroupCommand>(model);
 
-        GroupResource group = await _mediator.Send(command, cancellationToken);
+        GroupViewModel group = await _mediator.Send(command, cancellationToken);
 
         return CreatedAtAction(nameof(GetGroupById), new { groupId = group.GroupId }, group);
     }
@@ -142,14 +142,14 @@ public class GroupController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-    public async Task<ActionResult<GroupResource>> GetGroupById([FromRoute] int groupId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<GroupViewModel>> GetGroupById([FromRoute] int groupId, CancellationToken cancellationToken = default)
     {
         GetGroupByIdQuery query = new GetGroupByIdQuery
         {
             GroupId = groupId
         };
 
-        GroupResource group = await _mediator.Send(query, cancellationToken);
+        GroupViewModel group = await _mediator.Send(query, cancellationToken);
 
         if (group == null)
         {
@@ -361,7 +361,7 @@ public class GroupController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-    public async Task<ActionResult<IEnumerable<GroupMembershipResource>>> GetMembershipsByGroup([FromRoute] int groupId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<IEnumerable<GroupMembershipViewModel>>> GetMembershipsByGroup([FromRoute] int groupId, CancellationToken cancellationToken = default)
     {
         GroupExistsQuery existsQuery = new GroupExistsQuery { GroupId = groupId };
 
@@ -378,7 +378,7 @@ public class GroupController : ControllerBase
 
         GetMembershipsByGroupQuery membershipsQuery = new GetMembershipsByGroupQuery { GroupId = groupId };
 
-        IEnumerable<GroupMembershipResource> memberships = await _mediator.Send(membershipsQuery, cancellationToken);
+        IEnumerable<GroupMembershipViewModel> memberships = await _mediator.Send(membershipsQuery, cancellationToken);
 
         return Ok(memberships);
     }

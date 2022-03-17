@@ -20,7 +20,7 @@ public class GetMembershipByIdQueryTests
 
         MapperConfiguration mapperConfiguration = new(config =>
         {
-            config.CreateMap<GroupMembership, GroupMembershipResource>();
+            config.CreateMap<GroupMembership, GroupMembershipViewModel>();
         });
 
         _mapperMock = mapperConfiguration.CreateMapper();
@@ -39,7 +39,7 @@ public class GetMembershipByIdQueryTests
         GetMembershipByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object);
 
         // Act
-        GroupMembershipResource membership = await handler.Handle(request);
+        GroupMembershipViewModel membership = await handler.Handle(request);
 
         // Assert
         Assert.Null(membership);
@@ -60,7 +60,7 @@ public class GetMembershipByIdQueryTests
         GetMembershipByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object);
 
         // Act
-        GroupMembershipResource membership = await handler.Handle(request);
+        GroupMembershipViewModel membership = await handler.Handle(request);
 
         // Assert
         Assert.NotNull(membership);

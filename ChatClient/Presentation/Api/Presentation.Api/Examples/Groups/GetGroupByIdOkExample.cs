@@ -4,11 +4,11 @@ using System;
 
 namespace Presentation.Api.Examples.Groups;
 
-public class GetGroupByIdOkExample : IExamplesProvider<GroupResource>
+public class GetGroupByIdOkExample : IExamplesProvider<GroupViewModel>
 {
-    public GroupResource GetExamples()
+    public GroupViewModel GetExamples()
     {
-        return new GroupResource
+        return new GroupViewModel
         {
             GroupId = 1,
             Name = "Saturday night with friends",

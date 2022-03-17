@@ -231,14 +231,14 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-    public async Task<ActionResult<UserProfileResource>> GetUserProfile([FromRoute] int userId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<UserProfileViewModel>> GetUserProfile([FromRoute] int userId, CancellationToken cancellationToken = default)
     {
         GetUserProfileQuery query = new GetUserProfileQuery
         {
             UserId = userId
         };
 
-        UserProfileResource userProfile = await _mediator.Send(query, cancellationToken);
+        UserProfileViewModel userProfile = await _mediator.Send(query, cancellationToken);
 
         if (userProfile == null)
         {
@@ -284,11 +284,11 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-    public async Task<ActionResult<AuthenticatedUserResource>> Authenticate(CancellationToken cancellationToken = default)
+    public async Task<ActionResult<AuthenticatedUserViewModel>> Authenticate(CancellationToken cancellationToken = default)
     {
         AuthenticateQuery query = new AuthenticateQuery();
 
-        AuthenticatedUserResource user = await _mediator.Send(query, cancellationToken);
+        AuthenticatedUserViewModel user = await _mediator.Send(query, cancellationToken);
 
         return Ok(user);
     }
@@ -325,11 +325,11 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-    public async Task<ActionResult<IEnumerable<FriendshipResource>>> GetOwnFriendships(CancellationToken cancellationToken = default)
+    public async Task<ActionResult<IEnumerable<FriendshipViewModel>>> GetOwnFriendships(CancellationToken cancellationToken = default)
     {
         GetOwnFriendshipsQuery query = new GetOwnFriendshipsQuery();
 
-        IEnumerable<FriendshipResource> friendships = await _mediator.Send(query, cancellationToken);
+        IEnumerable<FriendshipViewModel> friendships = await _mediator.Send(query, cancellationToken);
 
         return Ok(friendships);
     }
@@ -366,11 +366,11 @@ public class UserController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-    public async Task<ActionResult<IEnumerable<RecipientResource>>> GetOwnRecipients(CancellationToken cancellationToken = default)
+    public async Task<ActionResult<IEnumerable<RecipientViewModel>>> GetOwnRecipients(CancellationToken cancellationToken = default)
     {
         GetOwnRecipientsQuery query = new GetOwnRecipientsQuery();
 
-        IEnumerable<RecipientResource> relevantRecipients = await _mediator.Send(query, cancellationToken);
+        IEnumerable<RecipientViewModel> relevantRecipients = await _mediator.Send(query, cancellationToken);
 
         return Ok(relevantRecipients);
     }

@@ -4,11 +4,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.Groups;
 
-public class CreateGroupCreatedExample : IExamplesProvider<GroupResource>
+public class CreateGroupCreatedExample : IExamplesProvider<GroupViewModel>
 {
-    public GroupResource GetExamples()
+    public GroupViewModel GetExamples()
     {
-        return new GroupResource
+        return new GroupViewModel
         {
             GroupId = 1,
             Name = "Saturday night with friends",

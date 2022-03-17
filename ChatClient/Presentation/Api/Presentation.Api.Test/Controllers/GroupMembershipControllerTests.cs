@@ -28,7 +28,7 @@ public class GroupMembershipControllerTests
         controller.ModelState.AddModelError("", "");
 
         // Act
-        ActionResult<GroupMembershipResource> response = await controller.CreateMembership(new CreateMembershipBody());
+        ActionResult<GroupMembershipViewModel> response = await controller.CreateMembership(new CreateMembershipBody());
 
         // Assert
         Assert.IsType<BadRequestObjectResult>(response.Result);
@@ -48,7 +48,7 @@ public class GroupMembershipControllerTests
         GroupMembershipController controller = new GroupMembershipController(mediatorMock.Object, null);
 
         // Act
-        ActionResult<GroupMembershipResource> response = await controller.CreateMembership(body);
+        ActionResult<GroupMembershipViewModel> response = await controller.CreateMembership(body);
 
         // Assert
         NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
@@ -77,7 +77,7 @@ public class GroupMembershipControllerTests
         GroupMembershipController controller = new GroupMembershipController(mediatorMock.Object, null);
 
         // Act
-        ActionResult<GroupMembershipResource> response = await controller.CreateMembership(body);
+        ActionResult<GroupMembershipViewModel> response = await controller.CreateMembership(body);
 
         // Assert
         NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
@@ -110,7 +110,7 @@ public class GroupMembershipControllerTests
         GroupMembershipController controller = new GroupMembershipController(mediatorMock.Object, null);
 
         // Act
-        ActionResult<GroupMembershipResource> response = await controller.CreateMembership(body);
+        ActionResult<GroupMembershipViewModel> response = await controller.CreateMembership(body);
 
         // Assert
         ObjectResult result = Assert.IsType<ObjectResult>(response.Result);
@@ -154,7 +154,7 @@ public class GroupMembershipControllerTests
         GroupMembershipController controller = new GroupMembershipController(mediatorMock.Object, mapperMock);
 
         // Act
-        ActionResult<GroupMembershipResource> response = await controller.CreateMembership(body);
+        ActionResult<GroupMembershipViewModel> response = await controller.CreateMembership(body);
 
         // Assert
         ObjectResult result = Assert.IsType<ObjectResult>(response.Result);
@@ -171,7 +171,7 @@ public class GroupMembershipControllerTests
         // Arrange
         CreateMembershipBody body = new CreateMembershipBody {GroupId = 1, UserId = 1, IsAdmin = false};
 
-        GroupMembershipResource expectedMembership = new GroupMembershipResource
+        GroupMembershipViewModel expectedMembership = new GroupMembershipViewModel
         {
             GroupMembershipId = 1,
             GroupId = 1,
@@ -210,12 +210,12 @@ public class GroupMembershipControllerTests
         GroupMembershipController controller = new GroupMembershipController(mediatorMock.Object, mapperMock);
 
         // Act
-        ActionResult<GroupMembershipResource> response = await controller.CreateMembership(body);
+        ActionResult<GroupMembershipViewModel> response = await controller.CreateMembership(body);
 
         // Assert
         CreatedAtActionResult result = Assert.IsType<CreatedAtActionResult>(response.Result);
 
-        GroupMembershipResource createdMembership = Assert.IsType<GroupMembershipResource>(result.Value);
+        GroupMembershipViewModel createdMembership = Assert.IsType<GroupMembershipViewModel>(result.Value);
 
         Assert.NotNull(createdMembership);
         Assert.Equal(expectedMembership, createdMembership);
@@ -230,12 +230,12 @@ public class GroupMembershipControllerTests
         Mock<IMediator> mediatorMock = new Mock<IMediator>();
         mediatorMock
             .Setup(m => m.Send(It.IsAny<GetMembershipByIdQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((GroupMembershipResource) null);
+            .ReturnsAsync((GroupMembershipViewModel) null);
 
         GroupMembershipController controller = new GroupMembershipController(mediatorMock.Object, null);
 
         // Act
-        ActionResult<GroupMembershipResource> response = await controller.GetMembershipById(membershipId);
+        ActionResult<GroupMembershipViewModel> response = await controller.GetMembershipById(membershipId);
 
         // Assert
         NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
@@ -252,7 +252,7 @@ public class GroupMembershipControllerTests
         // Arrange
         const int membershipId = 1;
 
-        GroupMembershipResource expectedMembership = new GroupMembershipResource {GroupMembershipId = membershipId};
+        GroupMembershipViewModel expectedMembership = new GroupMembershipViewModel {GroupMembershipId = membershipId};
 
         Mock<IMediator> mediatorMock = new Mock<IMediator>();
         mediatorMock
@@ -262,12 +262,12 @@ public class GroupMembershipControllerTests
         GroupMembershipController controller = new GroupMembershipController(mediatorMock.Object, null);
 
         // Act
-        ActionResult<GroupMembershipResource> response = await controller.GetMembershipById(membershipId);
+        ActionResult<GroupMembershipViewModel> response = await controller.GetMembershipById(membershipId);
 
         // Assert
         OkObjectResult result = Assert.IsType<OkObjectResult>(response.Result);
 
-        GroupMembershipResource membership = Assert.IsType<GroupMembershipResource>(result.Value);
+        GroupMembershipViewModel membership = Assert.IsType<GroupMembershipViewModel>(result.Value);
 
         Assert.NotNull(membership);
         Assert.Equal(expectedMembership, membership);

@@ -15,7 +15,7 @@ public class MessageMappingProfile : Profile
         // Define parameters
         int userId = default;
 
-        CreateMap<Message, MessageResource>()
+        CreateMap<Message, MessageViewModel>()
             .ForMember(destination => destination.AuthorName, config =>
             {
                 config.MapFrom(source => source.Author.UserName);

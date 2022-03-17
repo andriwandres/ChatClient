@@ -2,7 +2,7 @@
 
 namespace Core.Domain.Resources.Messages;
 
-public class LatestMessageResource
+public class LatestMessageViewModel
 {
     public int MessageId { get; set; }
     public int MessageRecipientId { get; set; }

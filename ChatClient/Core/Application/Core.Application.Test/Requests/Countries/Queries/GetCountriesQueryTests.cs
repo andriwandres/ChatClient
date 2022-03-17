@@ -21,7 +21,7 @@ public class GetCountriesQueryTests
         _unitOfWorkMock = new Mock<IUnitOfWork>();
         MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
         {
-            config.CreateMap<Country, CountryResource>();
+            config.CreateMap<Country, CountryViewModel>();
         });
 
         _mapperMock = mapperConfiguration.CreateMapper();
@@ -46,7 +46,7 @@ public class GetCountriesQueryTests
         GetCountriesQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object);
 
         // Act
-        IEnumerable<CountryResource> actualCountries = await handler.Handle(request);
+        IEnumerable<CountryViewModel> actualCountries = await handler.Handle(request);
 
         // Assert
         Assert.Equal(2, actualCountries.Count());

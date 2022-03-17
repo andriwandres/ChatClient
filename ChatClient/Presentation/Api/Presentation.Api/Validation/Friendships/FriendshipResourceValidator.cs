@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Presentation.Api.Validation.Friendships;
 
-public class FriendshipResourceValidator : AbstractValidator<FriendshipResource>
+public class FriendshipResourceValidator : AbstractValidator<FriendshipViewModel>
 {
     public FriendshipResourceValidator()
     {

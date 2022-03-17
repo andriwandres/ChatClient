@@ -4,7 +4,7 @@ using System.Text.RegularExpressions;
 
 namespace Presentation.Api.Validation.Users;
 
-public class AuthenticatedUserResourceValidator : AbstractValidator<AuthenticatedUserResource>
+public class AuthenticatedUserResourceValidator : AbstractValidator<AuthenticatedUserViewModel>
 {
     public AuthenticatedUserResourceValidator()
     {

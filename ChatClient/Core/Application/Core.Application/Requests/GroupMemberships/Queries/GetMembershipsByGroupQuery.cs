@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Core.Application.Requests.GroupMemberships.Queries;
 
-public class GetMembershipsByGroupQuery : IRequest<IEnumerable<GroupMembershipResource>>
+public class GetMembershipsByGroupQuery : IRequest<IEnumerable<GroupMembershipViewModel>>
 {
     public int GroupId { get; set; }
 
-    public class Handler : IRequestHandler<GetMembershipsByGroupQuery, IEnumerable<GroupMembershipResource>>
+    public class Handler : IRequestHandler<GetMembershipsByGroupQuery, IEnumerable<GroupMembershipViewModel>>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -24,10 +24,10 @@ public class GetMembershipsByGroupQuery : IRequest<IEnumerable<GroupMembershipRe
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<GroupMembershipResource>> Handle(GetMembershipsByGroupQuery request, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<GroupMembershipViewModel>> Handle(GetMembershipsByGroupQuery request, CancellationToken cancellationToken = default)
         {
             List<GroupMembership> memberships = await _unitOfWork.GroupMemberships.GetByGroup(request.GroupId, cancellationToken);
-            return _mapper.Map<List<GroupMembership>, List<GroupMembershipResource>>(memberships);
+            return _mapper.Map<List<GroupMembership>, List<GroupMembershipViewModel>>(memberships);
         }
     }
 }

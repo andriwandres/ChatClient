@@ -4,11 +4,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.Users;
 
-public class GetUserProfileOkExample : IExamplesProvider<UserProfileResource>
+public class GetUserProfileOkExample : IExamplesProvider<UserProfileViewModel>
 {
-    public UserProfileResource GetExamples()
+    public UserProfileViewModel GetExamples()
     {
-        return new UserProfileResource
+        return new UserProfileViewModel
         {
             UserId = 1,
             UserName = "alfred_miller",

@@ -4,19 +4,19 @@ using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.Friendships;
 
-public class GetOwnFriendshipsOkExample : IExamplesProvider<IEnumerable<FriendshipResource>>
+public class GetOwnFriendshipsOkExample : IExamplesProvider<IEnumerable<FriendshipViewModel>>
 {
-    public IEnumerable<FriendshipResource> GetExamples()
+    public IEnumerable<FriendshipViewModel> GetExamples()
     {
         return new[]
         {
-            new FriendshipResource
+            new FriendshipViewModel
             {
                 FriendshipId = 1,
                 RequesterId = 1,
                 AddresseeId = 2
             },
-            new FriendshipResource
+            new FriendshipViewModel
             {
                 FriendshipId = 2,
                 RequesterId = 4,

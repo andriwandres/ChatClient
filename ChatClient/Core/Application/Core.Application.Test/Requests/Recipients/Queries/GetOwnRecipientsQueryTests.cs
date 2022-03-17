@@ -38,7 +38,7 @@ public class GetOwnRecipientsQueryTests
         GetOwnRecipientsQuery.Handler handler = new GetOwnRecipientsQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
         // Act
-        List<RecipientResource> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
+        List<RecipientViewModel> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
 
         // Assert
         Assert.Equal(3, recipients.Count);
@@ -55,7 +55,7 @@ public class GetOwnRecipientsQueryTests
         GetOwnRecipientsQuery.Handler handler = new GetOwnRecipientsQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
         // Act
-        List<RecipientResource> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
+        List<RecipientViewModel> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
 
         // Assert
         Assert.Equal(3, recipients.Count);
@@ -84,7 +84,7 @@ public class GetOwnRecipientsQueryTests
         GetOwnRecipientsQuery.Handler handler = new GetOwnRecipientsQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
         // Act
-        List<RecipientResource> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
+        List<RecipientViewModel> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
 
         // Assert
         Assert.Equal(3, recipients.Count);
@@ -110,7 +110,7 @@ public class GetOwnRecipientsQueryTests
         GetOwnRecipientsQuery.Handler handler = new GetOwnRecipientsQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
         // Act
-        List<RecipientResource> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
+        List<RecipientViewModel> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
 
         // Assert
         Assert.Equal(3, recipients.Count);
@@ -127,7 +127,7 @@ public class GetOwnRecipientsQueryTests
         GetOwnRecipientsQuery.Handler handler = new GetOwnRecipientsQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
         // Act
-        List<RecipientResource> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
+        List<RecipientViewModel> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
 
         // Assert
         Assert.Equal(3, recipients.Count);
@@ -144,7 +144,7 @@ public class GetOwnRecipientsQueryTests
         GetOwnRecipientsQuery.Handler handler = new GetOwnRecipientsQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object);
 
         // Act
-        List<RecipientResource> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
+        List<RecipientViewModel> recipients = (await handler.Handle(new GetOwnRecipientsQuery())).ToList();
 
         // Assert
         Assert.Equal(3, recipients.Count);

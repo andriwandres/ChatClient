@@ -13,7 +13,7 @@ public class RecipientMappingProfile : Profile
     public RecipientMappingProfile()
     {
         int userId = default;
-        CreateMap<MessageRecipient, RecipientResource>()
+        CreateMap<MessageRecipient, RecipientViewModel>()
             .ForMember(destination => destination.AvailabilityStatus, config =>
             {
                 config.MapFrom(source =>
@@ -35,7 +35,7 @@ public class RecipientMappingProfile : Profile
             })
             .ForMember(destination => destination.LatestMessage, config =>
             {
-                config.MapFrom(source => new LatestMessageResource
+                config.MapFrom(source => new LatestMessageViewModel
                 {
                     MessageId = source.MessageId,
                     MessageRecipientId = source.MessageRecipientId,
@@ -51,7 +51,7 @@ public class RecipientMappingProfile : Profile
             {
                 config.MapFrom(source => source.Recipient.GroupMembershipId == null
                     ? null
-                    : new TargetGroupResource
+                    : new TargetGroupViewModel
                     {
                         GroupId = source.Recipient.GroupMembership.GroupId,
                         Name = source.Recipient.GroupMembership.Group.Name,
@@ -61,7 +61,7 @@ public class RecipientMappingProfile : Profile
             {
                 config.MapFrom(source => source.Recipient.UserId == null
                     ? null
-                    : new TargetUserResource
+                    : new TargetUserViewModel
                     {
                         UserId = source.Recipient.UserId == userId
                             ? source.Message.AuthorId

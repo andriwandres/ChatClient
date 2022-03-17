@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 
 namespace Core.Application.Requests.GroupMemberships.Commands;
 
-public class CreateMembershipCommand : IRequest<GroupMembershipResource>
+public class CreateMembershipCommand : IRequest<GroupMembershipViewModel>
 {
     public int UserId { get; set; }
     public int GroupId { get; set; }
     public bool IsAdmin { get; set; }
 
-    public class Handler : IRequestHandler<CreateMembershipCommand, GroupMembershipResource>
+    public class Handler : IRequestHandler<CreateMembershipCommand, GroupMembershipViewModel>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -28,7 +28,7 @@ public class CreateMembershipCommand : IRequest<GroupMembershipResource>
             _dateProvider = dateProvider;
         }
 
-        public async Task<GroupMembershipResource> Handle(CreateMembershipCommand request, CancellationToken cancellationToken = default)
+        public async Task<GroupMembershipViewModel> Handle(CreateMembershipCommand request, CancellationToken cancellationToken = default)
         {
             User user = await _unitOfWork.Users.GetByIdAsync(request.UserId);
 
@@ -51,7 +51,7 @@ public class CreateMembershipCommand : IRequest<GroupMembershipResource>
 
             await _unitOfWork.CommitAsync(cancellationToken);
 
-            return _mapper.Map<GroupMembership, GroupMembershipResource>(membership);
+            return _mapper.Map<GroupMembership, GroupMembershipViewModel>(membership);
         }
     }
 }

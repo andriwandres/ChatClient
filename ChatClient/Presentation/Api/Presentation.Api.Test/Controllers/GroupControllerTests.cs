@@ -29,7 +29,7 @@ public class GroupControllerTests
         controller.ModelState.AddModelError("", "");
 
         // Act
-        ActionResult<GroupResource> response = await controller.CreateGroup(null);
+        ActionResult<GroupViewModel> response = await controller.CreateGroup(null);
 
         // Assert
         Assert.IsType<BadRequestObjectResult>(response.Result);
@@ -45,7 +45,7 @@ public class GroupControllerTests
             Description = "Some group description"
         };
 
-        GroupResource expectedGroup = new GroupResource
+        GroupViewModel expectedGroup = new GroupViewModel
         {
             GroupId = 1,
             Name = model.Name,
@@ -67,12 +67,12 @@ public class GroupControllerTests
         GroupController controller = new GroupController(mediatorMock.Object, mapperMock);
 
         // Act
-        ActionResult<GroupResource> response = await controller.CreateGroup(model);
+        ActionResult<GroupViewModel> response = await controller.CreateGroup(model);
 
         // Assert
         CreatedAtActionResult result = Assert.IsType<CreatedAtActionResult>(response.Result);
 
-        GroupResource actualGroup = Assert.IsType<GroupResource>(result.Value);
+        GroupViewModel actualGroup = Assert.IsType<GroupViewModel>(result.Value);
 
         Assert.NotNull(actualGroup);
         Assert.Equal(1, actualGroup.GroupId);
@@ -89,12 +89,12 @@ public class GroupControllerTests
         Mock<IMediator> mediatorMock = new Mock<IMediator>();
         mediatorMock
             .Setup(m => m.Send(It.IsAny<GetGroupByIdQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((GroupResource) null);
+            .ReturnsAsync((GroupViewModel) null);
 
         GroupController controller = new GroupController(mediatorMock.Object, null);
 
         // Act
-        ActionResult<GroupResource> response = await controller.GetGroupById(groupId);
+        ActionResult<GroupViewModel> response = await controller.GetGroupById(groupId);
 
         // Assert
         NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
@@ -110,7 +110,7 @@ public class GroupControllerTests
         // Arrange
         const int groupId = 1;
 
-        GroupResource expectedGroup = new GroupResource
+        GroupViewModel expectedGroup = new GroupViewModel
         {
             GroupId = groupId
         };
@@ -123,12 +123,12 @@ public class GroupControllerTests
         GroupController controller = new GroupController(mediatorMock.Object, null);
 
         // Act
-        ActionResult<GroupResource> response = await controller.GetGroupById(groupId);
+        ActionResult<GroupViewModel> response = await controller.GetGroupById(groupId);
 
         // Assert
         OkObjectResult result = Assert.IsType<OkObjectResult>(response.Result);
 
-        GroupResource actualGroup = Assert.IsType<GroupResource>(result.Value);
+        GroupViewModel actualGroup = Assert.IsType<GroupViewModel>(result.Value);
 
         Assert.NotNull(actualGroup);
         Assert.Equal(groupId, actualGroup.GroupId);
@@ -267,7 +267,7 @@ public class GroupControllerTests
         GroupController controller = new GroupController(mediatorMock.Object, null);
 
         // Act
-        ActionResult<IEnumerable<GroupMembershipResource>> response = await controller.GetMembershipsByGroup(groupId);
+        ActionResult<IEnumerable<GroupMembershipViewModel>> response = await controller.GetMembershipsByGroup(groupId);
 
         // Assert
         NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
@@ -283,9 +283,9 @@ public class GroupControllerTests
         // Arrange
         const int groupId = 1;
 
-        IEnumerable<GroupMembershipResource> expectedMemberships = new []
+        IEnumerable<GroupMembershipViewModel> expectedMemberships = new []
         {
-            new GroupMembershipResource { GroupMembershipId = 1, GroupId = 1 }
+            new GroupMembershipViewModel { GroupMembershipId = 1, GroupId = 1 }
         };
 
         Mock<IMediator> mediatorMock = new Mock<IMediator>();
@@ -301,12 +301,12 @@ public class GroupControllerTests
         GroupController controller = new GroupController(mediatorMock.Object, null);
 
         // Act
-        ActionResult<IEnumerable<GroupMembershipResource>> response = await controller.GetMembershipsByGroup(groupId);
+        ActionResult<IEnumerable<GroupMembershipViewModel>> response = await controller.GetMembershipsByGroup(groupId);
 
         // Assert
         OkObjectResult result = Assert.IsType<OkObjectResult>(response.Result);
 
-        IEnumerable<GroupMembershipResource> actualMemberships = (IEnumerable<GroupMembershipResource>) result.Value;
+        IEnumerable<GroupMembershipViewModel> actualMemberships = (IEnumerable<GroupMembershipViewModel>) result.Value;
 
         Assert.NotNull(actualMemberships);
         Assert.Single(actualMemberships);

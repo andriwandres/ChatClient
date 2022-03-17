@@ -5,13 +5,13 @@ using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.Messages;
 
-public class GetMessagesWithRecipientOkExample : IExamplesProvider<IEnumerable<ChatMessageResource>>
+public class GetMessagesWithRecipientOkExample : IExamplesProvider<IEnumerable<ChatMessageViewModel>>
 {
-    public IEnumerable<ChatMessageResource> GetExamples()
+    public IEnumerable<ChatMessageViewModel> GetExamples()
     {
         return new[]
         {
-            new ChatMessageResource
+            new ChatMessageViewModel
             {
                 MessageRecipientId = 1,
                 MessageId = 1,
@@ -21,7 +21,7 @@ public class GetMessagesWithRecipientOkExample : IExamplesProvider<IEnumerable<C
                 IsRead = true,
                 IsOwnMessage = false
             },
-            new ChatMessageResource
+            new ChatMessageViewModel
             {
                 MessageRecipientId = 2,
                 MessageId = 2,

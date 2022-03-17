@@ -9,9 +9,9 @@ using System.Threading.Tasks;
 
 namespace Core.Application.Requests.Countries.Queries;
 
-public class GetCountriesQuery : IRequest<IEnumerable<CountryResource>>
+public class GetCountriesQuery : IRequest<IEnumerable<CountryViewModel>>
 {
-    public class Handler : IRequestHandler<GetCountriesQuery, IEnumerable<CountryResource>>
+    public class Handler : IRequestHandler<GetCountriesQuery, IEnumerable<CountryViewModel>>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -22,11 +22,11 @@ public class GetCountriesQuery : IRequest<IEnumerable<CountryResource>>
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<IEnumerable<CountryResource>> Handle(GetCountriesQuery request, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<CountryViewModel>> Handle(GetCountriesQuery request, CancellationToken cancellationToken = default)
         {
             List<Country> countries = await _unitOfWork.Countries.GetAllAsync();
                 
-            return _mapper.Map<List<Country>, List<CountryResource>>(countries);
+            return _mapper.Map<List<Country>, List<CountryViewModel>>(countries);
         }
     }
 }

@@ -12,11 +12,11 @@ using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace Core.Application.Requests.Messages.Queries;
 
-public class GetMessageByIdQuery : IRequest<MessageResource>
+public class GetMessageByIdQuery : IRequest<MessageViewModel>
 {
     public int MessageId { get; set; }
 
-    public class Handler : IRequestHandler<GetMessageByIdQuery, MessageResource>
+    public class Handler : IRequestHandler<GetMessageByIdQuery, MessageViewModel>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -29,13 +29,13 @@ public class GetMessageByIdQuery : IRequest<MessageResource>
             _userProvider = userProvider;
         }
 
-        public async Task<MessageResource> Handle(GetMessageByIdQuery request, CancellationToken cancellationToken = default)
+        public async Task<MessageViewModel> Handle(GetMessageByIdQuery request, CancellationToken cancellationToken = default)
         {
             int userId = _userProvider.GetCurrentUserId();
 
             Message message = await _unitOfWork.Messages.GetByIdAsync(request.MessageId);
 
-            return _mapper.Map<Message, MessageResource>(message, options =>
+            return _mapper.Map<Message, MessageViewModel>(message, options =>
             {
                 options.Items["userId"] = userId;
             });

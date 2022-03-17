@@ -100,7 +100,7 @@ public class GroupMembershipController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-    public async Task<ActionResult<GroupMembershipResource>> CreateMembership([FromBody] CreateMembershipBody body, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<GroupMembershipViewModel>> CreateMembership([FromBody] CreateMembershipBody body, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
         {
@@ -165,7 +165,7 @@ public class GroupMembershipController : ControllerBase
 
         CreateMembershipCommand createCommand = _mapper.Map<CreateMembershipBody, CreateMembershipCommand>(body);
 
-        GroupMembershipResource membership = await _mediator.Send(createCommand, cancellationToken);
+        GroupMembershipViewModel membership = await _mediator.Send(createCommand, cancellationToken);
 
         return CreatedAtAction(nameof(GetMembershipById), new { membershipId = membership.GroupMembershipId }, membership);
     }
@@ -214,11 +214,11 @@ public class GroupMembershipController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-    public async Task<ActionResult<GroupMembershipResource>> GetMembershipById([FromRoute] int membershipId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<GroupMembershipViewModel>> GetMembershipById([FromRoute] int membershipId, CancellationToken cancellationToken = default)
     {
         GetMembershipByIdQuery fetchQuery = new GetMembershipByIdQuery {GroupMembershipId = membershipId};
 
-        GroupMembershipResource membership = await _mediator.Send(fetchQuery, cancellationToken);
+        GroupMembershipViewModel membership = await _mediator.Send(fetchQuery, cancellationToken);
 
         if (membership == null)
         {

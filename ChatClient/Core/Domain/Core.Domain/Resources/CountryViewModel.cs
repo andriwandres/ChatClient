@@ -1,6 +1,6 @@
 ﻿namespace Core.Domain.Resources;
 
-public class CountryResource
+public class CountryViewModel
 {
     public int CountryId { get; set; }
     public string Code { get; set; }

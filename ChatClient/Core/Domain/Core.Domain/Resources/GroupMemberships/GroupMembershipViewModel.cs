@@ -1,6 +1,6 @@
 ﻿namespace Core.Domain.Resources.GroupMemberships;
 
-public class GroupMembershipResource
+public class GroupMembershipViewModel
 {
     public int GroupMembershipId { get; set; }
     public int GroupId { get; set; }

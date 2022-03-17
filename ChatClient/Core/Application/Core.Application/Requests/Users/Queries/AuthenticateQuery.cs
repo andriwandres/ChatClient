@@ -11,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace Core.Application.Requests.Users.Queries;
 
-public class AuthenticateQuery : IRequest<AuthenticatedUserResource>
+public class AuthenticateQuery : IRequest<AuthenticatedUserViewModel>
 {
-    public class Handler : IRequestHandler<AuthenticateQuery, AuthenticatedUserResource>
+    public class Handler : IRequestHandler<AuthenticateQuery, AuthenticatedUserViewModel>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -28,7 +28,7 @@ public class AuthenticateQuery : IRequest<AuthenticatedUserResource>
             _userProvider = userProvider;
         }
 
-        public async Task<AuthenticatedUserResource> Handle(AuthenticateQuery request, CancellationToken cancellationToken = default)
+        public async Task<AuthenticatedUserViewModel> Handle(AuthenticateQuery request, CancellationToken cancellationToken = default)
         {
             int userId = _userProvider.GetCurrentUserId();
 
@@ -37,14 +37,14 @@ public class AuthenticateQuery : IRequest<AuthenticatedUserResource>
 
             User user = await _unitOfWork.Users.GetByIdAsync(userId);
                 
-            AuthenticatedUserResource authenticatedUserResource = _mapper.Map<User, AuthenticatedUserResource>(user);
+            AuthenticatedUserViewModel authenticatedUserViewModel = _mapper.Map<User, AuthenticatedUserViewModel>(user);
 
-            if (authenticatedUserResource != null)
+            if (authenticatedUserViewModel != null)
             {
-                authenticatedUserResource.Token = token;
+                authenticatedUserViewModel.Token = token;
             }
 
-            return authenticatedUserResource;
+            return authenticatedUserViewModel;
         }
     }
 }

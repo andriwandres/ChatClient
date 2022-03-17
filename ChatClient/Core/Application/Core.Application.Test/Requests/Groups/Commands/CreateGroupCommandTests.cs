@@ -34,7 +34,7 @@ public class CreateGroupCommandTests
 
         MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
         {
-            config.CreateMap<Group, GroupResource>();
+            config.CreateMap<Group, GroupViewModel>();
         });
 
         _mapperMock = mapperConfiguration.CreateMapper();
@@ -66,7 +66,7 @@ public class CreateGroupCommandTests
             new CreateGroupCommand.Handler(_mapperMock, _unitOfWorkMock.Object, _dateProviderMock.Object, _userProviderMock.Object);
 
         // Act
-        GroupResource group = await handler.Handle(request);
+        GroupViewModel group = await handler.Handle(request);
 
         // Assert
         Assert.NotNull(group);

@@ -2,7 +2,7 @@
 
 namespace Core.Domain.Resources.Users;
 
-public class UserProfileResource
+public class UserProfileViewModel
 {
     public int UserId { get; set; }
     public string UserName { get; set; }

@@ -90,7 +90,7 @@ public class FriendshipController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-    public async Task<ActionResult<FriendshipResource>> RequestFriendship([FromBody] RequestFriendshipBody body, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<FriendshipViewModel>> RequestFriendship([FromBody] RequestFriendshipBody body, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
         {
@@ -145,7 +145,7 @@ public class FriendshipController : ControllerBase
         // Create friendship
         RequestFriendshipCommand command = _mapper.Map<RequestFriendshipBody, RequestFriendshipCommand>(body);
 
-        FriendshipResource friendship = await _mediator.Send(command, cancellationToken);
+        FriendshipViewModel friendship = await _mediator.Send(command, cancellationToken);
 
         return CreatedAtAction(nameof(GetFriendshipById), new { friendshipId = friendship.FriendshipId }, friendship);
     }
@@ -194,14 +194,14 @@ public class FriendshipController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-    public async Task<ActionResult<FriendshipResource>> GetFriendshipById([FromRoute] int friendshipId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<FriendshipViewModel>> GetFriendshipById([FromRoute] int friendshipId, CancellationToken cancellationToken = default)
     {
         GetFriendshipByIdQuery query = new GetFriendshipByIdQuery
         {
             FriendshipId = friendshipId
         };
 
-        FriendshipResource friendship = await _mediator.Send(query, cancellationToken);
+        FriendshipViewModel friendship = await _mediator.Send(query, cancellationToken);
 
         if (friendship == null)
         {

@@ -27,7 +27,7 @@ public class GetMessageByIdQueryTests
 
         MapperConfiguration mapperConfiguration = new(config =>
         {
-            config.CreateMap<Message, MessageResource>();
+            config.CreateMap<Message, MessageViewModel>();
         });
 
         _mapperMock = mapperConfiguration.CreateMapper();
@@ -46,7 +46,7 @@ public class GetMessageByIdQueryTests
         GetMessageByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object, _userProviderMock.Object);
 
         // Act
-        MessageResource message = await handler.Handle(request);
+        MessageViewModel message = await handler.Handle(request);
 
         // Assert
         Assert.Null(message);
@@ -67,7 +67,7 @@ public class GetMessageByIdQueryTests
         GetMessageByIdQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object, _userProviderMock.Object);
 
         // Act
-        MessageResource message = await handler.Handle(request);
+        MessageViewModel message = await handler.Handle(request);
 
         // Assert
         Assert.NotNull(message);

@@ -31,7 +31,7 @@ public class AuthenticateQueryTests
 
         MapperConfiguration mapperConfiguration = new(config =>
         {
-            config.CreateMap<User, AuthenticatedUserResource>();
+            config.CreateMap<User, AuthenticatedUserViewModel>();
         });
 
         _mapperMock = mapperConfiguration.CreateMapper();
@@ -62,7 +62,7 @@ public class AuthenticateQueryTests
             new(_unitOfWorkMock.Object, _mapperMock, _httpContextAccessorMock.Object, _userProviderMock.Object);
 
         // Act
-        AuthenticatedUserResource user = await handler.Handle(new AuthenticateQuery());
+        AuthenticatedUserViewModel user = await handler.Handle(new AuthenticateQuery());
 
         // Assert
         Assert.NotNull(user);
@@ -99,7 +99,7 @@ public class AuthenticateQueryTests
             new(_unitOfWorkMock.Object, _mapperMock, _httpContextAccessorMock.Object, _userProviderMock.Object);
 
         // Act
-        AuthenticatedUserResource user = await handler.Handle(new AuthenticateQuery());
+        AuthenticatedUserViewModel user = await handler.Handle(new AuthenticateQuery());
 
         // Assert
         Assert.Null(user);

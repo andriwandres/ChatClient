@@ -21,7 +21,7 @@ public class GetUserProfileQueryTests
 
         MapperConfiguration mapperConfiguration = new(config =>
         {
-            config.CreateMap<User, UserProfileResource>();
+            config.CreateMap<User, UserProfileViewModel>();
         });
 
         _mapperMock = mapperConfiguration.CreateMapper();
@@ -46,7 +46,7 @@ public class GetUserProfileQueryTests
         GetUserProfileQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object);
 
         // Act
-        UserProfileResource userProfile = await handler.Handle(request);
+        UserProfileViewModel userProfile = await handler.Handle(request);
 
         // Assert
         Assert.NotNull(userProfile);
@@ -66,7 +66,7 @@ public class GetUserProfileQueryTests
         GetUserProfileQuery.Handler handler = new(_mapperMock, _unitOfWorkMock.Object);
 
         // Act
-        UserProfileResource userProfile = await handler.Handle(request);
+        UserProfileViewModel userProfile = await handler.Handle(request);
 
         // Assert
         Assert.Null(userProfile);

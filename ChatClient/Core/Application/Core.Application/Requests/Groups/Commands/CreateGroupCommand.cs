@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace Core.Application.Requests.Groups.Commands;
 
-public class CreateGroupCommand : IRequest<GroupResource>
+public class CreateGroupCommand : IRequest<GroupViewModel>
 {
     public string Name { get; set; }
     public string Description { get; set; }
 
-    public class Handler : IRequestHandler<CreateGroupCommand, GroupResource>
+    public class Handler : IRequestHandler<CreateGroupCommand, GroupViewModel>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -29,7 +29,7 @@ public class CreateGroupCommand : IRequest<GroupResource>
             _userProvider = userProvider;
         }
 
-        public async Task<GroupResource> Handle(CreateGroupCommand request, CancellationToken cancellationToken = default)
+        public async Task<GroupViewModel> Handle(CreateGroupCommand request, CancellationToken cancellationToken = default)
         {
             int userId = _userProvider.GetCurrentUserId();
 
@@ -59,7 +59,7 @@ public class CreateGroupCommand : IRequest<GroupResource>
 
             await _unitOfWork.CommitAsync(cancellationToken);
 
-            return _mapper.Map<Group, GroupResource>(group);
+            return _mapper.Map<Group, GroupViewModel>(group);
         }
     }
 }

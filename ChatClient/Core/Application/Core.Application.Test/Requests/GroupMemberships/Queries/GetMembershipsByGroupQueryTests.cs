@@ -23,7 +23,7 @@ public class GetMembershipsByGroupQueryTests
 
         MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
         {
-            config.CreateMap<GroupMembership, GroupMembershipResource>();
+            config.CreateMap<GroupMembership, GroupMembershipViewModel>();
         });
 
         _mapperMock = mapperConfiguration.CreateMapper();
@@ -48,7 +48,7 @@ public class GetMembershipsByGroupQueryTests
         GetMembershipsByGroupQuery.Handler handler = new GetMembershipsByGroupQuery.Handler(_mapperMock, _unitOfWorkMock.Object);
 
         // Act
-        IEnumerable<GroupMembershipResource> actualMemberships = await handler.Handle(request);
+        IEnumerable<GroupMembershipViewModel> actualMemberships = await handler.Handle(request);
 
         // Assert
         Assert.NotNull(actualMemberships);

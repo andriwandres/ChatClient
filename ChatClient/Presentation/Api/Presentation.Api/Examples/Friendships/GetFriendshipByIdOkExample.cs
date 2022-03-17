@@ -3,11 +3,11 @@ using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.Friendships;
 
-public class GetFriendshipByIdOkExample : IExamplesProvider<FriendshipResource>
+public class GetFriendshipByIdOkExample : IExamplesProvider<FriendshipViewModel>
 {
-    public FriendshipResource GetExamples()
+    public FriendshipViewModel GetExamples()
     {
-        return new FriendshipResource
+        return new FriendshipViewModel
         {
             FriendshipId = 1,
             RequesterId = 1,

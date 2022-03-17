@@ -27,7 +27,7 @@ public class SessionControllerTests
         controller.ModelState.AddModelError("Credentials", "Required");
 
         // Act
-        ActionResult<AuthenticatedUserResource> response = await controller.Login(credentials);
+        ActionResult<AuthenticatedUserViewModel> response = await controller.Login(credentials);
 
         // Assert
         Assert.IsType<BadRequestObjectResult>(response.Result);
@@ -46,7 +46,7 @@ public class SessionControllerTests
         Mock<IMediator> mediatorMock = new Mock<IMediator>();
         mediatorMock
             .Setup(m => m.Send(It.IsAny<LoginCommand>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((AuthenticatedUserResource)null);
+            .ReturnsAsync((AuthenticatedUserViewModel)null);
 
         MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
         {
@@ -58,7 +58,7 @@ public class SessionControllerTests
         SessionController controller = new SessionController(mediatorMock.Object, mapperMock);
 
         // Act
-        ActionResult<AuthenticatedUserResource> response = await controller.Login(credentials);
+        ActionResult<AuthenticatedUserViewModel> response = await controller.Login(credentials);
 
         // Assert
         UnauthorizedObjectResult result = Assert.IsType<UnauthorizedObjectResult>(response.Result);
@@ -72,7 +72,7 @@ public class SessionControllerTests
     public async Task Login_ShouldReturnUser_WhenCredentialsAreValid()
     {
         // Arrange
-        AuthenticatedUserResource expectedUser = new AuthenticatedUserResource() { UserId = 1 };
+        AuthenticatedUserViewModel expectedUser = new AuthenticatedUserViewModel() { UserId = 1 };
 
         LoginBody credentials = new LoginBody
         {
@@ -95,12 +95,12 @@ public class SessionControllerTests
         SessionController controller = new SessionController(mediatorMock.Object, mapperMock);
 
         // Act
-        ActionResult<AuthenticatedUserResource> response = await controller.Login(credentials);
+        ActionResult<AuthenticatedUserViewModel> response = await controller.Login(credentials);
 
         // Assert
         OkObjectResult okResult = Assert.IsType<OkObjectResult>(response.Result);
 
-        AuthenticatedUserResource actualUser = (AuthenticatedUserResource)okResult.Value;
+        AuthenticatedUserViewModel actualUser = (AuthenticatedUserViewModel)okResult.Value;
 
         Assert.NotNull(actualUser);
         Assert.Equal(expectedUser.UserId, actualUser.UserId);

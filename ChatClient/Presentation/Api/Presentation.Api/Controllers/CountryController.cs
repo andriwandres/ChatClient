@@ -62,11 +62,11 @@ public class CountryController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-    public async Task<ActionResult<IEnumerable<CountryResource>>> GetCountries(CancellationToken cancellationToken = default)
+    public async Task<ActionResult<IEnumerable<CountryViewModel>>> GetCountries(CancellationToken cancellationToken = default)
     {
         GetCountriesQuery query = new GetCountriesQuery();
 
-        IEnumerable<CountryResource> countries = await _mediator.Send(query, cancellationToken);
+        IEnumerable<CountryViewModel> countries = await _mediator.Send(query, cancellationToken);
 
         return Ok(countries);
     }

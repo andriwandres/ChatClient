@@ -95,7 +95,7 @@ public class GetMessagesWithRecipientQueryTests
         GetMessagesWithRecipientQuery.Handler handler = new GetMessagesWithRecipientQuery.Handler(_unitOfWorkMock.Object, _userProviderMock.Object, _mapperMock);
 
         // Act
-        IEnumerable<ChatMessageResource> result = await handler.Handle(request);
+        IEnumerable<ChatMessageViewModel> result = await handler.Handle(request);
 
         // Assert
         Assert.NotNull(result);

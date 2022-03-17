@@ -18,10 +18,10 @@ public class CountryControllerTests
     public async Task GetCountries_ShouldGetAllCountries()
     {
         // Arrange
-        IEnumerable<CountryResource> expectedCountries = new[]
+        IEnumerable<CountryViewModel> expectedCountries = new[]
         {
-            new CountryResource {CountryId = 1},
-            new CountryResource {CountryId = 2}
+            new CountryViewModel {CountryId = 1},
+            new CountryViewModel {CountryId = 2}
         };
             
         Mock<IMediator> mediatorMock = new Mock<IMediator>();
@@ -32,12 +32,12 @@ public class CountryControllerTests
         CountryController controller = new CountryController(mediatorMock.Object);
 
         // Act
-        ActionResult<IEnumerable<CountryResource>> response = await controller.GetCountries();
+        ActionResult<IEnumerable<CountryViewModel>> response = await controller.GetCountries();
 
         // Assert
         OkObjectResult result = Assert.IsType<OkObjectResult>(response.Result);
 
-        IEnumerable<CountryResource> actualCountries = (IEnumerable<CountryResource>) result.Value;
+        IEnumerable<CountryViewModel> actualCountries = (IEnumerable<CountryViewModel>) result.Value;
 
         Assert.Equal(2, actualCountries.Count());
     }

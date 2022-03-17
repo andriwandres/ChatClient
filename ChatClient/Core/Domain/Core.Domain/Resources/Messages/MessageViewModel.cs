@@ -2,7 +2,7 @@
 
 namespace Core.Domain.Resources.Messages;
 
-public class MessageResource
+public class MessageViewModel
 {
     public int MessageId { get; set; }
     public int MessageRecipientId { get; set; }

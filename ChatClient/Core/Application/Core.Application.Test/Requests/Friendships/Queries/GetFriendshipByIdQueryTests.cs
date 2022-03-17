@@ -20,7 +20,7 @@ public class GetFriendshipByIdQueryTests
 
         MapperConfiguration mapperConfiguration = new(config =>
         {
-            config.CreateMap<Friendship, FriendshipResource>();
+            config.CreateMap<Friendship, FriendshipViewModel>();
         });
 
         _mapperMock = mapperConfiguration.CreateMapper();
@@ -39,7 +39,7 @@ public class GetFriendshipByIdQueryTests
         GetFriendshipByIdQuery.Handler handler = new(_unitOfWorkMock.Object, _mapperMock);
 
         // Act
-        FriendshipResource friendship = await handler.Handle(request);
+        FriendshipViewModel friendship = await handler.Handle(request);
 
         // Assert
         Assert.Null(friendship);
@@ -60,7 +60,7 @@ public class GetFriendshipByIdQueryTests
         GetFriendshipByIdQuery.Handler handler = new(_unitOfWorkMock.Object, _mapperMock);
 
         // Act
-        FriendshipResource friendship = await handler.Handle(request);
+        FriendshipViewModel friendship = await handler.Handle(request);
 
         // Assert
         Assert.NotNull(friendship);

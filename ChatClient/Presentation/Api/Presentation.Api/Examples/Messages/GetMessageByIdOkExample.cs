@@ -4,11 +4,11 @@ using System;
 
 namespace Presentation.Api.Examples.Messages;
 
-public class GetMessageByIdOkExample : IExamplesProvider<MessageResource>
+public class GetMessageByIdOkExample : IExamplesProvider<MessageViewModel>
 {
-    public MessageResource GetExamples()
+    public MessageViewModel GetExamples()
     {
-        return new MessageResource
+        return new MessageViewModel
         {
             MessageId = 1,
             MessageRecipientId = 1,

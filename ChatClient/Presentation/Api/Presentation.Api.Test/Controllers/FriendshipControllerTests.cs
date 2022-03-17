@@ -31,7 +31,7 @@ public class FriendshipControllerTests
         controller.ModelState.AddModelError("", "");
 
         // Act
-        ActionResult<FriendshipResource> response = await controller.RequestFriendship(model);
+        ActionResult<FriendshipViewModel> response = await controller.RequestFriendship(model);
 
         // Assert
         Assert.IsType<BadRequestObjectResult>(response.Result);
@@ -64,7 +64,7 @@ public class FriendshipControllerTests
         };
 
         // Act
-        ActionResult<FriendshipResource> response = await controller.RequestFriendship(body);
+        ActionResult<FriendshipViewModel> response = await controller.RequestFriendship(body);
 
         // Assert
         NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
@@ -97,7 +97,7 @@ public class FriendshipControllerTests
         };
 
         // Act
-        ActionResult<FriendshipResource> response = await controller.RequestFriendship(body);
+        ActionResult<FriendshipViewModel> response = await controller.RequestFriendship(body);
 
         // Assert
         ObjectResult result = Assert.IsType<ObjectResult>(response.Result);
@@ -138,7 +138,7 @@ public class FriendshipControllerTests
         };
 
         // Act
-        ActionResult<FriendshipResource> response = await controller.RequestFriendship(body);
+        ActionResult<FriendshipViewModel> response = await controller.RequestFriendship(body);
 
         // Assert
         ObjectResult result = Assert.IsType<ObjectResult>(response.Result);
@@ -154,7 +154,7 @@ public class FriendshipControllerTests
         // Arrange
         RequestFriendshipBody body = new RequestFriendshipBody { AddresseeId = 2 };
 
-        FriendshipResource expectedFriendship = new FriendshipResource
+        FriendshipViewModel expectedFriendship = new FriendshipViewModel
         {
             AddresseeId = 2,
             RequesterId = 1,
@@ -197,7 +197,7 @@ public class FriendshipControllerTests
         };
 
         // Act
-        ActionResult<FriendshipResource> response = await controller.RequestFriendship(body);
+        ActionResult<FriendshipViewModel> response = await controller.RequestFriendship(body);
 
         // Assert
         CreatedAtActionResult result = Assert.IsType<CreatedAtActionResult>(response.Result);
@@ -214,12 +214,12 @@ public class FriendshipControllerTests
         Mock<IMediator> mediatorMock = new Mock<IMediator>();
         mediatorMock
             .Setup(m => m.Send(It.IsAny<GetFriendshipByIdQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((FriendshipResource) null);
+            .ReturnsAsync((FriendshipViewModel) null);
 
         FriendshipController controller = new FriendshipController(mediatorMock.Object, null);
 
         // Act
-        ActionResult<FriendshipResource> response = await controller.GetFriendshipById(friendshipId);
+        ActionResult<FriendshipViewModel> response = await controller.GetFriendshipById(friendshipId);
 
         // Assert
         NotFoundObjectResult result = Assert.IsType<NotFoundObjectResult>(response.Result);
@@ -235,7 +235,7 @@ public class FriendshipControllerTests
         // Arrange
         const int friendshipId = 1;
 
-        FriendshipResource expectedFriendship = new FriendshipResource {FriendshipId = friendshipId};
+        FriendshipViewModel expectedFriendship = new FriendshipViewModel {FriendshipId = friendshipId};
 
         Mock<IMediator> mediatorMock = new Mock<IMediator>();
         mediatorMock
@@ -245,12 +245,12 @@ public class FriendshipControllerTests
         FriendshipController controller = new FriendshipController(mediatorMock.Object, null);
 
         // Act
-        ActionResult<FriendshipResource> response = await controller.GetFriendshipById(friendshipId);
+        ActionResult<FriendshipViewModel> response = await controller.GetFriendshipById(friendshipId);
 
         // Assert
         OkObjectResult result = Assert.IsType<OkObjectResult>(response.Result);
 
-        FriendshipResource friendship = Assert.IsType<FriendshipResource>(result.Value);
+        FriendshipViewModel friendship = Assert.IsType<FriendshipViewModel>(result.Value);
 
         Assert.Equal(friendshipId, friendship.FriendshipId);
     }

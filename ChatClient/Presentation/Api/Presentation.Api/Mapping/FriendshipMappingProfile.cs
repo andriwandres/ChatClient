@@ -10,7 +10,7 @@ public class FriendshipMappingProfile : Profile
 {
     public FriendshipMappingProfile()
     {
-        CreateMap<Friendship, FriendshipResource>();
+        CreateMap<Friendship, FriendshipViewModel>();
         CreateMap<RequestFriendshipBody, RequestFriendshipCommand>();
     }
 }

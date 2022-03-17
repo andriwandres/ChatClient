@@ -11,11 +11,11 @@ public class UserMappingProfile : Profile
 {
     public UserMappingProfile()
     {
-        CreateMap<User, AuthenticatedUserResource>()
+        CreateMap<User, AuthenticatedUserViewModel>()
             .ForMember(destination => destination.Token, 
                 config => config.Ignore());
 
-        CreateMap<User, UserProfileResource>()
+        CreateMap<User, UserProfileViewModel>()
             .ForMember(destination => destination.AvailabilityStatus, config =>
             {
                 config.MapFrom(source => source.Availability.Status);

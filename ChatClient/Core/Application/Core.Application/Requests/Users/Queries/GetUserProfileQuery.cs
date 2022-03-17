@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Core.Application.Requests.Users.Queries;
 
-public class GetUserProfileQuery : IRequest<UserProfileResource>
+public class GetUserProfileQuery : IRequest<UserProfileViewModel>
 {
     public int UserId { get; set; }
 
-    public class Handler : IRequestHandler<GetUserProfileQuery, UserProfileResource>
+    public class Handler : IRequestHandler<GetUserProfileQuery, UserProfileViewModel>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -23,11 +23,11 @@ public class GetUserProfileQuery : IRequest<UserProfileResource>
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<UserProfileResource> Handle(GetUserProfileQuery request, CancellationToken cancellationToken = default)
+        public async Task<UserProfileViewModel> Handle(GetUserProfileQuery request, CancellationToken cancellationToken = default)
         {
             User user = await _unitOfWork.Users.GetByIdAsync(request.UserId);
 
-            return _mapper.Map<User, UserProfileResource>(user);
+            return _mapper.Map<User, UserProfileViewModel>(user);
         }
     }
 }

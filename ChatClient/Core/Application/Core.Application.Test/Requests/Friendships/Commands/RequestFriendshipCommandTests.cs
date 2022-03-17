@@ -35,7 +35,7 @@ public class RequestFriendshipCommandTests
 
         MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
         {
-            config.CreateMap<Friendship, FriendshipResource>();
+            config.CreateMap<Friendship, FriendshipViewModel>();
         });
 
         _mapperMock = mapperConfiguration.CreateMapper();
@@ -59,7 +59,7 @@ public class RequestFriendshipCommandTests
         RequestFriendshipCommand.Handler handler = new RequestFriendshipCommand.Handler(_userProviderMock.Object, _unitOfWorkMock.Object, _dateProviderMock.Object, _mapperMock);
 
         // Act
-        FriendshipResource friendship = await handler.Handle(request);
+        FriendshipViewModel friendship = await handler.Handle(request);
 
         // Assert
         Assert.NotNull(friendship);

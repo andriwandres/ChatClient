@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Presentation.Api.Validation.Recipients;
 
-public class RecipientResourceValidator : AbstractValidator<RecipientResource>
+public class RecipientResourceValidator : AbstractValidator<RecipientViewModel>
 {
     public RecipientResourceValidator()
     {

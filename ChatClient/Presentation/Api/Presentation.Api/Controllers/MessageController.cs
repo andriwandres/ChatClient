@@ -98,7 +98,7 @@ public class MessageController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-    public async Task<ActionResult<ChatMessageResource>> SendMessage([FromBody] SendMessageBody body, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<ChatMessageViewModel>> SendMessage([FromBody] SendMessageBody body, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
         {
@@ -167,7 +167,7 @@ public class MessageController : ControllerBase
         // Send message to their recipients
         SendMessageCommand sendMessageCommand = _mapper.Map<SendMessageBody, SendMessageCommand>(body);
 
-        ChatMessageResource message = await _mediator.Send(sendMessageCommand, cancellationToken);
+        ChatMessageViewModel message = await _mediator.Send(sendMessageCommand, cancellationToken);
 
         return CreatedAtAction(nameof(GetMessageById), new { messageId = message.MessageId }, message);
     }
@@ -224,7 +224,7 @@ public class MessageController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-    public async Task<ActionResult<MessageResource>> GetMessageById([FromRoute] int messageId, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<MessageViewModel>> GetMessageById([FromRoute] int messageId, CancellationToken cancellationToken = default)
     {
         // Check if the message exists
         MessageExistsQuery existsQuery = new MessageExistsQuery { MessageId = messageId };
@@ -257,7 +257,7 @@ public class MessageController : ControllerBase
         // Get the message
         GetMessageByIdQuery fetchQuery = new GetMessageByIdQuery { MessageId = messageId };
 
-        MessageResource message = await _mediator.Send(fetchQuery, cancellationToken);
+        MessageViewModel message = await _mediator.Send(fetchQuery, cancellationToken);
 
         return Ok(message);
     }

@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 
 namespace Core.Application.Requests.Friendships.Queries;
 
-public class GetFriendshipByIdQuery : IRequest<FriendshipResource>
+public class GetFriendshipByIdQuery : IRequest<FriendshipViewModel>
 {
     public int FriendshipId { get; set; }
 
-    public class Handler : IRequestHandler<GetFriendshipByIdQuery, FriendshipResource>
+    public class Handler : IRequestHandler<GetFriendshipByIdQuery, FriendshipViewModel>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -23,11 +23,11 @@ public class GetFriendshipByIdQuery : IRequest<FriendshipResource>
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<FriendshipResource> Handle(GetFriendshipByIdQuery request, CancellationToken cancellationToken = default)
+        public async Task<FriendshipViewModel> Handle(GetFriendshipByIdQuery request, CancellationToken cancellationToken = default)
         {
             Friendship friendship = await _unitOfWork.Friendships.GetByIdAsync(request.FriendshipId);
 
-            return _mapper.Map<Friendship, FriendshipResource>(friendship);
+            return _mapper.Map<Friendship, FriendshipViewModel>(friendship);
         }
     }
 }

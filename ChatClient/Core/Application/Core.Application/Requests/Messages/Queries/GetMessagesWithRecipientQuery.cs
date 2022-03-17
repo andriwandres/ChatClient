@@ -14,14 +14,14 @@ using Core.Domain.Entities;
 
 namespace Core.Application.Requests.Messages.Queries;
 
-public class GetMessagesWithRecipientQuery : IRequest<IEnumerable<ChatMessageResource>>
+public class GetMessagesWithRecipientQuery : IRequest<IEnumerable<ChatMessageViewModel>>
 {
     public int RecipientId { get; set; }
     public int? Limit { get; set; }
     public DateTime? Before { get; set; }
     public DateTime? After { get; set; }
 
-    public class Handler : IRequestHandler<GetMessagesWithRecipientQuery, IEnumerable<ChatMessageResource>>
+    public class Handler : IRequestHandler<GetMessagesWithRecipientQuery, IEnumerable<ChatMessageViewModel>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IUserProvider _userProvider;
@@ -34,7 +34,7 @@ public class GetMessagesWithRecipientQuery : IRequest<IEnumerable<ChatMessageRes
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<ChatMessageResource>> Handle(GetMessagesWithRecipientQuery request, CancellationToken cancellationToken = default)
+        public async Task<IEnumerable<ChatMessageViewModel>> Handle(GetMessagesWithRecipientQuery request, CancellationToken cancellationToken = default)
         {
             int currentUserId = _userProvider.GetCurrentUserId();
 
@@ -43,8 +43,8 @@ public class GetMessagesWithRecipientQuery : IRequest<IEnumerable<ChatMessageRes
             List<MessageRecipient> messagesWithRecipients = await _unitOfWork.MessageRecipients
                 .GetMessagesWithRecipient(currentUserId, request.RecipientId, boundaries);
 
-            IEnumerable<ChatMessageResource> messages = messagesWithRecipients
-                .Select(source => new ChatMessageResource
+            IEnumerable<ChatMessageViewModel> messages = messagesWithRecipients
+                .Select(source => new ChatMessageViewModel
                 {
                     MessageRecipientId = source.MessageRecipientId,
                     MessageId = source.MessageId,

@@ -4,25 +4,25 @@ using System.Collections.Generic;
 
 namespace Presentation.Api.Examples.Countries;
 
-public class GetCountriesOkExample : IExamplesProvider<IEnumerable<CountryResource>>
+public class GetCountriesOkExample : IExamplesProvider<IEnumerable<CountryViewModel>>
 {
-    public IEnumerable<CountryResource> GetExamples()
+    public IEnumerable<CountryViewModel> GetExamples()
     {
         return new[]
         {
-            new CountryResource
+            new CountryViewModel
             {
                 CountryId = 1,
                 Code = "CH",
                 Name = "Countries.Switzerland"
             },
-            new CountryResource
+            new CountryViewModel
             {
                 CountryId = 2,
                 Code = "DE",
                 Name = "Countries.Germany"
             },
-            new CountryResource
+            new CountryViewModel
             {
                 CountryId = 3,
                 Code = "FR",

@@ -11,7 +11,7 @@ public class GroupMembershipMappingProfile : Profile
 {
     public GroupMembershipMappingProfile()
     {
-        CreateMap<GroupMembership, GroupMembershipResource>()
+        CreateMap<GroupMembership, GroupMembershipViewModel>()
             .ForMember(resource => resource.UserName, config =>
                 config.MapFrom(source => source.User.UserName));
 

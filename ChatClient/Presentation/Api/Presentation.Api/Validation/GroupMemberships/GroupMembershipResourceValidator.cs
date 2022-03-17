@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Presentation.Api.Validation.GroupMemberships;
 
-public class GroupMembershipResourceValidator : AbstractValidator<GroupMembershipResource>
+public class GroupMembershipResourceValidator : AbstractValidator<GroupMembershipViewModel>
 {
     public GroupMembershipResourceValidator()
     {

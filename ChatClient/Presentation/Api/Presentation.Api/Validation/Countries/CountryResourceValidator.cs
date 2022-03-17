@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace Presentation.Api.Validation.Countries;
 
-public class CountryResourceValidator : AbstractValidator<CountryResource>
+public class CountryResourceValidator : AbstractValidator<CountryViewModel>
 {
     public CountryResourceValidator()
     {

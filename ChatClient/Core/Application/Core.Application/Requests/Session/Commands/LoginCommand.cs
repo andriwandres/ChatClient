@@ -10,12 +10,12 @@ using System.Threading.Tasks;
 
 namespace Core.Application.Requests.Session.Commands;
 
-public class LoginCommand : IRequest<AuthenticatedUserResource>
+public class LoginCommand : IRequest<AuthenticatedUserViewModel>
 {
     public string UserNameOrEmail { get; set; }
     public string Password { get; set; }
 
-    public class Handler : IRequestHandler<LoginCommand, AuthenticatedUserResource>
+    public class Handler : IRequestHandler<LoginCommand, AuthenticatedUserViewModel>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -28,7 +28,7 @@ public class LoginCommand : IRequest<AuthenticatedUserResource>
             _cryptoService = cryptoService;
         }
 
-        public async Task<AuthenticatedUserResource> Handle(LoginCommand request, CancellationToken cancellationToken = default)
+        public async Task<AuthenticatedUserViewModel> Handle(LoginCommand request, CancellationToken cancellationToken = default)
         {
             User user = await _unitOfWork.Users.GetByUserNameOrEmail(request.UserNameOrEmail);
 
@@ -44,7 +44,7 @@ public class LoginCommand : IRequest<AuthenticatedUserResource>
                 return null;
             }
 
-            AuthenticatedUserResource mappedUser = _mapper.Map<User, AuthenticatedUserResource>(user);
+            AuthenticatedUserViewModel mappedUser = _mapper.Map<User, AuthenticatedUserViewModel>(user);
 
             mappedUser.Token = _cryptoService.GenerateToken(user);
 

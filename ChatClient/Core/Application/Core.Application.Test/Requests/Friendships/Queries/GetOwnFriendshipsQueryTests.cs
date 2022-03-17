@@ -28,7 +28,7 @@ public class GetOwnFriendshipsQueryTests
 
         MapperConfiguration mapperConfiguration = new MapperConfiguration(config =>
         {
-            config.CreateMap<Friendship, FriendshipResource>();
+            config.CreateMap<Friendship, FriendshipViewModel>();
         });
 
         _mapperMock = mapperConfiguration.CreateMapper();
@@ -51,7 +51,7 @@ public class GetOwnFriendshipsQueryTests
         GetOwnFriendshipsQuery.Handler handler = new GetOwnFriendshipsQuery.Handler(_unitOfWorkMock.Object, _mapperMock, _userProviderMock.Object);
 
         // Act
-        IEnumerable<FriendshipResource> friendships = await handler.Handle(new GetOwnFriendshipsQuery());
+        IEnumerable<FriendshipViewModel> friendships = await handler.Handle(new GetOwnFriendshipsQuery());
 
         // Assert
         Assert.Equal(2, friendships.Count());

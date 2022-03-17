@@ -10,11 +10,11 @@ using System.Threading.Tasks;
 
 namespace Core.Application.Requests.Friendships.Commands;
 
-public class RequestFriendshipCommand : IRequest<FriendshipResource>
+public class RequestFriendshipCommand : IRequest<FriendshipViewModel>
 {
     public int AddresseeId { get; set; }
 
-    public class Handler : IRequestHandler<RequestFriendshipCommand, FriendshipResource>
+    public class Handler : IRequestHandler<RequestFriendshipCommand, FriendshipViewModel>
     {
         private readonly IMapper _mapper;
         private readonly IUnitOfWork _unitOfWork;
@@ -29,7 +29,7 @@ public class RequestFriendshipCommand : IRequest<FriendshipResource>
             _userProvider = userProvider;
         }
 
-        public async Task<FriendshipResource> Handle(RequestFriendshipCommand request, CancellationToken cancellationToken = default)
+        public async Task<FriendshipViewModel> Handle(RequestFriendshipCommand request, CancellationToken cancellationToken = default)
         {
             int userId = _userProvider.GetCurrentUserId();
 
@@ -50,7 +50,7 @@ public class RequestFriendshipCommand : IRequest<FriendshipResource>
             await _unitOfWork.Friendships.Add(friendship, cancellationToken);
             await _unitOfWork.CommitAsync(cancellationToken);
 
-            FriendshipResource resource = _mapper.Map<Friendship, FriendshipResource>(friendship);
+            FriendshipViewModel resource = _mapper.Map<Friendship, FriendshipViewModel>(friendship);
 
             return resource;
         }

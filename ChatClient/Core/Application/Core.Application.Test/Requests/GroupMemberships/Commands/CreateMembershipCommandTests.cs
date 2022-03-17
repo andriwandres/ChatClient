@@ -24,7 +24,7 @@ public class CreateMembershipCommandTests
 
         MapperConfiguration mapperConfiguration = new(config =>
         {
-            config.CreateMap<GroupMembership, GroupMembershipResource>();
+            config.CreateMap<GroupMembership, GroupMembershipViewModel>();
         });
 
         _mapperMock = mapperConfiguration.CreateMapper();
@@ -66,7 +66,7 @@ public class CreateMembershipCommandTests
         CreateMembershipCommand.Handler handler = new(_dateProviderMock.Object, _unitOfWorkMock.Object, _mapperMock);
 
         // Act
-        GroupMembershipResource membership = await handler.Handle(request);
+        GroupMembershipViewModel membership = await handler.Handle(request);
 
         // Assert
         Assert.NotNull(membership);

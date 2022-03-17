@@ -87,7 +87,7 @@ public class SessionController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     [SwaggerResponse(StatusCodes.Status500InternalServerError, Type = typeof(ErrorViewModel))]
     [SwaggerResponseExample(StatusCodes.Status500InternalServerError, typeof(InternalServerErrorExample))]
-    public async Task<ActionResult<AuthenticatedUserResource>> Login([FromBody] LoginBody credentials, CancellationToken cancellationToken = default)
+    public async Task<ActionResult<AuthenticatedUserViewModel>> Login([FromBody] LoginBody credentials, CancellationToken cancellationToken = default)
     {
         if (!ModelState.IsValid)
         {
@@ -96,7 +96,7 @@ public class SessionController : ControllerBase
 
         LoginCommand command = _mapper.Map<LoginBody, LoginCommand>(credentials);
 
-        AuthenticatedUserResource user = await _mediator.Send(command, cancellationToken);
+        AuthenticatedUserViewModel user = await _mediator.Send(command, cancellationToken);
 
         if (user == null)
         {

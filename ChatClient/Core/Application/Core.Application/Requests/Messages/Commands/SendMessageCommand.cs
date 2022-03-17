@@ -14,13 +14,13 @@ using System.Threading.Tasks;
 
 namespace Core.Application.Requests.Messages.Commands;
 
-public class SendMessageCommand : IRequest<ChatMessageResource>
+public class SendMessageCommand : IRequest<ChatMessageViewModel>
 {
     public int RecipientId { get; set; }
     public int? ParentId { get; set; }
     public string HtmlContent { get; set; }
 
-    public class Handler : IRequestHandler<SendMessageCommand, ChatMessageResource>
+    public class Handler : IRequestHandler<SendMessageCommand, ChatMessageViewModel>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IDateProvider _dateProvider;
@@ -35,7 +35,7 @@ public class SendMessageCommand : IRequest<ChatMessageResource>
             _hubContext = hubContext;
         }
 
-        public async Task<ChatMessageResource> Handle(SendMessageCommand request, CancellationToken cancellationToken = default)
+        public async Task<ChatMessageViewModel> Handle(SendMessageCommand request, CancellationToken cancellationToken = default)
         {
             int currentUserId = _userProvider.GetCurrentUserId();
 
@@ -112,7 +112,7 @@ public class SendMessageCommand : IRequest<ChatMessageResource>
             // Notify recipient(s) of message
             await notificationFactory();
 
-            return new ChatMessageResource
+            return new ChatMessageViewModel
             {
                 MessageRecipientId = ownMessageRecipient.MessageRecipientId,
                 MessageId = ownMessageRecipient.MessageId,
@@ -148,7 +148,7 @@ public class SendMessageCommand : IRequest<ChatMessageResource>
                     .Single(mr => mr.Recipient.GroupMembership.UserId == userId);
 
                 // Map message to a view model
-                ChatMessageResource message = new ChatMessageResource
+                ChatMessageViewModel message = new ChatMessageViewModel
                 {
                     MessageRecipientId = relevantMessageRecipient.MessageRecipientId,
                     MessageId = relevantMessageRecipient.MessageId,
@@ -180,7 +180,7 @@ public class SendMessageCommand : IRequest<ChatMessageResource>
             User author = await _unitOfWork.Users.GetByIdAsync(currentUserId);
 
             // Map message to a view model
-            ChatMessageResource message = new()
+            ChatMessageViewModel message = new()
             {
                 MessageRecipientId = messageRecipient.MessageRecipientId,
                 MessageId = messageRecipient.MessageId,
