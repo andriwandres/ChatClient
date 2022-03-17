@@ -2,11 +2,11 @@
 using Core.Application.Database;
 using Core.Application.Services;
 using Core.Domain.Entities;
-using Core.Domain.Resources.Friendships;
 using MediatR;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Friendships;
 
 namespace Core.Application.Requests.Friendships.Queries;
 

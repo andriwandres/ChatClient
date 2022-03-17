@@ -1,8 +1,8 @@
 ﻿using Core.Domain.Dtos.GroupMemberships;
-using Core.Domain.Resources.Errors;
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
+using Core.Domain.ViewModels.Errors;
 
 namespace Presentation.Api.Examples.GroupMemberships;
 

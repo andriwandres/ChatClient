@@ -1,5 +1,5 @@
 ﻿using Core.Domain.Enums;
-using Core.Domain.Resources.Users;
+using Core.Domain.ViewModels.Users;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.Users;

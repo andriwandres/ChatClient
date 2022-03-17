@@ -1,7 +1,11 @@
+using System.Collections.Generic;
+using System.Globalization;
+using System.Net.Mime;
+using System.Text.Json;
 using Core.Application.Extensions;
 using Core.Application.Hubs;
 using Core.Domain.Options;
-using Core.Domain.Resources.Errors;
+using Core.Domain.ViewModels.Errors;
 using Infrastructure.Persistence.Database;
 using Infrastructure.Persistence.Extensions;
 using Infrastructure.Shared.Extensions;
@@ -16,10 +20,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Presentation.Api.Extensions;
 using Swashbuckle.AspNetCore.SwaggerUI;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Net.Mime;
-using System.Text.Json;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
@@ -117,4 +117,7 @@ application.UseEndpoints(endpoints =>
 
 application.Run();
 
-public partial class Program {}
+namespace Presentation.Api
+{
+    public partial class Program {}
+}

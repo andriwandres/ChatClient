@@ -1,4 +1,4 @@
-﻿using Core.Domain.Resources.Recipients;
+﻿using Core.Domain.ViewModels.Recipients;
 using FluentValidation;
 
 namespace Presentation.Api.Validation.Recipients;

@@ -3,8 +3,6 @@ using Core.Application.Requests.Messages.Commands;
 using Core.Application.Requests.Messages.Queries;
 using Core.Application.Requests.Recipients.Queries;
 using Core.Domain.Dtos.Messages;
-using Core.Domain.Resources.Errors;
-using Core.Domain.Resources.Messages;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -16,6 +14,8 @@ using Swashbuckle.AspNetCore.Filters;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Errors;
+using Core.Domain.ViewModels.Messages;
 
 namespace Presentation.Api.Controllers;
 

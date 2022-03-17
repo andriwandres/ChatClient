@@ -3,7 +3,6 @@ using Core.Application.Hubs;
 using Core.Application.Services;
 using Core.Domain.Dtos.Messages;
 using Core.Domain.Entities;
-using Core.Domain.Resources.Messages;
 using MediatR;
 using Microsoft.AspNetCore.SignalR;
 using System;
@@ -11,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Messages;
 
 namespace Core.Application.Requests.Messages.Commands;
 

@@ -1,7 +1,5 @@
 ﻿using AutoMapper;
 using Core.Domain.Dtos.Session;
-using Core.Domain.Resources.Errors;
-using Core.Domain.Resources.Users;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -14,6 +12,8 @@ using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Application.Requests.Session.Commands;
+using Core.Domain.ViewModels.Errors;
+using Core.Domain.ViewModels.Users;
 
 namespace Presentation.Api.Controllers;
 

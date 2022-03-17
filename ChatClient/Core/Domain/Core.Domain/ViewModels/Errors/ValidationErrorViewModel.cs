@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
-namespace Core.Domain.Resources.Errors;
+namespace Core.Domain.ViewModels.Errors;
 
 public class ValidationErrorViewModel
 {

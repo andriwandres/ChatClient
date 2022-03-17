@@ -3,11 +3,11 @@ using Core.Application.Database;
 using Core.Application.Requests.Users.Queries;
 using Core.Application.Services;
 using Core.Domain.Entities;
-using Core.Domain.Resources.Users;
 using Microsoft.AspNetCore.Http;
 using Moq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Users;
 using Xunit;
 
 namespace Core.Application.Test.Requests.Users.Queries;

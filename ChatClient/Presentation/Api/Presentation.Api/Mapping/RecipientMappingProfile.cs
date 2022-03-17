@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Core.Domain.Entities;
-using Core.Domain.Resources.Groups;
-using Core.Domain.Resources.Messages;
-using Core.Domain.Resources.Recipients;
-using Core.Domain.Resources.Users;
 using System.Linq;
+using Core.Domain.ViewModels.Groups;
+using Core.Domain.ViewModels.Messages;
+using Core.Domain.ViewModels.Recipients;
+using Core.Domain.ViewModels.Users;
 
 namespace Presentation.Api.Mapping;
 

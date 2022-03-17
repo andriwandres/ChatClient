@@ -1,4 +1,4 @@
-﻿namespace Core.Domain.Resources.Groups;
+﻿namespace Core.Domain.ViewModels.Groups;
 
 public class TargetGroupViewModel
 {

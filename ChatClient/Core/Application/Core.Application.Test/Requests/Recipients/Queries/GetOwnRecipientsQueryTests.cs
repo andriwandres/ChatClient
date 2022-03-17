@@ -3,12 +3,12 @@ using Core.Application.Requests.Recipients.Queries;
 using Core.Application.Services;
 using Core.Domain.Entities;
 using Core.Domain.Enums;
-using Core.Domain.Resources.Recipients;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Recipients;
 using Xunit;
 
 namespace Core.Application.Test.Requests.Recipients.Queries;

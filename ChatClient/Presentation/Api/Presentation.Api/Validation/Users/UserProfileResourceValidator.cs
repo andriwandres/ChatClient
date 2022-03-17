@@ -1,6 +1,6 @@
-﻿using Core.Domain.Resources.Users;
-using FluentValidation;
+﻿using FluentValidation;
 using System.Text.RegularExpressions;
+using Core.Domain.ViewModels.Users;
 
 namespace Presentation.Api.Validation.Users;
 

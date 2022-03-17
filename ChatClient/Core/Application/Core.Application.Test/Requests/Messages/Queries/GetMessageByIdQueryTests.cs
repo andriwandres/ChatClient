@@ -3,9 +3,9 @@ using Core.Application.Database;
 using Core.Application.Requests.Messages.Queries;
 using Core.Application.Services;
 using Core.Domain.Entities;
-using Core.Domain.Resources.Messages;
 using Moq;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Messages;
 using Xunit;
 
 namespace Core.Application.Test.Requests.Messages.Queries;

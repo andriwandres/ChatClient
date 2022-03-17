@@ -1,4 +1,4 @@
-﻿using Core.Domain.Resources.Friendships;
+﻿using Core.Domain.ViewModels.Friendships;
 using FluentValidation;
 
 namespace Presentation.Api.Validation.Friendships;

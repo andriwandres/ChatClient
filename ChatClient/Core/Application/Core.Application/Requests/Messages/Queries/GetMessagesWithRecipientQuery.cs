@@ -1,6 +1,5 @@
 ﻿using Core.Application.Database;
 using Core.Application.Services;
-using Core.Domain.Resources.Messages;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -11,6 +10,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Core.Domain.Dtos.Messages;
 using Core.Domain.Entities;
+using Core.Domain.ViewModels.Messages;
 
 namespace Core.Application.Requests.Messages.Queries;
 

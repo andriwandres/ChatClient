@@ -1,6 +1,6 @@
-﻿using Core.Domain.Resources.Friendships;
-using Swashbuckle.AspNetCore.Filters;
+﻿using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
+using Core.Domain.ViewModels.Friendships;
 
 namespace Presentation.Api.Examples.Friendships;
 

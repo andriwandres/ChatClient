@@ -1,15 +1,21 @@
 ﻿using System;
 
-namespace Core.Domain.Resources.Messages;
+namespace Core.Domain.ViewModels.Messages;
 
-public class LatestMessageViewModel
+public class MessageViewModel
 {
     public int MessageId { get; set; }
     public int MessageRecipientId { get; set; }
     public int AuthorId { get; set; }
+    public int? ParentId { get; set; }
+
     public string AuthorName { get; set; }
     public string HtmlContent { get; set; }
-    public bool IsRead { get; set; }
-    public bool IsOwnMessage { get; set; }
+
     public DateTime Created { get; set; }
+    public DateTime? ReadDate { get; set; }
+
+    public bool IsRead { get; set; }
+    public bool IsEdited { get; set; }
+    public bool IsOwnMessage { get; set; }
 }

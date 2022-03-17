@@ -4,12 +4,12 @@ using Core.Application.Requests.Messages.Queries;
 using Core.Application.Services;
 using Core.Domain.Dtos.Messages;
 using Core.Domain.Entities;
-using Core.Domain.Resources.Messages;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Messages;
 using Xunit;
 
 namespace Core.Application.Test.Requests.Messages.Queries;

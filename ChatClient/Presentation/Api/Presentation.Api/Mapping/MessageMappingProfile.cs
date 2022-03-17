@@ -3,8 +3,8 @@ using Core.Application.Requests.Messages.Commands;
 using Core.Application.Requests.Messages.Queries;
 using Core.Domain.Dtos.Messages;
 using Core.Domain.Entities;
-using Core.Domain.Resources.Messages;
 using System.Linq;
+using Core.Domain.ViewModels.Messages;
 
 namespace Presentation.Api.Mapping;
 

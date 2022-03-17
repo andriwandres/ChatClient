@@ -2,11 +2,11 @@
 using Core.Application.Database;
 using Core.Application.Requests.Countries.Queries;
 using Core.Domain.Entities;
-using Core.Domain.Resources;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels;
 using Xunit;
 
 namespace Core.Application.Test.Requests.Countries.Queries;

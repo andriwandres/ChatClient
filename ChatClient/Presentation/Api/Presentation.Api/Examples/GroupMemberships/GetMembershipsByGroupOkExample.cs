@@ -1,6 +1,6 @@
-﻿using Core.Domain.Resources.GroupMemberships;
-using Swashbuckle.AspNetCore.Filters;
+﻿using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
+using Core.Domain.ViewModels.GroupMemberships;
 
 namespace Presentation.Api.Examples.GroupMemberships;
 

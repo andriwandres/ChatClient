@@ -1,9 +1,9 @@
 ﻿using Core.Domain.Enums;
-using Core.Domain.Resources.Groups;
-using Core.Domain.Resources.Messages;
-using Core.Domain.Resources.Users;
+using Core.Domain.ViewModels.Groups;
+using Core.Domain.ViewModels.Messages;
+using Core.Domain.ViewModels.Users;
 
-namespace Core.Domain.Resources.Recipients;
+namespace Core.Domain.ViewModels.Recipients;
 
 public class RecipientViewModel
 {

@@ -1,5 +1,4 @@
 ﻿using Core.Domain.Options;
-using Core.Domain.Resources.Errors;
 using FluentValidation.AspNetCore;
 using MicroElements.Swashbuckle.FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -14,6 +13,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Core.Domain.ViewModels.Errors;
 
 namespace Presentation.Api.Extensions;
 

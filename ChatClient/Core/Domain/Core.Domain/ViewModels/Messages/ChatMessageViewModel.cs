@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Core.Domain.Resources.Messages;
+namespace Core.Domain.ViewModels.Messages;
 
 public class ChatMessageViewModel
 {

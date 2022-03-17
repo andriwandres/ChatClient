@@ -3,11 +3,11 @@ using Core.Application.Database;
 using Core.Application.Requests.Groups.Commands;
 using Core.Application.Services;
 using Core.Domain.Entities;
-using Core.Domain.Resources.Groups;
 using Moq;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Groups;
 using Xunit;
 
 namespace Core.Application.Test.Requests.Groups.Commands;

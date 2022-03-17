@@ -1,4 +1,4 @@
-﻿using Core.Domain.Resources;
+﻿using Core.Domain.ViewModels;
 using FluentValidation;
 
 namespace Presentation.Api.Validation.Countries;

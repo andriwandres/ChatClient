@@ -1,7 +1,7 @@
-﻿using Core.Domain.Resources.Messages;
-using Swashbuckle.AspNetCore.Filters;
+﻿using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
+using Core.Domain.ViewModels.Messages;
 
 namespace Presentation.Api.Examples.Messages;
 

@@ -6,10 +6,6 @@ using Core.Application.Requests.Users.Commands;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Availability;
 using Core.Domain.Dtos.Users;
-using Core.Domain.Resources.Errors;
-using Core.Domain.Resources.Friendships;
-using Core.Domain.Resources.Recipients;
-using Core.Domain.Resources.Users;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -25,6 +21,10 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Errors;
+using Core.Domain.ViewModels.Friendships;
+using Core.Domain.ViewModels.Recipients;
+using Core.Domain.ViewModels.Users;
 
 namespace Presentation.Api.Controllers;
 

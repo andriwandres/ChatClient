@@ -1,4 +1,4 @@
-﻿namespace Core.Domain.Resources;
+﻿namespace Core.Domain.ViewModels;
 
 public class CountryViewModel
 {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Core.Domain.Entities;
-using Core.Domain.Resources;
+using Core.Domain.ViewModels;
 
 namespace Presentation.Api.Mapping;
 

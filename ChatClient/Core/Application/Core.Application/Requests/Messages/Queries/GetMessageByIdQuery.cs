@@ -2,12 +2,12 @@
 using AutoMapper.QueryableExtensions;
 using Core.Application.Database;
 using Core.Application.Services;
-using Core.Domain.Resources.Messages;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using System.Threading;
 using System.Threading.Tasks;
 using Core.Domain.Entities;
+using Core.Domain.ViewModels.Messages;
 using Microsoft.EntityFrameworkCore.Query.Internal;
 
 namespace Core.Application.Requests.Messages.Queries;

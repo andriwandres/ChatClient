@@ -4,8 +4,6 @@ using Core.Application.Requests.Friendships.Queries;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Friendships;
 using Core.Domain.Enums;
-using Core.Domain.Resources.Errors;
-using Core.Domain.Resources.Friendships;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +12,8 @@ using Presentation.Api.Controllers;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Errors;
+using Core.Domain.ViewModels.Friendships;
 using Xunit;
 
 namespace Presentation.Api.Test.Controllers;

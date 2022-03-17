@@ -1,6 +1,6 @@
-﻿using Core.Domain.Resources.Groups;
-using Swashbuckle.AspNetCore.Filters;
+﻿using Swashbuckle.AspNetCore.Filters;
 using System;
+using Core.Domain.ViewModels.Groups;
 
 namespace Presentation.Api.Examples.Groups;
 

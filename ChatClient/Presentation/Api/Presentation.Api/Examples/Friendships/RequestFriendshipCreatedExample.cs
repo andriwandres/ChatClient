@@ -1,4 +1,4 @@
-﻿using Core.Domain.Resources.Friendships;
+﻿using Core.Domain.ViewModels.Friendships;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.Friendships;

@@ -1,11 +1,11 @@
 ﻿using AutoMapper;
 using Core.Application.Database;
 using Core.Domain.Entities;
-using Core.Domain.Resources.GroupMemberships;
 using MediatR;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.GroupMemberships;
 
 namespace Core.Application.Requests.GroupMemberships.Queries;
 

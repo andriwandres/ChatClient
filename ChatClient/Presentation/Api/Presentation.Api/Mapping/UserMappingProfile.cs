@@ -3,7 +3,7 @@ using Core.Application.Requests.Users.Commands;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Users;
 using Core.Domain.Entities;
-using Core.Domain.Resources.Users;
+using Core.Domain.ViewModels.Users;
 
 namespace Presentation.Api.Mapping;
 

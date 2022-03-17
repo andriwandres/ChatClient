@@ -1,5 +1,4 @@
 ﻿using Core.Application.Requests.Countries.Queries;
-using Core.Domain.Resources;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
@@ -8,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels;
 using Xunit;
 
 namespace Presentation.Api.Test.Controllers;

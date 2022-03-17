@@ -1,4 +1,4 @@
-﻿using Core.Domain.Resources.Groups;
+﻿using Core.Domain.ViewModels.Groups;
 using FluentValidation;
 
 namespace Presentation.Api.Validation.Groups;

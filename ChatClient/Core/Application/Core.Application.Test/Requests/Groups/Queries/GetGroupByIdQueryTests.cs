@@ -2,9 +2,9 @@
 using Core.Application.Database;
 using Core.Application.Requests.Groups.Queries;
 using Core.Domain.Entities;
-using Core.Domain.Resources.Groups;
 using Moq;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Groups;
 using Xunit;
 
 namespace Core.Application.Test.Requests.Groups.Queries;

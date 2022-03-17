@@ -1,4 +1,4 @@
-﻿using Core.Domain.Resources.Messages;
+﻿using Core.Domain.ViewModels.Messages;
 
 namespace Core.Domain.Dtos.Messages;
 

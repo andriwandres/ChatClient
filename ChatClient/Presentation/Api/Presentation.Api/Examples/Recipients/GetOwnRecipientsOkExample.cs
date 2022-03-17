@@ -1,11 +1,11 @@
 ﻿using Core.Domain.Enums;
-using Core.Domain.Resources.Groups;
-using Core.Domain.Resources.Messages;
-using Core.Domain.Resources.Recipients;
-using Core.Domain.Resources.Users;
 using Swashbuckle.AspNetCore.Filters;
 using System;
 using System.Collections.Generic;
+using Core.Domain.ViewModels.Groups;
+using Core.Domain.ViewModels.Messages;
+using Core.Domain.ViewModels.Recipients;
+using Core.Domain.ViewModels.Users;
 
 namespace Presentation.Api.Examples.Recipients;
 

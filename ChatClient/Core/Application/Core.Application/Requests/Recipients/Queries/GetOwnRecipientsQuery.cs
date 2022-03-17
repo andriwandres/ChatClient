@@ -1,15 +1,15 @@
 ﻿using Core.Application.Database;
 using Core.Application.Services;
 using Core.Domain.Entities;
-using Core.Domain.Resources.Groups;
-using Core.Domain.Resources.Messages;
-using Core.Domain.Resources.Recipients;
-using Core.Domain.Resources.Users;
 using MediatR;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Groups;
+using Core.Domain.ViewModels.Messages;
+using Core.Domain.ViewModels.Recipients;
+using Core.Domain.ViewModels.Users;
 
 namespace Core.Application.Requests.Recipients.Queries;
 

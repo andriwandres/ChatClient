@@ -1,4 +1,4 @@
-﻿using Core.Domain.Resources.Errors;
+﻿using Core.Domain.ViewModels.Errors;
 using FluentValidation;
 using Microsoft.AspNetCore.Http;
 

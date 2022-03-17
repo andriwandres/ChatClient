@@ -2,7 +2,7 @@
 using Core.Application.Requests.Groups.Commands;
 using Core.Domain.Dtos.Groups;
 using Core.Domain.Entities;
-using Core.Domain.Resources.Groups;
+using Core.Domain.ViewModels.Groups;
 
 namespace Presentation.Api.Mapping;
 

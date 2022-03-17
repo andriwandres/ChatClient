@@ -1,6 +1,6 @@
 ﻿using Core.Domain.Enums;
 
-namespace Core.Domain.Resources.Users;
+namespace Core.Domain.ViewModels.Users;
 
 public class UserProfileViewModel
 {

@@ -1,6 +1,6 @@
-﻿using Core.Domain.Resources;
-using Swashbuckle.AspNetCore.Filters;
+﻿using Swashbuckle.AspNetCore.Filters;
 using System.Collections.Generic;
+using Core.Domain.ViewModels;
 
 namespace Presentation.Api.Examples.Countries;
 

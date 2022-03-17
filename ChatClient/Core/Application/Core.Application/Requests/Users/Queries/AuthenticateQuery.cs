@@ -2,12 +2,12 @@
 using Core.Application.Database;
 using Core.Application.Services;
 using Core.Domain.Entities;
-using Core.Domain.Resources.Users;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Users;
 
 namespace Core.Application.Requests.Users.Queries;
 

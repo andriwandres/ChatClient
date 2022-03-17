@@ -1,4 +1,4 @@
-﻿namespace Core.Domain.Resources.GroupMemberships;
+﻿namespace Core.Domain.ViewModels.GroupMemberships;
 
 public class GroupMembershipViewModel
 {

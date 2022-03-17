@@ -3,11 +3,11 @@ using Core.Application.Database;
 using Core.Application.Requests.Friendships.Queries;
 using Core.Application.Services;
 using Core.Domain.Entities;
-using Core.Domain.Resources.Friendships;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Friendships;
 using Xunit;
 
 namespace Core.Application.Test.Requests.Friendships.Queries;

@@ -1,4 +1,4 @@
-﻿using Core.Domain.Resources.GroupMemberships;
+﻿using Core.Domain.ViewModels.GroupMemberships;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.GroupMemberships;

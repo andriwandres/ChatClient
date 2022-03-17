@@ -1,5 +1,5 @@
 ﻿using System;
-using Core.Domain.Resources.Groups;
+using Core.Domain.ViewModels.Groups;
 using Swashbuckle.AspNetCore.Filters;
 
 namespace Presentation.Api.Examples.Groups;

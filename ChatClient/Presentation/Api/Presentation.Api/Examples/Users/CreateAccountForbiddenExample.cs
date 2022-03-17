@@ -1,4 +1,4 @@
-﻿using Core.Domain.Resources.Errors;
+﻿using Core.Domain.ViewModels.Errors;
 using Microsoft.AspNetCore.Http;
 using Swashbuckle.AspNetCore.Filters;
 

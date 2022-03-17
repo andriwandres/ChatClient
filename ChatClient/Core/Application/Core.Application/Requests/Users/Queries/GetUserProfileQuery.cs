@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using Core.Application.Database;
 using Core.Domain.Entities;
-using Core.Domain.Resources.Users;
 using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Users;
 
 namespace Core.Application.Requests.Users.Queries;
 

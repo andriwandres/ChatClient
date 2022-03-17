@@ -1,6 +1,4 @@
 ﻿using Core.Application.Requests.Countries.Queries;
-using Core.Domain.Resources;
-using Core.Domain.Resources.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -13,6 +11,8 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels;
+using Core.Domain.ViewModels.Errors;
 
 namespace Presentation.Api.Controllers;
 

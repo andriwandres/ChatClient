@@ -4,7 +4,6 @@ using Core.Application.Requests.Messages.Commands;
 using Core.Application.Services;
 using Core.Domain.Dtos.Messages;
 using Core.Domain.Entities;
-using Core.Domain.Resources.Messages;
 using Microsoft.AspNetCore.SignalR;
 using Moq;
 using System;
@@ -12,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Messages;
 using Xunit;
 
 namespace Core.Application.Test.Requests.Messages.Commands;

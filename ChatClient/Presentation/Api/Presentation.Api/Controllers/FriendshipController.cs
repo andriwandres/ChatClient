@@ -3,8 +3,6 @@ using Core.Application.Requests.Friendships.Commands;
 using Core.Application.Requests.Friendships.Queries;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.Friendships;
-using Core.Domain.Resources.Errors;
-using Core.Domain.Resources.Friendships;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,6 +15,8 @@ using System.Net.Mime;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Errors;
+using Core.Domain.ViewModels.Friendships;
 
 namespace Presentation.Api.Controllers;
 

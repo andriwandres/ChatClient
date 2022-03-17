@@ -1,4 +1,4 @@
-﻿using Core.Domain.Resources.Messages;
+﻿using Core.Domain.ViewModels.Messages;
 using FluentValidation;
 
 namespace Presentation.Api.Validation.Messages;

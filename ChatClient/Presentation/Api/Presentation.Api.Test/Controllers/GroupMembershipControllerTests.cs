@@ -4,8 +4,6 @@ using Core.Application.Requests.GroupMemberships.Queries;
 using Core.Application.Requests.Groups.Queries;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Dtos.GroupMemberships;
-using Core.Domain.Resources.Errors;
-using Core.Domain.Resources.GroupMemberships;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +11,8 @@ using Moq;
 using Presentation.Api.Controllers;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Errors;
+using Core.Domain.ViewModels.GroupMemberships;
 using Xunit;
 
 namespace Presentation.Api.Test.Controllers;

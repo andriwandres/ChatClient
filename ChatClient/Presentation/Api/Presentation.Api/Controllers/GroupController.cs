@@ -3,9 +3,6 @@ using Core.Application.Requests.GroupMemberships.Queries;
 using Core.Application.Requests.Groups.Commands;
 using Core.Application.Requests.Groups.Queries;
 using Core.Domain.Dtos.Groups;
-using Core.Domain.Resources.Errors;
-using Core.Domain.Resources.GroupMemberships;
-using Core.Domain.Resources.Groups;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -19,6 +16,9 @@ using System.Collections.Generic;
 using System.Net.Mime;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Errors;
+using Core.Domain.ViewModels.GroupMemberships;
+using Core.Domain.ViewModels.Groups;
 
 namespace Presentation.Api.Controllers;
 

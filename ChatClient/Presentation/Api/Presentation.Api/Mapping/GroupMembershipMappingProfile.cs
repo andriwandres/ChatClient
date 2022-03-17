@@ -3,7 +3,7 @@ using Core.Application.Requests.GroupMemberships.Commands;
 using Core.Application.Requests.GroupMemberships.Queries;
 using Core.Domain.Dtos.GroupMemberships;
 using Core.Domain.Entities;
-using Core.Domain.Resources.GroupMemberships;
+using Core.Domain.ViewModels.GroupMemberships;
 
 namespace Presentation.Api.Mapping;
 

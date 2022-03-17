@@ -2,12 +2,12 @@
 using Core.Application.Database;
 using Core.Application.Requests.GroupMemberships.Queries;
 using Core.Domain.Entities;
-using Core.Domain.Resources.GroupMemberships;
 using Moq;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.GroupMemberships;
 using Xunit;
 
 namespace Core.Application.Test.Requests.GroupMemberships.Queries;

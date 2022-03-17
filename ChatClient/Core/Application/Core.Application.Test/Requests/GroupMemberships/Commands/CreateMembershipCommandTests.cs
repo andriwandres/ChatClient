@@ -3,10 +3,10 @@ using Core.Application.Database;
 using Core.Application.Requests.GroupMemberships.Commands;
 using Core.Application.Services;
 using Core.Domain.Entities;
-using Core.Domain.Resources.GroupMemberships;
 using Moq;
 using System.Threading;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.GroupMemberships;
 using Xunit;
 
 namespace Core.Application.Test.Requests.GroupMemberships.Commands;

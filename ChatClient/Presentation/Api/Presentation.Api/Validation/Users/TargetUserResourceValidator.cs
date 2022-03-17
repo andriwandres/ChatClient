@@ -1,4 +1,4 @@
-﻿using Core.Domain.Resources.Users;
+﻿using Core.Domain.ViewModels.Users;
 using FluentValidation;
 
 namespace Presentation.Api.Validation.Users;

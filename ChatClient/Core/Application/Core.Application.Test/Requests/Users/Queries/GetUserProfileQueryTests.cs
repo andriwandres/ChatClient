@@ -3,9 +3,9 @@ using Core.Application.Database;
 using Core.Application.Requests.Users.Queries;
 using Core.Domain.Entities;
 using Core.Domain.Enums;
-using Core.Domain.Resources.Users;
 using Moq;
 using System.Threading.Tasks;
+using Core.Domain.ViewModels.Users;
 using Xunit;
 
 namespace Core.Application.Test.Requests.Users.Queries;

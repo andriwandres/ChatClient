@@ -1,4 +1,4 @@
-﻿namespace Core.Domain.Resources.Friendships;
+﻿namespace Core.Domain.ViewModels.Friendships;
 
 public class FriendshipViewModel
 {
